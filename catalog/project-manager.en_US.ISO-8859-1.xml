@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<message_catalog package_key="project-manager" package_version="2.20b2" locale="en_US" charset="ISO-8859-1">
+
+  <msg key="Action">Action</msg>
+  <msg key="Actions">Actions</msg>
+  <msg key="Add">Add</msg>
+  <msg key="Add_subproject">Add subproject</msg>
+  <msg key="Assignees">Assignees</msg>
+  <msg key="Average">Average</msg>
+  <msg key="Cancel_do_not_delete">Cancel, do not delete</msg>
+  <msg key="Categories">Categories</msg>
+  <msg key="Code">Code</msg>
+  <msg key="Comment">Comment:</msg>
+  <msg key="Comments">Comments</msg>
+  <msg key="Complete">Complete:</msg>
+  <msg key="Customer">Customer</msg>
+  <msg key="Date">Date</msg>
+  <msg key="Dates">Dates</msg>
+  <msg key="Deadline">Deadline:</msg>
+  <msg key="Default_roles">Default roles</msg>
+  <msg key="Delete">Delete</msg>
+  <msg key="dependencies">dependencies</msg>
+  <msg key="Dependency">Dependency:</msg>
+  <msg key="Dependency_types">Dependency types</msg>
+  <msg key="Description">Description</msg>
+  <msg key="Description_1">Description:</msg>
+  <msg key="Done">Done.</msg>
+  <msg key="Earliest_finish">Earliest finish</msg>
+  <msg key="Earliest_start">Earliest start</msg>
+  <msg key="Edit">Edit</msg>
+  <msg key="Edit_assignees">Edit assignees</msg>
+  <msg key="Edit_categories">Edit categories</msg>
+  <msg key="Error">Error</msg>
+  <msg key="Goal">Goal</msg>
+  <msg key="hours">hours</msg>
+  <msg key="hrs">hrs</msg>
+  <msg key="Key">Key</msg>
+  <msg key="Latest_finish">Latest finish</msg>
+  <msg key="Latest_start">Latest start</msg>
+  <msg key="Log_entry">Log entry:</msg>
+  <msg key="Logger">Logger</msg>
+  <msg key="Logger_integration">Logger integration</msg>
+  <msg key="lt__Project_manager_requ">. Project manager requires you to
+          install and mount at least one instance of logger, because it
+          uses logger to log time and other variables against projects
+          and tasks. However, you can have varying levels of integration
+          with logger. This section sets up which logger instances you
+          want to be fully integrated with project-manager, so that new
+          project-manager projects appear in the logger instance.</msg>
+  <msg key="lt__Project_manager_requ_1">. Project manager requires you to
+  install and mount at least one instance of logger, because it
+  uses logger to log time and other variables against projects
+  and tasks. However, you can have varying levels of integration
+  with logger. This section sets up which logger instances you
+  want to be fully integrated with project-manager, so that new
+  project-manager projects appear in the logger instance.</msg>
+  <msg key="lt_After_they_have_done_">After they have done this, you can go back to the previous page,
+  refresh it, and then add and edit logged hours.</msg>
+  <msg key="lt_Are_you_ready_to_sync">Are you ready to sync with these URLs?</msg>
+  <msg key="lt_Are_you_sure_you_want">Are you sure you want to delete this process: %one_line%</msg>
+  <msg key="lt_Are_you_sure_youd_lik">Are you sure you'd like to delete these %task_term_lower%s?</msg>
+  <msg key="lt_be_patient____this_ta">(be patient,
+    this takes a long time, you can read the log files to see what's
+    happening if you like.)</msg>
+  <msg key="lt_Begin_synchronization">Begin synchronization</msg>
+  <msg key="lt_Click_on_one_of_the_f">Click on one of the following items to set it up:</msg>
+  <msg key="lt_Complete_task_infoper">Complete: %task_info.percent_complete%%</msg>
+  <msg key="lt_Date_entriestime_stam">Date: %entries.time_stamp_pretty%</msg>
+  <msg key="lt_depends_on_another_ta">depends on another %task_term_lower%</msg>
+  <msg key="lt_Enter_100_to_close_th">Enter 100% to close the %task_term_lower%, or less
+                            to open it.</msg>
+  <msg key="lt_Hours_remaining_task_">Hours remaining: %task_info.hours_remaining%</msg>
+  <msg key="lt_import_package_urlsty">@import &quot;%package_url%style-logger.css&quot;;
+    @import &quot;%package_url%style.css&quot;;</msg>
+  <msg key="lt_Logger_is_a_package_t">Logger is a package that lets you log time, expenses, and
+          other</msg>
+  <msg key="lt_Logger_is_a_package_t_1">Logger is a package that lets you log time, expenses, and
+  other</msg>
+  <msg key="lt_nbspnumrownumnbspnbsp">&amp;nbsp;%num.rownum%&amp;nbsp;&amp;nbsp;</msg>
+  <msg key="lt_not_current_select_li">(not current, select live version from the</msg>
+  <msg key="lt_Once_you_have_chosen_">Once you have chosen logger instances to be integrated
+        with project-manager, you may have a lot of older
+        project-manager projects that are not synchronized with
+        logger. This page lets you synchronize older project-manager
+        projects with logger, so that they are all linked in correctly
+        with that instance. This does not add in logger projects to
+        project-manager (although someone can certainly add that
+        functionality if they wish).</msg>
+  <msg key="lt_Project_entriesprojec">Project: %entries.project_name%</msg>
+  <msg key="lt_projectactual_hours_c">%project.actual_hours_completed% of %project.estimated_hours_total%</msg>
+  <msg key="lt_Projects_can_be_categ">Projects can be categorized according to multiple 'trees'
+        of categories. What this means is you can have multiple ways
+        of categorizing your projects. This section sets up your
+        categories and allows you to link them to projects. Currently,
+        there is a bug in the categories package that prevents the
+        context bar at the top of the screen from returning you to the
+        project-manager pages.</msg>
+  <msg key="lt_Send_email_to_assigne">Send email to assignees?</msg>
+  <msg key="lt_set_according_to_task">set according to task assignments</msg>
+  <msg key="lt_set_up_integration_wi">set up integration with logger</msg>
+  <msg key="lt_skip_adding_dependenc">skip adding dependencies</msg>
+  <msg key="lt_Slack_task_infoslack_">Slack: %task_info.slack_time%</msg>
+  <msg key="lt_Slack_time_task_infos">Slack time: %task_info.slack_time%</msg>
+  <msg key="lt_task_infoestimated_ho">%task_info.estimated_hours_work_min% - %task_info.estimated_hours_work_max% hrs estimated</msg>
+  <msg key="lt_task_infopercent_comp">%task_info.percent_complete%% complete</msg>
+  <msg key="lt_task_terms_depending_">%task_term%s depending on this %task_term%</msg>
+  <msg key="lt_task_terms_depending__1">%task_term%(s) depending on this %task_term%</msg>
+  <msg key="lt_task_terms_this_depen">%task_term%s this depends on.</msg>
+  <msg key="lt_task_terms_this_depen_1">%task_term%(s) this depends on.</msg>
+  <msg key="lt_The_administrator_nee">The administrator needs to</msg>
+  <msg key="lt_The_data_model_has_a_">The data model has a facility for default roles, although
+        it is not currently used at all. This shows what is in the
+        database for default roles. Currently unimplemented.</msg>
+  <msg key="lt_The_parameters_allow_">The parameters allow you to do things such as set up daily
+        reminder emails, change what fields are shown in the project
+        view and edit pages, and so on. Highly recommended if you're
+        setting up project-manager.</msg>
+  <msg key="lt_The_roles_people_can_">The roles people can take on projects and tasks, such as
+        manager, sales contact, tech support person, etc.. Currently,
+        can only be edited directly in the database.</msg>
+  <msg key="lt_There_are_no_matching">There are no matching log entries</msg>
+  <msg key="lt_There_is_a_data_model">There is a data model for workgroups, but it is not a part
+        of the UI. Shows what is in the database (currently, nothing!)</msg>
+  <msg key="lt_There_is_currently_a_">There is currently a bug in this page where it will not allow you to
+  remove values. You will have to do that through the parameters section.</msg>
+  <msg key="lt_This_page_allows_you_">This page allows you to update the deadlines of all the
+        projects in your installation. It will take a while.</msg>
+  <msg key="lt_This_page_will_eventu">This page will eventually allow you to log hours against multiple
+tasks at once.</msg>
+  <msg key="lt_to_these_processtask_">to these process
+%task_term_lower%s. Dependencies describe the order in which items must
+be completed. For example, &amp;quot;the boards must be delivered before
+construction can begin&amp;quot;. Entering dependencies is important because it
+allows the system to automatically compute schedules. However, you can</msg>
+  <msg key="lt_Unknown_group_by_colu">Unknown group by column %group_by%</msg>
+  <msg key="lt_Use_this_process_use_">Use this process: %use_link;noquote%</msg>
+  <msg key="lt_User_entriesuser_chun">User: %entries.user_chunk;noquote%</msg>
+  <msg key="lt_Valid_status_codes_fo">Valid status codes, for example, 'Open' and 'Closed'</msg>
+  <msg key="lt_Week_entriestime_stam">Week: %entries.time_stamp_week%</msg>
+  <msg key="lt_When_implemented_this">When implemented, this page will allow you to view and
+        edit the descriptions given to various dependency types (such
+        as finish before start, etc..) Currently, the only dependency
+        used is finish before start, so it's not exposed in the UI</msg>
+  <msg key="lt_You_can_optionally_lo">You can optionally log time worked here.</msg>
+  <msg key="lt_You_may_enter_a_task_">You may enter a %task_term_lower% that needs to
+                      be completed before this %task_term_lower%</msg>
+  <msg key="lt_You_may_optionally_en">You may optionally enter a hard deadline</msg>
+  <msg key="lt_You_must_choose_a_log">You must choose a logger instance to be the primary
+        logger linked in with project-manager. This is closely linked
+        in with project-manager, so you can view reports of a project, etc.</msg>
+  <msg key="lt_You_must_enter_a_numb">You must enter a number here (make your best
+                        guess)</msg>
+  <msg key="Max">Max:</msg>
+  <msg key="Min">Min:</msg>
+  <msg key="Name">Name</msg>
+  <msg key="nbspnbspproject_term">&amp;nbsp;&amp;nbsp;%project_term%</msg>
+  <msg key="No_UI">No UI</msg>
+  <msg key="Now">Now</msg>
+  <msg key="One_process">One process</msg>
+  <msg key="Ongoing">Ongoing</msg>
+  <msg key="Order">Order</msg>
+  <msg key="page">page)</msg>
+  <msg key="Parameters">Parameters</msg>
+  <msg key="Process_tasks">Process tasks:</msg>
+  <msg key="process_tasks">process tasks</msg>
+  <msg key="Processes">Processes</msg>
+  <msg key="Project">Project:</msg>
+  <msg key="Project_categories">Project categories</msg>
+  <msg key="Project_information">Project information</msg>
+  <msg key="Project_Search">Project Search:</msg>
+  <msg key="project_termnoquotes">%project_term;noquote%s</msg>
+  <msg key="project_terms">%project_term%s</msg>
+  <msg key="Projection">Projection</msg>
+  <msg key="Projects">Projects</msg>
+  <msg key="Related_task_terms">Related %task_term%s</msg>
+  <msg key="Remove_myself">Remove myself</msg>
+  <msg key="Roles">Roles</msg>
+  <msg key="Search">Search:</msg>
+  <msg key="Search:">Search:</msg>
+  <msg key="Section">Section</msg>
+  <msg key="Select_process">Select process:</msg>
+  <msg key="Set_up">Set up</msg>
+  <msg key="Skip_this_task">Skip this task?</msg>
+  <msg key="Slack">Slack:</msg>
+  <msg key="Slack_na">Slack: n/a</msg>
+  <msg key="Start">Start</msg>
+  <msg key="Status_types">Status types</msg>
+  <msg key="Subject">Subject:</msg>
+  <msg key="Subprojects">Subprojects</msg>
+  <msg key="Subtotal">Subtotal</msg>
+  <msg key="Subtotal_Average">Subtotal Average</msg>
+  <msg key="Sync">Sync</msg>
+  <msg key="Task">Task</msg>
+  <msg key="task_change">task change</msg>
+  <msg key="Task_hours_completed">Task hours completed</msg>
+  <msg key="task_terms">%task_term%s</msg>
+  <msg key="TASKS">TASKS</msg>
+  <msg key="Tasks">Tasks</msg>
+  <msg key="Time">Time:</msg>
+  <msg key="Total">Total</msg>
+  <msg key="Total_work_required">Total work required:</msg>
+  <msg key="Update_all">Update all</msg>
+  <msg key="User">User</msg>
+  <msg key="Users_to_view">Users to view</msg>
+  <msg key="variables">variables</msg>
+  <msg key="View">View</msg>
+  <msg key="View_options">View options</msg>
+  <msg key="View_project_changes">View project changes</msg>
+  <msg key="View_task_changes">View task changes</msg>
+  <msg key="Work">Work</msg>
+  <msg key="Work_required">Work required:</msg>
+  <msg key="Workgroups">Workgroups</msg>
+  <msg key="You_may_now_add">You may now add</msg>
+</message_catalog>
