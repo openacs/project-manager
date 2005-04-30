@@ -17,7 +17,7 @@ ad_page_contract {
 } -errors {
 }
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 
 # remove assignments 
 set current_assignees [pm::project::assign_remove_everyone \

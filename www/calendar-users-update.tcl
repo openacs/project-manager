@@ -15,7 +15,7 @@ ad_page_contract {
 } -errors {
 }
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 
 if {[empty_string_p party_id]} {
     set party_id [list $user_id]

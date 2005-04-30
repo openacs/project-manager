@@ -92,7 +92,7 @@ set urgency_threshold 8
 # the unique identifier for this package
 set package_id  [ad_conn package_id]
 set package_url [ad_conn package_url]
-set user_id     [ad_maybe_redirect_for_registration]
+set user_id     [auth::require_login]
 
 
 # permissions

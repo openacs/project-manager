@@ -72,7 +72,7 @@ set status_list [db_list_of_lists get_status_values "select description, status_
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [ad_maybe_redirect_for_registration]
+set user_id    [auth::require_login]
 
 # if mine_p is true, show only my tasks
 if {[string equal $mine_p t]} {

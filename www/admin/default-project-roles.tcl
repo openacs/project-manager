@@ -41,7 +41,7 @@ set context_bar [ad_context_bar "View $project_term_lower roles"]
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [ad_maybe_redirect_for_registration]
+set user_id    [auth::require_login]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
