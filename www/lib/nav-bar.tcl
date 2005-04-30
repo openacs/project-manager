@@ -20,7 +20,12 @@ set link_list {}
 
 
 if { [ad_conn user_id] != 0} {
-    lappend link_list [list "${package_url}tasks"]
+    if { [empty_string_p $project_item_id] } {
+	lappend link_list [list "${package_url}tasks"]
+    } else { 
+	lappend link_list [list [export_vars -base "${package_url}tasks" {{project_item_id}}]]
+    }
+		       
     lappend link_list {}
     lappend link_list "Tasks"
 
@@ -36,7 +41,12 @@ if { [ad_conn user_id] != 0} {
     lappend link_list {}
     lappend link_list "Processes"
 
-    lappend link_list [list "${logger_url}?user_id=${user_id}"]
+    if [empty_string_p $project_item_id] {
+	lappend link_list [list "[export_vars -base ${logger_url} {user_id {project_manager_url $package_url}}]"]
+    } else {
+	set logger_project_id [pm::project::get_logger_project -project_item_id $project_item_id]
+	lappend link_list [list "[export_vars -base ${logger_url} {{project_manager_url $package_url} {project_id $logger_project_id}}]"]
+    }
     lappend link_list {}
     lappend link_list "Logger"
 

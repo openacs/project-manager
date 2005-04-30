@@ -3,11 +3,12 @@
   <property name="title">@task_term@ #@task_id@:
     @task_info.task_title;noquote@ @closed_message@</property>
   <property name="context">@context;noquote@</property>
+  <property name="project_item_id">@project_item_id@</property>
   
   <if @task_info.live_revision@ ne @task_info.revision_id@>
     <h4>(not current, select live version from the <a href="task-revisions?task_id=@task_info.item_id@">task change</a> page)</h4>
   </if>
-  
+
   <table border="0" cellpadding="3" cellspacing="0" width="100%">
     
     <tr>

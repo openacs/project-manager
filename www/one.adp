@@ -7,6 +7,7 @@
     <property name="title">@my_title;noquote@</property>
   </else>
   <property name="context">@context;noquote@</property>
+  <property name="project_item_id">@project_item_id@</property>
   
   <if @project.live_revision@ ne @project.project_id@>
   <h4>(not current, select live version from the <a href="project-revisions?project_item_id=@project_item_id@">task change</a> page)</h4>

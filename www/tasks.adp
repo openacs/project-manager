@@ -4,8 +4,9 @@
   
   <property name="title">@task_term@s</property>
   <property name="context">@context@</property>
-  
-  
+  <if @passed_project_item_id@ ne 0>
+    <property name="project_item_id">@passed_project_item_id@</property>  
+  </if>
   <table cellpadding="3" cellspacing="3">
     
     <tr>

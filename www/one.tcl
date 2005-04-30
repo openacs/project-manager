@@ -94,7 +94,7 @@ set return_url [ad_return_url -qualified]
 # the unique identifier for this package
 set package_id  [ad_conn package_id]
 set package_url [ad_conn package_url]
-set user_id     [auth::require_login]
+set user_id     [ad_maybe_redirect_for_registration]
 
 
 # terminology and other parameters

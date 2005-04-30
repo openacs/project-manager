@@ -18,11 +18,12 @@
    @import url(@package_url@style.css) all;
 </style>
 
-<include src="nav-bar">
+<include src="nav-bar" project_item_id="@project_item_id@">
 <p />
 
 <slave>
 
 <p />
-<include src="nav-bar">
+<include src="nav-bar" project_item_id="@project_item_id@">
+
 

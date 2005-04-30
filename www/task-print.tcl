@@ -74,7 +74,7 @@ set context_bar [ad_context_bar "one?project_item_id=$project_item_id $project_t
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $task_id "[ad_conn url]?task_id=$task_id"]
 

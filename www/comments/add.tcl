@@ -13,6 +13,7 @@ ad_page_contract {
     title:notnull
     return_url:notnull
     {type "task"}
+    {attach_p "f"}
     {description:html ""}
 } -properties {
 } -validate {
@@ -53,6 +54,12 @@ ad_form -name comment \
             {options {{"Yes" "t"} {"No" "f"}}}
         }
         
+        {attach_p:text(select),optional
+            {label "Attach a file?"}
+            {options {{"Yes" "t"} {"No" "f"}}}
+            {value "f"}
+        }
+        
     } -new_request {
         
         set description [template::util::richtext::create "" {}]
@@ -63,16 +70,21 @@ ad_form -name comment \
         set description_body [template::util::richtext::get_property contents $description]
         set description_format [template::util::richtext::get_property format $description]
 
-        pm::util::general_comment_add \
-            -object_id $object_id \
-            -title "$title" \
-            -comment "$description_body" \
-            -mime_type "$description_format" \
-            -send_email_p $send_email_p \
-            -type $type
+        set comment_id [pm::util::general_comment_add \
+                            -object_id $object_id \
+                            -title "$title" \
+                            -comment "$description_body" \
+                            -mime_type "$description_format" \
+                            -send_email_p $send_email_p \
+                            -type $type]
 
         # does not seem to be working for some reason
         util_user_message -message "Comment: [ad_quotehtml $title] saved"
-        ad_returnredirect $return_url 
+
+        if { [string equal $attach_p "f"] && ![empty_string_p $return_url] } {
+            ad_returnredirect $return_url
+        } else {
+            ad_returnredirect "/comments/view-comment?[export_vars { comment_id return_url }]"
+        }
     }
 

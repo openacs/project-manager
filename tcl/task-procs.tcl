@@ -799,7 +799,11 @@ ad_proc -public pm::task::project_item_id {
 ad_proc -public pm::task::get_url {
     object_id
 } {
-    set url [pm::util::url]
+    
+    set package_id [db_string pm_package_id "select package_id from cr_folders cf, cr_items ci1, cr_items ci2 where cf.folder_id = ci1.parent_id and ci1.item_id = ci2.parent_id and ci2.item_id = :object_id"]
+
+    set url "[ad_url]"
+    append url [site_node::get_url_from_object_id -object_id $package_id]
 
     set package_url "${url}task-one?task_id=$object_id"
 

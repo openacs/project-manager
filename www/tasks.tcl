@@ -3,6 +3,7 @@ ad_page_contract {
     Main view page for tasks.
 
     @author jader@bread.com
+    @author openacs@sussdorff.de (MS)
     @creation-date 2003-12-03
     @cvs-id $Id$
 
@@ -23,13 +24,17 @@ ad_page_contract {
     {searchterm ""}
     {mine_p "t"}
     {status_id ""}
+    {page ""}
+    {page_size 25}
     role_id:optional
+    project_item_id:optional
 } -properties {
     task_term:onevalue
     context:onevalue
     tasks:multirow
     hidden_vars:onevalue
 }
+
 
 # if someone clicks on a party, then we want to see those tasks.
 if {[exists_and_not_null party_id]} {
@@ -46,6 +51,13 @@ set project_term_lower [parameter::get -parameter "projectname" -default "projec
 
 set use_days_p      [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
 
+# Check if a project_item_id was passed in and store it
+if [exists_and_not_null project_item_id] {
+    set passed_project_item_id $project_item_id
+} else {
+    set passed_project_item_id 0
+}
+
 set exporting_vars { status_id party_id orderby mine_p }
 set hidden_vars [export_vars -form $exporting_vars]
 # how to get back here
@@ -55,9 +67,12 @@ set logger_url [pm::util::logger_url]
 # set up context bar
 set context [list "Tasks"]
 
+# Get the currently available Status
+set status_list [db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]
+
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # if mine_p is true, show only my tasks
 if {[string equal $mine_p t]} {
@@ -66,7 +81,10 @@ if {[string equal $mine_p t]} {
 
 # status defaults to open
 if {![exists_and_not_null status_id]} {
-    set status_id [pm::task::default_status_open]
+    set status_where_clause ""
+#    set status_id [pm::task::default_status_open]
+} else {
+    set status_where_clause {ts.status = :status_id}
 }
 
 # permissions
@@ -106,11 +124,11 @@ if {[exists_and_not_null orderby]} {
 
 
 set elements {
-    task_number {
+    task_id {
         label "\#"
         link_url_col item_url
         link_html { title "View this project version" }
-        display_template {<a href="@tasks.item_url@">@tasks.task_item_id@</a>}
+        display_template {<a href="@tasks.item_url@">@tasks.task_id@</a>}
     } 
     title {
         label "Subject"
@@ -122,21 +140,64 @@ set elements {
     role {
         label "Role"
     }
-    latest_start_pretty {
-        label "Latest Start"
-    } 
-    latest_finish_pretty {
-        label "Latest Finish"
-        display_template {
-            <b>@tasks.latest_finish_pretty@</b>
-        }
-    } 
+}
+
+# MS: This assumes that the status of "2" will always be closed.
+# It does not make sense to display the latest_start and finished times for already
+# Closed tasks
+
+if {$status_id != 2} {
+    append elements {
+	latest_start_pretty {
+	    label "Latest Start"
+	} 
+	latest_finish_pretty {
+	    label "Latest Finish"
+	    display_template {
+		<b>@tasks.latest_finish_pretty@</b>
+	    }
+	} 
+    }
+}
+
+append elements {
+    status {
+	label "Status"
+    }
+}
+
+# MS: This assumes that the status of "2" will always be closed.
+# It does not make sense to display the remaining hours for 
+# Closed tasks
+
+if {$status_id != 2} {
+
+    if {[string is true $use_days_p]} {
+	append elements {
+	    days_remaining {
+		label "Days work"
+		html {
+		    align right
+		}
+	    } 
+	}
+    } else {
+	append elements {
+	    hours_remaining {
+		label "Hours remaining"
+		html {
+                align right
+		}
+	    } 
+	}
+    }
+
 }
 
 if {[string is true $use_days_p]} {
     append elements {
-        days_remaining {
-            label "Days work"
+        actual_days_worked {
+            label "Days worked"
             html {
                 align right
             }
@@ -144,8 +205,8 @@ if {[string is true $use_days_p]} {
     }
 } else {
     append elements {
-        hours_remaining {
-            label "Hours remaining"
+        actual_hours_worked {
+            label "Hours worked"
             html {
                 align right
             }
@@ -158,20 +219,21 @@ append elements {
         label "Project"
         display_col project_name
         link_url_eval {[export_vars -base one {project_item_id $tasks(project_item_id)}]}
+        hide_p {[ad_decode [exists_and_not_null project_item_id] 1 1 0]}
     } 
     log_url {
         label "Log"
         display_template {<a href="@tasks.log_url@">L</a>}
     } 
     percent_complete {
-        display_template "<group column=\"task_item_id\"></group>"
+        display_template "<group column=\"task_id\"></group>"
     }
 }
 
 template::list::create \
     -name tasks \
     -multirow tasks \
-    -key task_item_id \
+    -key task_id \
     -elements $elements \
     -actions [list "Add task" [export_vars -base task-select-project {return_url}] "Add a task"] \
     -bulk_actions {
@@ -189,6 +251,18 @@ template::list::create \
             label "Search"
             where_clause {$search_term_where}
         }
+        status_id {
+            label "Status"
+            values {$status_list}
+            where_clause "$status_where_clause"
+        }
+	project_item_id {
+	    label "Project"
+	    values {[pm::project::get_list_of_open]}
+	    where_clause {
+		t.parent_id = :project_item_id
+	    }
+	} 
         role_id {
             label "Roles"
             values {[pm::role::select_list_filter]}
@@ -196,6 +270,7 @@ template::list::create \
                 ta.role_id = :role_id
             }
         }
+
         party_id {
             label "People"
             values {[pm::task::assignee_filter_select -status_id $status_id]}
@@ -203,21 +278,16 @@ template::list::create \
                 ta.party_id = :party_id
             }
         }
-        status_id {
-            label "Status"
-            values {[db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]}
-            where_clause {ts.status = :status_id}
-        }
         mine_p {
             label "Show others' tasks"
         }
     } \
     -orderby {
         default_value $default_orderby
-        task_number {
+        task_id {
             label "Task \#"
-            orderby_desc "ts.task_number desc, p.first_names, p.last_name"
-            orderby_asc "ts.task_number asc, p.first_names, p.last_name"
+            orderby_desc "ts.task_id desc, p.first_names, p.last_name"
+            orderby_asc "ts.task_id asc, p.first_names, p.last_name"
             default_direction asc
         }
         title {
@@ -256,20 +326,27 @@ template::list::create \
             orderby_asc "t.latest_finish, ts.task_id, p.first_names, p.last_name"
             default_direction asc
         }
+	status {
+	    label "Status"
+	    orderby_desc "status desc, t.latest_finish desc, ts.task_id, p.first_names, p.last_name"
+	    orderby_asc "status asc, t.latest_finish desc, ts.task_id, p.first_names, p.last_name"
+	    default_direction asc
+	}
     } \
+    -page_size_variable_p 1 \
+    -page_size $page_size \
+    -page_flush_p 0 \
+    -page_query_name tasks_pagination \
     -orderby_name orderby \
     -html {
         width 100%
     }
 
-
-
-
 db_multirow -extend { item_url latest_start_pretty latest_finish_pretty slack_time log_url hours_remaining days_remaining} tasks tasks {
 } {
-    set item_url [export_vars -base "task-one" {{task_id $task_item_id}}]
+    set item_url [export_vars -base "task-one" {{task_id $task_id}}]
 
-    set log_url [export_vars -base "${logger_url}log" {{project_id $logger_project} {pm_task_id $task_item_id} {pm_project_id $project_item_id} {return_url $return_url}}]
+    set log_url [export_vars -base "${logger_url}log" {{project_id $logger_project} {pm_task_id $task_id} {pm_project_id $project_item_id} {return_url $return_url}}]
 
     set latest_start_pretty [lc_time_fmt $latest_start "%x"]
     set latest_finish_pretty [lc_time_fmt $latest_finish "%x"]
@@ -296,6 +373,8 @@ db_multirow -extend { item_url latest_start_pretty latest_finish_pretty slack_ti
              -estimated_hours_work_min $estimated_hours_work_min \
              -estimated_hours_work_max $estimated_hours_work_max \
              -percent_complete $percent_complete]
+
+    set actual_days_worked [expr $actual_hours_worked / 24]
 
 }
 

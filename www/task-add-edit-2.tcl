@@ -54,7 +54,7 @@ ad_page_contract {
 # --------------------------------------------------------------- 
 # Set up
 # --------------------------------------------------------------- 
-set user_id       [auth::require_login]
+set user_id       [ad_maybe_redirect_for_registration]
 set package_id    [ad_conn package_id]
 set peeraddr      [ad_conn peeraddr]
 
