@@ -75,8 +75,8 @@ set return_url [ad_return_url \
 		    -qualified]
 set logger_url [pm::util::logger_url]
 
-set contacts_url [util_memoize [list site_node::get_package_url -package_key contacts]]
-
+set contacts_url [util_memoize [list site_node::get_package_url \
+				    -package_key contacts]]
 
 # set up context bar
 
@@ -168,21 +168,23 @@ foreach element $elements {
     # show all players.
 
     if {$element == "role"} {
-	if {[exists_and_not_null party_id] && $user_id == $party_id} {
+	if {[exists_and_not_null party_id]
+	    && $user_id == $party_id} {
 	    set element "role"
 	    lappend filters [list role_id [list \
 					       label "[_ project-manager.Roles]" \
 					       values {[pm::role::select_list_filter]} \
 					       where_clause "ta.role_id = :role_id"
-					   ]
-			     ]
+					  ]
+			    ]
 	} else {
 	    set element "party_id"
 	    lappend filters [list party_id [list \
 						label "[_ project-manager.People]" \
-						values "[pm::task::assignee_filter_select -status_id $status_id]" \
+						values "[pm::task::assignee_filter_select \
+-status_id $status_id]" \
 						where_clause "ta.party_id = :party_id"
-					    ]
+					   ]
 			    ]
 	}
     }
@@ -241,8 +243,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if>
-		<a href="@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
             }
 	}
 	role {
@@ -313,6 +314,12 @@ template::list::create \
 	percent_complete {
 	    label "[_ project-manager.Percent_complete]"
 	}
+        last_name {
+            label "[_ project-manager.Who]"
+            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if>
+		@tasks.first_names@&nbsp;@tasks.last_name@ <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            }
+	}
     } \
     -sub_class {
 	narrow
@@ -350,11 +357,11 @@ template::list::create \
 	    orderby_asc "status asc, t.latest_finish desc, ts.task_item_id, u.first_names, u.last_name"
 	    default_direction asc
 	}
-        end_date {
-            orderby_asc "end_date, task_item_id asc, u.first_names, u.last_name"
-            orderby_desc "end_date desc, task_item_id desc, u.first_names, u.last_name"
-            default_direction asc
-        }
+	end_date {
+	    orderby_asc "end_date, task_item_id asc, u.first_names, u.last_name"
+	    orderby_desc "end_date desc, task_item_id desc, u.first_names, u.last_name"
+	    default_direction asc
+	}
     } \
     -actions $actions \
     -bulk_actions $bulk_actions \
@@ -430,7 +437,8 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
 	set actual_days_worked ""
     }
     set my_user_id $user_id
-    set user_url [export_vars -base "${contacts_url}contact" {{party_id $person_id}}]
+    set user_url [export_vars \
+		      -base "${contacts_url}contact" {{party_id $person_id}}]
 }
 
 # ------------------------- END OF FILE -------------------------
