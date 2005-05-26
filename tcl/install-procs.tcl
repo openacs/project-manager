@@ -156,12 +156,14 @@ ad_proc -public -callback contact::contact_form -impl project_manager {
 } {
     If organisation, ask to create new project
 } {
-    if { $object_type != "person" } {
-	ad_form -extend -name $form -form {
-	    {create_project_p:text(radio) \
-		 {label "[_ project-manager.create_project]"} \
-		 {options {{[_ acs-kernel.common_Yes] "t"} {[_ acs-kernel.common_no] "f"}}} \
-		 {values "f"}
+    if { [llength [application_link::get_linked -from_package_id $package_id -to_package_key "project-manager"]] > 0 } {
+	if { $object_type != "person" } {
+	    ad_form -extend -name $form -form {
+		{create_project_p:text(radio) \
+		     {label "[_ project-manager.create_project]"} \
+		     {options {{[_ acs-kernel.common_Yes] "t"} {[_ acs-kernel.common_no] "f"}}} \
+		     {values "f"}
+		}
 	    }
 	}
     }
