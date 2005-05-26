@@ -114,6 +114,54 @@ ad_proc -public -callback pm::task_delete {
 } {
 }
 
+ad_proc -private pm::link_new_tasks {
+    -object_id:required
+    -linked_id:required
+    -role:required
+    -title:required
+    {-description ""}
+    {-mime_type "text/plain"}
+} {
+    create new tasks in linked projects and link it to the object
+} {
+    set user_id [ad_conn user_id]
+    set ip_addr [ad_conn peeraddr]
+
+    db_1row get_watcher_role {
+	select role_id
+	from pm_roles
+	where one_line = :role
+    }
+
+    # get linked projects to folder
+    foreach project_item_id [application_data_link::get_linked -from_object_id $linked_id -to_object_type "pm_project"] {
+	db_1row pm_package_id {
+	    select package_id as pm_package_id
+	    from acs_objects
+	    where object_id = :project_item_id
+	}
+	
+	set task_id [pm::task::new \
+			 -project_id $project_item_id \
+			 -title $title \
+			 -description $description \
+			 -mime_type $mime_type \
+			 -creation_user $user_id \
+			 -creation_ip $ip_addr \
+			 -package_id $pm_package_id \
+			 -no_callback]
+
+	set task_item_id [pm::task::get_item_id -task_id $task_id]
+
+	pm::task::assign \
+	    -task_item_id $task_item_id \
+	    -party_id     $user_id \
+	    -role_id      $role_id
+
+	application_data_link::new -this_object_id $object_id -target_object_id $task_item_id
+    }
+}
+
 ad_proc -public -callback forum::message_new -impl project_manager {
     {-package_id:required}
     {-message_id:required}
@@ -123,30 +171,40 @@ ad_proc -public -callback forum::message_new -impl project_manager {
     # make sure this is not a reply message
     forum::message::get -message_id $message_id -array message
     if {$message_id == $message(root_message_id)} {
-	set user_id [ad_conn user_id]
-	set ip_addr [ad_conn peeraddr]
-
-	# get linked projects to forum
-	foreach project_item_id [application_data_link::get_linked -from_object_id $message(forum_id) -to_object_type "pm_project"] {
-	    db_1row pm_package_id {
-		select package_id as pm_package_id
-		from acs_objects
-		where object_id = :project_item_id
-	    }
-	    
-	    set task_id [pm::task::new \
-			     -project_id $project_item_id \
-			     -title $message(subject) \
-			     -creation_user $user_id \
-			     -creation_ip $ip_addr \
-			     -package_id $pm_package_id \
-			     -no_callback]
-
-	    set task_item_id [pm::task::get_item_id -task_id $task_id]
-
-	    application_data_link::new -this_object_id $message_id -target_object_id $task_item_id
-	}
+	pm::link_new_tasks -object_id $message_id -linked_id $message(forum_id) -role "Watcher" -title $message(subject)
     }
+}
+
+ad_proc -public -callback fs::file_new -impl project_manager {
+    {-package_id:required}
+    {-file_id:required}
+} {
+    create a new task for each new file upload
+} {
+    db_1row file_info {
+	select i.parent_id as folder_id, r.title, r.description, r.mime_type
+	from cr_items i, cr_revisions r
+	where i.item_id = :file_id
+	and r.revision_id = i.latest_revision
+    }
+
+    pm::link_new_tasks -object_id $file_id -linked_id $folder_id -role "Watcher" -title $title -description $description -mime_type $mime_type
+}
+
+ad_proc -public -callback fs::file_edit -impl project_manager {
+    {-package_id:required}
+    {-file_id:required}
+} {
+    create a new task for each new file revision uploaded
+} {
+    db_1row file_info {
+	select i.parent_id as folder_id, r.title, r.description, r.mime_type
+	from cr_items i, cr_revisions r
+	where i.item_id = :file_id
+	and r.revision_id = i.latest_revision
+    }
+
+    pm::link_new_tasks -object_id $file_id -linked_id $folder_id -role "Watcher" -title $title -description $description -mime_type $mime_type
 }
 
 ad_proc -public -callback contact::contact_form -impl project_manager {
