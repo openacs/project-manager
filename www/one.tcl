@@ -113,6 +113,9 @@ set portlet_master "/packages/project-manager/lib/portlet"
 set project_root [pm::util::get_root_folder -package_id $package_id]
 set my_title "$project_term \#$project_item_id: $project(project_name)"
 
+set forum_id [application_data_link::get_linked -from_object_id $project(item_id) -to_object_type "forums_forum"]
+set folder_id [application_data_link::get_linked -from_object_id $project(item_id) -to_object_type "content_folder"]
+
 
 # set up context bar, needs project(parent_id)
 if {[string equal $project(parent_id) $project_root]} {
