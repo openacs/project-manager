@@ -34,7 +34,7 @@ ad_page_contract {
 
 # --------------------------------------------------------------- #
 
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 set package_id [ad_conn package_id]
 
 permission::require_permission -object_id $package_id -privilege write
@@ -51,15 +51,15 @@ if {[exists_and_not_null project_item_id]} {
 
 
 # terminology
-set Project_Term    [parameter::get -parameter "ProjectName" -default "Project"]
-set project_term    [parameter::get -parameter "projectname" -default "project"]
-set Task_Term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term       [parameter::get -parameter "taskname" -default "task"]
+set Project_Term    [_ project-manager.Project]
+set project_term    [_ project-manager.project]
+set Task_Term       [_ project-manager.Task]
+set task_term       [_ project-manager.task]
 
 if {[empty_string_p $process_id]} {
-    set title "Select a $project_term to assign this $task_term to"
+    set title "[_ project-manager.lt_Select_a_project_term]"
 } else {
-    set title "Select a $project_term to assign this process to"
+    set title "[_ project-manager.lt_Select_a_project_term_1]"
 }
 
 if {![exists_and_not_null searchterm]} {
@@ -71,16 +71,16 @@ if {![exists_and_not_null searchterm]} {
 }
 
 if {[exists_and_not_null process_id]} {
-    set context [list [list "processes" "Processes"] "Use"]
+    set context [list [list "processes" "[_ project-manager.Processes]"] "[_ project-manager.Use]"]
 } else {
-    set context [list [list "tasks" "Tasks"] "Select Project"]
+    set context [list [list "tasks" "[_ project-manager.Tasks]"] "[_ project-manager.Select_Project]"]
 }
 
 # need to change this to show all the projects you're on by
 # default, and then give you the option of selecting all projects
 # as an option.
 
-set root_folder [db_string get_root "select pm_project__get_root_folder (:package_id, 'f')"]
+set root_folder [pm::util::get_root_folder -package_id $package_id]
 
 template::list::create \
     -name projects \
@@ -88,15 +88,15 @@ template::list::create \
     -key project_item_id \
     -elements {
         customer_name {
-            label "Customer"
+            label "[_ project-manager.Customer]"
         }
         project_item_id {
-            label "Project"
+            label "[_ project-manager.Project_1]"
             link_url_col item_url
             display_template "@projects.project_name@"
         }
         description {
-            label "Description"
+            label "[_ project-manager.Description]"
             display_template "@projects.description_html;noquote@"
         }
     } \
@@ -105,18 +105,18 @@ template::list::create \
     } \
     -filters {
         customer_name {
-            label "Customer"
+            label "[_ project-manager.Customer]"
             where_clause {p.organization_id = :customer_id}
         }
 
         searchterm {
-            label "Project Search term"
+            label "[_ project-manager.Project_Search_term]"
             where_clause $searchterm_where_clause
         }
  
        status_type {
-            label "Status"
-            values {{"Open" o} {"Closed" c}}
+            label "[_ project-manager.Status_1]"
+            values {{"[_ project-manager.Open]" o} {"[_ project-manager.Closed]" c}}
             where_clause {
                 s.status_type = :status_type
             }
@@ -128,13 +128,13 @@ template::list::create \
     -orderby {
         default_value customer_name,asc
         project_item_id {
-            label "Project"
+            label "[_ project-manager.Project_1]"
             orderby_desc "upper(p.title) desc"
             orderby_asc "upper(p.title) asc"
             default_direction asc
         }
         customer_name {
-            label "Customer"
+            label "[_ project-manager.Customer]"
             orderby_desc "upper(o.name) desc, upper(p.title) desc"
             orderby_asc "upper(o.name) asc, upper(p.title) asc"
             default_direction asc

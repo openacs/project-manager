@@ -40,5 +40,11 @@
     </querytext>
   </fullquery>
 
+    <fullquery name="pm::util::get_root_folder.get_root_folder">
+    <querytext>
+        select pm_project.get_root_folder (:package_id, 'f')
+    </querytext>
+  </fullquery>
+
   
 </queryset>

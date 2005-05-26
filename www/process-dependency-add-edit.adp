@@ -3,13 +3,7 @@
 <property name="title">@title@</property>
 
 
-You may now add <i>dependencies</i> to these process
-@task_term_lower@s. Dependencies describe the order in which items must
-be completed. For example, &quot;the boards must be delivered before
-construction can begin&quot;. Entering dependencies is important because it
-allows the system to automatically compute schedules. However, you can 
-<a href="process-one?process_id=@process_id;noquote@">skip adding dependencies</a>.
-
+#project-manager.lt_you_may_now_add_dep#
 <p />
 
 <center>
@@ -19,5 +13,6 @@ allows the system to automatically compute schedules. However, you can
 </formtemplate>
 </table>
 </center>
+
 
 

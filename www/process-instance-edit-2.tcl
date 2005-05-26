@@ -17,7 +17,7 @@ ad_page_contract {
 } -errors {
 }
 
-set user_id     [auth::require_login]
+set user_id     [ad_maybe_redirect_for_registration]
 set package_id  [ad_conn package_id]
 
 permission::require_permission \
@@ -27,4 +27,4 @@ permission::require_permission \
 
 db_dml change_process_instance { }
 
-ad_returnredirect -message "Saved change of process instance name" process-instances?process_id=$process_id
+ad_returnredirect -message "[_ project-manager.lt_Saved_change_of_proce]" process-instances?process_id=$process_id

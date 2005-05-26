@@ -15,7 +15,7 @@ ad_page_contract {
 } -errors {
 }
 
-set title "Synchronize logger projects"
+set title "[_ project-manager.lt_Synchronize_logger_pr]"
 set context [list $title]
 
 set logger_URLs [parameter::get -parameter "LoggerURLsToKeepUpToDate" -default ""]
@@ -87,7 +87,7 @@ if {[string equal $confirmed_p n]} {
 
     }
 
-    ad_returnredirect -message "Logger projects synchronized" index
+    ad_returnredirect -message "[_ project-manager.lt_Logger_projects_synch]" index
 }
 
 

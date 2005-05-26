@@ -2,24 +2,22 @@
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 
-<property name="title">One process</property>
+<property name="title">#project-manager.One_process#</property>
 <property name="context_bar">@context_bar;noquote@</property>
 
-Process tasks:
+#project-manager.Process_tasks#
 
 <ul>
-  <li> Use all tasks in this process: @use_link;noquote@<p />
+  <li> #project-manager.lt_Use_all_tasks_in_this#<p />
   <li> 
     <form action="process-task-add-edit" method="post"> 
-      Add 
-      <input type="hidden" name="process_id" value="@process_id@">
-      <input type="text"   name="number" size="3" value="1" />
-      new task(s) to this process
-      <input type="submit" name="submit" value="Go" />
+#project-manager.lt_add_new_tasks#
+      <input type="submit" name="submit" value="#project-manager.Go#" />
     </form>
   </li>
 </ul>
 
 
 <listtemplate name="tasks"></listtemplate>
+
 

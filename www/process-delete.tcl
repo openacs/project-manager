@@ -24,8 +24,8 @@ if {[string is false $confirm_p]} {
 
     db_1row get_name "select one_line, description from pm_process where process_id = :process_id"
 
-    set title "Delete process: $one_line"
-    set context [list "Delete: $one_line"]
+    set title "[_ project-manager.lt_Delete_process_one_li]"
+    set context [list "[_ project-manager.Delete_one_line]"]
 
     set yes_url "process-delete?[export_vars {process_id {confirm_p 1} return_url}]"
     set no_url $return_url
@@ -38,4 +38,4 @@ permission::require_permission -object_id $package_id -privilege delete
 
 pm::process::delete -process_id $process_id
 
-ad_returnredirect -message "Process deleted" $return_url
+ad_returnredirect -message "[_ project-manager.Process_deleted]" $return_url

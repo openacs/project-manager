@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -53,10 +53,12 @@ if {[empty_string_p $return_url]} {
 # --------------------------------------------------------------- 
 # Set up
 # --------------------------------------------------------------- 
-set user_id       [auth::require_login]
+set user_id       [ad_maybe_redirect_for_registration]
 set package_id    [ad_conn package_id]
 set peeraddr      [ad_conn peeraddr]
 
+
+# Not sure whether permissions check here on individual task is relevant. Check with Jade.
 if {[string is true $edit_p]} {
     permission::require_permission \
         -party_id $user_id \
@@ -75,7 +77,7 @@ if {[string is true $using_process_p]} {
     
 }
 
-ad_progress_bar_begin -title "Updating status..." -message_1 "Please wait..." -message_2 "Will continue automatically"
+ad_progress_bar_begin -title "[_ project-manager.Updating_status]" -message_1 "[_ project-manager.Please_wait]" -message_2 "[_ project-manager.lt_Will_continue_automat]"
 
 # compute the status for all projects
 
@@ -86,6 +88,11 @@ set computed_projects [list]
 
 foreach num $number {
 
+    permission::require_permission \
+        -party_id $user_id \
+        -object_id $project_item_id($num) \
+        -privilege create
+
     if {[lsearch $computed_projects $project_item_id($num)] < 0} {
 
         pm::project::compute_status $project_item_id($num)
@@ -93,7 +100,7 @@ foreach num $number {
     }
 }
 
-util_user_message -message "Saved tasks. You may need to refresh the screen to see the changes."
+util_user_message -message "[_ project-manager.lt_Saved_tasks_You_may_n]"
 
 ad_progress_bar_end -url $return_url
 
@@ -101,6 +108,11 @@ ad_progress_bar_end -url $return_url
 # send out email alerts
 
 if {[string is true $using_process_p]} {
+
+    permission::require_permission \
+        -party_id $user_id \
+        -object_id $project_item_id(1) \
+        -privilege create
 
     if {[string is true $send_email_p]} {
         pm::process::email_alert \
@@ -118,6 +130,11 @@ if {[string is true $using_process_p]} {
         -comments_mime_type_array           comments_mime_type
 
     foreach num $number {
+
+        permission::require_permission \
+            -party_id $user_id \
+            -object_id $task_item_id($num) \
+            -privilege write
 
         if {[exists_and_not_null comments($num)]} {
             # add comment to task

@@ -20,7 +20,7 @@ ad_page_contract {
 } -errors {
 }
 
-set display_title "Add a comment to: $title"
+set display_title "[_ project-manager.lt_Add_a_comment_to_titl]"
 set context [list "$display_title"]
 
 
@@ -41,22 +41,22 @@ ad_form -name comment \
         }
 
         {title:text
-            {label "Title"}
+            {label "[_ project-manager.Title]"}
             {html {size 50}}
         }
         
         {description:richtext(richtext),optional
-            {label "Comment"}
+            {label "[_ project-manager.Comment_1]"}
             {html { rows 9 cols 40 wrap soft}}}
         
         {send_email_p:text(select),optional
-            {label "Send email?"}
-            {options {{"Yes" "t"} {"No" "f"}}}
+            {label "[_ project-manager.Send_email]"}
+            {options {{"[_ acs-kernel.common_Yes]" "t"} {"[_ acs-kernel.common_no]" "f"}}}
         }
         
         {attach_p:text(select),optional
-            {label "Attach a file?"}
-            {options {{"Yes" "t"} {"No" "f"}}}
+            {label "[_ project-manager.Attach_a_file]"}
+            {options {{"[_ acs-kernel.common_Yes]" "t"} {"[_ acs-kernel.common_no]" "f"}}}
             {value "f"}
         }
         
@@ -79,7 +79,7 @@ ad_form -name comment \
                             -type $type]
 
         # does not seem to be working for some reason
-        util_user_message -message "Comment: [ad_quotehtml $title] saved"
+        util_user_message -message "[_ project-manager.lt_Comment_ad_quotehtml_]"
 
         if { [string equal $attach_p "f"] && ![empty_string_p $return_url] } {
             ad_returnredirect $return_url

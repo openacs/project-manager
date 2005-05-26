@@ -30,17 +30,17 @@ ad_page_contract {
 # --------------------------------------------------------------- #
 
 # terminology
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
-set project_term_lower [parameter::get -parameter "projectname" -default "project"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
+set project_term    [_ project-manager.Project]
+set project_term_lower [_ project-manager.project]
 
 # set up context bar
-set context_bar [list "Processes"]
+set context_bar [list "[_ project-manager.Processes]"]
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
@@ -60,22 +60,22 @@ template::list::create \
     -key item_id \
     -elements {
         one_line {
-            label "Subject"
+            label "[_ project-manager.Subject_1]"
             display_template {
                 <a href="process-one?process_id=@processes.process_id@">@processes.one_line@</a>
             }
         }
         description {
-            label "Description"
+            label "[_ project-manager.Description]"
         }
         instances {
-            label "Times used"
+            label "[_ project-manager.Times_used]"
             display_template {
                 <a href="process-instances?process_id=@processes.process_id@">@processes.instances@</a>
             }
         }
         creation_date {
-            label "Created"
+            label "[_ project-manager.Created]"
         }
         delete {
             link_url_col delete_url
@@ -88,7 +88,7 @@ template::list::create \
         narrow
     } \
     -actions {
-        "Add process" "process-add-edit" "Add a process"
+        "#project-manager.Add_process#" "process-add-edit" "#project-manager.Add_a_process#"
     } \
     -filters {
         orderby_process {}

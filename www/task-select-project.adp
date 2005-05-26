@@ -9,7 +9,7 @@
       <td class="list-filter-pane" valign="top" width="200">
         
         <form method=post name=search action=task-select-project>
-          Project Search:<br />
+          #project-manager.Project_Search#<br />
           <input type=text name=searchterm value="@searchterm_copy@" size="15" />
           @hidden_vars;noquote@
         </form>
@@ -27,3 +27,4 @@
   </tr>
 
 </table>
+

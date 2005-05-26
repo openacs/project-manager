@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -34,6 +34,10 @@ set assignments_lol [db_list_of_lists get_people {
     WHERE 
     i.parent_id = :project_item_id and
     i.item_id = a.task_id
+    and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = p.project_item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
 }]
 
 set parties [list]
@@ -75,4 +79,4 @@ foreach party $parties {
         -send_email_p $send_email_p
 }
 
-ad_returnredirect -message "Saved project assignments based on task assignments" [export_vars -base project-assign-edit {project_item_id return_url}]
+ad_returnredirect -message "[_ project-manager.lt_Saved_project_assignm]" [export_vars -base project-assign-edit {project_item_id return_url}]

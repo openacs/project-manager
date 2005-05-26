@@ -21,6 +21,10 @@
         WHERE p.project_id = i.live_revision and
         p.parent_id = :root_folder and
         p.status_id = s.status_id 
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = p.project_id
+                    and ppm.privilege = 'create'
+                    and ppm.party_id = :user_id)
         [template::list::filter_where_clauses -and -name projects]
         [template::list::orderby_clause -orderby -name projects]
     </querytext>

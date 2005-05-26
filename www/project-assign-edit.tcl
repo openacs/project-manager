@@ -20,7 +20,10 @@ ad_page_contract {
 set package_id [ad_conn package_id]
 
 # The id of the person logged in and browsing this page
-set user_id [auth::require_login]
+set user_id [ad_maybe_redirect_for_registration]
+
+# permissions
+permission::require_permission -party_id $user_id -object_id $project_item_id -privilege write
 
 set subsite_id [ad_conn subsite_id]
 
@@ -30,8 +33,8 @@ set user_group_id [application_group::group_id_from_package_id \
 
 set project_name [pm::project::name -project_item_id $project_item_id]
 
-set title "Edit project assignees"
-set context [list [list "one?project_item_id=$project_item_id" "$project_name"] "Edit assignees"]
+set title "[_ project-manager.lt_Edit_project_assignee]"
+set context [list [list "one?project_item_id=$project_item_id" "$project_name"] "[_ project-manager.Edit_assignees]"]
 
 set project_task_assignee_url [export_vars -base project-assign-task-assignees {project_item_id return_url}]
 
@@ -83,7 +86,7 @@ foreach role_list $roles_list_of_lists {
     set role      [lindex $role_list 1]
 
     append html "
-      <td><p /><B><I>Assignee: $role_name</I></B><p />"
+      <td><p /><B><I>[_ project-manager.Assignee_1] $role_name</I></B><p />"
 
     foreach assignee_list $assignee_list_of_lists {
         set name [lindex $assignee_list 0]

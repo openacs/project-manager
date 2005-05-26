@@ -27,19 +27,19 @@ if { [ad_conn user_id] != 0} {
     }
 		       
     lappend link_list {}
-    lappend link_list "Tasks"
+    lappend link_list "[_ project-manager.Tasks]"
 
     lappend link_list [list "${package_url}task-calendar"]
     lappend link_list {}
-    lappend link_list "Task Calendar"
+    lappend link_list "[_ project-manager.Task_Calendar]"
 
     lappend link_list [list "${package_url}?assignee_id=${user_id}"]
     lappend link_list {}
-    lappend link_list "Projects"
+    lappend link_list "[_ project-manager.Projects]"
 
     lappend link_list [list "${package_url}processes"]
     lappend link_list {}
-    lappend link_list "Processes"
+    lappend link_list "[_ project-manager.Processes]"
 
     if [empty_string_p $project_item_id] {
 	lappend link_list [list "[export_vars -base ${logger_url} {user_id {project_manager_url $package_url}}]"]
@@ -48,17 +48,17 @@ if { [ad_conn user_id] != 0} {
 	lappend link_list [list "[export_vars -base ${logger_url} {{project_manager_url $package_url} {project_id $logger_project_id}}]"]
     }
     lappend link_list {}
-    lappend link_list "Logger"
+    lappend link_list "[_ project-manager.Logger]"
 
     lappend link_list [list "${package_url}task-select-project"]
     lappend link_list {}
-    lappend link_list "Add task"
+    lappend link_list "[_ project-manager.Add_task]"
 }
 
 if { $admin_p } {
     lappend link_list [list "${package_url}admin/"]
     lappend link_list {}
-    lappend link_list "Admin"
+    lappend link_list "[_ project-manager.Admin]"
 }
 
 

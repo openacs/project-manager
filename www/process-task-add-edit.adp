@@ -18,9 +18,9 @@
 
           <td rowspan="2" align="center">&nbsp;@num.rownum@&nbsp;&nbsp;</td>
 
-          <td valign="top"><b>Subject:</b><font color="red">*</font><br /><input type="text" size="39" name="task_title.@num.rownum;noquote@" value="@num.one_line@"><p />
+          <td valign="top"><b>#project-manager.Subject#</b><font color="red">*</font><br /><input type="text" size="39" name="task_title.@num.rownum;noquote@" value="@num.one_line@"><p />
 
-              <b>Description:</b><br />
+              <b>#project-manager.Description_1#</b><br />
               <textarea name="description.@num.rownum;noquote@" rows="14" cols="40">@num.description@</textarea></td>
 
         </td>
@@ -28,36 +28,36 @@
           <td valign="top">
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
               <tr>
-                <td><b>Work required:</b><font color="red">*</font></td>
+                <td><b>#project-manager.Work_required#</b><font color="red">*</font></td>
               </tr>
 
               <if @use_day_p@ true>
                 <if @use_uncertain_completion_times_p@ eq 1>
-                  <tr><td>Min:</td>
-                    <td><input type="text" name="estimated_days_work_min.@num.rownum;noquote@" size="5" value="@num.work_days_min@"> days</td>
+                  <tr><td>#project-manager.Min#</td>
+                    <td><input type="text" name="estimated_days_work_min.@num.rownum;noquote@" size="5" value="@num.work_days_min@"> #project-manager.days#</td>
                   </tr>
                   
-                  <tr><td>Max:</td>
-                    <td><input type="text" name="estimated_days_work_max.@num.rownum;noquote@" size="5" value="@num.work_days_max@"> days</td>
+                  <tr><td>#project-manager.Max#</td>
+                    <td><input type="text" name="estimated_days_work_max.@num.rownum;noquote@" size="5" value="@num.work_days_max@"> #project-manager.days#</td>
                   </tr>
                 </if>
                 <else>
-                  <tr><td><input type="text" name="estimated_days_work.@num.rownum;noquote@" size="5" value="@num.work_days@"> days</tr>
+                  <tr><td><input type="text" name="estimated_days_work.@num.rownum;noquote@" size="5" value="@num.work_days@"> #project-manager.days#</tr>
                 </else>
                 
               </if>
               <else>
                 <if @use_uncertain_completion_times_p@ eq 1>
-                  <tr><td>Min:</td>
-                    <td><input type="text" name="estimated_hours_work_min.@num.rownum;noquote@" size="5" value="@num.work_min@"> hrs</td>
+                  <tr><td>#project-manager.Min#</td>
+                    <td><input type="text" name="estimated_hours_work_min.@num.rownum;noquote@" size="5" value="@num.work_min@"> #project-manager.hrs#</td>
                   </tr>
                   
-                  <tr><td>Max:</td>
-                    <td><input type="text" name="estimated_hours_work_max.@num.rownum;noquote@" size="5" value="@num.work_max@"> hrs</td>
+                  <tr><td>#project-manager.Max#</td>
+                    <td><input type="text" name="estimated_hours_work_max.@num.rownum;noquote@" size="5" value="@num.work_max@"> #project-manager.hrs#</td>
                   </tr>
                 </if>
                 <else>
-                  <tr><td><input type="text" name="estimated_hours_work.@num.rownum;noquote@" size="5" value="@num.work@"> hrs</tr>
+                  <tr><td><input type="text" name="estimated_hours_work.@num.rownum;noquote@" size="5" value="@num.work@"> #project-manager.hrs#</tr>
                 </else>
                 
               </else>
@@ -67,11 +67,11 @@
             <p />
 
             <input type="checkbox" name="use_dependency.@num.rownum;noquote@" value="@num.process_task_id;noquote@" @num.checked@>
-              depends on another @task_term_lower@
+              #project-manager.lt_depends_on_another_ta#
               
               <p />
 
-              <font size="-1">Order <input type="text" name="ordering.@num.rownum;noquote@" size="5" value="@num.ordering;noquote@" /></font>
+              <font size="-1">#project-manager.Order# <input type="text" name="ordering.@num.rownum;noquote@" size="5" value="@num.ordering;noquote@" /></font>
 
 
               <br />
@@ -101,3 +101,5 @@
       </form>
     </table>
   </center>
+
+

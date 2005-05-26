@@ -28,6 +28,10 @@
         t.item_id = :task_item_id and
         t.item_id = i.item_id and
         i.live_revision = t.revision_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = :task_item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
     </querytext>
   </fullquery>
 

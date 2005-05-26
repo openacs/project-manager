@@ -96,7 +96,7 @@ db_multirow -extend { subtotal subaverage view_url edit_url delete_url delete_on
     set view_url "[ad_conn package_url]log?[export_vars { { entry_id $id } { pm_project_id $pm_project_id } {pm_task_id $pm_task_id} }]"
     set edit_url "[ad_conn package_url]log?[export_vars { { entry_id $id } { edit "t" } {pm_project_id $pm_project_id} {pm_task_id $pm_task_id} }]"
     if { $delete_p } {
-        set delete_onclick "return confirm('Are you sure you want to delete log entry with $value $variable(unit) $variable(name) on $time_stamp?');"
+        set delete_onclick "return confirm('[_ project-manager.lt_Are_you_sure_you_want_1]);"
         set delete_url "[site_node::get_package_url -package_key logger]log-delete?[export_vars { { entry_id $id } {pm_task_id $pm_task_id} {return_url "[ad_return_url]"} {confirm_p 1} }]"
     } else {
         set delete_url ""
@@ -128,6 +128,6 @@ db_multirow -extend { subtotal subaverage view_url edit_url delete_url delete_on
 
 if { $value_count > 0 } {
     set value_average [expr round(100.0 * $value_total / $value_count) / 100.0] }  {
-    set value_average "n/a"
+    set value_average "[_ project-manager.na]"
 }
 

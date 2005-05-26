@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -18,10 +18,10 @@ ad_page_contract {
 
 set package_id [ad_conn package_id]
 
-permission::require_permission -privilege "delete" -object_id $package_id
+permission::require_permission -privilege "delete" -object_id $task_item_id
 
-set title "Delete task"
-set context [list "Delete task"]
+set title "[_ project-manager.Delete_task]"
+set context [list "[_ project-manager.Delete_task]"]
 
 
 set action [template::form get_action delete_task]
@@ -29,7 +29,7 @@ set action [template::form get_action delete_task]
 if {[string equal $action delete]} {
 
     pm::task::delete -task_item_id $task_item_id
-    ad_returnredirect -message "Task $task_item_id Deleted" "tasks"
+    ad_returnredirect -message "[_ project-manager.lt_Task_task_item_id_Del]" "tasks"
     ad_script_abort
 
 } else {
@@ -39,16 +39,16 @@ if {[string equal $action delete]} {
     if {[string is true $use_uncertain_completion_times_p]} {
         set hours_work {
             {estimated_hours_work_min:text
-                {label "Estimated Hours (Min)"}
+                {label "[_ project-manager.Estimated_Hours_Min]"}
             }
             {estimated_hours_work_max:text
-                {label "Estimated Hours (Max)"}
+                {label "[_ project-manager.Estimated_Hours_Max]"}
             }
         }
     } else {
         set hours_work {
             {estimated_hours_work:text
-                {label "Estimated Hours"}
+                {label "[_ project-manager.Estimated_Hours]"}
             }
         }
     }
@@ -57,14 +57,14 @@ if {[string equal $action delete]} {
     set form "
         task_item_id:key
         {task_title:text
-            {label \"Title\"}
+            {label \"[_ project-manager.Title_1]"}
         }
         {description:richtext
-            {label \"Description\"}
+            {label \"[_ project-manager.Description_2]"}
         }
         $hours_work
         {percent_complete:text
-            {label \"Percent Complete\"}
+            {label \"[_ project-manager.Percent_Complete]"}
         }
     "
     
@@ -79,7 +79,7 @@ if {[string equal $action delete]} {
         -mode display \
         -has_submit 1 \
         -has_edit 1 \
-        -actions {{"Delete this task?" delete} {"Cancel" cancel}} \
+        -actions {{"#project-manager.Delete_this_task#" delete} {"#project-manager.Cancel#" cancel}} \
         -cancel_url "task-one?task_id=$task_item_id" \
         -form $form 
 

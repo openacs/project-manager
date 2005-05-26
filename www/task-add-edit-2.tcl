@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -54,9 +54,12 @@ ad_page_contract {
 # --------------------------------------------------------------- 
 # Set up
 # --------------------------------------------------------------- 
-set user_id       [auth::require_login]
+set user_id       [ad_maybe_redirect_for_registration]
 set package_id    [ad_conn package_id]
 set peeraddr      [ad_conn peeraddr]
+
+# permissions
+permission::require_permission -party_id $user_id -object_id $package_id -privilege read
 
 set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
 
@@ -111,10 +114,6 @@ if {[string is true $edit_p]} {
     # EDITING
     # -------
 
-    permission::require_permission \
-        -party_id $user_id \
-        -object_id $package_id \
-        -privilege write
 
         # -----------------------------------------------------
         # find out information about the task before we edit it
@@ -189,6 +188,8 @@ if {[string is true $edit_p]} {
         # edit task
         # ---------
 
+        permission::require_permission -party_id $user_id -object_id $task_item_id($num) -privilege write
+
 
         set dead_line "[set end_date_${num}(year)]-[set end_date_${num}(month)]-[set end_date_${num}(day)]"
         set task_revision \
@@ -257,11 +258,6 @@ if {[string is true $edit_p]} {
     # USING PROCESS OR CREATING NEW TASKS
     # -----------------------------------
 
-    permission::require_permission \
-        -party_id $user_id \
-        -object_id $package_id \
-        -privilege create
-
     if {[string is true $using_process_p]} {
 
         set process_instance_id [pm::process::instantiate \
@@ -292,6 +288,8 @@ if {[string is true $edit_p]} {
         # -----------
         # create task
         # -----------
+
+        permission::require_permission -party_id $user_id -object_id $project_item_id($num) -privilege create
 
         set task_item \
             [pm::task::new \

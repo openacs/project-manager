@@ -628,6 +628,7 @@ ad_proc -public pm::task::edit {
     -update_ip:required
     -package_id:required
     {-priority "0"}
+    -no_callback:boolean
 } {
     
     
@@ -695,6 +696,10 @@ ad_proc -public pm::task::edit {
 
     db_dml update_logger_entries { }
 
+    if {!$no_callback_p} {
+	callback pm::task_edit -package_id $package_id -task_id $task_item_id
+    }
+
     return $return_val
 }
 
@@ -717,6 +722,7 @@ ad_proc -public pm::task::new {
     -creation_ip:required
     -package_id:required
     {-priority "0"}
+    -no_callback:boolean
 } {
     Creates a new task. 
 
@@ -750,6 +756,10 @@ ad_proc -public pm::task::new {
         pm::task::close -task_item_id $task_item_id
     }
 
+    if {!$no_callback_p} {
+	callback pm::task_new -package_id $package_id -task_id $task_item_id
+    }
+
     return $task_item_id
 }
 
@@ -757,6 +767,7 @@ ad_proc -public pm::task::new {
 
 ad_proc -public pm::task::delete {
     -task_item_id:required
+    -no_callback:boolean
 } {
     Marks a task deleted
     
@@ -769,6 +780,10 @@ ad_proc -public pm::task::delete {
     
     @error No error thrown if there is no such task.
 } {
+    if {!$no_callback_p} {
+	callback pm::task_delete -package_id [ad_conn package_id] -task_id $task_item_id
+    }
+
     db_dml mark_delete "update pm_tasks set deleted_p = 't' where task_id = :task_item_id"
 
     pm::project::compute_status [pm::task::project_item_id -task_item_id $task_item_id]
@@ -800,10 +815,15 @@ ad_proc -public pm::task::get_url {
     object_id
 } {
     
-    set package_id [db_string pm_package_id "select package_id from cr_folders cf, cr_items ci1, cr_items ci2 where cf.folder_id = ci1.parent_id and ci1.item_id = ci2.parent_id and ci2.item_id = :object_id"]
-
-    set url "[ad_url]"
-    append url [site_node::get_url_from_object_id -object_id $package_id]
+    set package_id [db_string pm_package_id "select package_id from cr_folders cf, cr_items ci1, cr_items ci2 where cf.folder_id = ci1.parent_id and ci1.item_id = ci2.parent_id and ci2.item_id = :object_id" -default 0]
+    
+    if {$package_id == 0} {
+        
+        set url [site_node_closest_ancestor_package_url -package_key "project-manager"]
+    } else {
+        set url "[ad_url]"
+        append url [site_node::get_url_from_object_id -object_id $package_id]
+    }
 
     set package_url "${url}task-one?task_id=$object_id"
 
@@ -1267,23 +1287,22 @@ ad_proc -public pm::task::email_status {} {
 
         }
 
-        set overdue_title "<h3>Overdue Tasks</h3>"
+        set overdue_title "<h3>[_ project-manager.Overdue_Tasks]</h3>"
 
-        set overdue_description "consult with people affected, and let them know deadlines are affected"
+        set overdue_description "[_ project-manager.lt_consult_with_people_a]"
 
-        set pressing_title "<h3>Pressing Tasks</h3>"
+        set pressing_title "<h3>[_ project-manager.Pressing_Tasks]</h3>"
 
-        set pressing_description "you need to start working on these soon to avoid affecting deadlines"
+        set pressing_description "[_ project-manager.lt_you_need_to_start_wor]"
 
-        set longterm_title "<h3>Long Term Tasks</h3>"
+        set longterm_title "<h3>[_ project-manager.Long_Term_Tasks]</h3>"
 
-        set longterm_description "look over these to plan ahead"
+        set longterm_description "[_ project-manager.lt_look_over_these_to_pl]"
 
         # okay, let's now set up the email body
 
         set description "
-<p>This is a daily reminder of tasks that are assigned to you
-You currently have <i>$task_count($party)</i> tasks assigned to you</p>
+<p>[_ project-manager.lt_This_is_a_daily_remin]</p>
 
 $overdue_title
 
@@ -1293,12 +1312,12 @@ $overdue_description
 
 <table border=\"0\" bgcolor=\"#ddddff\">
 <tr>
-  <th>Task \#</th>
-  <th>Subject</th>
-  <th>Role</th>
-  <th>Latest start</th>
-  <th>Latest finish</th>
-  <th>Slack</th>
+  <th>[_ project-manager.Task] \#</th>
+  <th>[_ project-manager.Subject_1]</th>
+  <th>[_ project-manager.Role]</th>
+  <th>[_ project-manager.Latest_start]</th>
+  <th>[_ project-manager.Latest_finish]</th>
+  <th>[_ project-manager.Slack_1]</th>
 </tr>
 "
 
@@ -1317,12 +1336,12 @@ $pressing_description
 
 <table border=\"0\" bgcolor=\"#ddddff\">
 <tr>
-  <th>Task \#</th>
-  <th>Subject</th>
-  <th>Role</th>
-  <th>Latest start</th>
-  <th>Latest finish</th>
-  <th>Slack</th>
+  <th>[_ project-manager.Task] \#</th>
+  <th>[_ project-manager.Subject_1]</th>
+  <th>[_ project-manager.Role]</th>
+  <th>[_ project-manager.Latest_start]</th>
+  <th>[_ project-manager.Latest_finish]</th>
+  <th>[_ project-manager.Slack_1]</th>
 </tr>
 "
 
@@ -1339,12 +1358,12 @@ $longterm_description
 
 <table border=\"0\" bgcolor=\"#ddddff\">
 <tr>
-  <th>Task \#</th>
-  <th>Subject</th>
-  <th>Role</th>
-  <th>Latest start</th>
-  <th>Latest finish</th>
-  <th>Slack</th>
+  <th>[_ project-manager.Task] \#</th>
+  <th>[_ project-manager.Subject_1]</th>
+  <th>[_ project-manager.Role]</th>
+  <th>[_ project-manager.Latest_start]</th>
+  <th>[_ project-manager.Latest_finish]</th>
+  <th>[_ project-manager.Slack_1]</th>
 </tr>
 "
 
@@ -1419,7 +1438,7 @@ ad_proc -public pm::task::email_alert {
     set task_term       \
         [parameter::get -parameter "Taskname" -default "Task"]
     set task_term_lower \
-        [parameter::get -parameter "taskname" -default "task"]
+        [_ project-manager.task]
     set use_uncertain_completion_times_p \
         [parameter::get -parameter "UseUncertainCompletionTimesP" -default "0"]
 
@@ -1435,8 +1454,8 @@ ad_proc -public pm::task::email_alert {
         # EDIT
         # ----
 
-        set subject_out "Edited $task_term \#$task_item_id: $subject"
-        set intro_text "$mod_username edited this $task_term_lower"
+        set subject_out "[_ project-manager.lt_Edited_task_term_task]"
+        set intro_text "[_ project-manager.lt_mod_username_edited_t]"
 
 
     } else {
@@ -1445,8 +1464,8 @@ ad_proc -public pm::task::email_alert {
         # NEW
         # ---
 
-        set subject_out "New $task_term \#$task_item_id: $subject"
-        set intro_text "$mod_username assigned you to a new $task_term_lower"
+        set subject_out "[_ project-manager.lt_New_task_term_task_it]"
+        set intro_text "[_ project-manager.lt_mod_username_assigned]"
 
     }
 
@@ -1454,7 +1473,7 @@ ad_proc -public pm::task::email_alert {
     if {[empty_string_p $comment]} {
         set comment_text ""
     } else {
-        set comment_text "<h3>Comment:</h3>$comment<p />"
+        set comment_text "<h3>[_ project-manager.Comment]</h3>$comment<p />"
     }
 
     set url [pm::task::get_url $task_item_id]
@@ -1495,38 +1514,38 @@ ad_proc -public pm::task::email_alert {
         set is_lead_p  [lindex $ass 2]
 
         set notification_text "${intro_text}${comment_text}
-<h3>Task overview</h3>
+<h3>[_ project-manager.Task_overview]</h3>
 <table border=\"0\" bgcolor=\"#ddddff\">
   <tr>
-    <td>Subject:</td>
+    <td>[_ project-manager.Subject]</td>
     <td><a href=\"${url}\">$subject</a> (\#$task_item_id)</td>
   </tr>
   <tr>
-    <td>Project:</td>
+    <td>[_ project-manager.Project]</td>
     <td>$project_name</td>
   </tr>
   <tr>
-    <td>Your role:</td>
+    <td>[_ project-manager.Your_role]</td>
     <td>$role</td>
   </tr>
 </table>
 
 $process_html
-<h3>Description</h3>
+<h3>[_ project-manager.Description]</h3>
 <table border=\"0\" bgcolor=\"\#ddddff\">
   <tr>
     <td>$description_out</td>
   </tr>
 </table>
 
-<h3>Dates:</h3>
+<h3>[_ project-manager.Dates_1]</h3>
 <table border=\"0\" bgcolor=\"#ddddff\">
   <tr>
-    <td>Latest start:</td>
+    <td>[_ project-manager.Latest_start_1]</td>
     <td>$latest_start</td>
   </tr>
   <tr>
-    <td>Latest finish</td>
+    <td>[_ project-manager.Latest_finish]</td>
     <td><i>$latest_finish</i></td>
   </tr>
 </table>"
@@ -1866,6 +1885,7 @@ ad_proc -public pm::task::assignee_html {
     {-number:required}
     {-process_task_id ""}
     {-task_item_id ""}
+    {-project_item_id ""}
 } {
     Assignee HTML for new tasks
     
@@ -1895,7 +1915,7 @@ ad_proc -public pm::task::assignee_html {
 
     } elseif {[exists_and_not_null task_item_id]} {
 
-        # EDITING
+        # EDITING (retrieve the assignees)
 
         set task_assignee_list_of_lists \
             [pm::task::assignee_role_list \
@@ -1903,9 +1923,11 @@ ad_proc -public pm::task::assignee_html {
 
     } else {
 
-        # NEW
-
-        set task_assignee_list_of_lists [list]
+        # NEW (set the assigness to the default assignees of the project)
+	
+        set task_assignee_list_of_lists \
+	    [pm::project::assignee_role_list \
+		 -project_item_id $project_item_id]
     }
 
     # Get assignments for when editing
@@ -2114,6 +2136,9 @@ ad_proc -public pm::task::date_html {
 
 } {
     Returns HTML for the date widget in the task-add-edit page
+
+    Since the calendar widget Javascript has been put in, this may
+    need to be updated.
     
     @author Jade Rubick (jader@bread.com)
     @creation-date 2004-10-15
@@ -2327,18 +2352,18 @@ ad_proc -public pm::task::what_changed {
             set iso_date_new "$end_date_year_array($tid)-$end_date_month_array($tid)-$end_date_day_array($tid) 00:00:00"
 
             if {[string equal $iso_date_old "-- 00:00:00"]} {
-                set date_old "no hard deadline"
+                set date_old "[_ project-manager.no_hard_deadline]"
             } else {
                 set date_old [lc_time_fmt $iso_date_old "%x"]
             }
 
             if {[string equal $iso_date_new "-- 00:00:00"]} {
-                set date_new "no hard deadline"
+                set date_new "[_ project-manager.no_hard_deadline]"
             } else {
                 set date_new [lc_time_fmt $iso_date_new "%x"]
             }
 
-            lappend changes "Hard deadline changed <i>from</i> $date_old <i>to</i> <b>$date_new</b>"
+            lappend changes "[_ project-manager.lt_Hard_deadline_changed]"
         }
 
         set old_one_line [ad_get_client_property -- project-manager old_one_line($tid)]
@@ -2361,7 +2386,7 @@ ad_proc -public pm::task::what_changed {
             set richtext_list [list $description_array($tid) $description_mime_type_array($tid)]
             set new_description_html [template::util::richtext::get_property html_value $richtext_list]
 
-            lappend changes "Description changed"
+            lappend changes "[_ project-manager.Description_changed]"
         }
 
         set old_estimated_hours_work [ad_get_client_property -- project-manager old_estimated_hours_work($tid)]
@@ -2376,13 +2401,13 @@ ad_proc -public pm::task::what_changed {
                 set new [pm::util::days_work -hours_work $estimated_hours_work_min_array($tid)]
 
                 if {![string equal $old $new]} {
-                    lappend changes "Work estimate (min) changed <i>from</i> $old <i>to</i> $new days"
+                    lappend changes "[_ project-manager.lt_Work_estimate_min_cha]"
                 }
                 
                 set old [pm::util::days_work -hours_work $old_estimated_hours_work_max]
                 set new [pm::util::days_work -hours_work $estimated_hours_work_max_array($tid)]
                 if {![string equal $old $new]} {
-                    lappend changes "Work estimate (max) changed <i>from</i> $old <i>to</i> $new days"
+                    lappend changes "[_ project-manager.lt_Work_estimate_max_cha]"
                 }
 
             } else {
@@ -2391,7 +2416,7 @@ ad_proc -public pm::task::what_changed {
                 set new [pm::util::days_work -hours_work $estimated_hours_work_array($tid)]
 
                 if {![string equal $old $new]} {
-                    lappend changes "Work estimate changed <i>from</i> $old <i>to</i> $new days"
+                    lappend changes "[_ project-manager.lt_Work_estimate_changed]"
                 }
                 
             }
@@ -2402,16 +2427,16 @@ ad_proc -public pm::task::what_changed {
             if {[string is true $use_uncertain_completion_times_p]} {
                 
                 if {![string equal $old_estimated_hours_work_min $estimated_hours_work_min_array($tid)]} {
-                    lappend changes "Work estimate (min) changed <i>from</i> $old_estimated_hours_work_min <i>to</i> $estimated_hours_work_min_array($tid) hrs"
+                    lappend changes "[_ project-manager.lt_Work_estimate_min_cha_1]"
                 }
                 
                 if {![string equal $old_estimated_hours_work_max $estimated_hours_work_max_array($tid)]} {
-                    lappend changes "Work estimate (max) changed <i>from</i> $old_estimated_hours_work_max <i>to</i> $estimated_hours_work_max_array($tid) hrs"
+                    lappend changes "[_ project-manager.lt_Work_estimate_max_cha_1]"
                 }
             } else {
                 
                 if {![string equal $old_estimated_hours_work $estimated_hours_work_array($tid)]} {
-                    lappend changes "Work estimate changed <i>from</i> $old_estimated_hours_work <i>to</i> $estimated_hours_work_array($tid) hrs"
+                    lappend changes "[_ project-manager.lt_Work_estimate_changed_1]"
                 }
                 
             }
@@ -2428,14 +2453,14 @@ ad_proc -public pm::task::what_changed {
 
         foreach new $new_assignees {
             if { [lsearch $old_assignees $new] == -1} {
-                lappend changes "Added: $new"
+                lappend changes "[_ project-manager.Added_new]"
             }
         }
 
         # check for assignees that have been removed
         foreach old $old_assignees {
             if { [lsearch $new_assignees $old] == -1} {
-                lappend changes "Removed: $old"
+                lappend changes "[_ project-manager.Removed_old]"
             }
         }
 
@@ -2447,7 +2472,7 @@ ad_proc -public pm::task::what_changed {
 
             set old [pm::project::name -project_item_id $old_project_item_id]
 
-            lappend changes "Project changed <i>from</i> $old"
+            lappend changes "[_ project-manager.lt_Project_changed_ifrom]"
 
         }
 
@@ -2457,20 +2482,20 @@ ad_proc -public pm::task::what_changed {
         if {![string equal $old_dependency $dependency_array($tid)]} {
 
             if {[empty_string_p $old_dependency]} {
-                set old "Nothing"
+                set old "[_ project-manager.Nothing]"
             } else {
                 set old [pm::task::name \
                              -task_item_id $old_dependency]
             }
 
             if {[empty_string_p $dependency_array($tid)]} {
-                set new "Nothing" 
+                set new "[_ project-manager.Nothing]" 
             } else {
                 set new [pm::task::name \
                              -task_item_id $dependency_array($tid)]
             }
 
-            lappend changes "Dependency changed <i>from</i> $old ($old_dependency)  <i>to</i> $new ($dependency_array($tid))"
+            lappend changes "[_ project-manager.lt_Dependency_changed_if]"
         }
 
 
@@ -2598,7 +2623,7 @@ ad_proc -public pm::task::default_orderby {
 } {
     if {[empty_string_p $set]} {
         
-        set default_orderby "latest_finish_pretty,asc"
+        set default_orderby "end_date,asc"
         
         set return_val [ad_get_client_property \
                             -default $default_orderby \

@@ -66,18 +66,6 @@ create table pm_projects (
 );
 
 
--- create the content type
- select content_type__create_type (
-   'pm_project',                -- content_type
-   'content_revision',          -- supertype    
-   'Project',                   -- pretty_name 
-   'Projects',                  -- pretty_plural
-   'pm_projects',     -- table_name 
-   'project_id',       -- id_column 
-   'pm_project__name'           -- name_method
- );
-
-
 -- other fields are added in too. See the -custom script.
 
 
@@ -405,131 +393,6 @@ create table pm_tasks_revisions (
 	priority			integer default 0
 );
 
--- create the content type
-select content_type__create_type (
-   'pm_task',                   -- content_type
-   'content_revision',          -- supertype    
-   'Task',                      -- pretty_name 
-   'Tasks',                     -- pretty_plural
-   'pm_tasks_revisions',        -- table_name (should this be pm_task?)
-   'task_revision_id',          -- id_column 
-   'pm_task__name'              -- name_method
-);
-
--- add in attributes
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'end_date', -- attribute_name
-    'date',     -- datatype
-    'End date', -- pretty_name
-    'End dates', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'timestamptz' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'percent_complete', -- attribute_name
-    'number',           -- datatype
-    'Percent complete', -- pretty_name
-    'Percents complete', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'numeric' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'estimated_hours_work', -- attribute_name
-    'number',           -- datatype
-    'Estimated hours work', -- pretty_name
-    'Estimated hours work', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'numeric' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'estimated_hours_work_min', -- attribute_name
-    'number',           -- datatype
-    'Estimated minimum hours', -- pretty_name
-    'Estimated minimum hours', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'numeric' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'estimated_hours_work_max', -- attribute_name
-    'number',           -- datatype
-    'Estimated maximum hours', -- pretty_name
-    'Estimated maximum hours', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'numeric' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'actual_hours_worked', -- attribute_name
-    'number',           -- datatype
-    'Actual hours worked', -- pretty_name
-    'Actual hours worked', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'numeric' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'earliest_start', -- attribute_name
-    'date',     -- datatype
-    'Earliest start date', -- pretty_name
-    'Earliest start dates', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'timestamptz' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'earliest_finish', -- attribute_name
-    'date',     -- datatype
-    'Earliest finish date', -- pretty_name
-    'Earliest finish dates', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'timestamptz' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'latest_start', -- attribute_name
-    'date',     -- datatype
-    'Latest start date', -- pretty_name
-    'Latest start dates', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'timestamptz' -- column_spec
-);
-
-select content_type__create_attribute (
-    'pm_task', -- content_type
-    'latest_finish', -- attribute_name
-    'date',     -- datatype
-    'Latest finish date', -- pretty_name
-    'Latest finish dates', -- pretty_plural
-    null, -- sort_order
-    null, -- default value
-    'timestamptz' -- column_spec
-);
-
-
-
 create table pm_task_logger_proj_map (
         task_item_id    integer
                         constraint pm_task_log_proj_map_t_nn
@@ -669,5 +532,3 @@ comment on table pm_users_viewed is '
   Used to keep track of what users to see on the task calendar and other
   views.
 ';
-
-\i project-manager-custom-create.sql

@@ -19,13 +19,13 @@ ad_page_contract {
 }
 
 set package_id [ad_conn package_id]
-set user_id [auth::require_login]
+set user_id [ad_maybe_redirect_for_registration]
 
-set title "Log time for multiple tasks"
+set title "[_ project-manager.lt_Log_time_for_multiple]"
 
 if {[exists_and_not_null return_url]} {
-    set context [list [list $return_url Tasks] "Log time"]
+    set context [list [list $return_url Tasks] "[_ project-manager.Log_time]"]
 } else {
-    set context [list "Log time"]
+    set context [list "[_ project-manager.Log_time]"]
 }
 

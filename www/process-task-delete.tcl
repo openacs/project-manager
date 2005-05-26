@@ -27,13 +27,13 @@ ad_page_contract {
 # --------------------------------------------------------------- #
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # terminology
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
+set task_term_lower [_ project-manager.task]
 
-set title "Delete process $task_term_lower"
-set context_bar [ad_context_bar "Delete process $task_term_lower"]
+set title "[_ project-manager.lt_Delete_process_task_t]"
+set context_bar [ad_context_bar "[_ project-manager.lt_Delete_process_task_t]"]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege write

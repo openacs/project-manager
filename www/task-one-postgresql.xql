@@ -26,9 +26,11 @@
         i.live_revision,
         p.first_names || ' ' || p.last_name as creation_user,
         proj_rev.title as project_name,
-        a.process_instance
+        a.process_instance,
+        acs_permission__permission_p (:task_id,:user_id,'write') as write_p,
+        acs_permission__permission_p (:task_id,:user_id,'create') as create_p
         FROM
-        pm_tasks_revisionsx t, 
+        pm_tasks_revisionsx t,
         cr_items i,
         persons p,
         cr_items proj,
@@ -42,6 +44,10 @@
         t.parent_id = proj.item_id and
         proj.live_revision = proj_rev.revision_id and
         t.item_id = a.task_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = a.task_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
     </querytext>
   </fullquery>
 
@@ -61,6 +67,10 @@
         d.parent_task_id = t.item_id and 
         t.revision_id    = i.live_revision and
         t.item_id        = i.item_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = d.task_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         [template::list::orderby_clause -name dependency -orderby]
     </querytext>
   </fullquery>
@@ -82,6 +92,10 @@
         d.parent_task_id = :task_id and 
         t.revision_id    = i.live_revision and
         t.item_id        = i.item_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = d.task_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         [template::list::orderby_clause -name dependency2 -orderby]
     </querytext>
   </fullquery>
@@ -102,6 +116,10 @@
         a.task_id  = :task_id and
         u.person_id = a.party_id and
         a.role_id  = r.role_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = a.task_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         [template::list::orderby_clause -name people -orderby]
     </querytext>
   </fullquery>

@@ -17,10 +17,11 @@ ad_page_contract {
 } -errors {
 }
 
+permission::require_permission -object_id $project_item_id -privilege "read"
 
-set title "Project Changes"
+set title "[_ project-manager.Project_Changes]"
 
-set context [list "one?project_item_id=$project_item_id Project" "View Revisions"]
+set context [list "one?project_item_id=$project_item_id" "[_ project-manager.Project_1]" "[_ project-manager.View_Revisions]"]
 
 
 # Project Revisions, using list-builder ---------------------------------
@@ -31,20 +32,20 @@ template::list::create \
     -key project_id \
     -elements {
         project_id {
-            label "Subject"
+            label "[_ project-manager.Subject_1]"
             display_col project_name
             link_url_col item_url
-            link_html { title "View this revision" }
+            link_html { title "[_ project-manager.View_this_revision]" }
             display_template {<if @revisions.live_revision@ eq @revisions.project_id@><B>@revisions.project_name@</B></if><else>@revisions.project_name@</else>}
         }
         description {
-            label "Description"
+            label "[_ project-manager.Description]"
             display_template {
                 @revisions.description_rich;noquote@
             }
         }
         planned_end_date {
-            label "Deadline"
+            label "[_ project-manager.Deadline_1]"
         }
     } \
     -sub_class {

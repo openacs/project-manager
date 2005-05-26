@@ -245,4 +245,16 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="pm::project::assignee_role_list.get_assignees_roles">
+    <querytext>
+        SELECT
+        party_id,
+        role_id
+        FROM 
+        pm_project_assignment a
+        WHERE
+	project_id = :project_item_id
+    </querytext>
+  </fullquery>
+
 </queryset>

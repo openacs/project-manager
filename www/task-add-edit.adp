@@ -8,14 +8,14 @@
       @export_vars;noquote@ 
       
       <span class="selected">
-        Send email to assignees? 
+        #project-manager.lt_Send_email_to_assigne# 
         <select name="send_email_p" >
-          <option value="t" selected="selected">Yes</option>
-          <option value="f">No</option>
+          <option value="t" selected="selected">#project-manager.Yes#</option>
+          <option value="f">#project-manager.No#</option>
         </select>
 
         <if @using_process_p@ true>
-          Process name <input type="text" name="process_name" size="25" value="@process_name@" />
+          #project-manager.Process_name# <input type="text" name="process_name" size="25" value="@process_name@" />
         </if>
       </span>
 
@@ -55,55 +55,55 @@
             <input type="hidden" name="number" value="@tasks.rownum@" />
           </td>
 
-          <td valign="top"><b>Subject:</b><font color="red">*</font><br /><input type="text" size="39" name="task_title.@tasks.rownum;noquote@" value="@tasks.one_line@"><p />
+          <td valign="top"><b>#project-manager.Subject#</b><font color="red">*</font><br /><input type="text" size="39" name="task_title.@tasks.rownum;noquote@" value="@tasks.one_line@"><p />
 
-              <b>Description:</b><br />
+              <b>#project-manager.Description_1#</b><br />
               <textarea name="description.@tasks.rownum;noquote@" rows="14" cols="40" id="richtext__add_edit__description.@tasks.rownum;noquote@">@tasks.description@</textarea><br />
 
-              Format: 
+              #project-manager.Format# 
               <select name="description_mime_type.@tasks.rownum;noquote@" id="richtext__add_edit__description.@tasks.rownum@">
                 
                 <if @tasks.description_mime_type@ eq "text/enhanced">
-                  <option value="text/enhanced" selected="selected">Enhanced Text</option>
+                  <option value="text/enhanced" selected="selected">#project-manager.Enhanced_Text#</option>
                 </if>
                 <else>
-                  <option value="text/enhanced">Enhanced Text</option>
+                  <option value="text/enhanced">#project-manager.Enhanced_Text#</option>
                 </else>
 
                 <if @tasks.description_mime_type@ eq "text/plain">
-                  <option value="text/plain" selected="selected">Plain Text</option>
+                  <option value="text/plain" selected="selected">#project-manager.Plain_Text#</option>
                 </if>
                 <else>
-                  <option value="text/plain">Plain Text</option>
+                  <option value="text/plain">#project-manager.Plain_Text#</option>
                 </else>
 
                 <if @tasks.description_mime_type@ eq "text/fixed-width">
-                  <option value="text/fixed-width" selected="selected">Fixed-width Text</option>
+                  <option value="text/fixed-width" selected="selected">#project-manager.Fixed-width_Text#</option>
                 </if>
                 <else>
-                  <option value="text/fixed-width">Fixed-width Text</option>
+                  <option value="text/fixed-width">#project-manager.Fixed-width_Text#</option>
                 </else>
 
                 <if @tasks.description_mime_type@ eq "text/html">
-                  <option value="text/html" selected="selected">HTML</option>
+                  <option value="text/html" selected="selected">#project-manager.HTML#</option>
                 </if>
                 <else>
-                  <option value="text/html">HTML</option>
+                  <option value="text/html">#project-manager.HTML#</option>
                 </else>
               </select>
 
               <if @edit_p@ true>
 
                 <p />
-                <b>Comment</b><br />
+                <b>#project-manager.Comment_1#</b><br />
                 <textarea name="comments.@tasks.rownum;noquote@" rows="7" cols="40"></textarea><br />
 
-                Format: 
+                #project-manager.Format# 
                 <select name="comments_mime_type.@tasks.rownum;noquote@">
-                  <option value="text/enhanced">Enhanced Text</option>
-                  <option value="text/plain" selected="selected">Plain Text</option>
-                  <option value="text/fixed-width">Fixed-width Text</option>
-                  <option value="text/html">HTML</option>
+                  <option value="text/enhanced">#project-manager.Enhanced_Text#</option>
+                  <option value="text/plain" selected="selected">#project-manager.Plain_Text#</option>
+                  <option value="text/fixed-width">#project-manager.Fixed-width_Text#</option>
+                  <option value="text/html">#project-manager.HTML#</option>
                 </select>
                 
               </if>
@@ -121,16 +121,16 @@
           <td valign="top">
             <table border="0" cellpadding="0" cellspacing="0">
               <tr>
-                <td><b>Work required:</b><font color="red">*</font></td>
+                <td><b>#project-manager.Work_required#</b><font color="red">*</font></td>
               </tr>
 
               <if @use_day_p@ true>
                 <if @use_uncertain_completion_times_p@ eq 1>
-                  <tr><td>Min:</td>
+                  <tr><td>#project-manager.Min#</td>
                     <td><input type="text" name="estimated_days_work_min.@tasks.rownum;noquote@" size="5" value="@tasks.work_min_days@"> @work_units;noquote@</td>
                   </tr>
                   
-                  <tr><td>Max:</td>
+                  <tr><td>#project-manager.Max#</td>
                     <td><input type="text" name="estimated_days_work_max.@tasks.rownum;noquote@" size="5" value="@tasks.work_max_days@"> @work_units;noquote@</td>
                   </tr>
                 </if>
@@ -141,11 +141,11 @@
               </if>
               <else>
                 <if @use_uncertain_completion_times_p@ eq 1>
-                  <tr><td>Min:</td>
+                  <tr><td>#project-manager.Min#</td>
                     <td><input type="text" name="estimated_hours_work_min.@tasks.rownum;noquote@" size="5" value="@tasks.work_min_hrs@"> @work_units;noquote@</td>
                   </tr>
                   
-                  <tr><td>Max:</td>
+                  <tr><td>#project-manager.Max#</td>
                     <td><input type="text" name="estimated_hours_work_max.@tasks.rownum;noquote@" size="5" value="@tasks.work_max_hrs@"> @work_units;noquote@</td>
                   </tr>
                 </if>
@@ -159,7 +159,7 @@
           
             <div class="shaded">
 
-              Deadline: @tasks.end_date_html;noquote@</p>
+              #project-manager.lt_Deadline_tasksend_dat#</p>
 
               <input type="hidden" name="process_task_id.@tasks.rownum@" value="@tasks.process_task_id;noquote@" />
 
@@ -169,14 +169,14 @@
               
               <p />
 
-              Dependency: <br />
+              #project-manager.Dependency# <br />
               <select name="dependency.@tasks.rownum@">
                 @tasks.dependency_html;noquote@
               </select>
 
               <p />
 
-	        Priority:
+	        #project-manager.Priority#
 		<input type="text" name="priority.@tasks.rownum@" value="@tasks.priority@" size="4"/>
 		<br />
 		<span style="margin-top: 4px; margin-bottom: 2px; color:
@@ -185,13 +185,12 @@
                   75%;">
                   <img src="/shared/images/info.gif" width="12"
                     height="9" alt="[i]" title="Help text" border="0">
-                    Enter a number for ordering the priority. 0 is the default
-		and also the lowest priority.
+                    #project-manager.lt_Enter_a_number_for_or#
                 </span>
 		<p />
 
               <if @edit_p@ true>
-		Status:
+		#project-manager.Status#
                 <input type="text" name="percent_complete.@tasks.rownum@" value="@tasks.percent_complete@" size="4"/>
                 %<br />
                 <span style="margin-top: 4px; margin-bottom: 2px; color:
@@ -200,14 +199,14 @@
                   75%;">
                   <img src="/shared/images/info.gif" width="12"
                     height="9" alt="[i]" title="Help text" border="0">
-                    Enter 100% to close the @task_term_lower@, or less to open it.
+                    #project-manager.lt_Enter_100_to_close_th_1#
                 </span>
               </if>
               <elseif @using_process_p@ true>
-                Status: 
+                #project-manager.Status# 
                 <select name="percent_complete.@tasks.rownum@">
-                  <option value="0">Open</option>
-                  <option value="100">Closed</option>
+                  <option value="0">#project-manager.Open#</option>
+                  <option value="100">#project-manager.Closed#</option>
                 </select>
               </elseif>
               <else>
@@ -219,10 +218,10 @@
 
               <if @edit_p@ true>
                 <p />
-                Log entry:
+                #project-manager.Log_entry#
                 <table border="0" class="list">
                   <tr class="form-element">
-                    <td class="form-label">Quantity:</td>
+                    <td class="form-label">#project-manager.Quantity#</td>
                     <td class="form-widget">
                       <input type="text" name="hours.@tasks.rownum@"
                         size="4" />
@@ -231,14 +230,14 @@
                   </tr>
 
                   <tr class="form-element">
-                    <td class="form-label">Date:</td>
+                    <td class="form-label">#project-manager.Date_1#</td>
                     <td class="form-widget">
                       <%= [set today_html@tasks.task_item_id@] %>
                     </td>
                   </tr>
 
                   <tr class="form-element">
-                    <td class="form-label">Description:</td>
+                    <td class="form-label">#project-manager.Description_1#</td>
                     <td class="form-widget">
                       <input type="text"
                         name="log.@tasks.rownum@" size="30" />
@@ -255,7 +254,7 @@
                           <img src="/shared/images/info.gif"
                     width="12" height="9" alt="[i]" title="Help text"
                     border="0">
-                            You can optionally log time worked here.
+                            #project-manager.lt_You_can_optionally_lo#
                         </p>
                       </td>
                   </tr>
@@ -317,3 +316,4 @@
   </center>
 
     <table border="0" cellpadding="5" cellspacing="0" class="list">
+

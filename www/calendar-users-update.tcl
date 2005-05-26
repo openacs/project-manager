@@ -15,7 +15,7 @@ ad_page_contract {
 } -errors {
 }
 
-set user_id [auth::require_login]
+set user_id [ad_maybe_redirect_for_registration]
 
 if {[empty_string_p party_id]} {
     set party_id [list $user_id]
@@ -39,4 +39,4 @@ db_transaction {
     }
 }
 
-ad_returnredirect -message "Updated who you will see on the task calendar" task-calendar
+ad_returnredirect -message "[_ project-manager.lt_Updated_who_you_will_]" task-calendar

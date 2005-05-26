@@ -81,7 +81,7 @@ ad_page_contract {
 }
 
 
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 set package_id [ad_conn package_id]
 
 permission::require_permission -party_id $user_id -object_id $package_id -privilege create
@@ -223,11 +223,11 @@ if {[llength $process_task_id] > 1} {
 }
 
 if {[llength [array get use_dependency]] > 0} {
-    set dep_msg "Now set up dependencies"
+    set dep_msg "[_ project-manager.lt_Now_set_up_dependenci]"
 } else {
     set dep_msg ""
 }
 
-ad_returnredirect -message "Process $task_tasks saved. $dep_msg" "process-dependency-add-edit?[export_vars -url {process_task_id:multiple process_id use_dependency:array}]"
+ad_returnredirect -message "[_ project-manager.lt_Process_task_tasks_sa] $dep_msg" "process-dependency-add-edit?[export_vars -url {process_task_id:multiple process_id use_dependency:array}]"
 
 ad_script_abort

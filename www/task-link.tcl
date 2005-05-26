@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -17,16 +17,20 @@ ad_page_contract {
 } -errors {
 }
 
-set user_id     [auth::require_login]
+set user_id     [ad_maybe_redirect_for_registration]
 set package_id  [ad_conn package_id]
 
-permission::require_permission \
-    -party_id $user_id \
-    -object_id $package_id \
-    -privilege write
+# permissions. This is a general 'does the user have permission to even ask for this page to be run?'
+permission::require_permission -party_id $user_id -object_id $package_id -privilege write
+
+# permissions. This is a general 'does the user have permission on the to_task?'
+permission::require_permission -party_id $user_id -object_id $to_task -privilege write
+
+# permissions. This is a general 'does the user have permission to even ask for this page to be run?'
+permission::require_permission -party_id $user_id -object_id $from_task -privilege write
 
 pm::task::link \
     -task_item_id_1 $from_task \
     -task_item_id_2 $to_task
 
-ad_returnredirect -message "Tasks linked" $return_url
+ad_returnredirect -message "[_ project-manager.Tasks_linked]" $return_url

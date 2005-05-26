@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -17,6 +17,8 @@ ad_page_contract {
 } -errors {
 }
 
+# permissions
+permission::require_permission -party_id $user_id -object_id $project_item_id -privilege write
 
 foreach user $user_id {
 
@@ -26,9 +28,9 @@ foreach user $user_id {
 }
 
 if {[llength $user_id] > 1} {
-    set assign "Assignments"
+    set assign "[_ project-manager.Assignments]"
 } else {
-    set assign "Assignment"
+    set assign "[_ project-manager.Assignment]"
 }
 
-ad_returnredirect -message "$assign removed" $return_url
+ad_returnredirect -message "[_ project-manager.assign_removed]" $return_url

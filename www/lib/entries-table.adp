@@ -1,17 +1,17 @@
 <!-- Log entries table start -->
 
 <if @entries:rowcount@ eq 0>
-  <span class="no_items_text">There are no matching log entries</span>
+  <span class="no_items_text">#project-manager.lt_There_are_no_matching#</span>
 </if>
 <else>
   <table class="logger_listing_tiny" cellpadding="3" cellspacing="1" width="100%">
     <tr class="logger_listing_header">
       <th class="logger_listing_narrow">&nbsp;</th>
-      <th class="logger_listing_narrow">Task</th>  
-      <th class="logger_listing_narrow">User</th>  
-      <th class="logger_listing_narrow">Date</th>
+      <th class="logger_listing_narrow">#project-manager.Task#</th>  
+      <th class="logger_listing_narrow">#project-manager.User#</th>  
+      <th class="logger_listing_narrow">#project-manager.Date#</th>
       <th class="logger_listing_narrow">@variable.name@</th>
-      <th class="logger_listing_narrow">Description</th>
+      <th class="logger_listing_narrow">#project-manager.Description#</th>
       <th class="logger_listing_narrow">&nbsp;</th>
     </tr>
 
@@ -26,19 +26,19 @@
           <td colspan="7">
             <switch @group_by@>
               <case value="user_id">
-                User: @entries.user_chunk;noquote@
+                #project-manager.User#: @entries.user_chunk;noquote@
               </case>
               <case value="project_name">
-                Project: @entries.project_name@
+                #project-manager.Project#: @entries.project_name@
               </case>
               <case value="time_stamp">
-                Date: @entries.time_stamp_pretty@
+                #project-manager.Date#: @entries.time_stamp_pretty@
               </case>
               <case value="time_stamp_week">
-                Week: @entries.time_stamp_week@
+                #project-manager.Week#: @entries.time_stamp_week@
               </case>
               <default>
-                Unknown group by column @group_by@
+                #project-manager.lt_Unknown_group_by_colu#
               </default>
             </switch>
           </td>
@@ -80,10 +80,10 @@
               <td class="logger_listing_narrow" align="center">&nbsp;</td>
               <td class="logger_listing_narrow" colspan="3">
                 <if @variable.type@ eq "additive">
-                  <b>Subtotal</b>
+                  <b>#project-manager.Subtotal#</b>
                 </if>
                 <else>
-                  <b>Subtotal Average</b>
+                  <b>#project-manager.Subtotal_Average#</b>
                 </else>
               </td>
               <td class="logger_listing_narrow" align="right" nowrap>
@@ -152,10 +152,10 @@
       <td class="logger_listing_narrow" align="center">&nbsp;</td>
       <td class="logger_listing_narrow" colspan="3">
         <if @variable.type@ eq "additive">
-          <b>Total</b>
+          <b>#project-manager.Total#</b>
         </if>
         <else>
-          <b>Average</b>
+          <b>#project-manager.Average#</b>
         </else>
       </td>
       <td class="logger_listing_narrow" align="right" nowrap>
@@ -189,7 +189,7 @@
     </tr>
     <tr class="logger_listing_odd">
       <td class="logger_listing_narrow" align="center">&nbsp;</td>
-      <td class="logger_listing_narrow" colspan="3"><b>Projection</b></td>
+      <td class="logger_listing_narrow" colspan="3"><b>#project-manager.Projection#</b></td>
       <td class="logger_listing_narrow" align="right" nowrap><b>@projection_value@</b></td>
       <td class="logger_listing_narrow">&nbsp;</td>
       <td class="logger_listing_narrow" align="center">&nbsp;</td>
@@ -211,3 +211,4 @@
 </else>
 
 <!-- Log entries table end -->
+

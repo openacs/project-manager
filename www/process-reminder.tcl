@@ -22,4 +22,4 @@ pm::process::email_alert \
     -project_item_id $project_item_id \
     -new_p f
 
-ad_returnredirect -message "Status update sent" $return_url
+ad_returnredirect -message "[_ project-manager.Status_update_sent]" $return_url

@@ -39,7 +39,7 @@ foreach url $possible_URLs {
 
 set logger_definition "
     {package_url:text(select)
-         {label \"Primary logger instance\"} 
+         {label \"[_ project-manager.lt_Primary_logger_instan]"} 
          {options {$logger_options}}
          {value $logger_primary}
     }
@@ -58,7 +58,7 @@ ad_form -extend -name logger \
             -parameter LoggerPrimaryURL \
             -value "$package_url"
 
-        ad_returnredirect -message "Primary logger instance saved" . 
+        ad_returnredirect -message "[_ project-manager.lt_Primary_logger_instan_1]" . 
 
     } \
     -new_data {

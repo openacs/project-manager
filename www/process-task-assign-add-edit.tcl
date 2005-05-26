@@ -52,14 +52,14 @@ set use_dependency       $use_dependency_pass
 
 
 # terminology
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
 
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
 set subsite_id [ad_conn subsite_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 set user_group_id [application_group::group_id_from_package_id \
                        -package_id $subsite_id]
@@ -67,8 +67,8 @@ set user_group_id [application_group::group_id_from_package_id \
 
 # permissions and more
 
-set title "Add a process $task_term_lower (assignment)"
-set context_bar [ad_context_bar [list "processes?process_id=$process_id" "Processes"] "Add assignment"]
+set title "[_ project-manager.lt_Add_a_process_task_te_1]"
+set context_bar [ad_context_bar [list "processes?process_id=$process_id" "[_ project-manager.Processes]"] "[_ project-manager.Add_assignment]"]
 permission::require_permission -party_id $user_id -object_id $package_id -privilege create
 
 
@@ -92,11 +92,11 @@ for {set i 0} {$i <= 5} {incr i} {
 
 
 
-set users_lofl "{{--Select Person--} {}} "
+set users_lofl "{{[_ project-manager.--Select_Person--]} {}} "
 append users_lofl [db_list_of_lists get_users { }]
 
 
-set roles_lofl "{{--Select Role--} {}} "
+set roles_lofl "{{[_ project-manager.--Select_Role--]} {}} "
 append roles_lofl [db_list_of_lists get_roles { }]
 
 
@@ -317,13 +317,13 @@ foreach tiid $process_task_id {
             [list \
                  [list \
                       party_id.$tiid.$i:text(select) \
-                      {label "Assignments \#$i $tiid"} \
+                      {label "[_ project-manager.Assignments] \#$i $tiid"} \
                       {options {[set users_lofl]}} \
                       {values $uv} \
                      ] \
                  [list \
                       role_id.$tiid.$i:text(select) \
-                      {label "Role \#$i $tiid"} \
+                      {label "[_ project-manager.Role] \#$i $tiid"} \
                       {options {[set roles_lofl]}} \
                       {values $rv} \
                      ] \

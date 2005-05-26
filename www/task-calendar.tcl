@@ -20,11 +20,11 @@ ad_page_contract {
     roles:multirow
 }
 
-set user_id [auth::require_login]
+set user_id [ad_maybe_redirect_for_registration]
 
 set date [calendar::adjust_date -date $date -julian_date $julian_date]
 
-set title "Task calendar"
+set title "[_ project-manager.Task_calendar]"
 set context [list $title]
 set header_stuff "
 <style type=\"text/css\">

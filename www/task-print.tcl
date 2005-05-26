@@ -61,20 +61,20 @@ ad_page_contract {
 # --------------------------------------------------------------- #
 
 # terminology
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
 set assignee_term   [parameter::get -parameter "AssigneeName" -default "Assignee"]
 set watcher_term    [parameter::get -parameter "WatcherName" -default "Watcher"]
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
+set project_term    [_ project-manager.Project]
 
 db_1row get_project_ids { }
 
-set context_bar [ad_context_bar "one?project_item_id=$project_item_id $project_term" "View"]
+set context_bar [ad_context_bar "one?project_item_id=$project_item_id $project_term" "[_ project-manager.View]"]
 
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $task_id "[ad_conn url]?task_id=$task_id"]
 
@@ -84,10 +84,10 @@ set show_comment_link "<a href=\"[ad_conn url]?task_id=$task_id&show_comment_p=t
 
 
 # permissions
-permission::require_permission -party_id $user_id -object_id $package_id -privilege read
+permission::require_permission -party_id $user_id -object_id $task_id -privilege read
 
-set write_p  [permission::permission_p -object_id $package_id -privilege write] 
-set create_p [permission::permission_p -object_id $package_id -privilege create]
+set write_p  [permission::permission_p -object_id $task_id -privilege write]
+set create_p [permission::permission_p -object_id $task_id -privilege create]
 
 # Task info ----------------------------------------------------------
 
@@ -110,7 +110,7 @@ template::list::create \
     -key task_id \
     -elements {
         dependency_type {
-            label "Type"
+            label "[_ project-manager.Type]"
             display_template {
                 <if @dependency.dependency_type@ eq start_before_start>
                 <img border="0" src="resources/start_before_start.png">
@@ -127,17 +127,17 @@ template::list::create \
             }
         }
         task_id {
-            label "Task"
+            label "[_ project-manager.Task]"
             display_col task_title
             link_url_col item_url
-            link_html { title "View this task" }
+            link_html { title "[_ project-manager.View_this_task]" }
         }
         percent_complete {
-            label "Status"
+            label "[_ project-manager.Status_1]"
             display_template "@dependency.percent_complete@\%"
         }
         end_date {
-            label "Deadline"
+            label "[_ project-manager.Deadline_1]"
         }
     } \
     -orderby {
@@ -170,7 +170,7 @@ template::list::create \
     -key task_id \
     -elements {
         dependency_type {
-            label "Type"
+            label "[_ project-manager.Type]"
             display_template {
                 <if @dependency2.dependency_type@ eq start_before_start>
                 <img border="0" src="resources/start_before_start.png">
@@ -187,17 +187,17 @@ template::list::create \
             }
         }
         task_id {
-            label "Task"
+            label "[_ project-manager.Task]"
             display_col task_title
             link_url_eval {task-one?task_id=$task_id}
-            link_html { title "View this task" }
+            link_html { title "[_ project-manager.View_this_task]" }
         }
         percent_complete {
-            label "Status"
+            label "[_ project-manager.Status_1]"
             display_template "@dependency2.percent_complete@\%"
         }
         end_date {
-            label "Deadline"
+            label "[_ project-manager.Deadline_1]"
         }
     } \
     -orderby {
@@ -239,7 +239,7 @@ template::list::create \
             }
         }
         role_id {
-            label "Role"
+            label "[_ project-manager.Role]"
             display_template "@people.one_line@"
         }
     } \

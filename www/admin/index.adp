@@ -5,120 +5,93 @@
     <property name="title">@title@</property>
     <property name="context">@context;noquote@</property>
 
-    Click on one of the following items to set it up:
+    #project-manager.lt_Click_on_one_of_the_f#
 
     <P />
 
     <table border="1" cellpadding="3" cellspacing="0">
 
       <tr>
-        <th>Section</th>
-        <th>Action</th>
-        <th>Description</th>
+        <th>#project-manager.Section#</th>
+        <th>#project-manager.Action#</th>
+        <th>#project-manager.Description#</th>
       </tr>
 
       <tr>
-        <th>Roles</th>
-        <td><a href="roles">View</a></td>
-        <td>The roles people can take on projects and tasks, such as
-        manager, sales contact, tech support person, etc.. Currently,
-        can only be edited directly in the database.</td>
+        <th>#project-manager.Roles#</th>
+        <td><a href="roles">#project-manager.View#</a></td>
+        <td>#project-manager.lt_The_roles_people_can_#</td>
       </tr>
 
       <tr>
-        <th>Default roles</th>
-        <td><a href="default-project-roles">View</a></td>
-        <td>The data model has a facility for default roles, although
-        it is not currently used at all. This shows what is in the
-        database for default roles. Currently unimplemented.</td>
+        <th>#project-manager.Default_roles#</th>
+        <td><a href="default-project-roles">#project-manager.View#</a></td>
+        <td>#project-manager.lt_The_data_model_has_a_#</td>
       </tr>
       
       <tr>
-        <th>Workgroups</th>
-        <td><a href="workgroups">View</a></td>
-        <td>There is a data model for workgroups, but it is not a part
-        of the UI. Shows what is in the database (currently, nothing!)</td>
+        <th>#project-manager.Workgroups#</th>
+        <td><a href="workgroups">#project-manager.View#</a></td>
+        <td>#project-manager.lt_There_is_a_data_model#</td>
       </tr>
       
       <tr>
-        <th>Dependency types</th>
-        <td>No UI</td>
-        <td>When implemented, this page will allow you to view and
-        edit the descriptions given to various dependency types (such
-        as finish before start, etc..) Currently, the only dependency
-        used is finish before start, so it's not exposed in the UI</td>
+        <th>#project-manager.Dependency_types#</th>
+        <td>#project-manager.No_UI#</td>
+        <td>#project-manager.lt_When_implemented_this#</td>
       </tr>
       
       <tr>
-        <th>Status types</th>
-        <td>No UI</td>
-        <td>Valid status codes, for example, 'Open' and 'Closed'</td>
+        <th>#project-manager.Status_types#</th>
+        <td>#project-manager.No_UI#</td>
+        <td>#project-manager.lt_Valid_status_codes_fo#</td>
       </tr>
       
       <tr>
-        <th>Project categories</th>
-        <td><a href="@categories_link;noquote@">Edit categories</a></td>
-        <td>Projects can be categorized according to multiple 'trees'
-        of categories. What this means is you can have multiple ways
-        of categorizing your projects. This section sets up your
-        categories and allows you to link them to projects. Currently,
-        there is a bug in the categories package that prevents the
-        context bar at the top of the screen from returning you to the
-        project-manager pages.</td>
+        <th>#project-manager.Project_categories#</th>
+        <td><a href="@categories_link;noquote@">#project-manager.Edit_categories#</a></td>
+        <td>#project-manager.lt_Projects_can_be_categ#</td>
       </tr>
 
       <tr>
-        <th rowspan="3">Logger integration</th>
-        <td><a href="@logger_link@">Set up</a></td>
-        <td>Logger is a package that lets you log time, expenses, and
-          other <i>variables</i>. Project manager requires you to
-          install and mount at least one instance of logger, because it
-          uses logger to log time and other variables against projects
-          and tasks. However, you can have varying levels of integration
-          with logger. This section sets up which logger instances you
-          want to be fully integrated with project-manager, so that new
-          project-manager projects appear in the logger instance.<p />
+        <th rowspan="3">#project-manager.Logger_integration#</th>
+        <td><a href="@logger_link@">#project-manager.Set_up#</a></td>
+        <td>#project-manager.lt_Logger_is_a_package_t# <i>#project-manager.variables#</i>#project-manager.lt__Project_manager_requ#<p />
           @logger_warning;noquote@
         </td>
       </tr>
 
       <tr>
-        <td><a href="@logger_primary_link@">Set up</a></td>
-        <td>You must choose a logger instance to be the primary
-        logger linked in with project-manager. This is closely linked
-        in with project-manager, so you can view reports of a project, etc.
+        <td><a href="@logger_primary_link@">#project-manager.Set_up#</a></td>
+        <td>#project-manager.lt_You_must_choose_a_log#
           <p />
           @logger_primary_warning;noquote@
         </td>
       </tr>
 
       <tr>
-        <td><a href="@logger_sync_link@">Sync</a></td>
-        <td>Once you have chosen logger instances to be integrated
-        with project-manager, you may have a lot of older
-        project-manager projects that are not synchronized with
-        logger. This page lets you synchronize older project-manager
-        projects with logger, so that they are all linked in correctly
-        with that instance. This does not add in logger projects to
-        project-manager (although someone can certainly add that
-        functionality if they wish).
+        <td><a href="@logger_sync_link@">#project-manager.Sync#</a></td>
+        <td>#project-manager.lt_Once_you_have_chosen_#
       </tr>
 
       <tr>
-        <th>Parameters</th>
-        <td><a href="@parameters_link@">Edit</a></td>
-        <td>The parameters allow you to do things such as set up daily
-        reminder emails, change what fields are shown in the project
-        view and edit pages, and so on. Highly recommended if you're
-        setting up project-manager.</td>
+        <th>#project-manager.Parameters#</th>
+        <td><a href="@parameters_link@">#project-manager.Edit#</a></td>
+        <td>#project-manager.lt_The_parameters_allow_#</td>
       </tr>
       
       <tr>
-        <th>Projects</th>
-        <td><a href="@update_projects_link@">Update all</a></td>
-        <td>This page allows you to update the deadlines of all the
-        projects in your installation. It will take a while.</td>
+        <th>#project-manager.Projects#</th>
+        <td><a href="@update_projects_link@">#project-manager.Update_all#</a></td>
+        <td>#project-manager.lt_This_page_allows_you_#</td>
+      </tr>
+
+      <tr>
+        <th>#project-manager.Linking#</th>
+        <td><a href="linking">#project-manager.Link_instances#</a></td>
+        <td>#project-manager.lt_Link_instances#</td>
       </tr>
 
     </table>
     
+

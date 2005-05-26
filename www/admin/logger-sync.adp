@@ -4,12 +4,12 @@
   
   <if @confirmed_p@ eq y>
 
-    Done.
+    #project-manager.Done#
 
   </if>
   <else>
     
-    Are you ready to sync with these URLs?
+    #project-manager.lt_Are_you_ready_to_sync#
     <ul>
       <list name="logger_URLs">
         <li> @logger_URLs:item@ </li>
@@ -17,8 +17,7 @@
     </ul>
 
     <p />
-    <a href="@confirm_link@">Begin synchronization<a> (be patient,
-    this takes a long time, you can read the log files to see what's
-    happening if you like.)
+    <a href="@confirm_link@">#project-manager.lt_Begin_synchronization#<a> #project-manager.lt_be_patient____this_ta#
 
   </else>
+

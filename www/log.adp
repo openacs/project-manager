@@ -3,9 +3,9 @@
 <property name="context">@context;noquote@</property>
 
 
-The administrator needs to <a href="admin">set up integration with logger</a>. 
+#project-manager.lt_The_administrator_nee# <a href="admin">#project-manager.lt_set_up_integration_wi#</a>. 
 
 <p />
 
-After they have done this, you can go back to the previous page,
-  refresh it, and then add and edit logged hours.
+#project-manager.lt_After_they_have_done_#
+

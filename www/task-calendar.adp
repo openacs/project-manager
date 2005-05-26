@@ -4,8 +4,8 @@
   <property name="context">@context@</property>
   <property name="header_stuff">@header_stuff;noquote@</property>
 
-  <a href="#viewoptions" class="button">View options</a>
-  <a href="#key" class="button">Key</a>
+  <a href="#viewoptions" class="button">#project-manager.View_options#</a>
+  <a href="#key" class="button">#project-manager.Key#</a>
 
   <form method="post" action="task-add-edit">
     <input type="submit" value="Edit Tasks" />
@@ -15,11 +15,11 @@
     
   </form>
 
-  <a name="viewoptions"><h3>View options</h3></a>
+  <a name="viewoptions"><h3>#project-manager.View_options#</h3></a>
 
   <a href="@here;noquote@" class="button">@hide_show_closed;noquote@</a>
 
-  <a name="key"><h3>Key</h3></a>
+  <a name="key"><h3>#project-manager.Key#</h3></a>
 
   <dl>
     <multiple name="roles">
@@ -28,7 +28,7 @@
     </multiple>
   </dl>
 
-  <h3>Users to view</h3>
+  <h3>#project-manager.Users_to_view#</h3>
 
   <form method="post" name="users_to_view" action="calendar-users-update">
     <multiple name="users">
@@ -46,3 +46,4 @@
 
     <input type="submit" value="Save" />
   </form>
+

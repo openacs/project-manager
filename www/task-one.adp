@@ -6,7 +6,7 @@
   <property name="project_item_id">@project_item_id@</property>
   
   <if @task_info.live_revision@ ne @task_info.revision_id@>
-    <h4>(not current, select live version from the <a href="task-revisions?task_id=@task_info.item_id@">task change</a> page)</h4>
+    <h4>#project-manager.lt_not_current_select_live#</h4>
   </if>
 
   <table border="0" cellpadding="3" cellspacing="0" width="100%">
@@ -20,7 +20,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th>Process status</th>
+            <th>#project-manager.Process_status#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -47,15 +47,21 @@
             <else>
               <th>
             </else>
-
+            <if @task_info.write_p@ eq t>
               <a href="@task_edit_url;noquote@">
                 <img border="0" src="/shared/images/Edit16.gif"
                   alt="Edit">
               </a>
+            </if>
               <a href="@print_link@">
                 <img border="0" src="resources/print-16.png"
                   alt="Print">
               </a>
+            <if @task_info.create_p@ eq t>
+              <a href="@permissions_url@">
+                <img border="0" src="resources/padlock.gif" alt="Set permissions"></img>
+              </a>
+            </if>
 	    <if @task_info.priority@ ge @urgency_threshold@>
 	     <font color=red>
 	     </if>
@@ -82,7 +88,7 @@
               <table border=0 cellpadding=3 cellspacing=1 width="100%"> 
                 
                 <tr>
-                  <td class="subheader">Description</td>
+                  <td class="subheader">#project-manager.Description#</td>
                 </tr>
                 
                 <tr>
@@ -96,7 +102,7 @@
                 <tr>
 
                 <tr>
-                  <td class="subheader">Comments</th>
+                  <td class="subheader">#project-manager.Comments#</th>
                 </tr>
 
                 <tr>
@@ -107,13 +113,13 @@
                 </tr>
                 
                 <tr>
-                  <td class="subheader">Actions</td>
+                  <td class="subheader">#project-manager.Actions#</td>
                 </tr>
                 
                 <tr>
                   <td class="list-bottom-bg">
                     <ul> 
-                      <li> <a href="task-revisions?task_id=@task_id@">View task changes</a></li>
+                      <li> <a href="task-revisions?task_id=@task_id@">#project-manager.View_task_changes#</a></li>
                     </ul>
                   </td>
                 </tr>
@@ -143,7 +149,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th>Dates</th>
+            <th>#project-manager.Dates#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -152,28 +158,28 @@
             <td colspan="2" class="list-bottom-bg">
               <table border="0" class="list" width="100%">
                 <tr>
-                  <td class="highlight">Earliest start</td>
+                  <td class="highlight">#project-manager.Earliest_start#</td>
                   <td>@task_info.earliest_start@&nbsp;</td>
                 </tr>
                 
                 <tr>
-                  <td class="highlight">Earliest finish</td>
+                  <td class="highlight">#project-manager.Earliest_finish#</td>
                   <td>@task_info.earliest_finish@</td>
                 </tr>
                 
                 <tr>
-                  <td class="highlight">Latest start</td>
+                  <td class="highlight">#project-manager.Latest_start#</td>
                   <td>@task_info.latest_start@</td>
                 </tr>
                 
                 <tr>
-                  <td class="highlight">Latest finish</td>
+                  <td class="highlight">#project-manager.Latest_finish#</td>
                   <td><b>@task_info.latest_finish@</b></td>
                 </tr>
 
                 <if @task_info.latest_finish@ ne @task_info.end_date@>
                   <tr>
-                    <td class="highlight">Deadline</td>
+                    <td class="highlight">#project-manager.Deadline_1#</td>
                     <td><b>@task_info.end_date@</b></td>
                   </tr>
                 </if>
@@ -190,7 +196,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th>Assignees</th>
+            <th>#project-manager.Assignees#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -206,7 +212,7 @@
               <ul>
                 <li>@assignee_add_self_widget;noquote@</li>
                 <if @assigned_p@>
-                  <li><a href="@assignee_remove_self_url;noquote@">Remove myself</a></li>
+                  <li><a href="@assignee_remove_self_url;noquote@">#project-manager.Remove_myself#</a></li>
                 </if>
               </ul>
             </td>
@@ -222,7 +228,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th colspan="2">Logger</th>
+            <th colspan="2">#project-manager.Logger#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -230,24 +236,24 @@
           
           <tr class="list-filter-header">
             <td class="list-bottom-bg" align="center" colspan="3">
-	        Priority: @task_info.priority@<br />
+	        #project-manager.lt_Priority_task_infopri#<br />
               <if @use_days_p@ true>
-                Days remaining: @task_info.days_remaining@<br />
+                #project-manager.lt_Days_remaining_task_i#<br />
               </if>
               <else>
-                Hours remaining: @task_info.hours_remaining@<br />
+                #project-manager.lt_Hours_remaining_task_#<br />
               </else>
               <if @task_info.slack_time@ nil>
-                Slack: n/a
+                #project-manager.Slack_na#
               </if>
               <elseif @task_info.slack_time@ lt 1>
-                Slack: <font color="red">@task_info.slack_time@</font><br />
+                #project-manager.Slack# <font color="red">@task_info.slack_time@</font><br />
               </elseif>
               <else>
-                Slack: @task_info.slack_time@<br />
+                #project-manager.lt_Slack_task_infoslack_#<br />
               </else>
 
-              Complete: @task_info.percent_complete@%
+              #project-manager.lt_Complete_task_infoper#
             </td>
             <td class="list-right-bg">&nbsp;</td>
 
@@ -293,7 +299,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th>@task_term@s this depends on.</th>
+            <th>#project-manager.lt_task_terms_this_depen#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -313,7 +319,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th>@task_term@s depending on this @task_term@</th>
+            <th>#project-manager.lt_task_terms_depending_#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -333,7 +339,7 @@
             <th align="left" valign="top" width="10">
               <img src="resources/tl-e6e6fa" align="top" />
             </th>
-            <th>Related @task_term@s</th>
+            <th>#project-manager.Related_task_terms#</th>
             <th align="right" valign="top" width="10">
               <img src="resources/tr-e6e6fa" align="top" />
             </th>
@@ -347,7 +353,7 @@
           <tr>
             <td colspan="2" class="list-bottom-bg">
               <form action="task-link" method="post">
-                Link task: 
+                #project-manager.Link_task# 
                 <input type="text" name="to_task" size="7" />
                 <input type="hidden" name="from_task" value="@task_id;noquote@" />
                 <input type="hidden" name="return_url" value="@return_url@" />
@@ -362,3 +368,4 @@
 </table>    
   
     
+

@@ -424,7 +424,7 @@ ad_proc -public pm::process::email_alert {
     set task_term       \
         [parameter::get -parameter "Taskname" -default "Task"]
     set task_term_lower \
-        [parameter::get -parameter "taskname" -default "task"]
+        [_ project-manager.task]
     set use_uncertain_completion_times_p \
         [parameter::get -parameter "UseUncertainCompletionTimesP" -default "0"]
 
@@ -475,24 +475,24 @@ ad_proc -public pm::process::email_alert {
     foreach to_address $to_addresses {
 
         set notification_text "${intro_text}
-<h3>Process overview</h3>
+<h3>[_ project-manager.Process_overview]</h3>
 <table border=\"0\" bgcolor=\"#ddddff\">
   <tr>
-    <td>Project:</td>
+    <td>[_ project-manager.Project]</td>
     <td><a href=\"${project_url}\">$project_name</a> (\#$project_item_id)</td>
   </tr>
   <tr>
-    <td>Overview of process:</td>
+    <td>[_ project-manager.Overview_of_process]</td>
     <td><a href=\"${process_url}\">$process_name</a></td>
   </tr>
 </table>
 
-<h3>$task_term and current status</h3>
+<h3>[_ project-manager.lt_task_term_and_current]</h3>
 <table border=\"0\" bgcolor=\"\#ddddff\" cellpadding=\"1\" cellspacing=\"1\">
   <th>$task_term name</th>
-  <th>Slack time</th>
-  <th>Lead</th>
-  <th>Latest finish</th>"
+  <th>[_ project-manager.Slack_time]</th>
+  <th>[_ project-manager.Lead]</th>
+  <th>[_ project-manager.Latest_finish]</th>"
 
         foreach ti $task_info {
             set task_item_id     [lindex $ti 0]
@@ -552,7 +552,7 @@ ad_proc -public pm::process::email_alert {
         }
         
         # build table of current status 
-        append notification_text "</table> <p>If the row is in red, you are involved in this task. If it is in grey, then it has already been completed.</p>"
+        append notification_text "</table> <p>[_ project-manager.lt_If_the_row_is_in_red_]</p>"
         
         pm::util::email \
             -to_addr $to_address \

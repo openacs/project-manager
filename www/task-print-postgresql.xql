@@ -10,6 +10,10 @@
         WHERE
         t.item_id = :task_id and
         i.live_revision = t.revision_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = t.item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
     </querytext>
   </fullquery>
 
@@ -22,6 +26,10 @@
         WHERE
         i.item_id = t.item_id and
         t.revision_id = :task_revision_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = t.item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
     </querytext>
   </fullquery>
 
@@ -51,6 +59,10 @@
         t.item_id = :task_id and
         t.revision_id = :task_revision_id and
         t.item_id = i.item_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = t.item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
     </querytext>
   </fullquery>
 
@@ -71,6 +83,10 @@
         d.parent_task_id = t.item_id and 
         t.revision_id    = i.live_revision and
         t.item_id        = i.item_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = t.item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         [template::list::orderby_clause -name dependency -orderby]
     </querytext>
   </fullquery>
@@ -92,6 +108,10 @@
         d.parent_task_id = :task_id and 
         t.revision_id    = i.live_revision and
         t.item_id        = i.item_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = t.item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         [template::list::orderby_clause -name dependency2 -orderby]
     </querytext>
   </fullquery>
@@ -110,6 +130,10 @@
         a.task_id  = :task_id and
         u.party_id = a.party_id and
         a.role_id  = r.role_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = a.task_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
     </querytext>
   </fullquery>
 

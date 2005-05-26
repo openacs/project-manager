@@ -79,12 +79,26 @@ ad_page_contract {
 
 # --------------------------------------------------------------- #
 
+# the unique identifier for this package
+#set package_id  [ad_conn package_id]
+#set package_url [ad_conn package_url]
+#set user_id     [ad_conn user_id]
+
+
+# permissions. Seemed to be superceded below and now again because of granular permissions work.
+#permission::require_permission -object_id $task_id -privilege "read"
+
+#set write_p  [permission::permission_p -object_id $task_id -privilege "write"]
+#set create_p [permission::permission_p -object_id $task_id -privilege "create"]
+
+
+
 # terminology and other parameters
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
 set assignee_term   [parameter::get -parameter "AssigneeName" -default "Assignee"]
 set watcher_term    [parameter::get -parameter "WatcherName" -default "Watcher"]
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
+set project_term    [_ project-manager.Project]
 set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
 
 set use_days_p      [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
@@ -92,14 +106,15 @@ set urgency_threshold 8
 # the unique identifier for this package
 set package_id  [ad_conn package_id]
 set package_url [ad_conn package_url]
-set user_id     [auth::require_login]
+set user_id     [ad_maybe_redirect_for_registration]
 
 
-# permissions
+# permissions. This is a general 'does the user have permission to even ask for this page to be run?'
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
 
-set write_p  [permission::permission_p -object_id $package_id -privilege write] 
-set create_p [permission::permission_p -object_id $package_id -privilege create]
+# These values are now set by the query that extracts the task.
+#set write_p  [permission::permission_p -object_id $package_id -privilege write]
+#set create_p [permission::permission_p -object_id $package_id -privilege create]
 
 
 
@@ -148,7 +163,7 @@ if {[exists_and_not_null task_info(earliest_start_j)]} {
 }
 
 if {$task_info(percent_complete) >= 100} {
-    set closed_message "-- Closed"
+    set closed_message "[_ project-manager.--_Closed]"
 } else {
     set closed_message ""
 }
@@ -171,7 +186,7 @@ if {![empty_string_p $task_info(process_instance)]} {
 
 set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $task_id "[pm::task::get_url $task_id]"]
 
-set comments_link "<a href=\"[export_vars -base "comments/add" {{ object_id $task_id} {title "$task_info(task_title)"} {return_url [ad_return_url]} {type task} }]\">Add comment</a>"
+set comments_link "<a href=\"[export_vars -base "comments/add" {{ object_id $task_id} {title "$task_info(task_title)"} {return_url [ad_return_url]} {type task} }]\">[_ project-manager.Add_comment]</a>"
 
 set print_link "task-print?&task_id=$task_id&project_item_id=$task_info(project_item_id)"
 
@@ -201,7 +216,8 @@ if {$assigned_p} {
     set assignee_remove_self_url [export_vars -base task-assign-remove {{task_item_id $task_id} user_id return_url}]
 }
 
-
+# Set the link to the permissions page
+set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/permissions/one?[export_vars {{object_id $task_id}}]"
 
 set nextyear_ansi [clock format [clock scan "+ 365 day"] -format "%Y-%m-%d"]
 set then_ansi [clock format [clock scan "-$logger_days days"] -format "%Y-%m-%d"]
@@ -235,7 +251,7 @@ template::list::create \
     -key d_task_id \
     -elements {
         dependency_type {
-            label "Type"
+            label "[_ project-manager.Type]"
             display_template {
                 <if @dependency.dependency_type@ eq start_before_start>
                 <img border="0" src="resources/start_before_start.png">
@@ -252,17 +268,17 @@ template::list::create \
             }
         }
         d_task_id {
-            label "Task"
+            label "[_ project-manager.Task]"
             display_col task_title
             link_url_col item_url
-            link_html { title "View this task" }
+            link_html { title "[_ project-manager.View_this_task]" }
         }
         percent_complete {
-            label "Status"
+            label "[_ project-manager.Status_1]"
             display_template "@dependency.percent_complete@\%"
         }
         end_date {
-            label "Deadline"
+            label "[_ project-manager.Deadline_1]"
         }
     } \
     -orderby {
@@ -294,7 +310,7 @@ template::list::create \
     -key d_task_id \
     -elements {
         dependency_type {
-            label "Type"
+            label "[_ project-manager.Type]"
             display_template {
                 <if @dependency2.dependency_type@ eq start_before_start>
                 <img border="0" src="resources/start_before_start.png">
@@ -311,17 +327,17 @@ template::list::create \
             }
         }
         d_task_id {
-            label "Task"
+            label "[_ project-manager.Task]"
             display_col task_title
             link_url_eval {task-one?task_id=$d_task_id}
-            link_html { title "View this task" }
+            link_html { title "[_ project-manager.View_this_task]" }
         }
         percent_complete {
-            label "Status"
+            label "[_ project-manager.Status_1]"
             display_template "@dependency2.percent_complete@\%"
         }
         end_date {
-            label "Deadline"
+            label "[_ project-manager.Deadline_1]"
         }
     } \
     -orderby {
@@ -362,7 +378,7 @@ template::list::create \
             }
         }
         role_id {
-            label "Role"
+            label "[_ project-manager.Role]"
             display_template "@people.one_line@"
         }
     } \
@@ -405,27 +421,27 @@ template::list::create \
     -key x_task_id \
     -elements {
         x_task_id {
-            label "ID"
+            label "[_ project-manager.ID]"
         }
         title {
-            label "Task"
+            label "[_ project-manager.Task]"
             link_url_col item_url
-            link_html { title "View this task" }
+            link_html { title "[_ project-manager.View_this_task]" }
         }
         slack_time {
-            label "Slack"
+            label "[_ project-manager.Slack_1]"
         }
         earliest_start_pretty {
-            label "ES"
+            label "[_ project-manager.ES]"
         }
         earliest_finish_pretty {
-            label "EF"
+            label "[_ project-manager.EF]"
         }
         latest_start_pretty {
-            label "LS"
+            label "[_ project-manager.LS]"
         }
         latest_finish_pretty {
-            label "LF"
+            label "[_ project-manager.LF]"
             display_template {
                 <b>@xrefs.latest_finish_pretty@</b>
             }
@@ -451,7 +467,7 @@ db_multirow -extend { item_url earliest_start_pretty earliest_finish_pretty late
     set earliest_start_pretty [lc_time_fmt $earliest_start "%x"]
     set earliest_finish_pretty [lc_time_fmt $earliest_finish "%x"]
     set latest_start_pretty [lc_time_fmt $latest_start "%x"]
-    set latest_finish_pretty [lc_time_fmt $latest_finish "%x"]
+    set latest_finish_pretty [lc_time_fmt $latest_finish "%x"nn]
 
     set slack_time [pm::task::slack_time \
                         -earliest_start_j $earliest_start_j \

@@ -528,6 +528,8 @@ begin
         values (
                 v_revision_id, p_end_date, p_percent_complete, p_estimated_hours_work, p_estimated_hours_work_min, p_estimated_hours_work_max, ''0'', p_priority);
 
+        update acs_objects set context_id = p_project_id where object_id = task_id;
+
         PERFORM acs_permission__grant_permission(
                 v_revision_id,
                 p_creation_user,

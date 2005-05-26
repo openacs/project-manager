@@ -64,22 +64,22 @@ if {![exists_and_not_null use_dependency_list]} {
 }
 
 # terminology
-set task_term       [parameter::get -parameter "TaskName"    -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname"    -default "task"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # permissions
 
-set title "Add $task_term_lower dependencies"
-set context_bar [ad_context_bar [list "process-task-add-edit?[export_vars -url {{process_id process_task_id:multiple}}]" "Assignments"] "New $task_term dependency"]
+set title "[_ project-manager.lt_Add_task_term_lower_d_1]"
+set context_bar [ad_context_bar [list &quot;process-task-add-edit?[export_vars -url {{process_id process_task_id:multiple}}]&quot; &quot;&lt;#_ Assignments&quot;] &quot;&lt;#_ New $task_term dependency&quot;]
 
 permission::require_permission -party_id $user_id -object_id $package_id -privilege create
 
-set process_task_id_pass [string map {" " "-"} $process_task_id]
-set use_dependency_list_pass  [string map {" " "-"} $use_dependency_list]
+set process_task_id_pass [string map {&quot; &quot; &quot;-&quot;} $process_task_id]
+set use_dependency_list_pass  [string map {&quot; &quot; &quot;-&quot;} $use_dependency_list]
 
 ad_form -name add_edit -form {
     dependency_id:key(pm_process_task_dependency_seq)
@@ -107,13 +107,13 @@ ad_form -name add_edit -form {
 } -new_data {
 
     # convert from our hack back to a list
-    set process_task_id      [string map {"-" " "} $process_task_id]
+    set process_task_id      [string map {&quot;-&quot; &quot; &quot;} $process_task_id]
 
     pm::process::remove_dependency \
         -process_task_id $process_task_id
 
     # convert from our hack back to a list
-    set use_dependency_list [string map {"-" " "} $use_dependency_list]
+    set use_dependency_list [string map {&quot;-&quot; &quot; &quot;} $use_dependency_list]
 
     foreach tr $use_dependency_list {
 
@@ -132,7 +132,7 @@ ad_form -name add_edit -form {
 } -edit_data {
 
     set process_task_id_pass $process_task_id
-    set process_task_id_pass [string map {"-" " "} $process_task_id_pass]
+    set process_task_id_pass [string map {&quot;-&quot; &quot; &quot;} $process_task_id_pass]
     set process_task_id      $process_task_id_pass
 
     pm::process::remove_dependency -process_task_id $process_task_id 
@@ -152,7 +152,7 @@ ad_form -name add_edit -form {
 
 } -after_submit {
 
-    ad_returnredirect -message "Process task dependencies saved" [export_vars -base process-one -url {process_id}]
+    ad_returnredirect -message "[_ project-manager.lt_Process_task_dependen]" [export_vars -base process-one -url {process_id}]
     ad_script_abort
 }
 
@@ -195,12 +195,12 @@ db_foreach dependency_query { } -column_array tasks {
 
         {task_title.$tasks(task_id):text(hidden)
             {section {$tasks(task_title)}}
-            {label \"Subject\"}
+            {label \"[_ project-manager.Subject_2]"}
             {value {$tasks(task_title)}}
         }
 
         {description.$tasks(task_id):text(inform)
-            {label \"Description\"}
+            {label \"[_ project-manager.Description_2]"}
             {value {$tasks(description)}}
         }
 
@@ -209,7 +209,7 @@ db_foreach dependency_query { } -column_array tasks {
         }
 
         {dependency_task_id.$tasks(task_id):text(select)
-            {label \"Dependency\"}
+            {label \"[_ project-manager.Dependency_1]"}
             {options {$dependency_options_full}}
             {value {$tasks(parent_task_id)}}
             {help_text {$task_term the dependency is based on}}

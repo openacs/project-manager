@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -20,12 +20,14 @@ ad_page_contract {
 } -errors {
 }
 
+# permissions. This is a general 'does the user have permission to even ask for this page to be run?'
+permission::require_permission -party_id $user_id -object_id $package_id -privilege read
 
-set task_term       [parameter::get -parameter "TaskName" -default "Task Revisions"]
+set task_term [_ project-manager.Task]
 
-set title "$task_term Changes"
+set title "[_ project-manager.task_term_Changes]"
 
-set context [list "task-one?task_id=$task_id $task_term" "View"]
+set context [list "task-one?task_id=$task_id $task_term" "[_ project-manager.View]"]
 
 
 # Task Revisions, using list-builder ---------------------------------
@@ -36,32 +38,32 @@ template::list::create \
     -key revision_id \
     -elements {
         revision_id {
-            label "Subject"
+            label "[_ project-manager.Subject_1]"
             display_col task_title
             link_url_col item_url
-            link_html { title "View this revision" }
+            link_html { title "[_ project-manager.View_this_revision]" }
             display_template {<if @revisions.live_revision@ eq @revisions.revision_id@><B>@revisions.task_title@</B></if><else>@revisions.task_title@</else>}
         }
         description {
-            label "Description"
+            label "[_ project-manager.Description]"
             display_template {
                 @revisions.description_rich;noquote@
             }
         }
         percent_complete {
-            label "Status"
+            label "[_ project-manager.Status_1]"
             display_template "@revisions.percent_complete@\%"
         }
         actual_hours_worked {
-            label "Hour to date"
+            label "[_ project-manager.Hour_to_date]"
             display_template "@revisions.actual_hours_worked@ hrs"
         }
         estimated_hours_work_min {
-            label "Work estimate"
+            label "[_ project-manager.Work_estimate]"
             display_template "@revisions.estimated_hours_work_min@ - @revisions.estimated_hours_work_max@ hrs"
         }
         end_date {
-            label "Deadline"
+            label "[_ project-manager.Deadline_1]"
         }
     } \
     -sub_class {

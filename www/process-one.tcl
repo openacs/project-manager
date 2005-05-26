@@ -30,7 +30,7 @@ ad_page_contract {
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
@@ -42,7 +42,7 @@ set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCom
 
 # set up context bar, needs parent_id
 
-set context_bar [ad_context_bar [list "processes?process_id=$process_id" "Processes"] "One"]
+set context_bar [ad_context_bar [list "processes?process_id=$process_id" "[_ project-manager.Processes]"] "[_ project-manager.One]"]
 
 set use_link "<a href=\"[export_vars -base task-select-project {process_id project_item_id}]\"><img border=\"0\" src=\"/shared/images/go.gif\"></a>"
 
@@ -50,7 +50,7 @@ set use_link "<a href=\"[export_vars -base task-select-project {process_id proje
 set elements \
     [list \
          one_line {
-             label "Subject"
+             label "[_ project-manager.Subject_1]"
              display_template {<a href="process-task-add-edit?process_id=[set process_id]&process_task_id=@tasks.process_task_id@">@tasks.one_line@</a>
                  <if @tasks.dependency_type@ eq start_before_start>
                  <img border="0" src="resources/start_before_start.png">
@@ -67,10 +67,10 @@ set elements \
              }
          } \
          description {
-             label "Description"
+             label "[_ project-manager.Description]"
          } \
          person_id {
-             label "Lead"
+             label "[_ project-manager.Lead]"
              display_template {
                  <group column="process_task_id">
                  <i>@tasks.first_names@ @tasks.last_name@</i><br />
@@ -89,17 +89,17 @@ template::list::create \
     -orderby {
         default_value ordering,asc
         ordering {
-            label "Order"
+            label "[_ project-manager.Order]"
             orderby_asc "t.ordering, t.process_task_id, p.first_names, p.last_name"
             orderby_desc "t.ordering desc, t.process_task_id desc, p.first_names, p.last_name"
             default_direction asc
         }
     } \
-    -bulk_actions {
-        "Use" "task-select-project" "Use process"
-        "Edit" "process-task-add-edit" "Edit tasks"
-        "Delete" "process-task-delete" "Delete tasks"
-    } \
+    -bulk_actions [list \
+		   "[_ project-manager.Use]" "task-select-project" "[_ project-manager.Use_process]" \
+		   "[_ acs-kernel.common_Edit]" "process-task-add-edit" "[_ project-manager.Edit_tasks]" \
+		   "[_ project-manager.Delete]" "process-task-delete" "[_ project-manager.Delete_tasks]" \
+		   ]\
     -bulk_action_export_vars {
         process_id
         project_item_id

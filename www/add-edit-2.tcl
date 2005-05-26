@@ -27,8 +27,10 @@ ad_page_contract {
     context_bar:onevalue
     title:onevalue
 
+} -validate {
 }
 
+permission::require_permission -object_id $project_item_id -privilege "read"
 
 # this is necessary for new projects
 if {![exists_and_not_null old_project_id]} {
@@ -39,14 +41,14 @@ if {![exists_and_not_null old_project_id]} {
 # the unique identifier for this package
 set package_id [ad_conn package_id]
 set subsite_id [ad_conn subsite_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 set user_group_id [application_group::group_id_from_package_id \
                        -package_id $subsite_id]
 
 # terminology
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
-set project_term_lower  [parameter::get -parameter "projectname" -default "project"]
+set project_term    [_ project-manager.Project]
+set project_term_lower  [_ project-manager.project]
 set use_goal_p  [parameter::get -parameter "UseGoalP" -default "1"]
 set use_project_code_p  [parameter::get -parameter "UseUserProjectCodesP" -default "1"]
 
@@ -91,7 +93,7 @@ ad_form -name add_edit \
     } \
     -new_data {
 
-        ad_returnredirect -message "Project changes saved" "one?[export_url_vars project_item_id]"
+        ad_returnredirect -message "[_ project-manager.lt_Project_changes_saved]" "one?[export_url_vars project_item_id]"
         ad_script_abort
         
     } -edit_data {
@@ -100,7 +102,7 @@ ad_form -name add_edit \
 
     } -after_submit {
         
-        ad_returnredirect -message "Project changes saved" "one?[export_url_vars project_item_id]"
+        ad_returnredirect -message "[_ project-manager.lt_Project_changes_saved]" "one?[export_url_vars project_item_id]"
         ad_script_abort
 
     }

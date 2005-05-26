@@ -7,7 +7,7 @@
 
 <form action="process-task-delete-2" method="post">
 
-Are you sure you'd like to delete these @task_term_lower@s?
+#project-manager.lt_Are_you_sure_youd_lik#
 
 <input type="submit" name="submit" value="Yes" />
 @hidden_vars;noquote@
@@ -15,3 +15,4 @@ Are you sure you'd like to delete these @task_term_lower@s?
 </form>
 
 </center>
+

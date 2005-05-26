@@ -31,17 +31,17 @@ ad_page_contract {
 # --------------------------------------------------------------- #
 
 # terminology
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
-set project_term_lower [parameter::get -parameter "projectname" -default "project"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
+set project_term    [_ project-manager.Project]
+set project_term_lower [_ project-manager.project]
 
 # set up context bar
 set context_bar [ad_context_bar "View $project_term_lower roles"]
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
@@ -61,12 +61,12 @@ template::list::create \
     -key role_id \
     -elements {
         role_id {
-            label "Role ID"
+            label "[_ project-manager.Role_ID]"
             link_url_col item_url
-            link_html { title "Edit this role" }
+            link_html { title "[_ project-manager.Edit_this_role]" }
         }
         party_id {
-            label "Party ID"
+            label "[_ project-manager.Party_ID]"
         }
     } \
     -filters {

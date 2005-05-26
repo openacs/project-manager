@@ -36,10 +36,15 @@ ad_page_contract {
 }
 
 
+if {$new_tasks == "1"} {
+    ad_returnredirect [export_vars -base task-add-edit-one {task_item_id project_item_id process_id process_task_id:multiple return_url}]
+    ad_script_abort
+}
+
 # --------------------------------------------------------------- 
 # Set up
 # --------------------------------------------------------------- 
-set user_id       [auth::require_login]
+set user_id       [ad_maybe_redirect_for_registration]
 set package_id    [ad_conn package_id]
 
 # use hour units or day units
@@ -55,9 +60,9 @@ if {[string is true $use_day_p]} {
 # --------------------------------------------------------------- 
 # terminology
 # --------------------------------------------------------------- 
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
+set project_term    [_ project-manager.Project]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
 set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
 
 # -------------------------
@@ -103,7 +108,7 @@ if {[string is true $edit_p]} {
 
 } elseif {[empty_string_p $project_item_id]} {
     
-    ad_return_error "Project missing" "For new tasks, a project must be passed in"
+    ad_return_error "[_ project-manager.Project_missing]" "[_ project-manager.lt_For_new_tasks_a_proje]"
     ad_script_abort
 }
 
@@ -111,25 +116,17 @@ if {[string is true $edit_p]} {
 # permissions and title setup, etc
 # --------------------------------------------------------------- 
 
-if {[string is true $edit_p]} { 
+if {[string is true $edit_p]} {
 
-    set title "Edit a $task_term_lower"
-    set context [list [list $return_url "Go back"] "Edit $task_term"]
-
-    permission::require_permission \
-        -party_id $user_id \
-        -object_id $package_id \
-        -privilege write
+    set title "[_ project-manager.lt_Edit_a_task_term_lowe]"
+    set context [list [list $return_url "[_ project-manager.Go_back]"] "[_ project-manager.Edit_task_term]"]
 
 } else {
 
-    set title "Add $task_term_lower"
-    set context [list [list "one?item_id=$project_item_id" "One $project_term"] "New $task_term"]
+    set title "[_ project-manager.Add_task_term_lower]"
+    set context [list [list "one?project_item_id=$project_item_id" "[pm::project::name -project_item_id $project_item_id]"] "[_ project-manager.New_task_term]"]
 
-    permission::require_permission \
-        -party_id $user_id \
-        -object_id $package_id \
-        -privilege create
+    permission::require_permission -party_id $user_id -object_id $project_item_id -privilege create
 
 }
 
@@ -162,12 +159,6 @@ template::multirow create \
 
 if {[string is true $edit_p]} {
 
-#    set today_html [pm::task::today_html \
- \#                      -month_target log_month \
-   \#                    -day_target   log_day \
-     \#                  -year_target  log_year]
-
-
     # -------
     # EDITING
     # -------
@@ -187,6 +178,9 @@ if {[string is true $edit_p]} {
 
     foreach task $task_item_id {
 
+        # Check permission for user to edit the task
+        permission::require_permission -party_id $user_id -object_id $task -privilege write
+
         set this_project $task_project_item_id($task)
         
         set project_options [pm::project::select_list_of_open \
@@ -199,13 +193,8 @@ if {[string is true $edit_p]} {
                                     -project_id $logger_project]
 	set today_date [db_string today "select to_date(sysdate,'YYYY-MM-DD')  from dual"]
         set today_html$task "<br><input type=\"text\" name=\"log_date\" value=\"$today_date\" id=\"sel2$task\" /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel2$task', 'y-m-d');\"> <b>y-m-d </b>"
-
-       #set end_date_html [pm::task::date_html \
-        \#                       -selected_day $task_end_date_day($task) \
-          \#                     -selected_month $task_end_date_month($task) \
-            \#                   -selected_year $task_end_date_year($task)] 
-
-    set end_date_html "<br><input type=\"text\" name=\"date\" value=\"$task_end_date_year($task)-$task_end_date_month($task)-$task_end_date_day($task)\" id=sel1$task /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$task', 'y-m-d');\"> <b>y-m-d </b>"
+        
+        set end_date_html "<br><input type=\"text\" name=\"date\" value=\"$task_end_date_year($task)-$task_end_date_month($task)-$task_end_date_day($task)\" id=sel1$task /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$task', 'y-m-d');\"> <b>y-m-d </b>"
 
         set assignee_html [pm::task::assignee_html \
                                -task_item_id $task \
@@ -313,12 +302,6 @@ if {[string is true $edit_p]} {
 
     set new_tasks [llength $process_tasks]
 
-#    set end_date_html [pm::task::date_html]
-
-
-     set end_date_html "<br><input type=\"text\" name=\"date\" value=\"$task_end_date_year($task)-$task_end_date_month($task)-$task_end_date_day($task)\" id=sel1$task_item_id /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$task_item_id', 'y-m-d');\"> <b>y-m-d </b>"
-   
-
     set number 1
     set total_number [llength $process_tasks]
 
@@ -350,6 +333,7 @@ if {[string is true $edit_p]} {
             [pm::util::days_work \
                  -hours_work $process_estimated_hours_work_max($pt)]
 
+        set end_date_html "<br><input type=\"text\" name=\"date\" value=\"\" id=sel1$pt /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$pt', 'y-m-d');\"> <b>y-m-d </b>"
 
         # make sure deps are working.
 
@@ -382,13 +366,14 @@ if {[string is true $edit_p]} {
     # NEW
     # ---
 
-set today_date [db_string today "select to_date(sysdate,'YYYY-MM-DD') from dual"]
- #  set end_date_html [pm::task::date_html]
+    set today_date [db_string today "select to_date(sysdate,'YYYY-MM-DD') from dual"]
+    #  set end_date_html [pm::task::date_html]
 
     for {set i 1} {$i <= $new_tasks} {incr i} {
     set end_date_html "<br><input type=\"text\" name=\"date\" value=\"$today_date\" id=\"sel1$i\" /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$i', 'y-m-d');\"> <b>y-m-d </b>"
 
         set assignee_html [pm::task::assignee_html \
+                              -project_item_id $project_item_id \
                               -number $i]
 
         set dependency_options_full [pm::task::options_list_html \

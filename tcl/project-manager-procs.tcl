@@ -314,7 +314,7 @@ ad_proc -public pm::util::logger_url {} {
 
     if {[empty_string_p $return_val]} {
         ns_log Error "Project-manager: need to set up LoggerPrimaryURL in parameters"
-        util_user_message -message "Administrator needs to set up logger integration"
+        util_user_message -message "[_ project-manager.lt_Administrator_needs_t]"
     }
 
     return $return_val
@@ -484,7 +484,7 @@ ad_proc -public pm::util::general_comment_add {
                 set project_url [pm::project::url \
                                      -project_item_id $object_id]
                 
-                set subject "Project comment: $title"
+                set subject "[_ project-manager.lt_Project_comment_title]"
 
                 # convert to HTML
                 set richtext_list [list $comment $mime_type]
@@ -656,7 +656,7 @@ ad_proc -private pm::util::category_selects_not_cached {
         return ""
     }
 
-    set return_val "<form method=\"post\" action=\"index\">$export_vars <br /><select name=\"category_id\"><option value=\"\">--All Categories--</option>$category_select"
+    set return_val "<form method=\"post\" action=\"index\">$export_vars <br /><select name=\"category_id\"><option value=\"\">[_ project-manager.--All_Categories--]</option>$category_select"
 
     append return_val "</select><input type=\"submit\" value=\"Go\" /></form>"
     
@@ -752,4 +752,84 @@ ad_proc -public pm::util::subsite_assignees_list_of_lists_not_cached {
     set assignees [db_list_of_lists get_assignees { }]
     
     return $assignees
+}
+
+ad_proc -private pm::util::get_root_folder {
+    {-package_id ""}
+} {
+    Returns the Root folder of the project manager instance
+} {
+    set project_root [db_exec_plsql get_root_folder { }]
+    return $project_root
+}
+
+ad_proc -public pm::util::get_project_name {
+    {-project_id ""}
+    {-project_item_id ""}
+} {
+    Returns the project name
+} {
+
+    if {![exists_and_not_null project_item_id] && \
+	    ![exists_and_not_null project_id]} {
+	
+	ad_complain "[_ project-manager.No_project_passed_in]"
+	
+    }
+
+    if {[empty_string_p $project_id]} {
+	set project_id [pm::project::get_project_id -project_item_id $project_item_id]
+    }
+
+    return [util_memoize [list pm::util::get_project_name_not_cached -project_id $project_id] 600]
+}
+
+ad_proc -private pm::util::get_project_name_not_cached {
+    {-project_id:required}
+} {
+    Returns the project name
+} {
+    set project_name [db_string get_project_name { }]
+    return $project_name
+}
+
+ad_proc -public pm::util::get_parent_id {
+    {-project_item_id:required}
+    {-project_id:required}
+} {
+    Returns the parent_id
+} {
+    return [util_memoize [list pm::util::get_parent_id_not_cached -project_item_id $project_item_id -project_id $project_id] 600]
+}
+
+ad_proc -private pm::util::get_parent_id_not_cached {
+    {-project_item_id:required}
+    {-project_id:required}
+} {
+    Returns the parent_id
+} {
+    set parent_id [db_string get_project_name { }]
+    return $parent_id
+}
+
+ad_proc -public pm::util::closed_p {
+    {-project_id ""}
+    {-project_item_id ""}
+
+} {
+    Returns 1 if the project is closed
+} {
+
+   if {![exists_and_not_null project_item_id] && \
+	    ![exists_and_not_null project_id]} {
+	
+	ad_complain "[_ project-manager.No_project_passed_in]"
+	
+    }
+
+    if {[empty_string_p $project_id]} {
+	set project_id [pm::project::get_project_id -project_item_id $project_item_id]
+    }
+
+    return [db_0or1row project_closed_p "select 1 from pm_projectsx where project_id = :project_id and status_id in (select status_id from pm_task_status where status_type ='c')"]
 }

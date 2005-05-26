@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -18,6 +18,9 @@ ad_page_contract {
 } -errors {
 }
 
+# permissions
+permission::require_permission -party_id $user_id -object_id $task_item_id -privilege write
+
 set present_user_id [ad_conn user_id]
 set peeraddr        [ad_conn peeraddr]
 
@@ -34,7 +37,7 @@ foreach user $user_id {
         -role_id $role_id \
         -party_id $user
 
-    append comment "<li>Added: [person::name -person_id $user]</li>"
+    append comment "<li>[_ project-manager.Added] [person::name -person_id $user]</li>"
 
     incr index
 }
@@ -53,9 +56,9 @@ pm::util::general_comment_add \
 
 
 if {[llength $user_id] > 1} {
-    set assign "Assignments"
+    set assign "[_ project-manager.Assignments]"
 } else {
-    set assign "Assignment"
+    set assign "[_ project-manager.Assignment]"
 }
 
-ad_returnredirect -message "$assign saved" $return_url
+ad_returnredirect -message "[_ project-manager.assign_saved]" $return_url

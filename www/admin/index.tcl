@@ -42,7 +42,7 @@ set title "Project Manager Administration"
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # set up links
 set categories_link "/categories/cadmin/one-object?object_id=$package_id"
@@ -53,15 +53,15 @@ set logger_sync_link "logger-sync"
 set update_projects_link "update-projects"
 
 if {[empty_string_p $logger_URLs]} {
-    set logger_warning "<font color=\"red\">not set up</font>"
+    set logger_warning "<font color=\"red\">[_ project-manager.not_set_up]</font>"
 } else {
-    set logger_warning "Currently integrated: <ul><li>[join $logger_URLs "<li>"]</ul>"
+    set logger_warning "[_ project-manager.Currently_integrated] <ul><li>[join $logger_URLs "<li>"]</ul>"
 }
 
 if {[empty_string_p $logger_primary]} {
-    set logger_primary_warning "<font color=\"red\">not set up</font>"
+    set logger_primary_warning "<font color=\"red\">[_ project-manager.not_set_up]</font>"
 } else {
-    set logger_primary_warning "Currently selected: <ul><li>$logger_primary</ul>"
+    set logger_primary_warning "[_ project-manager.Currently_selected] <ul><li>$logger_primary</ul>"
 }
 
 # permissions

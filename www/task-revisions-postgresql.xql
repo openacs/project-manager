@@ -33,6 +33,10 @@
         t.item_id = :task_id and
         t.item_id = i.item_id and
         t.creation_user = p.person_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = t.item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         ORDER BY
         t.revision_id asc
     </querytext>

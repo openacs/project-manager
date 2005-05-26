@@ -27,21 +27,21 @@ ad_page_contract {
 # --------------------------------------------------------------- #
 # the unique identifier for this package
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # terminology and parameters
-set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
-set project_term_lower  [parameter::get -parameter "projectname" -default "project"]
+set project_term    [_ project-manager.Project]
+set project_term_lower  [_ project-manager.project]
 
 if {[exists_and_not_null process_id]} {
-    set title "Edit a Process"
-    set context_bar [ad_context_bar "Edit Process"]
+    set title "[_ project-manager.Edit_a_Process]"
+    set context_bar [ad_context_bar "[_ project-manager.Edit_Process]"]
 
     # permissions
     permission::require_permission -party_id $user_id -object_id $package_id -privilege write
 } else {
-    set title "Add a Process"
-    set context_bar [ad_context_bar "New Process"]
+    set title "[_ project-manager.Add_a_Process]"
+    set context_bar [ad_context_bar "[_ project-manager.New_Process]"]
 
     # permissions
     permission::require_permission -party_id $user_id -object_id $package_id -privilege create
@@ -52,18 +52,18 @@ ad_form -name add_edit -form {
     process_id:key
 
     {one_line:text
-        {label "Subject"}
+        {label "[_ project-manager.Subject_1]"}
 	{value $one_line}
         {html {size 40}}
     }
 
     {description:text(textarea),optional
-	{label "Description"}
+	{label "[_ project-manager.Description]"}
 	{value $description}
 	{html { rows 5 cols 40 wrap soft}}}
 
     {number_of_tasks:text
-        {label "Number of new tasks"}
+        {label "[_ project-manager.Number_of_new_tasks]"}
 	{value "1"}
         {html {size 5}}
     }
@@ -78,7 +78,7 @@ ad_form -name add_edit -form {
 
     db_dml new_process { *SQL* }
 
-    ad_returnredirect -message "Process added. Now add process tasks." "process-task-add-edit?[export_vars -url {{number $number_of_tasks} process_id}]"
+    ad_returnredirect -message "[_ project-manager.lt_Process_added_Now_add]" "process-task-add-edit?[export_vars -url {{number $number_of_tasks} process_id}]"
     ad_script_abort
 
 } -edit_data {
@@ -87,7 +87,7 @@ ad_form -name add_edit -form {
 
 } -after_submit {
 
-    ad_returnredirect -message "Process changes saved. Now edit process tasks" "process-task-add-edit?[export_vars -url {{number $number_of_tasks} process_id}]"
+    ad_returnredirect -message "[_ project-manager.lt_Process_changes_saved]" "process-task-add-edit?[export_vars -url {{number $number_of_tasks} process_id}]"
     ad_script_abort
 }
 

@@ -53,8 +53,12 @@
         t.parent_id = proj.item_id and
         proj.live_revision = proj_rev.revision_id
 	and proj.parent_id = f.folder_id
-        and f.package_id = :package_id 
+        and f.package_id = :package_id
 	[template::list::page_where_clause -and -name "tasks" -key "ts.task_id"]
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = ts.task_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
         [template::list::filter_where_clauses -and -name tasks]
         [template::list::orderby_clause -orderby -name tasks]
     </querytext>

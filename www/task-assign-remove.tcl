@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -17,6 +17,9 @@ ad_page_contract {
 } -errors {
 }
 
+# permissions
+permission::require_permission -party_id $user_id -object_id $task_item_id -privilege write
+
 set present_user_id [ad_conn user_id]
 set peeraddr        [ad_conn peeraddr]
 
@@ -34,7 +37,7 @@ foreach user $user_id {
         -party_id $user
 
     if {[string is true $assigned_p]} {
-        lappend comment_list "<li>Removed: [person::name -person_id $user]</li>"
+        lappend comment_list "<li>[_ project-manager.Removed]: [person::name -person_id $user]</li>"
     }
 }
 
@@ -56,10 +59,10 @@ if {[llength $comment_list] > 0} {
 }
 
 if {[llength $user_id] > 1} {
-    set assign "Assignments"
+    set assign "[_ project-manager.Assignments]"
 } else {
-    set assign "Assignment"
+    set assign "[_ project-manager.Assignment]"
 }
 
-ad_returnredirect -message "$assign removed" $return_url
+ad_returnredirect -message "[_ project-manager.assign_removed]" $return_url
 

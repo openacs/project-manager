@@ -195,6 +195,7 @@ ad_proc -public pm::project::new {
     -creation_user:required
     -creation_ip:required
     -package_id:required
+    -no_callback:boolean
 } {
     Creates a new project
 
@@ -248,12 +249,26 @@ ad_proc -public pm::project::new {
         -party_id $creation_user \
         -send_email_p "f"
 
+    # Set the parent_id to the package_id if this is not a subproject.
+    # Otherwise permission inheritance won't work.
+    # Update the context_id
+    if {[empty_string_p $parent_id]} {
+	set parent_id $package_id
+    }
+
+    db_dml update_context_id "update acs_objects set context_id = :parent_id where object_id = :project_item_id"
+
+    if {!$no_callback_p} {
+	callback pm::project_new -package_id $package_id -project_id $project_item_id
+    }
+
     return $project_revision
 }
 
 
 ad_proc -public pm::project::delete {
     -project_item_id:required
+    -no_callback:boolean
 } {
     Stub for project deletion
     
@@ -266,7 +281,10 @@ ad_proc -public pm::project::delete {
     
     @error 
 } {
-    
+    if {!$no_callback_p} {
+	callback pm::project_delete -package_id [ad_conn package_id] -project_id $project_item_id
+    }
+
     # should we delete the logger project as well?
 
 }
@@ -291,6 +309,7 @@ ad_proc -public pm::project::edit {
     -creation_user:required
     -creation_ip:required
     -package_id:required
+    -no_callback:boolean
 } {
     Stub for project edit
     
@@ -348,6 +367,10 @@ ad_proc -public pm::project::edit {
 		:package_id
 	);
      "]
+
+    if {!$no_callback_p} {
+	callback pm::project_edit -package_id $package_id -project_id $project_item_id
+    }
 
     return $returnval
 }
@@ -1757,9 +1780,9 @@ ad_proc -public pm::project::assign {
         set from_addr [cc_email_from_party [ad_conn user_id]]
         set role [pm::role::name -role_id $role_id]
 
-        set subject "Assigned to project: $project_name"
+        set subject "[_ project-manager.lt_Assigned_to_project_p]"
         
-        set content "<table bgcolor=\"\#ddffdd\"><tr><td>You have been assigned to a project: <a href=\"$project_url\">$project_name</a> (as $role)</td></tr></table>"
+        set content "<table bgcolor=\"\#ddffdd\"><tr><td>[_ project-manager.lt_You_have_been_assigne]</td></tr></table>"
 
 
         pm::util::email \
@@ -1845,13 +1868,32 @@ ad_proc -public pm::project::assign_remove_everyone {
     return $current_assignees
 }
 
+ad_proc -public pm::project::assignee_role_list {
+    {-project_item_id:required}
+} {
+    Returns a list of lists, with all assignees to a particular 
+    project. {{party_id role_id} {party_id role_id}}
+
+    @author Malte Sussdorff (openacs@sussdorff.de)
+    @creation-date 2005-05-14
+    
+    @param project_item_id
+
+    @return 
+    
+    @error 
+} {
+
+    return [db_list_of_lists get_assignees_roles { }]
+
+}
 
 ad_proc -public pm::project::assignee_filter_select {
-    {-status_id:required}
+    {-status_id ""}
 } {
     Returns a list of lists, people who are assigned to projects with a 
     status of status_id. Used in the list-builder filters for
-    the projects list page. Cached 5 minutes.
+    the projects list page. Cached 10 minutes.
     
     @author Jade Rubick (jader@bread.com)
     @creation-date 2004-06-11
@@ -1867,7 +1909,7 @@ ad_proc -public pm::project::assignee_filter_select {
 
 
 ad_proc -private pm::project::assignee_filter_select_helper {
-    {-status_id:required}
+    {-status_id ""}
 } {
     Returns a list of lists, people who are assigned projects with a 
     status of status_id. Used in the list-builder filters for
@@ -1882,7 +1924,14 @@ ad_proc -private pm::project::assignee_filter_select_helper {
     
     @error 
 } {
-    return [db_list_of_lists get_people {
+
+    if {[exists_and_not_null status_id]} {
+	set status_clause "p.status_id = :status_id and"
+    } else {
+	set status_clause ""
+    }
+
+    return [db_list_of_lists get_people "
 SELECT
         distinct(first_names || ' ' || last_name) as fullname, 
         u.person_id 
@@ -1894,11 +1943,11 @@ SELECT
         WHERE 
         u.person_id = a.party_id and
         i.item_id = a.project_id and
-        p.status_id = :status_id and 
+	$status_clause
         i.live_revision = p.project_id
         ORDER BY
         fullname
-    }]
+    "]
 }
 
 

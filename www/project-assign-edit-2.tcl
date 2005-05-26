@@ -1,4 +1,4 @@
-# 
+#
 
 ad_page_contract {
     
@@ -17,7 +17,10 @@ ad_page_contract {
 } -errors {
 }
 
-set user_id [auth::require_login]
+set user_id [ad_maybe_redirect_for_registration]
+
+# permissions
+permission::require_permission -party_id $user_id -object_id $project_item_id -privilege write
 
 # remove assignments 
 set current_assignees [pm::project::assign_remove_everyone \
@@ -41,4 +44,4 @@ foreach ass $assignee {
 
 }
 
-ad_returnredirect -message "Assignments saved" $return_url
+ad_returnredirect -message "[_ project-manager.Assignments_saved]" $return_url

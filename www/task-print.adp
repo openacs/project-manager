@@ -20,7 +20,7 @@
 <table border=0 cellpadding=3 cellspacing=1 width="100%">
 
 <tr>
-<th colspan="2">Description</th>
+<th colspan="2">#project-manager.Description#</th>
 <tr>
 <td colspan="2">@task_info.description;noquote@
 </tr>
@@ -28,7 +28,7 @@
 <tr>
 <td colspan="2">
     <if @show_comment_p@ eq t>
-      <p /><h3>Comments</h3>@comments;noquote@
+      <p /><h3>#project-manager.Comments#</h3>@comments;noquote@
     </if>
     <else>
       <font size="-2"><p />@show_comment_link;noquote@</font>
@@ -44,7 +44,7 @@
 
 <table border="0">
 <tr>
-<th bgcolor="lavender">Assignees</th>
+<th bgcolor="lavender">#project-manager.Assignees#</th>
 </tr>
 
 <tr>
@@ -52,55 +52,55 @@
 </tr>
 
 <tr>
-<th bgcolor="lavender">Work</th>
+<th bgcolor="lavender">#project-manager.Work#</th>
 </tr>
 
 <tr>
-<td>@task_info.percent_complete@% complete</td>
+<td>#project-manager.lt_task_infopercent_comp#</td>
 </tr>
 
 <tr>
-<td>@task_info.estimated_hours_work_min@ - @task_info.estimated_hours_work_max@ hrs estimated</td>
+<td>#project-manager.lt_task_infoestimated_ho#</td>
 </tr>
 
 <tr>
-<td>Slack time: @task_info.slack_time@</td>
+<td>#project-manager.lt_Slack_time_task_infos#</td>
 </tr>
 
 <tr>
-<th bgcolor="lavender">Dates</th>
+<th bgcolor="lavender">#project-manager.Dates#</th>
 
 <tr><td>
 
 <table border="0" cellpadding="0" cellspacing="0">
 <tr>
-<td>Now</th>
+<td>#project-manager.Now#</th>
 <td>@task_info.current_time@</td>
 </tr>
 
 <tr>
-<td>Earliest start</th>
+<td>#project-manager.Earliest_start#</th>
 <td>@task_info.earliest_start@</td>
 </tr>
 
 <tr>
-<td>Earliest finish</th>
+<td>#project-manager.Earliest_finish#</th>
 <td>@task_info.earliest_finish@</td>
 </tr>
 
 <tr>
-<td>Latest start</th>
+<td>#project-manager.Latest_start#</th>
 <td>@task_info.latest_start@</td>
 </tr>
 
 <tr>
-<td>Latest finish</th>
+<td>#project-manager.Latest_finish#</th>
 <td>@task_info.latest_start@</td>
 </tr>
 </table>
 
 <tr>
-<th bgcolor="lavender">@task_term@(s) this depends on.</th>
+<th bgcolor="lavender">#project-manager.lt_task_terms_this_depen_1#</th>
 </tr>
 
 <tr>
@@ -109,7 +109,7 @@
 </tr>
 
 <tr>
-<th bgcolor="lavender">@task_term@(s) depending on this @task_term@</th>
+<th bgcolor="lavender">#project-manager.lt_task_terms_depending__1#</th>
 </tr>
 
 <tr>
@@ -127,3 +127,4 @@
 
 </BODY>
 </HTML>
+

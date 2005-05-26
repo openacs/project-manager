@@ -17,7 +17,7 @@ ad_page_contract {
 
 db_1row get_instance { }
 
-set title "Edit process instance"
-set context [list [list "Processes" processes ] [list "Process instances" "process-instances?process_id=$process_id"] $title]
+set title "[_ project-manager.lt_Edit_process_instance]"
+set context [list [list "[_ project-manager.Processes]" processes ] [list "[_ project-manager.Process_instances]" "process-instances?process_id=$process_id"] $title]
 
 

@@ -48,8 +48,8 @@ ad_page_contract {
 # terminology and parameters
 # --------------------------
 
-set task_term       [parameter::get -parameter "TaskName" -default "Task"]
-set task_term_lower [parameter::get -parameter "taskname" -default "task"]
+set task_term       [_ project-manager.Task]
+set task_term_lower [_ project-manager.task]
 set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
 set use_day_p     [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
 
@@ -60,7 +60,7 @@ set DEFAULT_ORDERING_GAP 5
 # --------------------------------------
 
 set package_id [ad_conn package_id]
-set user_id    [auth::require_login]
+set user_id    [ad_maybe_redirect_for_registration]
 
 # ------------------------------------------------------------
 # if process_task_id is set, then we are editing process tasks
@@ -69,8 +69,8 @@ set user_id    [auth::require_login]
 if {[exists_and_not_null process_task_id]} {
 
     set edit_p 1
-    set title "Edit a process $task_term_lower"
-    set context_bar [ad_context_bar [list "process-one?process_id=$process_id" "Process"] "Edit tasks"]
+    set title "[_ project-manager.lt_Edit_a_process_task_t]"
+    set context_bar [ad_context_bar [list "process-one?process_id=$process_id" "[_ project-manager.Process]"] "[_ project-manager.Edit_tasks]"]
     permission::require_permission -party_id $user_id -object_id $package_id -privilege write
 
     set process_tasks [list]
@@ -109,8 +109,8 @@ if {[exists_and_not_null process_task_id]} {
 } else {
 
     set edit_p 0
-    set title "Add a process $task_term_lower"
-    set context_bar [ad_context_bar [list "process-one?process_id=$process_id" "Process"] "Add tasks"]
+    set title "[_ project-manager.lt_Add_a_process_task_te]"
+    set context_bar [ad_context_bar [list "process-one?process_id=$process_id" "[_ project-manager.Process]"] "[_ project-manager.Add_tasks]"]
     permission::require_permission -party_id $user_id -object_id $package_id -privilege create
     
     for {set i 1} {$i <= $number} {incr i} {
@@ -173,7 +173,7 @@ for {set i 1} {$i <= $number} {incr i} {
         set role      [lindex $role_list 1]
         
         append html "
-        <td align=\"left\" valign=\"top\"><p /><B><I>Assignee: $role_name</I></B><p />"
+        <td align=\"left\" valign=\"top\"><p /><B><I>[_ project-manager.Assignee_1] $role_name</I></B><p />"
         
         foreach assignee_list $assignee_list_of_lists {
             set name [lindex $assignee_list 0]
