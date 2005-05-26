@@ -30,15 +30,3 @@ set project(estimated_finish_date) [lc_time_fmt $project(estimated_finish_date) 
 set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) "%x"]
 set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) "%x"]
 set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
-
-set forum_id [application_data_link::get_linked -from_object_id $project(item_id) -to_object_type "forums_forum"]
-if {$forum_id != {}} {
-    db_1row forum_package_id {}
-    set project(forum_url) "[lindex [site_node::get_url_from_object_id -object_id $forum_package_id] 0][export_vars -base forum-view {forum_id}]"
-}
-
-set folder_id [application_data_link::get_linked -from_object_id $project(item_id) -to_object_type "content_folder"]
-if {$folder_id != {}} {
-    db_1row folder_package_id {}
-    set project(folder_url) "[lindex [site_node::get_url_from_object_id -object_id $folder_package_id] 0][export_vars -base index {folder_id}]"
-}

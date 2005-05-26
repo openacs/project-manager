@@ -60,8 +60,6 @@
           <td colspan="2" class="fill-list-bottom">
             <ul> 
               <li> <a href="project-revisions?project_item_id=@project_item_id@">#project-manager.View_project_changes#</a></li>
-	      <if @project.forum_url@ not nil><li><a href="@project.forum_url@">Linked Forum</a></li></if>
-	      <if @project.folder_url@ not nil><li><a href="@project.folder_url@">Linked File Folder</a></li></if>
             </ul>
           </td>
           <td class="fill-list-right">&nbsp;</td>
