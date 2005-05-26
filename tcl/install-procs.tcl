@@ -195,8 +195,7 @@ ad_proc -public -callback contact::contact_new_form -impl project_manager {
 				    -organization_id $contact_id \
 				    -creation_user $creation_user \
 				    -creation_ip $creation_ip \
-				    -package_id $pm_package_id \
-				    -no_callback]
+				    -package_id $pm_package_id]
 
 		set project_item_id [pm::project::get_project_item_id -project_id $project_id]
 
