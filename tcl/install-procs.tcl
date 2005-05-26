@@ -180,7 +180,7 @@ ad_proc -public -callback contact::contact_new_form -impl project_manager {
     if { $object_type != "person" } {
 	upvar create_project_p create_project_p
 
-	if {$create_project_p == "t"} {
+	if {[exists_and_not_null create_project_p] && $create_project_p == "t"} {
 	    db_1row organisation_data {
 		select o.name, ao.creation_user, ao.creation_ip
 		from organizations o, acs_objects ao
