@@ -15,20 +15,18 @@ foreach required_param {forum_id} {
 
 # Integrate with Forums
 
-if {$forum_id > 1} {
-    # Get forum data
-    if {[catch {forum::get -forum_id $forum_id -array forum} errMsg]} {
+# Get forum data
+if {[catch {forum::get -forum_id $forum_id -array forum} errMsg]} {
 	if {[string equal $::errorCode NOT_FOUND]} {
 	    ns_returnnotfound
 	    ad_script_abort
 	}
-	error $errMsg $::errorInfo $::errorCode
-    }
-    forum::security::require_read_forum -forum_id $forum_id
-    forum::security::permissions -forum_id $forum_id permissions
-    set package_id [acs_object::get_element -object_id $forum_id -element package_id]
-    set base_url [apm_package_url_from_id $package_id]
+    error $errMsg $::errorInfo $::errorCode
 }
+forum::security::require_read_forum -forum_id $forum_id
+forum::security::permissions -forum_id $forum_id permissions
+set package_id [acs_object::get_element -object_id $forum_id -element package_id]
+set base_url [apm_package_url_from_id $package_id]
 
 foreach optional_param {} {
     if {![info exists $optional_param]} {

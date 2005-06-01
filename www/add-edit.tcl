@@ -259,7 +259,7 @@ ad_form -extend -name add_edit \
 				-object_id $project_id \
 				-form add_edit \
 				-cr_widget none \
-				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $folder_id] \
+				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id] \
 				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id logger_project} \
 				-exclude_static]
 
@@ -315,7 +315,7 @@ ad_form -extend -name add_edit \
 				-object_id $project_id \
 				-form add_edit \
 				-cr_widget none \
-				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $folder_id] \
+				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id] \
 				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id logger_project} \
 				-exclude_static]
 

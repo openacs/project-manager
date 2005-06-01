@@ -5,17 +5,26 @@
 # @arch-tag: 5b46d737-f74a-4069-9ae8-b833c6017a29
 # @cvs-id $Id$
 
-foreach required_param {project_id project_item_id} {
+foreach required_param {} {
     if {![info exists $required_param]} {
 	return -code error "$required_param is a required parameter."
     }
 }
-foreach optional_param {} {
+foreach optional_param {project_id project_item_id} {
     if {![info exists $optional_param]} {
 	set $optional_param {}
     }
 }
 
+if {[empty_string_p $project_item_id]} {
+    if {[empty_string_p $project_id]} {
+        return -code error "You have to provide either project_id or project_item_id"
+    } else {
+        set project_item_id [pm::project::get_project_item_id -project_id $project_id]
+    }
+}
+
+set user_id [auth::require_login]
 # Subprojects, using list-builder ---------------------------------
 
 template::list::create \
@@ -24,7 +33,7 @@ template::list::create \
     -key item_id \
     -elements {
 	project_name {
-	    label "<#_Subject#>"
+	    label "[_ project-manager.Subject]"
 	    link_url_col item_url
 	    link_html {title "[_ project-manager._View]" }
 	}

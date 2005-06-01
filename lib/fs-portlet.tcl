@@ -13,6 +13,5 @@ foreach required_param {folder_id} {
     }
 }
 
-
-set package_id [acs_object::get_element -object_id $folder_id -element package_id]
+set package_id [lindex [fs::get_folder_package_and_root $folder_id] 0]
 set base_url [apm_package_url_from_id $package_id]
