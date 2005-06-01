@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="2.80d1" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.0d3" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -171,8 +171,8 @@
   <msg key="lt_consult_with_people_a">consult with people affected, and let them know deadlines are affected</msg>
   <msg key="lt_Date_entriestime_stam">Date: %entries.time_stamp_pretty%</msg>
   <msg key="lt_Days_remaining_task_i">Days remaining: %task_info.days_remaining%</msg>
-  <msg key="lt_Deadline_tasksend_dat">Deadline: %tasks.end_date_html;noquote%</msg>
   <msg key="lt_Deadline_task">Deadline: </msg>
+  <msg key="lt_Deadline_tasksend_dat">Deadline: %tasks.end_date_html;noquote%</msg>
   <msg key="lt_Delete_process_one_li">Delete process: %one_line%</msg>
   <msg key="lt_Delete_process_task_t">Delete process %task_term_lower%</msg>
   <msg key="lt_Dependency_changed_if">Dependency changed &lt;i&gt;from&lt;/i&gt; %old% (%old_dependency%)  &lt;i&gt;to&lt;/i&gt; %new% (%new_dependency%)</msg>
@@ -353,6 +353,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="not_set_up">not set up</msg>
   <msg key="Nothing">Nothing</msg>
   <msg key="Now">Now</msg>
+  <msg key="number">#</msg>
   <msg key="Number_of_new_tasks">Number of new tasks</msg>
   <msg key="Observer">Observer?</msg>
   <msg key="OK">OK\</msg>
@@ -457,9 +458,9 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Total">Total</msg>
   <msg key="Total_work_required">Total work required:</msg>
   <msg key="Type">Type</msg>
+  <msg key="Unmounted">Unmounted</msg>
   <msg key="Update_all">Update all</msg>
   <msg key="Updating_status">Updating status...</msg>
-  <msg key="Unmounted">Unmounted</msg>
   <msg key="Use">Use</msg>
   <msg key="Use_a_process">Use a process</msg>
   <msg key="Use_process">Use process</msg>
