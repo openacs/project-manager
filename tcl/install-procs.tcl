@@ -31,7 +31,6 @@ ad_proc -private pm::install::package_install {
     content::type::attribute::new -content_type {pm_project} -attribute_name {latest_finish_date} -datatype {date} -pretty_name {Latest finish date} -pretty_plural {Latest finish dates} -column_spec {timestamptz}
     content::type::attribute::new -content_type {pm_project} -attribute_name {actual_hours_completed} -datatype {number} -pretty_name {Actual hours completed} -pretty_plural {Actual hours completed} -column_spec {numeric}
     content::type::attribute::new -content_type {pm_project} -attribute_name {estimated_hours_total} -datatype {number} -pretty_name {Estimated hours total} -pretty_plural {Estimated hours total} -column_spec {numeric}
-    content::type::attribute::new -content_type {pm_project} -attribute_name {logger_project} -datatype {integer} -pretty_name {Linked logger project} -pretty_plural {Linked logger projects} -column_spec {integer}
     content::type::attribute::new -content_type {pm_project} -attribute_name {customer_id} -datatype {integer} -pretty_name {Customer} -pretty_plural {Customers} -column_spec {integer}
 
     ## Create pm_task
@@ -81,12 +80,14 @@ ad_proc -private pm::install::package_uninstantiate {
 ad_proc -public -callback pm::project_new {
     {-package_id:required}
     {-project_id:required}
+    {-data:required}
 } {
 }
 
 ad_proc -public -callback pm::project_edit {
     {-package_id:required}
     {-project_id:required}
+    {-data:required}
 } {
 }
 
@@ -297,6 +298,9 @@ ad_proc -private pm::install::after_upgrade {
 	    }
 	    3.0d2 3.0d3 {
 		rel_types::new "application_data_link" "Application Data Link" "Application Data Links" acs_object 0 "" acs_object 0 ""
+	    }
+	    3.0d3 3.0d4 {
+		content::type::attribute::delete -content_type {pm_project} -attribute_name {logger_project}
 	    }
 	}
 }

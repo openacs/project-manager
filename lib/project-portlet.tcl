@@ -19,9 +19,7 @@ set use_project_code_p [parameter::get -parameter "UseUserProjectCodesP" -defaul
 db_1row project_query { } -column_array project
 
 set richtext_list [list $project(description) $project(mime_type)]
-
 set project(description) [template::util::richtext::get_property html_value $richtext_list]
-
 set project_root [pm::util::get_root_folder]
 
 set project(planned_start_date) [lc_time_fmt $project(planned_start_date) "%x"]
@@ -30,3 +28,10 @@ set project(estimated_finish_date) [lc_time_fmt $project(estimated_finish_date) 
 set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) "%x"]
 set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) "%x"]
 set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
+
+dtype::get_object -object_id $project_id -object_type pm_project -array dattr -exclude_static
+
+multirow create dynamic_attributes name value
+foreach attr [array names dattr] {
+    multirow append dynamic_attributes "[_ dynamic-types.pm_project_$attr]" $dattr($attr)
+}

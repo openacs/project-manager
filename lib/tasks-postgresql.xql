@@ -37,8 +37,8 @@
         r.is_lead_p,
 	t.priority,
         p.customer_id,
-        p.logger_project,
-        p.title as project_name
+        p.title as project_name,
+	ar.object_id_two as logger_project
 	FROM
 	(select tr.item_id,
                 ta.party_id,
@@ -74,12 +74,18 @@
            i.item_id = d.task_id,
         pm_tasks_active ti,
         pm_task_status s,
-        pm_projectsx p
+        pm_projectsx p,
+	acs_rels ar,
+	acs_objects o
 	WHERE
         t.parent_id     = p.item_id and
         t.revision_id   = i.live_revision and
         t.item_id       = ti.task_id and
         ti.status       = s.status_id
+	and ar.object_id_one = t.parent_id
+	and ar.rel_type = 'application_data_link'
+	and o.object_id = ar.object_id_two
+	and o.object_type = 'logger_project'
         and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = ti.task_id
                     and ppm.privilege = 'read'

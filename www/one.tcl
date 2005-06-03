@@ -108,6 +108,8 @@ permission::require_permission -party_id $user_id -object_id $package_id -privil
 # Get Project Information
 db_1row project_query { } -column_array project
 
+set project(logger_project) [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
+
 # Context Bar and Title information
 set portlet_master "/packages/project-manager/lib/portlet"
 set project_root [pm::util::get_root_folder -package_id $package_id]

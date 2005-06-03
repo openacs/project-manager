@@ -19,17 +19,12 @@
         submitter.first_names || ' ' || submitter.last_name as user_name
         FROM
         logger_entries le
-        LEFT JOIN (select 
-                   r.title, 
-                   m.logger_entry 
-                   from 
-                   cr_items i, 
-                   cr_revisions r,
-                   pm_task_logger_proj_map m 
-                   where 
-                   r.item_id = m.task_item_id and
-                   i.live_revision = r.revision_id) task 
-                ON le.entry_id = task.logger_entry,
+        LEFT JOIN (select r.title, ar.object_id_two
+                   from cr_items i, cr_revisions r, acs_rels ar
+                   where r.item_id = ar.object_id_one
+		   and ar.rel_type = 'application_data_link'
+                   and i.live_revision = r.revision_id) task 
+                ON le.entry_id = task.object_id_two,
         logger_projects lp,
         acs_objects ao,
         persons submitter

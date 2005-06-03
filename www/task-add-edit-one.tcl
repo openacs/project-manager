@@ -62,7 +62,7 @@ set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCom
 if {[exists_and_not_null task_item_id] || ![ad_form_new_p -key task_id]} {
     set edit_p t
     db_1row task_data {}
-    set logger_project [pm::project::get_logger_project -project_item_id $project_item_id]
+    set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
     set variable_options [logger::ui::variable_options -project_id $logger_project]
 
     set open_p [pm::project::open_p -project_item_id $project_item_id]
@@ -491,7 +491,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -object_id $task_id \
 			 -form task_add_edit \
 			 -cr_widget none \
-			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id] \
+			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id object_type pm_task] \
 			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority} \
 			 -exclude_static]
 
@@ -553,15 +553,13 @@ ad_form -extend -name task_add_edit -new_request {
         # Log hours and other variables to task
         # -------------------------------------
 
-        set logger_project [pm::project::get_logger_project \
-                                -project_item_id $project_item_id]
-
+	set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
        
         if {[exists_and_not_null hours]} {
 
             pm::project::log_hours \
                 -logger_project_id $logger_project \
-                -variable_id $logger_variable \
+                -variable_id $logger_variable_id \
                 -value $hours \
                 -description $log \
                 -task_item_id $task_item_id \
@@ -583,7 +581,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -object_id $task_id \
 			 -form task_add_edit \
 			 -cr_widget none \
-			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id] \
+			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id object_type pm_task] \
 			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority} \
 			 -exclude_static]
 

@@ -56,13 +56,7 @@ create table pm_projects (
         latest_finish_date      timestamptz,
         -- denormalized, taken from logger
         actual_hours_completed  numeric,
-        estimated_hours_total   numeric,
-        -- The logger package keeps its own projects table
-        logger_project          integer
-                                constraint pm_projects_logger_pj_nn
-                                not null
-                                constraint pm_projects_logger_pj_fk
-                                references logger_projects
+        estimated_hours_total   numeric
 );
 
 
@@ -392,24 +386,6 @@ create table pm_tasks_revisions (
 	-- How important is this task
 	priority			integer default 0
 );
-
-create table pm_task_logger_proj_map (
-        task_item_id    integer
-                        constraint pm_task_log_proj_map_t_nn
-                        not null
-                        constraint pm_task_log_proj_map_t_fk
-                        references pm_tasks
-                        on delete cascade,
-        logger_entry    integer
-                        constraint pm_task_log_proj_map_l_nn
-                        not null
-                        constraint pm_task_log_proj_map_l_fk
-                        references logger_entries
-                        on delete cascade,
-        constraint pm_task_logger_proj_map_uq
-        unique (task_item_id, logger_entry)
-);
-
 
 
 

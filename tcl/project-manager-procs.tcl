@@ -310,14 +310,7 @@ ad_proc -public pm::util::logger_url {} {
     
     @error 
 } {
-    set return_val [parameter::get -parameter "LoggerPrimaryURL" -default ""]
-
-    if {[empty_string_p $return_val]} {
-        ns_log Error "Project-manager: need to set up LoggerPrimaryURL in parameters"
-        util_user_message -message "[_ project-manager.lt_Administrator_needs_t]"
-    }
-
-    return $return_val
+    return [site_node::get_url_from_object_id -object_id [lindex [application_link::get_linked -from_package_id [ad_conn package_id] -to_package_key logger] 0]]
 }
 
 

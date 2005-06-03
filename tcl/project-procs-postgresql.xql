@@ -45,18 +45,6 @@
     </querytext>
   </fullquery>
 
-  <fullquery name="pm::project::log_hours.add_task_logger_map">
-    <querytext>
-      INSERT INTO
-      pm_task_logger_proj_map
-      (task_item_id,
-      logger_entry)
-      VALUES
-      (:task_item_id,
-      :entry_id)
-    </querytext>
-  </fullquery>
-
   <fullquery name="pm::project::new.new_project_item">
     <querytext>
         select pm_project__new_project_item (
@@ -70,7 +58,7 @@
                 to_timestamp(:planned_end_date,'YYYY MM DD HH24 MI SS'),
                 null,
                 null,
-                :logger_project,
+                null,
                 :ongoing_p,
                 :status_id,
                 :organization_id,

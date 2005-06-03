@@ -161,7 +161,7 @@ ad_proc -private pm::project::log_hours {
     # if we have a pm_task_id, then we need to note that this
     # entry is logged to a particular task.
     if {[exists_and_not_null task_item_id]} {
-        db_dml add_task_logger_map { }
+	application_data_link::new -this_object_id $task_item_id -target_object_id $entry_id
         
         set returnval [pm::task::update_hours \
                            -task_item_id $task_item_id \
@@ -215,27 +215,7 @@ ad_proc -public pm::project::new {
         set planned_end_date ""
     }
 
-    # create a logger project
-    set logger_project [logger::project::new \
-                           -name $project_name \
-                           -project_lead $creation_user \
-                           ] 
-
-    # we want the logger project to show up in logger!
-    set logger_URLs [parameter::get -parameter "LoggerURLsToKeepUpToDate" -default ""]
-    foreach url $logger_URLs {
-        # get the package_id
-        set node_id [site_node::get_node_id -url $url]
-        array set node [site_node::get -node_id $node_id]
-        set this_package_id $node(package_id)
-
-        logger::package::map_project \
-            -project_id $logger_project \
-            -package_id $this_package_id
-    }
-
-    # create a project manager project (associating the logger project
-    # with the logger project)
+    # create a project manager project
     set project_revision [db_exec_plsql new_project_item { *SQL }]
 
     set project_item_id [pm::project::get_project_item_id \
@@ -284,9 +264,6 @@ ad_proc -public pm::project::delete {
     if {!$no_callback_p} {
 	callback pm::project_delete -package_id [ad_conn package_id] -project_id $project_item_id
     }
-
-    # should we delete the logger project as well?
-
 }
 
 
@@ -301,7 +278,6 @@ ad_proc -public pm::project::edit {
     {-planned_end_date ""}
     {-actual_start_date ""}
     {-actual_end_date ""}
-    -logger_project:required
     {-ongoing_p "f"}
     -status_id:required
     -organization_id:required
@@ -324,27 +300,6 @@ ad_proc -public pm::project::edit {
     
     @error 
 } {
-
-    # if we edit the name of the project, we need to edit the logger
-    # project name too.
-
-    set logger_project [pm::project::get_logger_project \
-                            -project_item_id $project_item_id]
-
-    set active_p [pm::status::open_p -task_status_id $status_id]
-    set customer_name [organizations::name -organization_id "$organization_id"]
-
-    if {![empty_string_p $customer_name]} {
-        append customer_name " - "
-    }
-
-    logger::project::edit \
-        -project_id $logger_project \
-        -name "$customer_name$project_name" \
-        -description "$description" \
-        -project_lead $creation_user \
-        -active_p $active_p
-
     set returnval [db_exec_plsql update_project "
 	select pm_project__new_project_revision (
 		:project_item_id,
@@ -357,7 +312,7 @@ ad_proc -public pm::project::edit {
 		to_timestamp(:planned_end_date,'YYYY MM DD HH24 MI SS'),
 		null,
 		null,
-                :logger_project,
+                null,
 		:ongoing_p,
                 :status_id,
                 :organization_id,
@@ -1559,32 +1514,6 @@ ad_proc -public pm::project::compute_parent_status {project_item_id} {
     return $return_code
 }
 
-
-
-ad_proc -public pm::project::get_logger_project {
-    -project_item_id:required
-} {
-    Returns logger's project ID when given project manager's project ID
-    
-    @author Jade Rubick (jader@bread.com)
-    @creation-date 2004-03-04
-    
-    @param project_item_id
-
-    @return logger's project_id
-    
-    @error returns no_project if no such project_item_id exists
-} {
-    return [db_string get_logger_project "
-        SELECT
-        logger_project 
-        FROM
-        pm_projects
-        WHERE
-        project_id =
-          (select live_revision from cr_items where item_id = :project_item_id)
-    " -default "no_project"]
-}
 
 
 ad_proc -public pm::project::get_project {

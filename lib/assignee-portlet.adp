@@ -15,7 +15,7 @@
       </if>
       <if @assigned_p@>
 	<li>
-	  <a href="@assignee_remove_self_url;noquote@">#project-manager.Remove#</a>
+	  <a href="@assignee_remove_self_url;noquote@">#project-manager.Remove_myself#</a>
 	</li>
       </if>
       <li>

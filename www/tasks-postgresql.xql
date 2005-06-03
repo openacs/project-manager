@@ -12,7 +12,7 @@
         t.description,	
 	tst.description as status,
         t.parent_id as project_item_id,
-        proj_rev.logger_project,
+        ar.object_id_two as logger_project,
         proj_rev.title as project_name,
         to_char(t.earliest_start,'J') as earliest_start_j,
         to_char(current_timestamp,'J') as today_j,
@@ -44,7 +44,9 @@
             ON ta.role_id = r.role_id,
         cr_items proj,
 	cr_folders f,
-        pm_projectsx proj_rev
+        pm_projectsx proj_rev,
+	acs_rels ar,
+	acs_objects o
         WHERE
         ts.task_id  = t.item_id and
 	tst.status_id = status and
@@ -54,6 +56,10 @@
         proj.live_revision = proj_rev.revision_id
 	and proj.parent_id = f.folder_id
         and f.package_id = :package_id
+	and ar.object_id_one = t.parent_id
+	and ar.rel_type = 'application_data_link'
+	and o.object_id = ar.object_id_two
+	and o.object_type = 'logger_project'
 	[template::list::page_where_clause -and -name "tasks" -key "ts.task_id"]
         and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = ts.task_id

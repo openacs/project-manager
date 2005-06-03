@@ -13,8 +13,6 @@
 \i project-manager-custom-drop.sql
 \i project-manager-notifications-drop.sql
 
-drop table pm_task_logger_proj_map;
-
 create function inline_0 ()
 returns integer as '
 declare

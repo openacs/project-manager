@@ -116,7 +116,7 @@ if {[empty_string_p $contacts_url]} {
 
 # Get the rows to display
 
-set row_list "project_name {}\n" 
+set row_list "checkbox {}\nproject_name {}\n" 
 foreach element $elements {
     append row_list "$element {}\n"
 }

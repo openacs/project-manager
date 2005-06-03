@@ -17,17 +17,15 @@
                submitter.person_id as user_id,
                submitter.first_names || ' ' || submitter.last_name as user_name
         FROM logger_entries le ,
-             (SELECT r.title, 
-                     m.logger_entry 
-              FROM cr_items i, 
-                   cr_revisions r,
-                   pm_task_logger_proj_map m 
-              WHERE r.item_id = m.task_item_id and
-                    i.live_revision = r.revision_id) task,
+             (SELECT r.title, ar.object_id_two
+              FROM cr_items i, cr_revisions r, acs_rels ar
+              WHERE r.item_id = ar.object_id_one
+              and ar.rel_type = 'application_data_link'
+	      and i.live_revision = r.revision_id) task,
               logger_projects lp,
               acs_objects ao,
               persons submitter
-        WHERE le.entry_id = task.logger_entry (+) and
+        WHERE le.entry_id = task.object_id_two (+) and
               le.project_id = lp.project_id and
               ao.object_id = le.entry_id and
               ao.creation_user = submitter.person_id

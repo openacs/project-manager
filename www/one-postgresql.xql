@@ -7,7 +7,6 @@
         p.item_id,
 	p.project_id,
 	p.title as project_name,
-	p.project_code,
 	p.goal,
 	p.description,
         p.mime_type, 

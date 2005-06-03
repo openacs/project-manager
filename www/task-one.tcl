@@ -9,21 +9,19 @@ ad_page_contract {
     @return task_term_lower Term to use for task
     @return assignee_term Term to use for assignee
     @return watcher_term Term to use for watcher
-    @return dependency multirow that stores dependency information
-    @return dependency2 multirow that stores dependency information for tasks that have dependencies on this particular task
 
     @param task_id item_id for the task
     @param project_item_id the item_id for the project. Used for navigational links
     @param project_id the revision_id for the project. Used for navigational links
     @param context_bar value for context bar creation
-    @param orderby_dependency specifies how the dependencies will be sorted
-    @param orderby_dependency2 specifies how the dependencies will be sorted (for tasks that have dependencies on this task)
+    @param orderby_depend_to specifies how the dependencies will be sorted
+    @param orderby_depend_from specifies how the dependencies will be sorted (for tasks that have dependencies on this task)
     @param logger_days The number of days back to view logged entries
 } {
     task_id:integer,optional
     task_revision_id:integer,optional
-    orderby_dependency:optional
-    orderby_dependency2:optional
+    {orderby_depend_to:optional ""}
+    {orderby_depend_from:optional ""}
     orderby_people:optional
     {logger_variable_id:integer ""}
     {logger_days:integer "180"}
@@ -36,8 +34,6 @@ ad_page_contract {
     context:onevalue
     write_p:onevalue
     create_p:onevalue
-    dependency:multirow
-    dependency2:multirow
     people:multirow
     task_term:onevalue
     task_term_lower:onevalue
@@ -196,8 +192,7 @@ set return_url [ad_return_url]
 
 set task_edit_url [export_vars -base task-add-edit {{task_item_id $task_id} return_url project_item_id}]
 
-set logger_project [pm::project::get_logger_project \
-                        -project_item_id $task_info(project_item_id)]
+set logger_project [lindex [application_data_link::get_linked -from_object_id $task_info(project_item_id) -to_object_type logger_project] 0]
 
 set logger_url [pm::util::logger_url]
 
@@ -242,125 +237,17 @@ set notification_chunk [notification::display::request_widget \
                             -url "[ad_conn url]?[ad_conn query]" \
                            ]
 
+# ------------------
+# Dynamic Attributes
+# ------------------
 
-# Dependency info ------------------------------------------------
+dtype::get_object -object_id $task_revision_id -object_type pm_task -array dattr -exclude_static
 
-template::list::create \
-    -name dependency \
-    -multirow dependency \
-    -key d_task_id \
-    -elements {
-        dependency_type {
-            label "[_ project-manager.Type]"
-            display_template {
-                <if @dependency.dependency_type@ eq start_before_start>
-                <img border="0" src="resources/start_before_start.png">
-                </if>
-                <if @dependency.dependency_type@ eq start_before_finish>
-                <img border="0" src="resources/start_before_finish.png">
-                </if>
-                <if @dependency.dependency_type@ eq finish_before_start>
-                <img border="0" src="resources/finish_before_start.png">
-                </if>
-                <if @dependency.dependency_type@ eq finish_before_finish>
-                <img border="0" src="resources/finish_before_finish.png">
-                </if>
-            }
-        }
-        d_task_id {
-            label "[_ project-manager.Task]"
-            display_col task_title
-            link_url_col item_url
-            link_html { title "[_ project-manager.View_this_task]" }
-        }
-        percent_complete {
-            label "[_ project-manager.Status_1]"
-            display_template "@dependency.percent_complete@\%"
-        }
-        end_date {
-            label "[_ project-manager.Deadline_1]"
-        }
-    } \
-    -orderby {
-        percent_complete {orderby percent_complete}
-        end_date {orderby end_date}
-    } \
-    -orderby_name orderby_dependency \
-    -sub_class {
-        narrow
-    } \
-    -filters {
-        task_revision_id {}
-        orderby_dependency2 {}
-    } \
-    -html {
-        width 100%
-    }
-
-db_multirow -extend { item_url } dependency dependency_query {
-} {
-    set item_url [export_vars -base "task-one" -override {{task_id $parent_task_id}} { task_id $d_task_id }]
+multirow create dynamic_attributes name value
+foreach attr [array names dattr] {
+    multirow append dynamic_attributes "[_ dynamic-types.pm_task_$attr]" $dattr($attr)
 }
 
-# Dependency info (dependency other task have on this task) ------
-
-template::list::create \
-    -name dependency2 \
-    -multirow dependency2 \
-    -key d_task_id \
-    -elements {
-        dependency_type {
-            label "[_ project-manager.Type]"
-            display_template {
-                <if @dependency2.dependency_type@ eq start_before_start>
-                <img border="0" src="resources/start_before_start.png">
-                </if>
-                <if @dependency2.dependency_type@ eq start_before_finish>
-                <img border="0" src="resources/start_before_finish.png">
-                </if>
-                <if @dependency2.dependency_type@ eq finish_before_start>
-                <img border="0" src="resources/finish_before_start.png">
-                </if>
-                <if @dependency2.dependency_type@ eq finish_before_finish>
-                <img border="0" src="resources/finish_before_finish.png">
-                </if>
-            }
-        }
-        d_task_id {
-            label "[_ project-manager.Task]"
-            display_col task_title
-            link_url_eval {task-one?task_id=$d_task_id}
-            link_html { title "[_ project-manager.View_this_task]" }
-        }
-        percent_complete {
-            label "[_ project-manager.Status_1]"
-            display_template "@dependency2.percent_complete@\%"
-        }
-        end_date {
-            label "[_ project-manager.Deadline_1]"
-        }
-    } \
-    -orderby {
-        percent_complete {orderby percent_complete}
-        end_date {orderby end_date}
-    } \
-    -orderby_name orderby_dependency2 \
-    -sub_class {
-        narrow
-    } \
-    -filters {
-        task_revision_id {}
-        orderby_dependency {}
-    } \
-    -html {
-        width 100%
-    }
-
-
-db_multirow -extend { item_url } dependency2 dependency2_query {
-} {
-
-}
 
 # People, using list-builder ---------------------------------
 
@@ -388,9 +275,8 @@ template::list::create \
     -filters {
         party_id {}
         task_id {}
-        orderby_subproject {}
-        orderby_versions {}
-        orderby_tasks {}
+        orderby_depend_to {}
+        orderby_depend_from {}
     } \
     -orderby {
         default_value role_id,desc
@@ -413,71 +299,6 @@ template::list::create \
 
 db_multirow people task_people_query { }
 
-# Xrefs ------------------------------------------------
-
-template::list::create \
-    -name xrefs \
-    -multirow xrefs \
-    -key x_task_id \
-    -elements {
-        x_task_id {
-            label "[_ project-manager.ID]"
-        }
-        title {
-            label "[_ project-manager.Task]"
-            link_url_col item_url
-            link_html { title "[_ project-manager.View_this_task]" }
-        }
-        slack_time {
-            label "[_ project-manager.Slack_1]"
-        }
-        earliest_start_pretty {
-            label "[_ project-manager.ES]"
-        }
-        earliest_finish_pretty {
-            label "[_ project-manager.EF]"
-        }
-        latest_start_pretty {
-            label "[_ project-manager.LS]"
-        }
-        latest_finish_pretty {
-            label "[_ project-manager.LF]"
-            display_template {
-                <b>@xrefs.latest_finish_pretty@</b>
-            }
-        }
-    } \
-    -sub_class {
-        narrow
-    } \
-    -filters {
-        task_revision_id {}
-        orderby_revision {}
-        orderby_dependency {}
-        orderby_dependency2 {}
-    } \
-    -html {
-        width 100%
-    }
-
-db_multirow -extend { item_url earliest_start_pretty earliest_finish_pretty latest_start_pretty latest_finish_pretty slack_time } xrefs xrefs_query {
-} {
-    set item_url [export_vars -base "task-one" -override {{task_id $x_task_id}}]
-
-    set earliest_start_pretty [lc_time_fmt $earliest_start "%x"]
-    set earliest_finish_pretty [lc_time_fmt $earliest_finish "%x"]
-    set latest_start_pretty [lc_time_fmt $latest_start "%x"]
-    set latest_finish_pretty [lc_time_fmt $latest_finish "%x"nn]
-
-    set slack_time [pm::task::slack_time \
-                        -earliest_start_j $earliest_start_j \
-                        -today_j $today_j \
-                        -latest_start_j $latest_start_j]
-
-}
-
-
 ad_return_template
 
 # ------------------------- END OF FILE ------------------------- #
-

@@ -19,7 +19,6 @@
         p.mime_type, 
 	to_char(p.planned_start_date,'YYYY-MM-DD HH24:MI') as planned_start_date,
 	to_char(p.planned_end_date,'YYYY-MM-DD HH24:MI') as planned_end_date,
-        p.logger_project,
 	p.ongoing_p,
         i.live_revision,
         to_char(p.estimated_finish_date,'YYYY-MM-DD HH24:MI') as estimated_finish_date,

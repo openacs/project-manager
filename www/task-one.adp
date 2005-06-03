@@ -95,6 +95,11 @@
                   <td class="list-bg">@task_info.description;noquote@</td>
                 </tr>
 
+                <multiple name="dynamic_attributes">
+                  <tr><td class="subheader">@dynamic_attributes.name@</td></tr>
+                  <tr><td class="list-bg">@dynamic_attributes.value@</td></tr>
+                </multiple>
+
                 <tr>
                   <td class="list-bg" align="right">-- @task_info.creation_user@</td>
                 </tr>
@@ -294,73 +299,24 @@
 
         <P />
         
-        <table border="0 class="list" width="100%" cellpadding="0" cellspacing="0">
-          <tr>
-            <th align="left" valign="top" width="10">
-              <img src="resources/tl-e6e6fa" align="top" />
-            </th>
-            <th>#project-manager.lt_task_terms_this_depen#</th>
-            <th align="right" valign="top" width="10">
-              <img src="resources/tr-e6e6fa" align="top" />
-            </th>
-          </tr>
-          <tr>
-            <td colspan="2" class="list-bottom-bg">
-              <listtemplate name="dependency"></listtemplate>
-            </td>
-            <td class="list-right-bg">&nbsp;</td>
-          </tr>
-        </table>
+        <include src="/packages/project-manager/lib/dependency-portlet"
+	         task_id="@task_id@"
+		 task_term="@task_term@"
+		 type="to_other" />
         
         <P />
         
-        <table border="0" class="list" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <th align="left" valign="top" width="10">
-              <img src="resources/tl-e6e6fa" align="top" />
-            </th>
-            <th>#project-manager.lt_task_terms_depending_#</th>
-            <th align="right" valign="top" width="10">
-              <img src="resources/tr-e6e6fa" align="top" />
-            </th>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <listtemplate name="dependency2"></listtemplate>
-            </td>
-            <td class="list-right-bg">&nbsp;</td>
-          </tr>
-        </table>
+        <include src="/packages/project-manager/lib/dependency-portlet"
+	         task_id="@task_id@"
+		 task_term="@task_term@"
+		 type="from_other" />
         
         <p />
         
-        <table border="0" class="list" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <th align="left" valign="top" width="10">
-              <img src="resources/tl-e6e6fa" align="top" />
-            </th>
-            <th>#project-manager.Related_task_terms#</th>
-            <th align="right" valign="top" width="10">
-              <img src="resources/tr-e6e6fa" align="top" />
-            </th>
-          </tr>
-          <tr>
-            <td colspan="2" class="list-bottom-bg">
-              <listtemplate name="xrefs"></listtemplate>
-            </td>
-            <td class="list-right-bg">&nbsp;</td>
-          </tr>
-          <tr>
-            <td colspan="2" class="list-bottom-bg">
-              <form action="task-link" method="post">
-                #project-manager.Link_task# 
-                <input type="text" name="to_task" size="7" />
-                <input type="hidden" name="from_task" value="@task_id;noquote@" />
-                <input type="hidden" name="return_url" value="@return_url@" />
-            </td>
-            <td class="list-right-bg">&nbsp;</td>
-          </tr>
-        </table>
+        <include src="/packages/project-manager/lib/related-tasks-portlet"
+	         task_id="@task_id@"
+		 task_term="@task_term@"
+		 return_url="@return_url@" />
         
       </td>
     </tr>

@@ -197,23 +197,6 @@
     </querytext>
   </fullquery>
 
-  <fullquery name="pm::task::edit.update_logger_entries">
-    <querytext>
-      UPDATE 
-      logger_entries 
-      SET 
-      project_id = :logger_project 
-      WHERE 
-      entry_id in 
-      (select 
-      logger_entry 
-      from 
-      pm_task_logger_proj_map 
-      where 
-      task_item_id = :task_item_id)
-    </querytext>
-  </fullquery>
-
   <fullquery name="pm::task::new.new_task_item">
     <querytext>
         select pm_task__new_task_item (

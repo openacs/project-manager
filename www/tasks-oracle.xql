@@ -10,7 +10,7 @@
                t.title,
                t.description,
                t.parent_id as project_item_id,
-               proj_rev.logger_project,
+               r.object_id_two as logger_project,
                proj_rev.title as project_name,
                to_char(t.earliest_start,'J') as earliest_start_j,
                to_char(sysdate,'J') as today_j,
@@ -36,7 +36,9 @@
               persons p ,
               pm_roles r ,
               cr_items proj,
-              pm_projectsx proj_rev
+              pm_projectsx proj_rev,
+	      acs_rels ar,
+	      acs_objects o
         WHERE t.item_id = ta.task_id (+) and
               ta.party_id = p.person_id (+) and
               ta.role_id = r.role_id (+) and 
@@ -44,7 +46,11 @@
               i.item_id   = t.item_id and
               t.task_revision_id = i.live_revision and 
               t.parent_id = proj.item_id and
-              proj.live_revision = proj_rev.revision_id
+              proj.live_revision = proj_rev.revision_id and
+	      ar.object_id_one = t.parent_id and
+	      ar.rel_type = 'application_data_link' and
+	      o.object_id = ar.object_id_two and
+	      o.object_type = 'logger_project'
               [template::list::filter_where_clauses -and -name tasks]
               [template::list::orderby_clause -orderby -name tasks]
     </querytext>

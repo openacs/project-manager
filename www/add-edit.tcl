@@ -24,7 +24,6 @@ ad_page_contract {
     {deadline_scheduling ""}
     {ongoing_p ""}
     {status_id ""}
-    {logger_project ""}
 
 } -properties {
 
@@ -75,7 +74,7 @@ if {[ad_form_new_p -key project_item_id]} {
     set logger_values ""
 } else {
 
-    set logger_project [pm::project::get_logger_project -project_item_id $project_item_id]
+    set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
     set logger_values [logger::project::get_variables -project_id $logger_project]
 
 }
@@ -90,10 +89,6 @@ ad_form -name add_edit \
 
         {project_item_id:text(hidden)
             {value $project_item_id}
-        }
-
-        {logger_project:text(hidden)
-            {value $logger_project}
         }
 
         {project_name:text
@@ -208,6 +203,9 @@ ad_form -extend -name add_edit \
         set user_id [ad_conn user_id]
         set peeraddr [ad_conn peeraddr]
 	set folder_id [pm::util::get_root_folder -package_id $package_id]
+	set callback_data(organization_id) $customer_id
+	set callback_data(variables) $variables
+
 	set customer_name [organizations::name -organization_id $customer_id]
 	if {![empty_string_p $customer_name]} {
 	    append customer_name " - "
@@ -230,41 +228,18 @@ ad_form -extend -name add_edit \
 		set planned_end_date ""
 	    }
 
-	    # create a logger project
-	    set logger_project [logger::project::new \
-				    -name "$customer_name$project_name" \
-				    -description $description \
-				    -project_lead $user_id \
-				   ] 
-
-	    # we want the logger project to show up in logger!
-	    set logger_URLs [parameter::get -parameter "LoggerURLsToKeepUpToDate" -default ""]
-	    foreach url $logger_URLs {
-		# get the package_id
-		set node_id [site_node::get_node_id -url $url]
-		array set node [site_node::get -node_id $node_id]
-		set this_package_id $node(package_id)
-
-		logger::package::map_project \
-		    -project_id $logger_project \
-		    -package_id $this_package_id
-	    }
-
-	    # create a project manager project (associating the logger project
-	    # with the logger project)
-
+	    # create a project manager project
 	    set project_id [dtype::form::process \
 				-prefix pm \
 				-object_type pm_project \
 				-object_id $project_id \
 				-form add_edit \
 				-cr_widget none \
-				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id] \
-				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id logger_project} \
+				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id object_type pm_project] \
+				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id} \
 				-exclude_static]
 
 	    set project_item_id [pm::project::get_project_item_id -project_id $project_id]
-	    # set logger_project [pm::project::get_logger_project -project_item_id $project_item_id]
 	    set project_role [pm::role::default]
 
 	    pm::project::assign \
@@ -277,16 +252,7 @@ ad_form -extend -name add_edit \
 		category::map_object -remove_old -object_id $project_item_id $category_ids
 	    }
 
-	    if {[exists_and_not_null variables]} {
-		foreach var $variables {
-		    logger::project::map_variable -project_id $logger_project -variable_id $var
-		}
-	    } else {
-		# add in the default variable
-		logger::project::map_variable -project_id $logger_project -variable_id [logger::variable::get_default_variable_id]
-	    }
-
-	    callback pm::project_new -package_id $package_id -project_id $project_item_id
+	    callback pm::project_new -package_id $package_id -project_id $project_item_id -data [array get callback_data]
 	}
 
     } -edit_data {
@@ -297,43 +263,22 @@ ad_form -extend -name add_edit \
 	    # it until it is edited. So we need to pull in these values
 	    set old_project_id $project_id
 
-	    set logger_project [pm::project::get_logger_project \
-				    -project_item_id $project_item_id]
-
-	    set active_p [pm::status::open_p -task_status_id $status_id]
-
-	    logger::project::edit \
-		-project_id $logger_project \
-		-name "$customer_name$project_name" \
-		-description $description \
-		-project_lead $user_id \
-		-active_p $active_p
-
 	    set project_id [dtype::form::process \
 				-prefix pm \
 				-object_type pm_project \
 				-object_id $project_id \
 				-form add_edit \
 				-cr_widget none \
-				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id] \
-				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id logger_project} \
+				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id object_type pm_project] \
+				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id} \
 				-exclude_static]
 
-	    set project_item_id [pm::project::get_project_item_id \
-				     -project_id $project_id]
-
-	    # set logger_project [pm::project::get_logger_project -project_item_id $project_item_id]
-
-	    if {[exists_and_not_null variables]} {
-		logger::project::remap_variables -project_id $logger_project -new_variable_list $variables
-	    } else {
-		logger::project::remap_variables -project_id $logger_project -new_variable_list [logger::variable::get_default_variable_id]
-	    }
+	    set project_item_id [pm::project::get_project_item_id -project_id $project_id]
 
 	    if {[exists_and_not_null category_ids]} {
 		category::map_object -remove_old -object_id $project_item_id $category_ids
 	    }
-	    callback pm::project_edit -package_id $package_id -project_id $project_item_id
+	    callback pm::project_edit -package_id $package_id -project_id $project_item_id -data [array get callback_data]
 	}
 
     } -after_submit {

@@ -166,9 +166,7 @@ if {[string is true $edit_p]} {
         # Log hours and other variables to task
         # -------------------------------------
 
-        set logger_project [pm::project::get_logger_project \
-                                -project_item_id $project_item_id($num)]
-
+	set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id($num) -to_object_type logger_project] 0]
        
         if {[exists_and_not_null hours($num)]} {
 

@@ -53,7 +53,6 @@
                 p_planned_end_date    => to_date(:planned_end_date,'YYYY MM DD HH24 MI SS'),
                 p_actual_start_date   => null,
                 p_actual_end_date     => null,
-                p_logger_project      => :logger_project,
                 p_ongoing_p           => :ongoing_p,
                 p_status_id           => :status_id,
                 p_customer_id         => :organization_id,

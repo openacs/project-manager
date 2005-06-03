@@ -58,7 +58,7 @@ if { [exists_and_not_null end_date_ansi] } {
 # project manager task.
 
 if { [exists_and_not_null pm_task_id] } {
-    lappend where_clauses "le.entry_id in (select logger_entry from pm_task_logger_proj_map where task_item_id = :pm_task_id)"
+    lappend where_clauses "le.entry_id in (select object_id_two from acs_rels where object_id_one = :pm_task_id and rel_type = 'application_data_link')"
 }
 
 

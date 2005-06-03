@@ -51,55 +51,6 @@
     </querytext>
   </fullquery>
 
-  <fullquery name="dependency_query">
-    <querytext>
-        SELECT
-        t.title as task_title,
-        to_char(t.end_date,'MM/DD/YYYY') as end_date,
-        t.percent_complete,
-        i.live_revision,
-        d.parent_task_id,
-        d.dependency_type
-        FROM
-        pm_tasks_revisionsx t, cr_items i, pm_task_dependency d
-        WHERE
-        d.task_id        = :task_id and
-        d.parent_task_id = t.item_id and 
-        t.revision_id    = i.live_revision and
-        t.item_id        = i.item_id
-        and exists (select 1 from acs_object_party_privilege_map ppm
-                    where ppm.object_id = d.task_id
-                    and ppm.privilege = 'read'
-                    and ppm.party_id = :user_id)
-        [template::list::orderby_clause -name dependency -orderby]
-    </querytext>
-  </fullquery>
-
-  <fullquery name="dependency2_query">
-    <querytext>
-        SELECT
-        t.title as task_title,
-        to_char(t.end_date,'MM/DD/YYYY') as end_date,
-        t.percent_complete,
-        i.live_revision,
-        d.parent_task_id,
-        d.dependency_type,
-        d.task_id as d_task_id
-        FROM
-        pm_tasks_revisionsx t, cr_items i, pm_task_dependency d
-        WHERE
-        d.task_id        = t.item_id and
-        d.parent_task_id = :task_id and 
-        t.revision_id    = i.live_revision and
-        t.item_id        = i.item_id
-        and exists (select 1 from acs_object_party_privilege_map ppm
-                    where ppm.object_id = d.task_id
-                    and ppm.privilege = 'read'
-                    and ppm.party_id = :user_id)
-        [template::list::orderby_clause -name dependency2 -orderby]
-    </querytext>
-  </fullquery>
-
   <fullquery name="task_people_query">
     <querytext>
         select
@@ -121,52 +72,6 @@
                     and ppm.privilege = 'read'
                     and ppm.party_id = :user_id)
         [template::list::orderby_clause -name people -orderby]
-    </querytext>
-  </fullquery>
-
-  <fullquery name="xrefs_query">
-    <querytext>
-      SELECT
-      x.task_id_1 as x_task_id,
-      r.title,
-        to_char(r.earliest_start,'YYYY-MM-DD HH24:MI') as earliest_start,
-        r.earliest_start - current_date as days_to_earliest_start,
-        to_char(r.earliest_start,'J') as earliest_start_j,
-        to_char(r.earliest_finish,'YYYY-MM-DD HH24:MI') as earliest_finish,
-        r.earliest_finish - current_date as days_to_earliest_finish,
-        to_char(r.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
-        r.latest_start - current_date as days_to_latest_start,
-        to_char(r.latest_start,'J') as latest_start_j,
-        to_char(current_date,'J') as today_j,
-        to_char(r.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
-        r.latest_finish - current_date as days_to_latest_finish
-      FROM
-      pm_task_xref x, pm_tasks_revisionsx r, cr_items i
-      WHERE
-      x.task_id_2      = :task_id and
-      x.task_id_1      = r.item_id and
-      r.revision_id    = i.live_revision
-      UNION
-      SELECT
-      x2.task_id_2 as x_task_id,
-      r2.title,
-        to_char(r2.earliest_start,'YYYY-MM-DD HH24:MI') as earliest_start,
-        r2.earliest_start - current_date as days_to_earliest_start,
-        to_char(r2.earliest_start,'J') as earliest_start_j,
-        to_char(r2.earliest_finish,'YYYY-MM-DD HH24:MI') as earliest_finish,
-        r2.earliest_finish - current_date as days_to_earliest_finish,
-        to_char(r2.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
-        r2.latest_start - current_date as days_to_latest_start,
-        to_char(r2.latest_start,'J') as latest_start_j,
-        to_char(current_date,'J') as today_j,
-        to_char(r2.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
-        r2.latest_finish - current_date as days_to_latest_finish
-      FROM
-      pm_task_xref x2, pm_tasks_revisionsx r2, cr_items i2
-      WHERE
-      x2.task_id_1      = :task_id and
-      x2.task_id_2      = r2.item_id and
-      i2.live_revision  = r2.revision_id
     </querytext>
   </fullquery>
 

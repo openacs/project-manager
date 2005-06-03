@@ -44,7 +44,7 @@ if { [ad_conn user_id] != 0} {
     if [empty_string_p $project_item_id] {
 	lappend link_list [list "[export_vars -base ${logger_url} {user_id {project_manager_url $package_url}}]"]
     } else {
-	set logger_project_id [pm::project::get_logger_project -project_item_id $project_item_id]
+	set logger_project_id [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
 	lappend link_list [list "[export_vars -base ${logger_url} {{project_manager_url $package_url} {project_id $logger_project_id}}]"]
     }
     lappend link_list {}

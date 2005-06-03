@@ -87,7 +87,7 @@
   <msg key="Earliest_Start">Earliest Start</msg>
   <msg key="Earliest_start">Earliest start</msg>
   <msg key="Edit">Edit</msg>
-  <msg key="Edit_1">assignees</msg>
+  <msg key="Edit_1">Edit assignees</msg>
   <msg key="Edit_a_Process">Edit a Process</msg>
   <msg key="Edit_assignees">Edit assignees</msg>
   <msg key="Edit_categories">Edit categories</msg>
@@ -356,7 +356,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="number">#</msg>
   <msg key="Number_of_new_tasks">Number of new tasks</msg>
   <msg key="Observer">Observer?</msg>
-  <msg key="OK">OK\</msg>
+  <msg key="OK">OK</msg>
   <msg key="One">One</msg>
   <msg key="One_line_description">One line description</msg>
   <msg key="One_process">One process</msg>
@@ -441,6 +441,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Sync">Sync</msg>
   <msg key="Table">Table</msg>
   <msg key="Task">Task</msg>
+  <msg key="task">task</msg>
   <msg key="Task_Calendar">Task Calendar</msg>
   <msg key="Task_calendar">Task calendar</msg>
   <msg key="task_change">task change</msg>

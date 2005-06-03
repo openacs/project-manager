@@ -52,6 +52,12 @@
 		  <td class="highlight" valign="top">#project-manager.Description_1#</td>
 		  <td class="fill-list-bg">@project.description;noquote@</td>
 		</tr>
+                <multiple name="dynamic_attributes">
+		  <tr>
+		    <td class="highlight">@dynamic_attributes.name@:</td>
+		    <td class="fill-list-bg">@dynamic_attributes.value@</td>
+		  </tr>
+                </multiple>
 	      </table>
 	    </td>
 	    <td class="fill-list-right">&nbsp;</td>
@@ -66,4 +72,3 @@
         </tr>
 
 	</table>
-

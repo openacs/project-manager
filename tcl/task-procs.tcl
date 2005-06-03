@@ -676,25 +676,14 @@ ad_proc -public pm::task::edit {
     }
 
     if {$percent_complete >= 100} {
-
         set status_id [pm::task::default_status_closed]
-
     } elseif {$percent_complete < 100} {
-
         set status_id [pm::task::default_status_open]
     }
 
-    set actual_hours_worked [pm::task::update_hours \
-                                 -task_item_id $task_item_id]
+    set actual_hours_worked [pm::task::update_hours -task_item_id $task_item_id]
 
     set return_val [db_exec_plsql new_task_revision { *SQL }]
-
-    # we have to update all logged hours to make sure the hours are
-    # set to the correct project whenever the project is changed.
-
-    set logger_project [pm::project::get_logger_project -project_item_id $project_item_id]
-
-    db_dml update_logger_entries { }
 
     if {!$no_callback_p} {
 	callback pm::task_edit -package_id $package_id -task_id $task_item_id
@@ -887,7 +876,7 @@ ad_proc -private pm::task::update_hours {
 } {
     The pm_tasks_revisions table contains a denormalized cache of the
     total number of hours logged to it. Updates the cache from the 
-    hours logged in logger and the pm_task_logger_proj_map table
+    hours logged in logger
     
     @author Jade Rubick (jader@bread.com)
     @creation-date 2004-03-04
@@ -928,9 +917,8 @@ ad_proc -private pm::task::update_hours {
                              -task_id $task_revision_id]
     }
 
-
     set total_logged_hours [db_string total_hours "
-        select sum(le.value) from logger_entries le where entry_id in (select logger_entry from pm_task_logger_proj_map where task_item_id = :task_item_id) and le.variable_id = '[logger::variable::get_default_variable_id]'
+        select sum(le.value) from logger_entries le where entry_id in (select object_id_two from acs_rels where object_id_one = :task_item_id and rel_type = 'application_data_link') and le.variable_id = '[logger::variable::get_default_variable_id]'
     " -default "0"]
 
     if {[string is true $update_tasks_p]} {

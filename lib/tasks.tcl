@@ -389,6 +389,7 @@ template::list::create \
     }
 
 db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url} tasks tasks {} {
+
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
 

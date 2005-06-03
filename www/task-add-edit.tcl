@@ -187,10 +187,8 @@ if {[string is true $edit_p]} {
                                  -selected $this_project]
 
         # find out the default logger variable for this project
-        set logger_project [pm::project::get_logger_project \
-                                -project_item_id $this_project]
-        set logger_variable_id [logger::project::get_primary_variable \
-                                    -project_id $logger_project]
+	set logger_project [lindex [application_data_link::get_linked -from_object_id $this_project -to_object_type logger_project] 0]
+        set logger_variable_id [logger::project::get_primary_variable -project_id $logger_project]
 	set today_date [db_string today "select to_date(sysdate,'YYYY-MM-DD')  from dual"]
         set today_html$task "<br><input type=\"text\" name=\"log_date\" value=\"$today_date\" id=\"sel2$task\" /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel2$task', 'y-m-d');\"> <b>y-m-d </b>"
         
