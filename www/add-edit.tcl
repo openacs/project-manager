@@ -11,6 +11,7 @@ ad_page_contract {
 
 } {
     project_id:integer,optional
+    {dform:optional "implicit"}
     {project_revision_id ""}
     {project_item_id ""}
     {project_name ""}
@@ -182,7 +183,7 @@ if {$use_project_code_p} {
         } 
 }
 
-dtype::form::add_elements -prefix pm -object_type pm_project -object_id [value_if_exists project_id] -form add_edit -exclude_static -cr_widget none
+dtype::form::add_elements -dform $dform -prefix pm -object_type pm_project -object_id [value_if_exists project_id] -form add_edit -exclude_static -cr_widget none
 
 ad_form -extend -name add_edit \
     -new_request {
@@ -230,6 +231,7 @@ ad_form -extend -name add_edit \
 
 	    # create a project manager project
 	    set project_id [dtype::form::process \
+				-dform $dform \
 				-prefix pm \
 				-object_type pm_project \
 				-object_id $project_id \
@@ -264,6 +266,7 @@ ad_form -extend -name add_edit \
 	    set old_project_id $project_id
 
 	    set project_id [dtype::form::process \
+				-dform $dform \
 				-prefix pm \
 				-object_type pm_project \
 				-object_id $project_id \

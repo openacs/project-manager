@@ -23,6 +23,7 @@ ad_page_contract {
     @param return_url 
 } {
     task_item_id:integer,optional
+    {dform:optional "implicit"}
     {project_item_id:integer ""}
     {process_id:integer ""}
     {process_task_id:integer,multiple ""}
@@ -187,7 +188,7 @@ if {[string is true $edit_p]} {
     }
 }
 
-dtype::form::add_elements -prefix pm -object_type pm_task -object_id [value_if_exists task_id] -form task_add_edit -exclude_static -cr_widget none
+dtype::form::add_elements -dform $dform -prefix pm -object_type pm_task -object_id [value_if_exists task_id] -form task_add_edit -exclude_static -cr_widget none
 
 if {[string is true $edit_p]} {
     ad_form -extend -name task_add_edit \
@@ -486,6 +487,7 @@ ad_form -extend -name task_add_edit -new_request {
         permission::require_permission -party_id $user_id -object_id $project_item_id -privilege create
 
 	set task_id [dtype::form::process \
+			 -dform $dform \
 			 -prefix pm \
 			 -object_type pm_task \
 			 -object_id $task_id \
@@ -576,6 +578,7 @@ ad_form -extend -name task_add_edit -new_request {
         permission::require_permission -party_id $user_id -object_id $task_item_id -privilege write
 
 	set task_id [dtype::form::process \
+			 -dform $dform \
 			 -prefix pm \
 			 -object_type pm_task \
 			 -object_id $task_id \
