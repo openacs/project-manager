@@ -27,6 +27,7 @@
         p.actual_hours_completed,
         p.estimated_hours_total,
         p.parent_id,
+        p.dform,
         s.status_type,
         acs_permission__permission_p (:project_id,:user_id,'write') as write_p,
         acs_permission__permission_p (:project_id,:user_id,'create') as create_p

@@ -29,9 +29,20 @@ set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) "%
 set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) "%x"]
 set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
 
+# ------------------
+# Dynamic Attributes
+# ------------------
+
+set form_attributes [list]
+foreach element [dtype::form::metadata::widgets_list -object_type pm_project -exclude_static_p 1 -dform $project(dform)] {
+    lappend form_attributes [lindex $element 3]
+}
+
 dtype::get_object -object_id $project_id -object_type pm_project -array dattr -exclude_static
 
 multirow create dynamic_attributes name value
 foreach attr [array names dattr] {
-    multirow append dynamic_attributes "[_ dynamic-types.pm_project_$attr]" $dattr($attr)
+    if {[lsearch -exact $form_attributes $attr] > -1} {
+	multirow append dynamic_attributes "[_ acs-translations.pm_project_$attr]" $dattr($attr)
+    }
 }

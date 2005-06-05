@@ -241,11 +241,18 @@ set notification_chunk [notification::display::request_widget \
 # Dynamic Attributes
 # ------------------
 
+set form_attributes [list]
+foreach element [dtype::form::metadata::widgets_list -object_type pm_task -exclude_static_p 1 -dform $task_info(dform)] {
+    lappend form_attributes [lindex $element 3]
+}
+
 dtype::get_object -object_id $task_revision_id -object_type pm_task -array dattr -exclude_static
 
 multirow create dynamic_attributes name value
 foreach attr [array names dattr] {
-    multirow append dynamic_attributes "[_ dynamic-types.pm_task_$attr]" $dattr($attr)
+    if {[lsearch -exact $form_attributes $attr] > -1} {
+	multirow append dynamic_attributes "[_ acs-translations.pm_task_$attr]" $dattr($attr)
+    }
 }
 
 

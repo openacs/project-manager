@@ -23,6 +23,7 @@
         t.estimated_hours_work_max,
         t.percent_complete,
 	t.priority,
+        t.dform,
         i.live_revision,
         p.first_names || ' ' || p.last_name as creation_user,
         proj_rev.title as project_name,

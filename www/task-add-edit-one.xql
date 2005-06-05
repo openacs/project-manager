@@ -10,12 +10,20 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="get_dynamic_form">
+    <querytext>
+	select dform
+	from pm_tasks_revisions
+	where task_revision_id = :task_id
+    </querytext>
+  </fullquery>
+
   <fullquery name="get_task_data">
     <querytext>
 	select title as task_title, description, mime_type as description_mime_type,
 	       percent_complete, to_char(end_date,'YYYY-MM-DD') as task_end_date,
 	       estimated_hours_work, estimated_hours_work_min,
-	       estimated_hours_work_max, priority, dform
+	       estimated_hours_work_max, priority
 	from pm_tasks_revisionsi
 	where object_id = :task_id
     </querytext>

@@ -72,6 +72,7 @@ if {[exists_and_not_null task_item_id] || ![ad_form_new_p -key task_id]} {
     } else {
 	set project_options [pm::project::get_list_of_open]
     }
+    db_1row get_dynamic_form {}
 } else {
     set edit_p f
 }
