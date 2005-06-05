@@ -43,9 +43,11 @@ set title "Project Manager Administration"
 # the unique identifier for this package
 set package_id [ad_conn package_id]
 set user_id    [ad_maybe_redirect_for_registration]
+set root_folder_id [content::folder::get_folder_from_package -package_id $package_id]
 
 # set up links
 set categories_link "/categories/cadmin/one-object?object_id=$package_id"
+set categories_task_link "/categories/cadmin/one-object?object_id=$root_folder_id"
 set parameters_link "/shared/parameters?package_id=$package_id&return_url=[site_node::get_package_url -package_key project-manager]admin/"
 set logger_link "logger"
 set logger_primary_link "logger-primary"
@@ -70,9 +72,6 @@ permission::require_permission -party_id $user_id -object_id $package_id -privil
 set write_p  [permission::permission_p -object_id $package_id -privilege write] 
 set create_p [permission::permission_p -object_id $package_id -privilege create]
 set admin_p [permission::permission_p -object_id $package_id -privilege admin]
-
-# root CR folder
-set root_folder [db_string get_root "select pm_project__get_root_folder (:package_id, 'f')"]
 
 
 # ------------------------- END OF FILE ------------------------- #

@@ -54,6 +54,12 @@
       </tr>
 
       <tr>
+        <th>#project-manager.Task_categories#</th>
+        <td><a href="@categories_task_link;noquote@">#project-manager.Edit_categories#</a></td>
+        <td>#project-manager.lt_Tasks_can_be_categ#</td>
+      </tr>
+
+      <tr>
         <th rowspan="3">#project-manager.Logger_integration#</th>
         <td><a href="@logger_link@">#project-manager.Set_up#</a></td>
         <td>#project-manager.lt_Logger_is_a_package_t# <i>#project-manager.variables#</i>#project-manager.lt__Project_manager_requ#<p />
@@ -93,5 +99,3 @@
       </tr>
 
     </table>
-    
-

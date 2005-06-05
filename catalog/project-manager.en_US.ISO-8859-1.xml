@@ -271,6 +271,13 @@
   <msg key="lt_task_terms_depending__1">%task_term%(s) depending on this %task_term%</msg>
   <msg key="lt_task_terms_this_depen">%task_term%s this depends on.</msg>
   <msg key="lt_task_terms_this_depen_1">%task_term%(s) this depends on.</msg>
+  <msg key="lt_Tasks_can_be_categ">Tasks can be categorized according to multiple 'trees'
+        of categories. What this means is you can have multiple ways
+        of categorizing your tasks. This section sets up your
+        categories and allows you to link them to tasks. Currently,
+        there is a bug in the categories package that prevents the
+        context bar at the top of the screen from returning you to the
+        project-manager pages.</msg>
   <msg key="lt_The_administrator_nee">The administrator needs to</msg>
   <msg key="lt_The_data_model_has_a_">The data model has a facility for default roles, although
         it is not currently used at all. This shows what is in the
@@ -444,6 +451,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="task">task</msg>
   <msg key="Task_Calendar">Task Calendar</msg>
   <msg key="Task_calendar">Task calendar</msg>
+  <msg key="Task_categories">Task categories</msg>
   <msg key="task_change">task change</msg>
   <msg key="Task_hours_completed">Task hours completed</msg>
   <msg key="Task_overview">Task overview</msg>

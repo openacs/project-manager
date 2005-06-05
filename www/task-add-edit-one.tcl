@@ -41,6 +41,7 @@ set package_id    [ad_conn package_id]
 # use hour units or day units
 set use_day_p     [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
 set hours_day     [pm::util::hours_day]
+set root_folder_id [content::folder::get_folder_from_package -package_id $package_id]
 
 if {[string is true $use_day_p]} {
     set work_units "[_ project-manager.days]"
@@ -173,7 +174,7 @@ ad_form -extend -name task_add_edit \
     }
         
 if {[string is true $edit_p]} {
-    if {![empty_string_p [category_tree::get_mapped_trees $package_id]]} {
+    if {![empty_string_p [category_tree::get_mapped_trees $root_folder_id]]} {
         ad_form -extend -name task_add_edit -form {
             {category_ids:integer(category),multiple {label "[_ project-manager.Categories]"}
                 {html {size 7}} {value {$task_id $package_id}}
@@ -181,7 +182,7 @@ if {[string is true $edit_p]} {
         }
     }
 } else {
-    if {![empty_string_p [category_tree::get_mapped_trees $package_id]]} {
+    if {![empty_string_p [category_tree::get_mapped_trees $root_folder_id]]} {
         ad_form -extend -name task_add_edit -form {
             {category_ids:integer(category),multiple,optional {label "[_ project-manager.Categories]"}
                 {html {size 7}} {value {}}
