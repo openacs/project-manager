@@ -32,6 +32,7 @@ ad_proc -private pm::install::package_install {
     content::type::attribute::new -content_type {pm_project} -attribute_name {actual_hours_completed} -datatype {number} -pretty_name {Actual hours completed} -pretty_plural {Actual hours completed} -column_spec {numeric}
     content::type::attribute::new -content_type {pm_project} -attribute_name {estimated_hours_total} -datatype {number} -pretty_name {Estimated hours total} -pretty_plural {Estimated hours total} -column_spec {numeric}
     content::type::attribute::new -content_type {pm_project} -attribute_name {customer_id} -datatype {integer} -pretty_name {Customer} -pretty_plural {Customers} -column_spec {integer}
+    content::type::attribute::new -content_type {pm_project} -attribute_name {dform} -datatype {string} -pretty_name {Dynamic Form} -pretty_plural {Dynamic Forms} -column_spec {varchar(100)}
 
     ## Create pm_task
     dtype::create -name {pm_task} -supertype {content_revision} -pretty_name {Task} -pretty_plural {Tasks} -table_name {pm_tasks_revisions} -id_column {task_revision_id}
@@ -46,6 +47,7 @@ ad_proc -private pm::install::package_install {
     content::type::attribute::new -content_type {pm_task} -attribute_name {latest_start} -datatype {date} -pretty_name {Latest start date} -pretty_plural {Latest start dates} -column_spec {timestamptz}
     content::type::attribute::new -content_type {pm_task} -attribute_name {latest_finish} -datatype {date} -pretty_name {Latest finish date} -pretty_plural {Latest finish dates} -column_spec {timestamptz}
     content::type::attribute::new -content_type {pm_task} -attribute_name {priority} -datatype {integer} -pretty_name {Priority} -pretty_plural {Priorities} -column_spec {integer}
+    content::type::attribute::new -content_type {pm_task} -attribute_name {dform} -datatype {string} -pretty_name {Dynamic Form} -pretty_plural {Dynamic Forms} -column_spec {varchar(100)}
 
     # Create new relationship type for Application Links
     rel_types::new "application_link" "Application Link" "Application Links" apm_package 0 "" apm_package 0 ""
@@ -301,6 +303,10 @@ ad_proc -private pm::install::after_upgrade {
 	    }
 	    3.0d3 3.0d4 {
 		content::type::attribute::delete -content_type {pm_project} -attribute_name {logger_project}
+	    }
+	    3.0d4 3.0d5 {
+		content::type::attribute::new -content_type {pm_project} -attribute_name {dform} -datatype {string} -pretty_name {Dynamic Form} -pretty_plural {Dynamic Forms} -column_spec {varchar(100)}
+		content::type::attribute::new -content_type {pm_task} -attribute_name {dform} -datatype {string} -pretty_name {Dynamic Form} -pretty_plural {Dynamic Forms} -column_spec {varchar(100)}
 	    }
 	}
 }

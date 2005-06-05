@@ -7,14 +7,14 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.0d4" url="http://openacs.org/repository/download/apm/project-manager-3.0d4.apm">
+    <version name="3.0d5" url="http://openacs.org/repository/download/apm/project-manager-3.0d5.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <summary>Project management tool for OpenACS</summary>
         <release-date>2005-01-13</release-date>
         <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
 
-        <provides url="project-manager" version="3.0d4"/>
+        <provides url="project-manager" version="3.0d5"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.1.3"/>
         <requires url="acs-templating" version="5.1.6d1"/>

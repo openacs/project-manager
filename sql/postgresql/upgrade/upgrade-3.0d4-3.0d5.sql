@@ -1,139 +1,11 @@
---
--- packages/project-manager/sql/postgresql/project-manager-functions-create.sql
---
--- @author jade@bread.com, ncarroll@ee.usyd.edu.au
--- @creation-date 2003-05-15
--- @cvs-id $Id$
---
---
+alter table pm_projects add column dform varchar(100);
+alter table pm_projects alter column dform set default 'implicit';
+update pm_projects set dform = 'implicit';
 
--- When we created the acs object type above, we specified a
--- 'name_method'.  This is the name of a function that will return the
--- name of the object.  This is a convention ensuring that all objects
--- can be identified.  Now we have to build that function.  In this case,
--- we'll return a field called title as the name. 
+alter table pm_tasks_revisions add column dform varchar(100);
+alter table pm_tasks_revisions alter column dform set default 'implicit';
+update pm_tasks_revisions set dform = 'implicit';
 
-select define_function_args('pm_project__name', 'project_id');
-
-create or replace function pm_project__name (integer)
-returns varchar as '
-declare
-    p_pm_project_id      alias for $1;
-    v_pm_project_name    pm_projectsx.name%TYPE;
-begin
-        select name || ''_'' || p_pm_project_id into v_pm_project_name
-                from pm_projectsx
-                where item_id = p_pm_project_id;
-    return v_pm_project_name;
-end;
-' language 'plpgsql';
-
-
--- Create a new root folder
-
-select define_function_args('pm_project__new_root_folder', 'package_id');
-
-create or replace function pm_project__new_root_folder (integer)
-returns integer as '
-declare
-        p_package_id            alias for $1;
-
-        v_folder_id             cr_folders.folder_id%TYPE;
-        v_folder_name           cr_items.name%TYPE;
-begin
-
-        -- raise notice ''in new root folder'';
-
-        -- Set the folder name
-        v_folder_name := pm_project__new_unique_name (p_package_id);
-
-        v_folder_id := content_folder__new (
-            v_folder_name,                              -- name
-            ''Projects'',                               -- label
-            ''Project Repository'',                     -- description
-            null,                                       -- parent_id
-            p_package_id,                               -- context_id
-            null,                                       -- folder_id
-            null,                                       -- creation_date
-            null,                                       -- creation_user
-            null                                        -- creation_ip
-        );
-
-        -- Register the standard content types
-        PERFORM content_folder__register_content_type (
-                v_folder_id,            -- folder_id
-                ''pm_project'',         -- content_type
-                ''f''                   -- include_subtypes
-        );
-
-        -- there is no facility in the API for adding in the package_id,
-        -- so we have to do it ourselves
-
-        update cr_folders 
-        set package_id = p_package_id 
-        where folder_id = v_folder_id;
-
-        -- TODO: Handle Permissions here for this folder.
-
-        return v_folder_id;
-end;' language 'plpgsql';
-
-
--- Returns the root folder corresponding to a particular package instance.
--- Creates a new root folder if one does not exist for the specified package
--- instance.
-
-select define_function_args('pm_project__get_root_folder', 'package_id,create_if_not_present_p');
-
-create or replace function pm_project__get_root_folder (integer, boolean)
-returns integer as '
-declare
-        p_package_id            alias for $1;
-        p_create_if_not_present_p alias for $2;
-
-        v_folder_id             cr_folders.folder_id%TYPE;
-        v_count                 integer;
-begin
-
-        -- raise notice ''in get root folder p_create_if_not_present_p = %'',p_create_if_not_present_p;
-
-        select count(*) into v_count
-        from cr_folders
-        where package_id = p_package_id;
-
-        -- raise notice ''count is % for package_id %'', v_count, p_package_id;
-
-        if v_count > 1 then
-                raise exception ''More than one project repository for this application instance'';
-        elsif v_count = 1 then
-                select folder_id into v_folder_id
-                from cr_folders 
-                where package_id = p_package_id;
-        else
-                if p_create_if_not_present_p = true then
-                        -- Must be a new instance.  Create a new root folder.
-                        raise notice ''creating a new root repository folder'';
-                        v_folder_id := pm_project__new_root_folder(p_package_id);
-                else
-                        -- raise notice ''setting to null'';
-                        v_folder_id := null;
-                end if;
-        end if;
-
-        -- raise notice ''v_folder_id is %'', v_folder_id;
-
-        return v_folder_id;
-
-end; ' language 'plpgsql';
-
-
--- Create a project item.
-
--- A project item should be placed within a folder.  Therefore a new project
--- item is associated with creating a new project folder that will contain
--- the project item.  A new root project folder will be created if parent_id
--- is null.  Otherwise a project folder will be created as a sub-folder
--- of an existing project folder.
 
 select define_function_args('pm_project__new_project_item', 'project_name, project_code, parent_id, goal, description, mime_type, planned_start_date, planned_end_date, actual_start_date, actual_end_date, ongoing_p, status_id, customer_id, dform, creation_date, creation_user, creation_ip, package_id');
 
@@ -257,37 +129,6 @@ begin
         return v_revision_id;
 end;' language 'plpgsql';
 
-
--- The delete function deletes a record and all related overhead. 
-
-select define_function_args('pm_project__delete_project_item', 'project_id');
-
-create or replace function pm_project__delete_project_item (integer)
-returns integer as '
-declare
-        p_project_id                            alias for $1;
-        v_child                                 cr_items%ROWTYPE;
-begin
-        raise NOTICE ''Deleting pm_project...'';
-
-        for v_child in select 
-                item_id
-                from 
-                cr_items
-                where 
-                parent_id = p_project_id and
-                content_type = ''pm_project''
-        LOOP
-                PERFORM pm_project__delete_project_item(v_child.item_id);
-        end loop;
-
-        delete from pm_projects where project_id in (select revision_id from pm_projectsx where item_id = p_project_id);
-
-        PERFORM content_item__delete(p_project_id);
-        return 0;
-end;' language 'plpgsql';
-
-
 select define_function_args('pm_project__new_project_revision', 'item_id, project_name, project_code, parent_id, goal, description, planned_start_date, planned_end_date, actual_start_date, actual_end_date, ongoing_p, status_id, organization_id, dform, creation_date, creation_user, creation_ip, package_id');
 
 create or replace function pm_project__new_project_revision (
@@ -373,65 +214,6 @@ begin
         return v_revision_id;
 end;' language 'plpgsql';
 
-
-
--- Creates and returns a unique name.
-
-select define_function_args('pm_project__new_unique_name', 'package_id');
-
-create or replace function pm_project__new_unique_name (integer)
-returns text as '
-declare
-        p_package_id            alias for $1;
-
-        v_name                  cr_items.name%TYPE;
-        v_package_key           apm_packages.package_key%TYPE;
-        v_id                    integer;
-begin
-        select package_key into v_package_key from apm_packages
-            where package_id = p_package_id;
-
-        select acs_object_id_seq.nextval into v_id from dual;
-
-        -- Set the name
-        select v_package_key || ''_'' || 
-            to_char(current_timestamp, ''YYYYMMDD'') || ''_'' ||
-            v_id into v_name;
-
-        return v_name;
-end;' language 'plpgsql';
-
-----------------------------------
--- Tasks
-----------------------------------
-
--- When we created the acs object type above, we specified a
--- 'name_method'.  This is the name of a function that will return the
--- name of the object.  This is a convention ensuring that all objects
--- can be identified.  Now we have to build that function.  In this case,
--- we'll return a field called title as the name. 
-
-select define_function_args('pm_task__name', 'task_id');
-
-create or replace function pm_task__name (integer)
-returns varchar as '
-declare
-    p_pm_task_id         alias for $1;
-    v_pm_task_name       cr_items.name%TYPE;
-begin
-        select i.name || ''_'' || p_pm_task_id into v_pm_task_name
-                from cr_items i
-                where i.item_id = p_pm_task_id;
-    return v_pm_task_name;
-end;
-' language 'plpgsql';
-
-
--- Create a task item.
-
--- A task should be placed within a project or another task.
--- If it is not associated with a project, then it is placed in the root
--- project repository folder.
 
 select define_function_args('pm_task__new_task_item', 'project_id, title, description, html_p, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, status_id, process_instance_id, dform, creation_date, creation_user, creation_ip, package_id, priority');
 
@@ -621,26 +403,4 @@ begin
         );
 
         return v_revision_id;
-end;' language 'plpgsql';
-
-
--- The delete function deletes a record and all related overhead. 
-
-select define_function_args('pm_task__delete_task_item', 'task_id');
-
-create or replace function pm_task__delete_task_item (integer)
-returns integer as '
-declare
-        p_task_id                               alias for $1;
-begin
-        delete from pm_tasks_revisions
-                where task_revision_id in (select revision_id from pm_tasks_revisionsx where item_id = p_task_id);
-
-        delete from pm_tasks
-                where task_id = p_task_id;
-
-        raise NOTICE ''Deleting pm_task...'';
-
-        PERFORM content_item__delete(p_task_id);
-        return 0;
 end;' language 'plpgsql';

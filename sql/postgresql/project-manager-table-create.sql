@@ -56,7 +56,8 @@ create table pm_projects (
         latest_finish_date      timestamptz,
         -- denormalized, taken from logger
         actual_hours_completed  numeric,
-        estimated_hours_total   numeric
+        estimated_hours_total   numeric,
+        dform                   varchar(100) default 'implicit'
 );
 
 
@@ -384,7 +385,8 @@ create table pm_tasks_revisions (
         latest_start                    timestamptz,
         latest_finish                   timestamptz,
 	-- How important is this task
-	priority			integer default 0
+	priority			integer default 0,
+        dform                           varchar(100) default 'implicit'
 );
 
 

@@ -132,6 +132,7 @@ ad_form -name task_add_edit -export {task_item_id} \
         task_id:key
         
         {edit_p:text(hidden)}
+        {dform:text(hidden)}
         {using_process_p:text(hidden)}
         {return_url:text(hidden),optional}
         {process_task_id:text(hidden),optional}
@@ -494,7 +495,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -form task_add_edit \
 			 -cr_widget none \
 			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id object_type pm_task] \
-			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority} \
+			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority dform} \
 			 -exclude_static]
 
 	set task_item_id [db_string get_item_id {}]
@@ -585,7 +586,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -form task_add_edit \
 			 -cr_widget none \
 			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id object_type pm_task] \
-			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority} \
+			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority dform} \
 			 -exclude_static]
 
 	db_dml update_task {}

@@ -191,6 +191,7 @@ ad_proc -public pm::project::new {
     {-ongoing_p "f"}
     -status_id:required
     -organization_id:required
+    {-dform "implicit"}
     {-creation_date ""}
     -creation_user:required
     -creation_ip:required
@@ -281,6 +282,7 @@ ad_proc -public pm::project::edit {
     {-ongoing_p "f"}
     -status_id:required
     -organization_id:required
+    {-dform "implicit"}
     {-creation_date ""}
     -creation_user:required
     -creation_ip:required
@@ -316,6 +318,7 @@ ad_proc -public pm::project::edit {
 		:ongoing_p,
                 :status_id,
                 :organization_id,
+                :dform,
 		now(),
 		:creation_user,
 		:creation_ip,

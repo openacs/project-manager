@@ -92,6 +92,8 @@ ad_form -name add_edit \
             {value $project_item_id}
         }
 
+        {dform:text(hidden)}
+
         {project_name:text
             {label "[_ project-manager.lt_set_project_term_name]"}
             {value $project_name}
@@ -238,7 +240,7 @@ ad_form -extend -name add_edit \
 				-form add_edit \
 				-cr_widget none \
 				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id object_type pm_project] \
-				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id} \
+				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id dform} \
 				-exclude_static]
 
 	    set project_item_id [pm::project::get_project_item_id -project_id $project_id]
@@ -273,7 +275,7 @@ ad_form -extend -name add_edit \
 				-form add_edit \
 				-cr_widget none \
 				-defaults [list title $project_name description $description mime_type "text/plain" context_id $parent_id parent_id $parent_id object_type pm_project] \
-				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id} \
+				-default_fields {project_code goal {planned_start_date $planned_start_date_sql} {planned_end_date $planned_end_date_sql} actual_start_date actual_end_date ongoing_p status_id customer_id dform} \
 				-exclude_static]
 
 	    set project_item_id [pm::project::get_project_item_id -project_id $project_id]

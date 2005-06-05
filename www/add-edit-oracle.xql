@@ -14,6 +14,7 @@
  	       to_char(p.planned_start_date,'YYYY-MM-DD') as planned_start_date,
  	       to_char(p.planned_end_date,'YYYY-MM-DD') as planned_end_date,
  	       p.ongoing_p
+	       p.dform
         FROM   pm_projectsx p
         WHERE  p.item_id    = :project_item_id and
                p.project_id = :project_id 

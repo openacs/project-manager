@@ -624,6 +624,7 @@ ad_proc -public pm::task::edit {
     -estimated_hours_work:required
     -estimated_hours_work_min:required
     -estimated_hours_work_max:required
+    {-dform "implicit"}
     -update_user:required
     -update_ip:required
     -package_id:required
@@ -707,6 +708,7 @@ ad_proc -public pm::task::new {
     {-creation_date ""}
     {-status_id ""}
     {-process_instance_id ""}
+    {-dform "implicit"}
     -creation_user:required
     -creation_ip:required
     -package_id:required
