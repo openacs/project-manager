@@ -33,9 +33,6 @@ ad_page_contract {
 
 # --------------------------------------------------------------- #
 
-set logger_URLs [parameter::get -parameter "LoggerURLsToKeepUpToDate" -default ""]
-set logger_primary [parameter::get -parameter "LoggerPrimaryURL" -default ""]
-
 # set up context bar
 set context [list]
 set title "Project Manager Administration"
@@ -49,22 +46,7 @@ set root_folder_id [content::folder::get_folder_from_package -package_id $packag
 set categories_link "/categories/cadmin/one-object?object_id=$package_id"
 set categories_task_link "/categories/cadmin/one-object?object_id=$root_folder_id"
 set parameters_link "/shared/parameters?package_id=$package_id&return_url=[site_node::get_package_url -package_key project-manager]admin/"
-set logger_link "logger"
-set logger_primary_link "logger-primary"
-set logger_sync_link "logger-sync"
 set update_projects_link "update-projects"
-
-if {[empty_string_p $logger_URLs]} {
-    set logger_warning "<font color=\"red\">[_ project-manager.not_set_up]</font>"
-} else {
-    set logger_warning "[_ project-manager.Currently_integrated] <ul><li>[join $logger_URLs "<li>"]</ul>"
-}
-
-if {[empty_string_p $logger_primary]} {
-    set logger_primary_warning "<font color=\"red\">[_ project-manager.not_set_up]</font>"
-} else {
-    set logger_primary_warning "[_ project-manager.Currently_selected] <ul><li>$logger_primary</ul>"
-}
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege admin

@@ -60,27 +60,6 @@
       </tr>
 
       <tr>
-        <th rowspan="3">#project-manager.Logger_integration#</th>
-        <td><a href="@logger_link@">#project-manager.Set_up#</a></td>
-        <td>#project-manager.lt_Logger_is_a_package_t# <i>#project-manager.variables#</i>#project-manager.lt__Project_manager_requ#<p />
-          @logger_warning;noquote@
-        </td>
-      </tr>
-
-      <tr>
-        <td><a href="@logger_primary_link@">#project-manager.Set_up#</a></td>
-        <td>#project-manager.lt_You_must_choose_a_log#
-          <p />
-          @logger_primary_warning;noquote@
-        </td>
-      </tr>
-
-      <tr>
-        <td><a href="@logger_sync_link@">#project-manager.Sync#</a></td>
-        <td>#project-manager.lt_Once_you_have_chosen_#
-      </tr>
-
-      <tr>
         <th>#project-manager.Parameters#</th>
         <td><a href="@parameters_link@">#project-manager.Edit#</a></td>
         <td>#project-manager.lt_The_parameters_allow_#</td>

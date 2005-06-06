@@ -35,9 +35,6 @@
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="LoggerPrimaryURL"  description="This is the primary logger instance that is linked in to this project-manager instance. Links to this instance are added to 
-project-manager." section_name="logger"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="LoggerURLsToKeepUpToDate"  description="This is a list of logger instances that are linked in with project-manager. When they are linked in, that means that new projects are added to the list of projects, and are taken off the list when project-manager closes them. This should be set via the project-manager Admin UI, not through here." section_name="logger"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="SendDailyEmail"  default="0" description="Whether or not to send a daily email reminder to all people who are assigned tasks. A 1 indicates yes, and a 0 indicates no." section_name="email"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="UseDayInsteadOfHour"  default="t" description="Use day measurements instead of hour measurements. t or f." section_name="project-manager"/>
