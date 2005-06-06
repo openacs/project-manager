@@ -10,7 +10,7 @@
 # categories
 
 set categories [list]
-set cat_list [category::get_mapped_categories $project_item_id]
+set cat_list [category::get_mapped_categories $item_id]
 foreach cat $cat_list {
     lappend categories [category::get_name $cat]
 }

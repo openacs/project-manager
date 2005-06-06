@@ -131,11 +131,14 @@
 
               </table>
               <td class="list-right-bg">&nbsp</td>
-
         </table>
         
         <P />
         
+  <include
+    src="/packages/project-manager/lib/categories-portlet"
+    item_id="@task_revision_id@" />
+
         <if 0 eq 1>
           <if @notification_chunk@ not nil>
             @notification_chunk;noquote@

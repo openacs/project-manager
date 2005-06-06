@@ -150,7 +150,7 @@ if {[exists_and_not_null project_id]} {
     if {![empty_string_p [category_tree::get_mapped_trees $package_id]]} {
         ad_form -extend -name add_edit -form {
             {category_ids:integer(category),multiple {label "[_ project-manager.Categories]"}
-                {html {size 7}} {value {$project_item_id $package_id}}
+                {html {size 7}} {value {$project_id $package_id}}
             }
         }
     }
@@ -253,7 +253,7 @@ ad_form -extend -name add_edit \
 		-send_email_p "f"
 
 	    if {[exists_and_not_null category_ids]} {
-		category::map_object -remove_old -object_id $project_item_id $category_ids
+		category::map_object -object_id $project_id $category_ids
 	    }
 
 	    callback pm::project_new -package_id $package_id -project_id $project_item_id -data [array get callback_data]
@@ -281,7 +281,7 @@ ad_form -extend -name add_edit \
 	    set project_item_id [pm::project::get_project_item_id -project_id $project_id]
 
 	    if {[exists_and_not_null category_ids]} {
-		category::map_object -remove_old -object_id $project_item_id $category_ids
+		category::map_object -object_id $project_id $category_ids
 	    }
 	    callback pm::project_edit -package_id $package_id -project_id $project_item_id -data [array get callback_data]
 	}

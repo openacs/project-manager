@@ -543,7 +543,7 @@ ad_form -extend -name task_add_edit -new_request {
         }
 
 	if {[exists_and_not_null category_ids]} {
-	    category::map_object -remove_old -object_id $task_id $category_ids
+	    category::map_object -object_id $task_id $category_ids
 	}
 
 	callback pm::task_new -package_id $package_id -task_id $task_item_id
@@ -638,7 +638,7 @@ ad_form -extend -name task_add_edit -new_request {
         }
 
 	if {[exists_and_not_null category_ids]} {
-	    category::map_object -remove_old -object_id $task_id $category_ids
+	    category::map_object -object_id $task_id $category_ids
 	}
 
 	callback pm::task_edit -package_id $package_id -task_id $task_item_id

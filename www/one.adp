@@ -28,8 +28,7 @@
   <p />
   <include
     src="/packages/project-manager/lib/categories-portlet"
-    project_id="@project_id@"
-    project_item_id="@project_item_id@" />
+    item_id="@project_id@" />
   <p />
   <if @use_subprojects_p@>
     <include
