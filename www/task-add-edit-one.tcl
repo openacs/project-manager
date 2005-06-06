@@ -158,7 +158,7 @@ if {[string is true $using_process_p]} {
 ad_form -extend -name task_add_edit \
     -form {
         {task_title:text
-            {label "[_ project-manager.Process_name]"}
+            {label "[_ project-manager.Task_name]"}
             {html {size 40}}
         }
         
@@ -177,7 +177,7 @@ if {[string is true $edit_p]} {
     if {![empty_string_p [category_tree::get_mapped_trees $root_folder_id]]} {
         ad_form -extend -name task_add_edit -form {
             {category_ids:integer(category),multiple {label "[_ project-manager.Categories]"}
-                {html {size 7}} {value {$task_id $package_id}}
+                {html {size 7}} {value {$task_id $root_folder_id}}
             }
         }
     }
@@ -185,7 +185,7 @@ if {[string is true $edit_p]} {
     if {![empty_string_p [category_tree::get_mapped_trees $root_folder_id]]} {
         ad_form -extend -name task_add_edit -form {
             {category_ids:integer(category),multiple,optional {label "[_ project-manager.Categories]"}
-                {html {size 7}} {value {}}
+                {html {size 7}} {value {{} $root_folder_id}}
             }
         }
     }

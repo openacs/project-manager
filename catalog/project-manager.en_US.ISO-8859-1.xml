@@ -454,6 +454,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Task_categories">Task categories</msg>
   <msg key="task_change">task change</msg>
   <msg key="Task_hours_completed">Task hours completed</msg>
+  <msg key="Task_name">Task Name:</msg>
   <msg key="Task_overview">Task overview</msg>
   <msg key="task_term_Changes">%task_term% Changes</msg>
   <msg key="task_terms">%task_term%s</msg>
