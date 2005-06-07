@@ -1609,6 +1609,7 @@ ad_proc -public pm::project::select_list_of_open {
 
 ad_proc -public pm::project::close {
     {-project_item_id:required}
+    -no_callback:boolean
 } {
     Closes a project
     
@@ -1633,6 +1634,9 @@ ad_proc -public pm::project::close {
         project_id in (select live_revision from cr_items where item_id = :project_item_id)
     }
 
+    if {!$no_callback_p} {
+	callback pm::project_close -package_id [ad_conn package_id] -project_id $project_item_id
+    }
 }
 
 

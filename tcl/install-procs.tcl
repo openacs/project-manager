@@ -99,6 +99,12 @@ ad_proc -public -callback pm::project_delete {
 } {
 }
 
+ad_proc -public -callback pm::project_close {
+    {-package_id:required}
+    {-project_id:required}
+} {
+}
+
 ad_proc -public -callback pm::task_new {
     {-package_id:required}
     {-task_id:required}
@@ -112,6 +118,12 @@ ad_proc -public -callback pm::task_edit {
 }
 
 ad_proc -public -callback pm::task_delete {
+    {-package_id:required}
+    {-task_id:required}
+} {
+}
+
+ad_proc -public -callback pm::task_close {
     {-package_id:required}
     {-task_id:required}
 } {

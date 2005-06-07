@@ -1124,6 +1124,7 @@ ad_proc -public pm::task::open {
 
 ad_proc -public pm::task::close {
     {-task_item_id:required}
+    -no_callback:boolean
 } {
     Closes a task
     
@@ -1140,6 +1141,9 @@ ad_proc -public pm::task::close {
 
     db_dml update_status { }
 
+    if {!$no_callback_p} {
+	callback pm::task_close -package_id [ad_conn package_id] -task_id $task_item_id
+    }
 }
 
 
