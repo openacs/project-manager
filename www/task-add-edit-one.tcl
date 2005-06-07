@@ -65,7 +65,8 @@ if {[exists_and_not_null task_item_id] || ![ad_form_new_p -key task_id]} {
     set edit_p t
     db_1row task_data {}
     set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
-    set variable_options [logger::ui::variable_options -project_id $logger_project]
+    set logger_variable_id [logger::project::get_primary_variable -project_id $logger_project]
+    logger::variable::get -variable_id $logger_variable_id -array logger_variable
 
     set open_p [pm::project::open_p -project_item_id $project_item_id]
     if {[string is false $open_p]} {
@@ -316,14 +317,13 @@ if {[string is true $edit_p]} {
 	    }
 
 	    {hours:text,optional
-		{label "[_ project-manager.Quantity]"}
+		{label $logger_variable(name)}
 		{html {size 4}}
 		{section "[_ project-manager.Log_entry]"}
+		{after_html $logger_variable(unit)}
 	    }
         
-	    {logger_variable_id:text(select),optional
-		{label " "}
-		{options $variable_options}
+	    {logger_variable_id:text(hidden)
 		{section "[_ project-manager.Log_entry]"}
 	    }
 
@@ -418,7 +418,6 @@ ad_form -extend -name task_add_edit -new_request {
     set estimated_days_work_max [expr $estimated_hours_work_max / $hours_day]
 
     set log_date [db_string today {}]
-    set logger_variable_id [logger::project::get_primary_variable -project_id $logger_project]
 } -validate {
 } -on_submit {
     set hours_day [pm::util::hours_day]
