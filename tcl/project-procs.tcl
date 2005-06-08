@@ -150,8 +150,11 @@ ad_proc -private pm::project::log_hours {
     }
 
     # add in the new entry
-    logger::entry::new -entry_id $entry_id \
+    logger::entry::new \
+	-entry_id $entry_id \
         -project_id $logger_project_id \
+	-project_item_id $project_item_id \
+	-task_item_id $task_item_id \
         -variable_id $variable_id \
         -value $value \
         -time_stamp $timestamp_ansi \

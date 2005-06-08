@@ -919,8 +919,16 @@ ad_proc -private pm::task::update_hours {
                              -task_id $task_revision_id]
     }
 
+    set variable_id [logger::variable::get_default_variable_id]
+
     set total_logged_hours [db_string total_hours "
-        select sum(le.value) from logger_entries le where entry_id in (select object_id_two from acs_rels where object_id_one = :task_item_id and rel_type = 'application_data_link') and le.variable_id = '[logger::variable::get_default_variable_id]'
+        select sum(le.value)
+	from logger_entries le
+	where entry_id in (select object_id_two
+			   from acs_rels
+			   where object_id_one = :task_item_id
+			   and rel_type = 'application_data_link')
+	and le.variable_id = :variable_id
     " -default "0"]
 
     if {[string is true $update_tasks_p]} {
@@ -2421,15 +2429,18 @@ ad_proc -public pm::task::what_changed {
             if {[string is true $use_uncertain_completion_times_p]} {
                 
                 if {![string equal $old_estimated_hours_work_min $estimated_hours_work_min_array($tid)]} {
+		    set new_estimated_hours_work_min $estimated_hours_work_min_array($tid)
                     lappend changes "[_ project-manager.lt_Work_estimate_min_cha_1]"
                 }
                 
                 if {![string equal $old_estimated_hours_work_max $estimated_hours_work_max_array($tid)]} {
+		    set new_estimated_hours_work_max $estimated_hours_work_max_array($tid)
                     lappend changes "[_ project-manager.lt_Work_estimate_max_cha_1]"
                 }
             } else {
                 
                 if {![string equal $old_estimated_hours_work $estimated_hours_work_array($tid)]} {
+		    set new_estimated_hours_work $estimated_hours_work_array($tid)
                     lappend changes "[_ project-manager.lt_Work_estimate_changed_1]"
                 }
                 

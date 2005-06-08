@@ -503,6 +503,10 @@ ad_form -extend -name task_add_edit -new_request {
 
 	db_dml new_task {}
 
+	if {[exists_and_not_null category_ids]} {
+	    category::map_object -object_id $task_id $category_ids
+	}
+
 	if {$percent_complete >= 100} {
 	    pm::task::close -task_item_id $task_item_id
 	}
@@ -540,10 +544,6 @@ ad_form -extend -name task_add_edit -new_request {
                 -dependency_type  finish_before_start \
                 -project_item_id $project_item_id
         }
-
-	if {[exists_and_not_null category_ids]} {
-	    category::map_object -object_id $task_id $category_ids
-	}
 
 	callback pm::task_new -package_id $package_id -task_id $task_item_id
     }
@@ -592,6 +592,11 @@ ad_form -extend -name task_add_edit -new_request {
 
 	db_dml update_task {}
 
+	if {[exists_and_not_null category_ids]} {
+	    category::map_object -object_id $task_id $category_ids
+	}
+
+	set actual_hours_worked [pm::task::update_hours -task_item_id $task_item_id]
 	if {$percent_complete >= 100} {
 	    pm::task::close -task_item_id $task_item_id
 	}
@@ -635,10 +640,6 @@ ad_form -extend -name task_add_edit -new_request {
                 -dependency_type finish_before_start \
                 -project_item_id $project_item_id
         }
-
-	if {[exists_and_not_null category_ids]} {
-	    category::map_object -object_id $task_id $category_ids
-	}
 
 	callback pm::task_edit -package_id $package_id -task_id $task_item_id
     }
