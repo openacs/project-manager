@@ -21,10 +21,11 @@ create table pm_project_status (
                                 check (status_type in ('c','o'))
 );
 
+-- I'm not sure if this shouldn't be a category, but well...
 insert into pm_project_status (status_id, description, status_type) values
-(1, 'Open', 'o');
+(1, '#acs-kernel.common_Open#', 'o');
 insert into pm_project_status (status_id, description, status_type) values
-(2, 'Closed', 'c');
+(2, '#acs-kernel.common_Closed#', 'c');
 
 
 -- project revisions, items are kept in cr_items
@@ -94,9 +95,9 @@ comment on table pm_roles is '
   responsible for the task, or are just observers on it. 
 ';
 
-insert into pm_roles (role_id, one_line, description, sort_order, is_lead_p) values ('1','Lead','Team members who are responsible for the completion of the project','10','t');
-insert into pm_roles (role_id, one_line, description, sort_order) values ('2','Player','A person on the team responsible for completion of the project','20');
-insert into pm_roles (role_id, one_line, description, sort_order, is_observer_p) values ('3','Watcher','A person interested in developments, possibly helping out on it.','30','t');
+insert into pm_roles (role_id, one_line, description, sort_order, is_lead_p) values ('1','#project-manager.Lead#','#project-manager.lt_Team_members_who_are_#','10','t');
+insert into pm_roles (role_id, one_line, description, sort_order) values ('2','#project-manager.Player#','#project-manager.lt_A_person_on_the_team_#','20');
+insert into pm_roles (role_id, one_line, description, sort_order, is_observer_p) values ('3','#project-manager.Watcher#','#project-manager.lt_A_person_interested_i#','30','t');
 
 
 create table pm_default_roles (
@@ -246,10 +247,10 @@ create table pm_task_dependency_types (
         description                     varchar(1000)
 );
 
-insert into pm_task_dependency_types (short_name, description) values ('start_before_start','Starts before this starts');
-insert into pm_task_dependency_types (short_name, description) values ('start_before_finish','Starts before this finishes');
-insert into pm_task_dependency_types (short_name, description) values ('finish_before_start','Finishes before this starts');
-insert into pm_task_dependency_types (short_name, description) values ('finish_before_finish','Finishes before this finishes');
+insert into pm_task_dependency_types (short_name, description) values ('start_before_start','#project-manager.lt_Starts_before_this_st#');
+insert into pm_task_dependency_types (short_name, description) values ('start_before_finish','#project-manager.lt_Starts_before_this_fi#');
+insert into pm_task_dependency_types (short_name, description) values ('finish_before_start','#project-manager.lt_Finishes_before_this_#');
+insert into pm_task_dependency_types (short_name, description) values ('finish_before_finish','#project-manager.lt_Finishes_before_this__1#');
 
 create sequence pm_process_task_dependency_seq;
 
@@ -321,9 +322,9 @@ create table pm_task_status (
 );
 
 insert into pm_task_status (status_id, description, status_type) values
-(1, 'Open', 'o');
+(1, '#acs-kernel.common_Open#', 'o');
 insert into pm_task_status (status_id, description, status_type) values
-(2, 'Closed', 'c');
+(2, '#acs-kernel.common_Closed#', 'c');
 
 
 create sequence pm_tasks_number_seq;
