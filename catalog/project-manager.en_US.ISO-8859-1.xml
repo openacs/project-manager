@@ -116,6 +116,8 @@
   <msg key="Hour_to_date">Hour to date</msg>
   <msg key="hours">hours</msg>
   <msg key="Hours_completed">Hours completed</msg>
+  <msg key="Hours_remaining">Hours remaining</msg>
+  <msg key="Hours_worked">Hours worked</msg>
   <msg key="hrs">hrs</msg>
   <msg key="HTML">HTML</msg>
   <msg key="ID">ID</msg>
@@ -152,6 +154,8 @@
   with logger. This section sets up which logger instances you
   want to be fully integrated with project-manager, so that new
   project-manager projects appear in the logger instance.</msg>
+  <msg key="lt_A_person_interested_i">A person interested in developments, possibly helping out on it.</msg>
+  <msg key="lt_A_person_on_the_team_">A person on the team responsible for completion of the project</msg>
   <msg key="lt_Add_a_comment_to_titl">Add a comment to: %title%</msg>
   <msg key="lt_Add_a_process_task_te">Add a process %task_term_lower%</msg>
   <msg key="lt_Add_a_process_task_te_1">Add a process %task_term_lower% (assignment)</msg>
@@ -192,6 +196,8 @@
   <msg key="lt_Enter_100_to_close_th">Enter 100% to close the %task_term_lower%, or less to open it.</msg>
   <msg key="lt_Enter_100_to_close_th_1">Enter 100% to close the %task_term_lower%, or less to open it.</msg>
   <msg key="lt_Enter_a_number_for_or">Enter a number for ordering the priority. 0 is the default and also the lowest priority.</msg>
+  <msg key="lt_Finishes_before_this_">Finishes before this starts</msg>
+  <msg key="lt_Finishes_before_this__1">Finishes before this finishes</msg>
   <msg key="lt_For_new_tasks_a_proje">For new tasks, a project must be passed in</msg>
   <msg key="lt_Hard_deadline_changed">Hard deadline changed &lt;i&gt;from&lt;/i&gt; %date_old% &lt;i&gt;to&lt;/i&gt; &lt;b&gt;%date_new%&lt;/b&gt;</msg>
   <msg key="lt_Hours_remaining_task_">Hours remaining: %task_info.hours_remaining%</msg>
@@ -267,6 +273,8 @@
   <msg key="lt_skip_adding_dependenc">skip adding dependencies</msg>
   <msg key="lt_Slack_task_infoslack_">Slack: %task_info.slack_time%</msg>
   <msg key="lt_Slack_time_task_infos">Slack time: %task_info.slack_time%</msg>
+  <msg key="lt_Starts_before_this_fi">Starts before this finishes</msg>
+  <msg key="lt_Starts_before_this_st">Starts before this starts</msg>
   <msg key="lt_Synchronize_logger_pr">Synchronize logger projects</msg>
   <msg key="lt_task_infoestimated_ho">%task_info.estimated_hours_work_min% - %task_info.estimated_hours_work_max% hrs estimated</msg>
   <msg key="lt_task_infopercent_comp">%task_info.percent_complete%% complete</msg>
@@ -283,6 +291,7 @@
         there is a bug in the categories package that prevents the
         context bar at the top of the screen from returning you to the
         project-manager pages.</msg>
+  <msg key="lt_Team_members_who_are_">Team members who are responsible for the completion of the project</msg>
   <msg key="lt_The_administrator_nee">The administrator needs to</msg>
   <msg key="lt_The_data_model_has_a_">The data model has a facility for default roles, although
         it is not currently used at all. This shows what is in the
@@ -384,6 +393,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Percent_Complete">Percent Complete\</msg>
   <msg key="Percent_complete">Percent complete</msg>
   <msg key="Plain_Text">Plain Text</msg>
+  <msg key="Player">Player</msg>
   <msg key="Please_wait">Please wait...</msg>
   <msg key="Pressing_Tasks">Pressing Tasks</msg>
   <msg key="Priority">Priority:</msg>
@@ -492,6 +502,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="View_task_changes">View task changes</msg>
   <msg key="View_this_revision">View this revision</msg>
   <msg key="View_this_task">View this task</msg>
+  <msg key="Watcher">Watcher</msg>
   <msg key="Who">Who</msg>
   <msg key="Work">Work</msg>
   <msg key="Work_estimate">Work estimate</msg>

@@ -243,7 +243,7 @@ ad_proc -public pm::project::new {
     db_dml update_context_id "update acs_objects set context_id = :parent_id where object_id = :project_item_id"
 
     if {!$no_callback_p} {
-	callback pm::project_new -package_id $package_id -project_id $project_item_id
+	callback pm::project_new -package_id $package_id -project_id $project_item_id -data [list organization_id $organization_id]
     }
 
     return $project_revision

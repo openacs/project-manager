@@ -56,7 +56,7 @@ template::list::create \
 db_multirow -extend {item_url} subproject project_subproject_query {} {
 
     set item_url [export_vars \
-		      -base "one" -override {{project_item_id $item_id}} {project_item_id}]
+		      -base "$base_url/one" -override {{project_item_id $item_id}} {project_item_id}]
 }
 
 

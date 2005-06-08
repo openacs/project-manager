@@ -271,10 +271,15 @@ if {!$use_uncertain_completion_times_p} {
 ad_form -extend -name task_add_edit \
     -form {
         {task_end_date:text(text),optional
-            {label "[_ project-manager.lt_Deadline_task]"}
+            {label "[_ project-manager.Deadline]"}
 	    {html {id sel1}}
 	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>y-m-d </b>\]
 	    }}
+        }
+        {task_end_time:date,optional
+            {label "[_ project-manager.Deadline_Time]"}
+	    {value {[template::util::date::now]}}
+	    {format {[lc_get formbuilder_time_format]}} 
         }
     }
 
@@ -323,6 +328,7 @@ if {[string is true $edit_p]} {
 		{after_html $logger_variable(unit)}
 	    }
         
+
 	    {logger_variable_id:text(hidden)
 		{section "[_ project-manager.Log_entry]"}
 	    }
@@ -412,6 +418,9 @@ ad_form -extend -name task_add_edit -new_request {
     set priority 0
 } -edit_request {
     db_1row get_task_data {}
+    
+    set task_end_time [template::util::date::from_ansi $task_end_date [lc_get frombuilder_time_format]]
+    set task_end_date [lindex $task_end_date 0]
 
     set hours_day [pm::util::hours_day]
     set estimated_days_work_min [expr $estimated_hours_work_min / $hours_day]
@@ -429,7 +438,12 @@ ad_form -extend -name task_add_edit -new_request {
     set end_date(year)   [lindex [set end_date_split] 0]
     set end_date(format) ""
     ad_page_contract_filter_proc_date end_date end_date
-    set end_date_sql [pm::util::datenvl -value $end_date(date) -value_if_null "null" -value_if_not_null "to_timestamp('$end_date(date)','YYYY-MM-DD')"]
+
+    set task_end_date_list [split $end_date(date) "-"]
+    append task_end_date_list " [lrange $task_end_time 3 5]"
+
+    set end_date(date) $task_end_date_list 
+    set end_date_sql [pm::util::datenvl -value $end_date(date) -value_if_null "null" -value_if_not_null "to_timestamp('$end_date(date)','YYYY MM DD HH24 MI SS')"]
 
     if {[info exists log_date]} {
 	set log_date_split [split $log_date "-"]

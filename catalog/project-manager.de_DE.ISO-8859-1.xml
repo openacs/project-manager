@@ -51,6 +51,8 @@
   <msg key="Goal">Ziel</msg>
   <msg key="hours">Stunden</msg>
   <msg key="Hours_completed">Erfasste Stunden</msg>
+  <msg key="Hours_remaining">Verbleibende Stunden</msg>
+  <msg key="Hours_worked">Stunden gearbeitet</msg>
   <msg key="hrs">Std.</msg>
   <msg key="Key">Schlüssel</msg>
   <msg key="Latest_Finish">Spätestes Ende</msg>

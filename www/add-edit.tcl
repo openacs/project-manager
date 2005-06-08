@@ -113,15 +113,21 @@ ad_form -name add_edit \
         {planned_start_date:text(text)
             {label "[_ project-manager.Starts]"}
 	    {html {id sel1}}
-	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>y-m-d </b>\]
+	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>d.m.y </b>\]
 	    }}
         }
         
-        {planned_end_date:text(text) 
+        {planned_end_date:text(text)
             {label "[_ project-manager.Deadline_1]"}
 	    {html {id sel2}}
-	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>y-m-d </b>\]
+	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>d.m.y </b>\]
 	    }}
+        }
+
+        {planned_end_time:date
+            {label "[_ project-manager.Deadline_Time]"}
+	    {value {[template::util::date::now]}}
+	    {format {[lc_get formbuilder_time_format]}} 
         }
 
         
@@ -194,13 +200,15 @@ ad_form -extend -name add_edit \
             set ongoing_p t
         }
 
-        set planned_end_date [util::date acquire clock [clock scan $planned_end_date]]
-        set planned_end_date "[lindex $planned_end_date 0]-[lindex $planned_end_date 1]-[lindex $planned_end_date 2]"
-        set planned_start_date [util::date acquire clock [clock scan $planned_start_date]]
-       set planned_start_date "[lindex $planned_start_date 0]-[lindex $planned_start_date 1]-[lindex $planned_start_date 2]"
+	set planned_end_date [dt_sysdate]
+	set planned_start_date [dt_sysdate]
 
     } -edit_request {
+
 	db_1row project_query {}
+	set planned_end_time [template::util::date::from_ansi $planned_end_date [lc_get frombuilder_time_format]]
+	set planned_end_date [lindex $planned_end_date 0]
+
     } -on_submit {
         
         set user_id [ad_conn user_id]
@@ -216,8 +224,11 @@ ad_form -extend -name add_edit \
 	if {[empty_string_p $parent_id]} {
 	    set parent_id $folder_id
 	}
+	set planned_end_date_list [split $planned_end_date "-"]
+	append planned_end_date_list " [lrange $planned_end_time 3 5]"
+
 	set planned_start_date_sql "to_timestamp('$planned_start_date','YYYY MM DD HH24 MI SS')"
-	set planned_end_date_sql "to_timestamp('$planned_end_date','YYYY MM DD HH24 MI SS')"
+	set planned_end_date_sql "to_timestamp('$planned_end_date_list','YYYY MM DD HH24 MI SS')"
 
     } -new_data {
 
