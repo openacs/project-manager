@@ -41,8 +41,10 @@ foreach element [dtype::form::metadata::widgets_list -object_type pm_project -ex
 dtype::get_object -object_id $project_id -object_type pm_project -array dattr -exclude_static
 
 multirow create dynamic_attributes name value
-foreach attr [array names dattr] {
-    if {[lsearch -exact $form_attributes $attr] > -1} {
-	multirow append dynamic_attributes "[_ acs-translations.pm_project_$attr]" $dattr($attr)
+if {[array exists dattr]} {
+    foreach attr [array names dattr] {
+	if {[lsearch -exact $form_attributes $attr] > -1} {
+	    multirow append dynamic_attributes "[_ acs-translations.pm_project_$attr]" $dattr($attr)
+	}
     }
 }
