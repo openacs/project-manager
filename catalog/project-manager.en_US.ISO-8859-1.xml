@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.0d3" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.0d5" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -15,6 +15,7 @@
   <msg key="Add__subproject">Add subproject</msg>
   <msg key="Add_a_Process">Add a Process</msg>
   <msg key="Add_a_process">Add a process</msg>
+  <msg key="Add_a_task">Add a task</msg>
   <msg key="Add_assignment">Add assignment</msg>
   <msg key="Add_comment">Add comment</msg>
   <msg key="Add_myself_as">Add myself as</msg>
@@ -51,6 +52,7 @@
   <msg key="Comment_1">Comment</msg>
   <msg key="Comments">Comments</msg>
   <msg key="Complete">Complete:</msg>
+  <msg key="create_project">Create project</msg>
   <msg key="Created">Created</msg>
   <msg key="CSV">CSV</msg>
   <msg key="Currently_integrated">Currently integrated:</msg>
@@ -63,6 +65,8 @@
   <msg key="Dates">Dates</msg>
   <msg key="Dates_1">Dates:</msg>
   <msg key="days">days</msg>
+  <msg key="Days_work">Days work</msg>
+  <msg key="Days_worked">Days worked</msg>
   <msg key="Deadline">Deadline:</msg>
   <msg key="Deadline_1">Deadline</msg>
   <msg key="Default_roles">Default roles</msg>
@@ -126,6 +130,7 @@
   <msg key="Link_instances">Link package instances</msg>
   <msg key="Link_task">Link task:</msg>
   <msg key="Linking">Linking</msg>
+  <msg key="Log">Log</msg>
   <msg key="Log_entry">Log entry:</msg>
   <msg key="Log_time">Log time</msg>
   <msg key="Logged_variables">Logged variables</msg>
@@ -377,6 +382,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
   <msg key="Percent_Complete">Percent Complete\</msg>
+  <msg key="Percent_complete">Percent complete</msg>
   <msg key="Plain_Text">Plain Text</msg>
   <msg key="Please_wait">Please wait...</msg>
   <msg key="Pressing_Tasks">Pressing Tasks</msg>
