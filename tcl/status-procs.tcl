@@ -120,5 +120,10 @@ ad_proc -private pm::status::project_status_select_helper {
     
     @error 
 } {
-    return [db_list_of_lists get_status "select description, status_id from pm_project_status order by status_type desc, description"]
+    set return_list [list]
+    db_foreach get_status "select description, status_id from pm_project_status order by status_type desc, description" {
+	set description [lang::util::localize $description]
+	lappend return_list [list "$description" $status_id]
+    }
+    return $return_list
 }
