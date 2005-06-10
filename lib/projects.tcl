@@ -122,13 +122,13 @@ foreach element $elements {
 }
 
 if {$bulk_p == 1} {
-    set bulk_actions [list "[_ project-manager.Close]" "@{base_url}/bulk-close" "[_ project-manager.Close_project]"] 
+    set bulk_actions [list "[_ project-manager.Close]" "@{base_url}bulk-close" "[_ project-manager.Close_project]"] 
 } else {
     set bulk_actions [list]
 }
 
 if {$actions_p == 1} {
-    set actions [list "[_ project-manager.Add_project]" "${base_url}/add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]"] 
+    set actions [list "[_ project-manager.Add_project]" "${base_url}add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]"] 
 } else {
     set actions [list]
 }
@@ -250,7 +250,7 @@ template::list::create \
 
 db_multirow -extend { item_url } projects project_folders {
 } {
-    set item_url [export_vars -base "${base_url}/one" {project_item_id}]
+    set item_url [export_vars -base "${base_url}one" {project_item_id}]
 }
 
 # ------------------------- END OF FILE ------------------------- #

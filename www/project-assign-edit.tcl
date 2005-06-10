@@ -22,6 +22,11 @@ set package_id [ad_conn package_id]
 # The id of the person logged in and browsing this page
 set user_id [ad_maybe_redirect_for_registration]
 
+# We want to assign people based on one or more categories. For this a
+# new page should be made available to add users based on categories.
+ 
+set project_assign_categories_url [export_vars -base project-assign-from-categories {project_item_id return_url}]
+
 # permissions
 permission::require_permission -party_id $user_id -object_id $project_item_id -privilege write
 
@@ -60,6 +65,8 @@ db_foreach assignee_query {
 } {
     set assigned($party_id-$role_id) 1
 }
+
+set contact_id [application_data_link::get_linked -from_object_id $party_id -to_object_type "content_item"]
 
 set assignee_list_of_lists [db_list_of_lists get_assignees {
     select distinct
@@ -105,6 +112,9 @@ foreach role_list $roles_list_of_lists {
         "
 
     }
+
+    # Add the list of Employees from the customer as well if they are
+    # not already in the list above.
 
     append html "</td>"
 

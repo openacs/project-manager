@@ -5,6 +5,7 @@
   <msg key="Action">Aktion</msg>
   <msg key="Actions">Aktionen</msg>
   <msg key="Add">Hinzufügen</msg>
+  <msg key="Add_a_Process">Einen Prozess hinzufügen</msg>
   <msg key="Add_a_process">Einen Prozess (bestehend aus mehreren einzelnen Aufgaben) hinzufügen</msg>
   <msg key="Add_a_task">Eine Aufgabe hinzufügen</msg>
   <msg key="Add_process">Prozess hinzufügen</msg>
@@ -33,6 +34,7 @@
   <msg key="Days_worked">Tage gearbeitet</msg>
   <msg key="Deadline">Abgabetermin:</msg>
   <msg key="Deadline_1">Abgabetermin</msg>
+  <msg key="Deadline_Time">Abgabezeit</msg>
   <msg key="Default_roles">Vordefinierte Rollen</msg>
   <msg key="Delete">Löschen</msg>
   <msg key="dependencies">Abhängigkeiten</msg>
@@ -59,6 +61,9 @@
   <msg key="Latest_finish">Spätestes Ende</msg>
   <msg key="Latest_Start">Frühester Start</msg>
   <msg key="Latest_start">Spätester Beginn</msg>
+  <msg key="Lead">Lead</msg>
+  <msg key="Link_instances">Paket Instanzen verlinken</msg>
+  <msg key="Linking">Verbindungen (Linking)</msg>
   <msg key="Log">Stundenlog</msg>
   <msg key="Log_entry">Aufwandserfassung Eintrag:</msg>
   <msg key="Logged_variables">Erfasste Variablen</msg>
@@ -81,6 +86,7 @@
   <msg key="lt_Hours_remaining_task_">Verbliebende Stunden: %task_info.hours_remaining%</msg>
   <msg key="lt_If_yes_then_this_proj">Wenn JA, dann hat dieses Projekt keinen Abgabetermin</msg>
   <msg key="lt_import_package_urlsty">@import &quot;%package_url%style-logger.css&quot;; @import &quot;%package_url%style.css&quot;;</msg>
+  <msg key="lt_Link_instances">Diese Seite erlaubt es Ihnen, andere Paket-Instanzen mit diesem Projekt Manager zu verbinden.</msg>
   <msg key="lt_Logger_is_a_package_t">Die Aufwandserfassung ist ein Package, das es Ihnen erlaubt, die in dem Projekt geleisteten Stunden, Kosten etc. zu erfassen.</msg>
   <msg key="lt_Logger_is_a_package_t_1">Die Aufwandserfassung ist ein Package, das es Ihnen erlaubt, die in dem Projekt geleisteten Stunden, Kosten etc. zu erfassen.</msg>
   <msg key="lt_nbspnumrownumnbspnbsp">&amp;nbsp;%num.rownum%&amp;nbsp;&amp;nbsp;</msg>
@@ -130,10 +136,12 @@
   <msg key="Min">Min.:</msg>
   <msg key="Name">name</msg>
   <msg key="nbspnbspproject_term">&amp;nbsp;&amp;nbsp;%project_term%</msg>
+  <msg key="New_Process">Neuer Prozess</msg>
   <msg key="New_project_term">Neues %project_term%</msg>
   <msg key="No_UI">Kein User Interface</msg>
   <msg key="Now">Jetzt</msg>
   <msg key="number">#</msg>
+  <msg key="Number_of_new_tasks">Anzahl der neuen Aufgaben</msg>
   <msg key="One_process">Ein Prozess</msg>
   <msg key="Ongoing">laufend</msg>
   <msg key="Open">Offen</msg>
@@ -141,6 +149,7 @@
   <msg key="page">Seite)</msg>
   <msg key="Parameters">Parameter</msg>
   <msg key="Percent_complete">Prozent Fertig</msg>
+  <msg key="Player">Vertr.</msg>
   <msg key="Process_tasks">Prozess Aufgaben:</msg>
   <msg key="process_tasks">Prozess Aufgaben</msg>
   <msg key="Processes">Prozesse</msg>
@@ -182,6 +191,7 @@
   <msg key="Task">Aufgabe</msg>
   <msg key="task">Aufgabe</msg>
   <msg key="Task_Calendar">Aufgaben Kalender</msg>
+  <msg key="Task_calendar">Aufgaben Kalender</msg>
   <msg key="Task_categories">Aufgaben Kategorien</msg>
   <msg key="task_change">Aufgabenänderung</msg>
   <msg key="Task_hours_completed">Aufgabe, erfasste Stunden</msg>
@@ -201,6 +211,7 @@
   <msg key="View_options">Optionen ansehen</msg>
   <msg key="View_project_changes">Projektänderungen ansehen</msg>
   <msg key="View_task_changes">Aufgabenänderungen ansehen</msg>
+  <msg key="Watcher">Übernommen durch</msg>
   <msg key="Who">Wer</msg>
   <msg key="Work">Arbeit</msg>
   <msg key="Work_required">Notwendige Arbeit:</msg>

@@ -11,6 +11,11 @@
   <msg key="Action">Action</msg>
   <msg key="Actions">Actions</msg>
   <msg key="Active_tasks">Active tasks</msg>
+  <msg key="Actual_end_date">Actual end date</msg>
+  <msg key="Actual_end_dates">Actual end dates</msg>
+  <msg key="Actual_hours_worked">Actual hours worked</msg>
+  <msg key="Actual_start_date">Actual start date</msg>
+  <msg key="Actual_start_dates">Actual start dates</msg>
   <msg key="Add">Add</msg>
   <msg key="Add__subproject">Add subproject</msg>
   <msg key="Add_a_Process">Add a Process</msg>
@@ -28,6 +33,7 @@
   <msg key="Added">Added:</msg>
   <msg key="Added_new">Added: %new%</msg>
   <msg key="Admin">Admin</msg>
+  <msg key="Assign_from_categories">Assign from categories</msg>
   <msg key="assign_removed">%assign% removed</msg>
   <msg key="assign_saved">%assign% saved</msg>
   <msg key="Assignee">Assignee</msg>
@@ -69,6 +75,7 @@
   <msg key="Days_worked">Days worked</msg>
   <msg key="Deadline">Deadline:</msg>
   <msg key="Deadline_1">Deadline</msg>
+  <msg key="Deadline_Time">Deadline Time</msg>
   <msg key="Default_roles">Default roles</msg>
   <msg key="Delete">Delete</msg>
   <msg key="Delete_one_line">Delete: %one_line%</msg>
@@ -86,10 +93,15 @@
   <msg key="Description_changed">Description changed</msg>
   <msg key="Done">Done.</msg>
   <msg key="Done_1">Done</msg>
+  <msg key="Dynamic_Form">Dynamic Form</msg>
+  <msg key="Dynamic_Forms">Dynamic Forms</msg>
   <msg key="Earliest_Finish">Earliest Finish</msg>
   <msg key="Earliest_finish">Earliest finish</msg>
+  <msg key="Earliest_finish_date">Earliest finish date</msg>
   <msg key="Earliest_Start">Earliest Start</msg>
   <msg key="Earliest_start">Earliest start</msg>
+  <msg key="Earliest_start_date">Earliest start date</msg>
+  <msg key="Earliest_start_dates">Earliest start dates</msg>
   <msg key="Edit">Edit</msg>
   <msg key="Edit_1">Edit assignees</msg>
   <msg key="Edit_a_Process">Edit a Process</msg>
@@ -101,12 +113,15 @@
   <msg key="Edit_tasks">Edit tasks</msg>
   <msg key="Edit_this_role">Edit this role</msg>
   <msg key="EF">EF</msg>
+  <msg key="End_date">End date</msg>
+  <msg key="End_dates">End dates</msg>
   <msg key="Enhanced_Text">Enhanced Text</msg>
   <msg key="Error">Error</msg>
   <msg key="ES">ES</msg>
   <msg key="Estimated_Hours">Estimated Hours</msg>
   <msg key="Estimated_Hours_Max">Estimated Hours (Max)</msg>
   <msg key="Estimated_Hours_Min">Estimated Hours (Min)</msg>
+  <msg key="Estimated_hours_work">Estimated hours work</msg>
   <msg key="Fixed-width_Text">Fixed-width Text</msg>
   <msg key="Format">Format:</msg>
   <msg key="Go">Go</msg>
@@ -124,9 +139,13 @@
   <msg key="Key">Key</msg>
   <msg key="Latest_Finish">Latest Finish</msg>
   <msg key="Latest_finish">Latest finish</msg>
+  <msg key="Latest_finish_date">Latest finish date</msg>
+  <msg key="Latest_finish_dates">Latest finish dates</msg>
   <msg key="Latest_Start">Latest Start</msg>
   <msg key="Latest_start">Latest start</msg>
   <msg key="Latest_start_1">Latest start:</msg>
+  <msg key="Latest_start_date">Latest start date</msg>
+  <msg key="Latest_start_dates">Latest start dates</msg>
   <msg key="Lead">Lead</msg>
   <msg key="LF">LF</msg>
   <msg key="Link_instances">Link package instances</msg>
@@ -156,6 +175,7 @@
   project-manager projects appear in the logger instance.</msg>
   <msg key="lt_A_person_interested_i">A person interested in developments, possibly helping out on it.</msg>
   <msg key="lt_A_person_on_the_team_">A person on the team responsible for completion of the project</msg>
+  <msg key="lt_Actual_hours_complete">Actual hours completed</msg>
   <msg key="lt_Add_a_comment_to_titl">Add a comment to: %title%</msg>
   <msg key="lt_Add_a_process_task_te">Add a process %task_term_lower%</msg>
   <msg key="lt_Add_a_process_task_te_1">Add a process %task_term_lower% (assignment)</msg>
@@ -187,6 +207,7 @@
   <msg key="lt_Dependency_changed_if">Dependency changed &lt;i&gt;from&lt;/i&gt; %old% (%old_dependency%)  &lt;i&gt;to&lt;/i&gt; %new% (%new_dependency%)</msg>
   <msg key="lt_depends_on_another_ta">depends on another %task_term_lower%</msg>
   <msg key="lt_done_with_project_upd">done with project update page (finally!)</msg>
+  <msg key="lt_Earliest_finish_dates">Earliest finish dates</msg>
   <msg key="lt_Edit_a_process_task_t">Edit a process %task_term_lower%</msg>
   <msg key="lt_Edit_a_project_term_l">Edit a %project_term_lower%</msg>
   <msg key="lt_Edit_a_task_term_lowe">Edit a %task_term_lower%</msg>
@@ -196,6 +217,11 @@
   <msg key="lt_Enter_100_to_close_th">Enter 100% to close the %task_term_lower%, or less to open it.</msg>
   <msg key="lt_Enter_100_to_close_th_1">Enter 100% to close the %task_term_lower%, or less to open it.</msg>
   <msg key="lt_Enter_a_number_for_or">Enter a number for ordering the priority. 0 is the default and also the lowest priority.</msg>
+  <msg key="lt_Estimated_finish_date">Estimated finish date</msg>
+  <msg key="lt_Estimated_finish_date_1">Estimated finish dates</msg>
+  <msg key="lt_Estimated_hours_total">Estimated hours total</msg>
+  <msg key="lt_Estimated_maximum_hou">Estimated maximum hours</msg>
+  <msg key="lt_Estimated_minimum_hou">Estimated minimum hours</msg>
   <msg key="lt_Finishes_before_this_">Finishes before this starts</msg>
   <msg key="lt_Finishes_before_this__1">Finishes before this finishes</msg>
   <msg key="lt_For_new_tasks_a_proje">For new tasks, a project must be passed in</msg>
@@ -207,6 +233,8 @@
     @import &quot;%package_url%style.css&quot;;</msg>
   <msg key="lt_Last_input_typetext_n">Last &lt;input type=&quot;text&quot; name=&quot;logger_days&quot; value=&quot;%logger_days%&quot; size=&quot;5&quot; /&gt; Days</msg>
   <msg key="lt_Link_instances">This page allows you to link other package instances to this project manager</msg>
+  <msg key="lt_Linked_logger_project">Linked logger project</msg>
+  <msg key="lt_Linked_logger_project_1">Linked logger projects</msg>
   <msg key="lt_Log_time_for_multiple">Log time for multiple tasks</msg>
   <msg key="lt_Logger_is_a_package">Logger is a package that lets you log time, expenses, and
   other . Project manager requires you to
@@ -392,10 +420,16 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Party_ID">Party ID</msg>
   <msg key="Percent_Complete">Percent Complete\</msg>
   <msg key="Percent_complete">Percent complete</msg>
+  <msg key="Percents_complete">Percents complete</msg>
   <msg key="Plain_Text">Plain Text</msg>
+  <msg key="Planned_end_date">Planned end date</msg>
+  <msg key="Planned_end_dates">Planned end dates</msg>
+  <msg key="Planned_start_date">Planned start date</msg>
+  <msg key="Planned_start_dates">Planned start dates</msg>
   <msg key="Player">Player</msg>
   <msg key="Please_wait">Please wait...</msg>
   <msg key="Pressing_Tasks">Pressing Tasks</msg>
+  <msg key="Priorities">Priorities</msg>
   <msg key="Priority">Priority:</msg>
   <msg key="Priority_1">Priority</msg>
   <msg key="Process">Process</msg>
@@ -415,16 +449,22 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Project_1">Project</msg>
   <msg key="Project_categories">Project categories</msg>
   <msg key="Project_Changes">Project Changes</msg>
+  <msg key="Project_code">Project code</msg>
+  <msg key="Project_codes">Project codes</msg>
+  <msg key="Project_goal">Project goal</msg>
+  <msg key="Project_goals">Project goals</msg>
   <msg key="Project_information">Project information</msg>
   <msg key="Project_is_ongoing">Project is ongoing?</msg>
   <msg key="Project_missing">Project missing</msg>
   <msg key="Project_name">Project name</msg>
+  <msg key="Project_ongoing">Project ongoing</msg>
   <msg key="Project_Search">Project Search:</msg>
   <msg key="Project_Search_term">Project Search term</msg>
   <msg key="project_termnoquotes">%project_term;noquote%s</msg>
   <msg key="project_terms">%project_term%s</msg>
   <msg key="Projection">Projection</msg>
   <msg key="Projects">Projects</msg>
+  <msg key="Projects_ongoing">Projects ongoing</msg>
   <msg key="Quantity">Quantity:</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>
   <msg key="Remove">myself</msg>
