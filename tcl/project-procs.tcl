@@ -393,7 +393,6 @@ ad_proc -public pm::project::get {
 }
 
 
-
 ad_proc -private pm::project::latest_start {
     {-end_date_j:required}
     {-hours_to_complete:required}
@@ -1570,15 +1569,12 @@ ad_proc -public pm::project::get_project {
     
     @error 
 } {
-    return [db_string get_logger_project "
-        SELECT
-        i.item_id
-        FROM
-        pm_projectsx p, cr_items i
-        WHERE
-        i.live_revision = p.revision_id and logger_project = :logger_project
-    " -default "no_project"]
-    
+    set project_id [application_data_link::get_linked -this_object_id $logger_project -to_object_type "pm_project"]
+    if {[empty_string_p $project_id]} {
+	return "no project"
+    } else {
+	return $project_id    
+    }
 }
 
 
