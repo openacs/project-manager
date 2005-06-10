@@ -6,7 +6,7 @@
 # @cvs-id $Id$
 
 set required_param_list [list package_id]
-set optional_param_list [list orderby status_id searchterm bulk_p action_p]
+set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url]
 set optional_unset_list [list assignee_id]
 
 foreach required_param $required_param_list {
@@ -122,13 +122,13 @@ foreach element $elements {
 }
 
 if {$bulk_p == 1} {
-    set bulk_actions [list "[_ project-manager.Close]" "bulk-close" "[_ project-manager.Close_project]"] 
+    set bulk_actions [list "[_ project-manager.Close]" "@{base_url}/bulk-close" "[_ project-manager.Close_project]"] 
 } else {
     set bulk_actions [list]
 }
 
 if {$actions_p == 1} {
-    set actions [list "[_ project-manager.Add_project]" "add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]"] 
+    set actions [list "[_ project-manager.Add_project]" "${base_url}/add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]"] 
 } else {
     set actions [list]
 }
@@ -250,7 +250,7 @@ template::list::create \
 
 db_multirow -extend { item_url } projects project_folders {
 } {
-    set item_url [export_vars -base "one" {project_item_id}]
+    set item_url [export_vars -base "${base_url}/one" {project_item_id}]
 }
 
 # ------------------------- END OF FILE ------------------------- #

@@ -1,7 +1,8 @@
   <table cellpadding="3" cellspacing="3">
     
     <tr>
-      
+
+    <if @filter_p@ ne 0>
       <td class="project-filter-pane" valign="top">
         
         <form method=post name=search action=index>
@@ -16,13 +17,12 @@
         <listfilters name="projects"></listfilters>
         
       </td>
-      
+      </if>
       <td class="list-list-pane" valign="top">
         
         <listtemplate name="projects"></listtemplate>
         
       </td>
-      
     </tr>
     
   </table>
