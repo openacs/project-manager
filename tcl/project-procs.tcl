@@ -154,15 +154,19 @@ ad_proc -private pm::project::log_hours {
 	-entry_id $entry_id \
         -project_id $logger_project_id \
 	-project_item_id $project_item_id \
-	-task_item_id $task_item_id \
         -variable_id $variable_id \
         -value $value \
         -time_stamp $timestamp_ansi \
         -description $description \
         -party_id $creation_user
+
     
     # if we have a pm_task_id, then we need to note that this
     # entry is logged to a particular task.
+
+    logger::project::get -project_id $logger_project_id -array project_array
+    logger::variable::get -variable_id [logger::project::get_primary_variable -project_id $logger_project_id] -array variable_array
+
     if {[exists_and_not_null task_item_id]} {
 	application_data_link::new -this_object_id $task_item_id -target_object_id $entry_id
         
@@ -173,6 +177,36 @@ ad_proc -private pm::project::log_hours {
         if {[string is true $update_status_p]} {
             pm::project::compute_status $project_item_id
         }
+
+	set log_title "$project_array(name)\: [pm::task::name -task_item_id $task_item_id]: logged $value $variable_array(unit)"
+
+        pm::util::general_comment_add \
+            -object_id $task_item_id \
+            -title $log_title \
+            -comment $description \
+            -mime_type "text/html" \
+            -user_id [ad_conn user_id] \
+            -peeraddr [ad_conn peeraddr] \
+            -type "task" \
+            -send_email_p t
+
+        pm::task::update_hours \
+            -task_item_id $task_item_id \
+            -update_tasks_p t
+
+    } else {
+
+	set log_title "$project_array(name)\: [pm::project::name -project_item_id $project_item_id]: logged $value $variable_array(unit)"
+
+        pm::util::general_comment_add \
+            -object_id $project_item_id \
+            -title $log_title \
+            -comment $description \
+            -mime_type "text/html" \
+            -user_id [ad_conn user_id] \
+            -peeraddr [ad_conn peeraddr] \
+            -type "project" \
+            -send_email_p t
     }
 
     return $returnval
