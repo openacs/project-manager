@@ -274,29 +274,28 @@ ad_proc -public -callback contact::organization_new -impl project_manager {
 	# Check if we have a .LRN Club linked in. If yes,only create
 	# the project in the .LRN Club, otherwise in the default project
 	# manager instances
-	set package_list [application_data_link::get_linked -from_object_id $contact_id -to_object_type "dotlrn_club"]
+	set dotlrn_club_id [application_data_link::get_linked -from_object_id $contact_id -to_object_type "dotlrn_club"]
+	set pm_package_id [dotlrn_community::get_package_id_from_package_key -package_key "project-manager" -community_id $dotlrn_club_id]
 
-	if {[empty_string_p $package_list]} {
-	    set package_list [lindex [application_link::get_linked \
+	if {[empty_string_p $package_id]} {
+	    set pm_package_id [lindex [application_link::get_linked \
 					  -from_package_id $package_id \
 					  -to_package_key "project-manager"] 0]
 	}
 	
-	foreach pm_package_id $package_list {
-	    set project_id [pm::project::new \
-				-project_name $name \
-				-status_id 1 \
-				-organization_id $contact_id \
-				-creation_user $creation_user \
-				-creation_ip $creation_ip \
-				-package_id $pm_package_id]
-	    
-	    set project_item_id [pm::project::get_project_item_id \
+	set project_id [pm::project::new \
+			    -project_name $name \
+			    -status_id 1 \
+			    -organization_id $contact_id \
+			    -creation_user $creation_user \
+			    -creation_ip $creation_ip \
+			    -package_id $pm_package_id]
+	
+	set project_item_id [pm::project::get_project_item_id \
 				     -project_id $project_id]
+	
+	application_data_link::new -this_object_id $contact_id -target_object_id $project_item_id
 	    
-	    application_data_link::new -this_object_id $contact_id -target_object_id $project_item_id
-	    
-	}
     }
 }
 
