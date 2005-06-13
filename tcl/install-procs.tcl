@@ -259,6 +259,7 @@ ad_proc -public -callback contact::contact_form -impl project_manager {
 ad_proc -public -callback contact::organization_new -impl project_manager {
     {-package_id:required}
     {-contact_id:required}
+    {-name:required}
 } {
     create a new project for new organization
 } {
@@ -266,12 +267,9 @@ ad_proc -public -callback contact::organization_new -impl project_manager {
     
     if {[exists_and_not_null create_project_p]
 	&& $create_project_p == "t"} {
-	db_1row organisation_data {
-	    select o.name, ao.creation_user, ao.creation_ip
-	    from organizations o, acs_objects ao
-	    where o.organization_id = :contact_id
-	    and ao.object_id = o.organization_id}
-	
+
+	set creation_user [ad_conn user_id]
+	set creation_ip [ad_conn peeraddr]
 	foreach pm_package_id [application_link::get_linked \
 				   -from_package_id $package_id \
 				   -to_package_key "project-manager"] {
