@@ -270,9 +270,19 @@ ad_proc -public -callback contact::organization_new -impl project_manager {
 
 	set creation_user [ad_conn user_id]
 	set creation_ip [ad_conn peeraddr]
-	foreach pm_package_id [application_link::get_linked \
-				   -from_package_id $package_id \
-				   -to_package_key "project-manager"] {
+	
+	# Check if we have a .LRN Club linked in. If yes,only create
+	# the project in the .LRN Club, otherwise in the default project
+	# manager instances
+	set package_list [application_data_link::get_linked -from_object_id $contact_id -to_object_type "dotlrn_club"]
+
+	if {[empty_string_p $package_list]} {
+	    set package_list [lindex [application_link::get_linked \
+					  -from_package_id $package_id \
+					  -to_package_key "project-manager"] 0]
+	}
+	
+	foreach pm_package_id $package_list {
 	    set project_id [pm::project::new \
 				-project_name $name \
 				-status_id 1 \
@@ -286,7 +296,7 @@ ad_proc -public -callback contact::organization_new -impl project_manager {
 	    
 	    application_data_link::new -this_object_id $contact_id -target_object_id $project_item_id
 	    
-	    }
+	}
     }
 }
 
