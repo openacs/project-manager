@@ -17,7 +17,7 @@ ad_page_contract {
 }
 
 set package_id [ad_conn package_id]
-
+set user_id [ad_conn user_id]
 permission::require_permission -privilege "delete" -object_id $task_item_id
 
 set title "[_ project-manager.Delete_task]"
@@ -39,34 +39,33 @@ if {[string equal $action delete]} {
     if {[string is true $use_uncertain_completion_times_p]} {
         set hours_work {
             {estimated_hours_work_min:text
-                {label "[_ project-manager.Estimated_Hours_Min]"}
+                {label \"[_ project-manager.Estimated_Hours_Min]\"}
             }
             {estimated_hours_work_max:text
-                {label "[_ project-manager.Estimated_Hours_Max]"}
+                {label \"[_ project-manager.Estimated_Hours_Max]\"}
             }
         }
     } else {
         set hours_work {
             {estimated_hours_work:text
-                {label "[_ project-manager.Estimated_Hours]"}
+                {label \"[_ project-manager.Estimated_Hours]\"}
             }
         }
     }
 
 
-    set form "
+    set form {
         task_item_id:key
         {task_title:text
-            {label \"[_ project-manager.Title_1]"}
+            {label "[_ project-manager.Title]"}
         }
         {description:richtext
-            {label \"[_ project-manager.Description_2]"}
+            {label "[_ project-manager.Description]"}
         }
-        $hours_work
         {percent_complete:text
-            {label \"[_ project-manager.Percent_Complete]"}
+            {label "[_ project-manager.Percent_Complete]"}
         }
-    "
+    }
     
     ad_form -name delete_task \
         -edit_request {
@@ -79,7 +78,10 @@ if {[string equal $action delete]} {
         -mode display \
         -has_submit 1 \
         -has_edit 1 \
-        -actions {{"#project-manager.Delete_this_task#" delete} {"#project-manager.Cancel#" cancel}} \
+        -actions [list \
+		      [list [_ project-manager.Delete_this_task] delete]\
+		      [list [_ project-manager.Cancel] cancel] \
+		      ] \
         -cancel_url "task-one?task_id=$task_item_id" \
         -form $form 
 
