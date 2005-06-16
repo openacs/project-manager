@@ -63,7 +63,6 @@ ad_proc -private pm::install::package_instantiate {
 } {
     Package instantiation callback proc.
 } {
-
     # create a content folder
 
     set folder_id [content::folder::new \
@@ -73,6 +72,8 @@ ad_proc -private pm::install::package_instantiate {
 
     content::folder::register_content_type -folder_id $folder_id -content_type {pm_project} -include_subtypes t
     content::folder::register_content_type -folder_id $folder_id -content_type {pm_task} -include_subtypes t
+
+    callback pm::install::after_instantiate -package_id $package_id
 }
 
 ad_proc -private pm::install::package_uninstantiate {

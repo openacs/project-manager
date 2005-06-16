@@ -60,6 +60,11 @@ ad_proc -public -callback pm::task_close {
 } {
 }
 
+ad_proc -public -callback pm::install::after_instantiate {
+    {-package_id:required}
+} {
+}
+
 ad_proc -public -callback forum::message_new -impl project_manager {
     {-package_id:required}
     {-message_id:required}
