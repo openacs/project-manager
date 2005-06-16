@@ -22,9 +22,13 @@
   <msg key="Comment">Kommentar:</msg>
   <msg key="Comments">Kommentar</msg>
   <msg key="Complete">abgeschlossen:</msg>
+<<<<<<< project-manager.de_DE.ISO-8859-1.xml
+  <msg key="create_project">Projekt erstellen</msg>
+=======
   <msg key="create_project">Projekt erstellen</msg>
   <msg key="Created">Erstellt</msg>
   <msg key="CSV">CSV</msg>
+>>>>>>> 1.3
   <msg key="Customer">Kunde</msg>
   <msg key="Customer_Name">Kundenname</msg>
   <msg key="Customers">Kunden</msg>

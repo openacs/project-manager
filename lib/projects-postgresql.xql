@@ -57,8 +57,8 @@
                     where ppm.object_id = p.project_id
                     and ppm.privilege = 'read'
                     and ppm.party_id = :user_id)
-        [template::list::filter_where_clauses -and -name projects]
-        [template::list::orderby_clause -orderby -name projects]
+        [template::list::filter_where_clauses -and -name "projects_${package_id}"]
+        [template::list::orderby_clause -orderby -name "projects_${package_id}"]
     </querytext>
 </fullquery>
 

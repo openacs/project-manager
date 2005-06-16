@@ -1,5 +1,8 @@
   <table cellpadding="3" cellspacing="3">
-    
+   <multiple name=pm_packages>    
+
+
+
     <tr>
 
     <if @filter_p@ ne 0>
@@ -14,17 +17,17 @@
         
         @category_select;noquote@
         
-        <listfilters name="projects"></listfilters>
+
         
       </td>
       </if>
       <td class="list-list-pane" valign="top">
         
-        <listtemplate name="projects"></listtemplate>
+        <listtemplate name="@pm_packages.list_id@"></listtemplate>
         
       </td>
     </tr>
-    
+   </multiple>
   </table>
 
 

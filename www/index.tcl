@@ -22,6 +22,7 @@ ad_page_contract {
     category_id:multiple,optional
     {format "normal"}
     {assignee_id ""}
+    
 } -properties {
 
     context:onevalue
@@ -256,6 +257,7 @@ db_multirow -extend { item_url } projects project_folders {
 
 
 list::write_output -name projects
+
 
 
 # ------------------------- END OF FILE ------------------------- #

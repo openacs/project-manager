@@ -34,7 +34,40 @@ if {![info exists format]} {
 }
 
 
+
 # --------------------------------------------------------------- #
+
+set _package_id $package_id
+template::multirow create pm_packages "list_id" "contact_column" "community_name"
+set c_row 0
+
+
+
+foreach package_id $_package_id {
+
+
+set _base_url [site_node::get_url_from_object_id -object_id $package_id]
+
+if {![empty_string_p $_base_url]} {
+
+    set base_url $_base_url
+}
+
+set community_id [dotlrn_community::get_community_id_from_url \
+		  -url $base_url \
+		     ]
+
+if {![empty_string_p $community_id]} {
+
+    set community_name [dotlrn_community::get_community_name  $community_id]
+
+    set portal_info_name "Project: $community_name" 
+    set portal_info_url  "$base_url" 
+		       
+}
+
+
+
 
 set exporting_vars { status_id category_id assignee_id orderby format }
 set hidden_vars [export_vars -form $exporting_vars]
@@ -45,12 +78,6 @@ set context [list]
 # the unique identifier for this package
 set user_id    [ad_maybe_redirect_for_registration]
 
-# permissions
-permission::require_permission -party_id $user_id -object_id $package_id -privilege read
-
-set write_p  [permission::permission_p -object_id $package_id -privilege write] 
-set create_p [permission::permission_p -object_id $package_id -privilege create]
-set admin_p [permission::permission_p -object_id $package_id -privilege admin]
 
 # root CR folder
 set root_folder [pm::util::get_root_folder -package_id $package_id]
@@ -74,7 +101,9 @@ if {[exists_and_not_null category_id]} {
     set pass_cat $category_id
 } else {
     set temp_category_id ""
-    unset category_id
+    if {[info exists category_id]} {
+	unset category_id
+    }
 }
 
 set category_select [pm::util::category_selects \
@@ -108,11 +137,18 @@ if {[exists_and_not_null orderby]} {
 # Get url of the contacts package if it has been mounted for the links on the index page.
 set contacts_url [util_memoize [list site_node::get_package_url -package_key contacts]]
 if {[empty_string_p $contacts_url]} {
-    set contact_column "@projects.customer_name@"
+    set contact_column "@projects_${package_id}.customer_name@"
 } else {
-    set contact_column "<a href=\"${contacts_url}contact?party_id=@projects.customer_id@\">@projects.customer_name@</a>"
+    set contact_column "<a href=\"${contacts_url}contact?party_id=@projects_${package_id}.customer_id@\">@projects_${package_id}.customer_name@</a>"
 }
 
+# Store project names and all other project individuel data
+set contact_coloum "fff" 
+
+template::multirow append pm_packages "projects_${package_id}" "$contact_column" 
+
+ns_log notice "projects = projects_${package_id} c_row=$c_row\n [template::multirow get pm_packages 1 list_id] , [template::multirow columns pm_packages] , [template::multirow size pm_packages]"
+incr c_row
 
 # Get the rows to display
 
@@ -122,20 +158,30 @@ foreach element $elements {
 }
 
 if {$bulk_p == 1} {
-    set bulk_actions [list "[_ project-manager.Close]" "@{base_url}bulk-close" "[_ project-manager.Close_project]"] 
+    set bulk_actions [list "[_ project-manager.Close]" "@{base_url}/bulk-close" "[_ project-manager.Close_project]" ] 
 } else {
     set bulk_actions [list]
 }
 
 if {$actions_p == 1} {
-    set actions [list "[_ project-manager.Add_project]" "${base_url}add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]"] 
+
+    if {[info exists portal_info_name]} {
+	
+	set actions [list "$portal_info_name" "$portal_info_url" "$portal_info_name" "[_ project-manager.Add_project]" "${base_url}/add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" ] 
+    
+    } else {
+
+	set actions [list  "[_ project-manager.Add_project]" "${base_url}/add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" ] 
+    
+    }
+    
 } else {
-    set actions [list]
+    set actions [list "Project: $community_name" "$base_url"]
 }
 
 template::list::create \
-    -name projects \
-    -multirow projects \
+    -name "projects_${package_id}" \
+    -multirow projects_${package_id} \
     -selected_format $format \
     -key project_item_id \
     -elements {
@@ -152,15 +198,15 @@ template::list::create \
         }
         earliest_finish_date {
             label "[_ project-manager.Earliest_finish]"
-            display_template "<if @projects.days_to_earliest_finish@ gt 1>@projects.earliest_finish_date@</if><else><font color=\"green\">@projects.earliest_finish_date@</font></else>"
+            display_template "<if @projects_${package_id}.days_to_earliest_finish@ gt 1>@projects_${package_id}.earliest_finish_date@</if><else><font color=\"green\">@projects_${package_id}.earliest_finish_date@</font></else>"
         }
         latest_finish_date {
             label "[_ project-manager.Latest_Finish]"
-            display_template "<if @projects.days_to_latest_finish@ gt 1>@projects.latest_finish_date@</if><else><font color=\"red\">@projects.latest_finish_date@</font></else>"
+            display_template "<if @projects${package_id}.days_to_latest_finish@ gt 1>@projects${package_id}.latest_finish_date@</if><else><font color=\"red\">@projects${package_id}.latest_finish_date@</font></else>"
         }
         actual_hours_completed {
             label "[_ project-manager.Hours_completed]"
-            display_template "@projects.actual_hours_completed@/@projects.estimated_hours_total@"
+            display_template "@projects${package_id}.actual_hours_completed@/@projects.estimated_hours_total@"
         }
         category_id {
             display_template "<group column=\"project_item_id\"></group>"
@@ -248,9 +294,16 @@ template::list::create \
         width 100%
     }
 
-db_multirow -extend { item_url } projects project_folders {
+db_multirow -extend { item_url } "projects_${package_id}" project_folders {
 } {
     set item_url [export_vars -base "${base_url}one" {project_item_id}]
 }
 
+
+
+}
+
+
+
+ad_return_template
 # ------------------------- END OF FILE ------------------------- #
