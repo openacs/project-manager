@@ -193,7 +193,7 @@ template::list::create \
         customer_name {
             label "[_ project-manager.Customer]"
             display_template "
-<if @projects.customer_id@ not nil>$contact_column</if><else>@projects.customer_name@</else>
+<if @projects_${package_id}.customer_id@ not nil>$contact_column</if><else>@projects_${package_id}.customer_name@</else>
 "
         }
         earliest_finish_date {
@@ -202,11 +202,11 @@ template::list::create \
         }
         latest_finish_date {
             label "[_ project-manager.Latest_Finish]"
-            display_template "<if @projects${package_id}.days_to_latest_finish@ gt 1>@projects${package_id}.latest_finish_date@</if><else><font color=\"red\">@projects${package_id}.latest_finish_date@</font></else>"
+            display_template "<if @projects_${package_id}.days_to_latest_finish@ gt 1>@projects_${package_id}.latest_finish_date@</if><else><font color=\"red\">@projects_${package_id}.latest_finish_date@</font></else>"
         }
         actual_hours_completed {
             label "[_ project-manager.Hours_completed]"
-            display_template "@projects${package_id}.actual_hours_completed@/@projects.estimated_hours_total@"
+            display_template "@projects_${package_id}.actual_hours_completed@/@projects_${package_id}.estimated_hours_total@"
         }
         category_id {
             display_template "<group column=\"project_item_id\"></group>"
