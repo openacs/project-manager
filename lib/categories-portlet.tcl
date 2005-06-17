@@ -9,9 +9,15 @@
 
 # categories
 
-set categories [list]
+set cat_trees [list]
 set cat_list [category::get_mapped_categories $item_id]
 foreach cat $cat_list {
-    lappend categories [category::get_name $cat]
+    set tree_id [category::get_tree $cat]
+    lappend cat_trees [list [category_tree::get_name $tree_id] [category::get_name $cat] $tree_id]
 }
-set cat_length [llength $categories]
+
+multirow create categories tree_id tree_name category_name
+foreach cat [lsort -dictionary -index 0 $cat_trees] {
+    util_unlist $cat tree_name cat_name tree_id
+    multirow append categories $tree_id $tree_name $cat_name
+}

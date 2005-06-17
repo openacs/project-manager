@@ -1,4 +1,4 @@
-  <if @cat_length@ gt 0>
+  <if @categories:rowcount@ gt 0>
     <master src="/packages/project-manager/lib/portlet" />
     <property name="portlet_title">#project-manager.Categories#</property>
     <tr>
@@ -7,9 +7,13 @@
 	  <tr>
 	    <td class="fill-list-bg">
 	      <ul>
-		<list name="categories">
-		  <li> @categories:item@
-		</list>
+                <multiple name="categories">
+                  <li>@categories.tree_name@:
+                    <group column="tree_id" delimiter=", ">
+                      @categories.category_name@
+                    </group>
+                  </li>
+                </multiple>
 	      </ul>
 	    </td>
 	</table>
