@@ -218,11 +218,11 @@ template::list::create \
 	    label "[_ project-manager.number]"
 	    link_url_col item_url
 	    link_html {title "[_ project-manager.lt_View_this_project_ver]" }
-	    display_template {<a href="${base_url}@tasks.item_url@">@tasks.task_item_id@</a>}
+	    display_template {<a href="@tasks.base_url@@tasks.item_url@">@tasks.task_item_id@</a>}
 	}
         status_type {
             label "[_ project-manager.Done_1]"
-            display_template {<a href="${base_url}task-add-edit?task_id=@tasks.task_item_id@&project_item_id=@tasks.project_item_id@"><if @tasks.status_type@ eq c><img border="0" src="/resources/checkboxchecked.gif" /></if><else><img border="0" src="/resources/checkbox.gif" /></else></a>
+            display_template {<a href="@tasks.base_url@task-add-edit?task_id=@tasks.task_item_id@&project_item_id=@tasks.project_item_id@"><if @tasks.status_type@ eq c><img border="0" src="/resources/checkboxchecked.gif" /></if><else><img border="0" src="/resources/checkbox.gif" /></else></a>
             }
         }
 	title {
@@ -230,7 +230,7 @@ template::list::create \
 	}
         parent_task_id {
             label "[_ project-manager.Dep]"
-            display_template {<a href="${base_url}task-one?task_id=@tasks.parent_task_id@">@tasks.parent_task_id@</a>
+            display_template {<a href="@tasks.base_url@task-one?task_id=@tasks.parent_task_id@">@tasks.parent_task_id@</a>
             }
         }
         priority {
@@ -245,7 +245,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="${base_url}@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.base_url@@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
             }
 	}
 	role {
@@ -307,11 +307,11 @@ template::list::create \
 	}
 	log_url {
 	    label "[_ project-manager.Log]"
-	    display_template {<a href="${base_url}@tasks.log_url@">L</a>}
+	    display_template {<a href="@tasks.base_url@@tasks.log_url@">L</a>}
 	}
 	edit_url {
 	    label "[_ acs-kernel.common_Edit]"
-	    display_template {<a href="${base_url}@tasks.edit_url@">E</a>}
+	    display_template {<a href="@tasks.base_url@@tasks.edit_url@">E</a>}
 	}
 	percent_complete {
 	    label "[_ project-manager.Percent_complete]"
@@ -390,7 +390,7 @@ template::list::create \
 	}
     }
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url} tasks tasks {} {
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url} tasks tasks {} {
 
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
@@ -442,6 +442,9 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
     set my_user_id $user_id
     set user_url [export_vars \
 		      -base "${contacts_url}contact" {{party_id $person_id}}]
+
+    acs_object::get -object_id $task_item_id -array task_array
+    set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]
 }
 
 # ------------------------- END OF FILE -------------------------
