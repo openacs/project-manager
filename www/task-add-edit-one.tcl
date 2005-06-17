@@ -29,6 +29,8 @@ ad_page_contract {
     {process_task_id:integer,multiple ""}
     {return_url ""}
     {assignee:array,multiple,optional}
+    {organization_id "1302"}
+    {customer_id "1302"}
 }
 
 

@@ -42,6 +42,20 @@ if ![info exists package_id] {
     set package_id [ad_conn package_id]
 }
 
+
+set community_id [dotlrn_community::get_community_id_from_url \
+		  -url [ad_conn url] \
+		     ]
+
+if {![empty_string_p $community_id]} {
+
+    set base_url "project-manager/"
+
+} else {
+
+    set base_url ""
+
+}
 # ---------------------------------------------------------------
 
 # Hide finished tasks. This should be added as a filter, but I did not
@@ -77,6 +91,7 @@ set logger_url [pm::util::logger_url]
 
 set contacts_url [util_memoize [list site_node::get_package_url \
 				    -package_key contacts]]
+
 
 # set up context bar
 
@@ -192,7 +207,7 @@ foreach element $elements {
 }
 
 if {$bulk_p == 1} {
-    set bulk_actions [list "[_ project-manager.Log_hours]" "log-bulk" "[_ project-manager.lt_Log_hours_for_several]" "[_ project-manager.Edit_tasks]" "task-add-edit" "[_ project-manager.Edit_multiple_tasks]"]
+    set bulk_actions [list "[_ project-manager.Log_hours]" "${base_url}log-bulk" "[_ project-manager.lt_Log_hours_for_several]" "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]"]
     set bulk_action_export_vars [list [list return_url]]
 } else {
     set bulk_actions [list]
@@ -201,7 +216,7 @@ if {$bulk_p == 1} {
 
 if {$actions_p == 1} {
     set actions [list "[_ project-manager.Add_task]" [export_vars \
-							  -base task-select-project {return_url}] "[_ project-manager.Add_a_task]"]
+							  -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
 } else {
     set actions [list]
 }
@@ -216,11 +231,11 @@ template::list::create \
 	    label "[_ project-manager.number]"
 	    link_url_col item_url
 	    link_html {title "[_ project-manager.lt_View_this_project_ver]" }
-	    display_template {<a href="@tasks.item_url@">@tasks.task_item_id@</a>}
+	    display_template {<a href="${base_url}@tasks.item_url@">@tasks.task_item_id@</a>}
 	}
         status_type {
             label "[_ project-manager.Done_1]"
-            display_template {<a href="task-add-edit?task_id=@tasks.task_item_id@&project_item_id=@tasks.project_item_id@"><if @tasks.status_type@ eq c><img border="0" src="/resources/checkboxchecked.gif" /></if><else><img border="0" src="/resources/checkbox.gif" /></else></a>
+            display_template {<a href="${base_url}task-add-edit?task_id=@tasks.task_item_id@&project_item_id=@tasks.project_item_id@"><if @tasks.status_type@ eq c><img border="0" src="/resources/checkboxchecked.gif" /></if><else><img border="0" src="/resources/checkbox.gif" /></else></a>
             }
         }
 	title {
@@ -228,7 +243,7 @@ template::list::create \
 	}
         parent_task_id {
             label "[_ project-manager.Dep]"
-            display_template {<a href="task-one?task_id=@tasks.parent_task_id@">@tasks.parent_task_id@</a>
+            display_template {<a href="${base_url}task-one?task_id=@tasks.parent_task_id@">@tasks.parent_task_id@</a>
             }
         }
         priority {
@@ -243,7 +258,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="${base_url}@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
             }
 	}
 	role {
@@ -305,11 +320,11 @@ template::list::create \
 	}
 	log_url {
 	    label "[_ project-manager.Log]"
-	    display_template {<a href="@tasks.log_url@">L</a>}
+	    display_template {<a href="${base_url}@tasks.log_url@">L</a>}
 	}
 	edit_url {
 	    label "[_ acs-kernel.common_Edit]"
-	    display_template {<a href="@tasks.edit_url@">E</a>}
+	    display_template {<a href="${base_url}@tasks.edit_url@">E</a>}
 	}
 	percent_complete {
 	    label "[_ project-manager.Percent_complete]"
