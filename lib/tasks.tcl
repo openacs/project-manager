@@ -3,7 +3,7 @@
 # role_id
 
 set required_param_list [list]
-set optional_param_list [list orderby searchterm status_id page bulk_p actions_p]
+set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url]
 set optional_unset_list [list party_id role_id project_item_id]
 
 foreach required_param $required_param_list {
@@ -43,19 +43,6 @@ if ![info exists package_id] {
 }
 
 
-set community_id [dotlrn_community::get_community_id_from_url \
-		  -url [ad_conn url] \
-		     ]
-
-if {![empty_string_p $community_id]} {
-
-    set base_url "project-manager/"
-
-} else {
-
-    set base_url ""
-
-}
 # ---------------------------------------------------------------
 
 # Hide finished tasks. This should be added as a filter, but I did not

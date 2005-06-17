@@ -201,7 +201,7 @@ if {[empty_string_p $logger_variable_id]} {
                                 -project_id $logger_project]
 }
 
-set log_url [export_vars -base "${logger_url}log" {{return_url $return_url} {project_id $logger_project} {pm_project_id $task_info(project_item_id)} {pm_task_id $task_id}}]
+set log_url [export_vars -base "${logger_url}log" -url {{project_id $logger_project} {pm_project_id $task_info(project_item_id)} {pm_task_id $task_id} return_url}]
 
 set assignee_add_self_widget "Add myself as <form method=\"post\" action=\"task-assign-add\">[export_vars -form {{task_item_id $task_id} user_id return_url}][pm::role::task_select_list -select_name "role_id" -task_item_id $task_id -party_id $user_id]<input type=\"Submit\" value=\"OK\" /></form>"
 
