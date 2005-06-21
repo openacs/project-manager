@@ -6,7 +6,7 @@
 # @cvs-id $Id$
 
 set required_param_list [list package_id]
-set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url]
+set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url customer_id]
 set optional_unset_list [list assignee_id]
 
 foreach required_param $required_param_list {
@@ -167,11 +167,11 @@ if {$actions_p == 1} {
 
     if {[info exists portal_info_name]} {
 	
-	set actions [list "$portal_info_name" "$portal_info_url" "$portal_info_name" "[_ project-manager.Add_project]" "${base_url}/add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" ] 
+	set actions [list "$portal_info_name" "$portal_info_url" "$portal_info_name" "[_ project-manager.Add_project]" "[export_vars -base "${base_url}/add-edit" -url {customer_id}]" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" ] 
     
     } else {
 
-	set actions [list  "[_ project-manager.Add_project]" "${base_url}/add-edit" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" ] 
+	set actions [list  "[_ project-manager.Add_project]" "[export_vars -base "${base_url}/add-edit" -url {customer_id}]" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" ] 
     
     }
     
