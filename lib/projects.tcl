@@ -211,6 +211,10 @@ template::list::create \
         category_id {
             display_template "<group column=\"project_item_id\"></group>"
         }
+	status_id {
+	    label "[_ project-manager.Status_1]"
+	    display_template "<if @projects_${package_id}.status_id@ eq 2>#project-manager.Closed#</if><else>#project-manager.Open#</else>"
+	}
     } \
     -actions $actions \
     -bulk_actions $bulk_actions \
