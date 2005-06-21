@@ -730,6 +730,10 @@ ad_proc -public pm::task::new {
     @error
 
 } {
+    if {[empty_string_p $task_id]} {
+	set task_id [db_nextval acs_object_id_seq]
+    }
+
     if {![exists_and_not_null status_id]} {
         set status_id [pm::task::default_status_open]
     }
