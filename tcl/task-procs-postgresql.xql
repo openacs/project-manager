@@ -202,6 +202,7 @@
     <querytext>
         select pm_task__new_task_item (
         :project_id,
+        :task_id,
         :title,
         :description,
         :mime_type,

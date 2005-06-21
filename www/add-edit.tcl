@@ -25,6 +25,7 @@ ad_page_contract {
     {deadline_scheduling ""}
     {ongoing_p ""}
     {status_id ""}
+    {extra_data:optional ""}
 
 } -properties {
 
@@ -93,6 +94,7 @@ ad_form -name add_edit \
         }
 
         {dform:text(hidden)}
+        {extra_data:text(hidden),optional}
 
         {project_name:text
             {label "[_ project-manager.lt_set_project_term_name]"}
@@ -216,6 +218,9 @@ ad_form -extend -name add_edit \
 	set folder_id [pm::util::get_root_folder -package_id $package_id]
 	set callback_data(organization_id) $customer_id
 	set callback_data(variables) $variables
+	foreach {key value} $extra_data {
+	    set callback_data($key) $value
+	}
 
 	set customer_name [organizations::name -organization_id $customer_id]
 	if {![empty_string_p $customer_name]} {

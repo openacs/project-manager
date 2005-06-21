@@ -697,6 +697,7 @@ ad_proc -public pm::task::edit {
 
 ad_proc -public pm::task::new {
     -project_id:required
+    {-task_id ""}
     {-title "Subject missing"}
     {-description ""}
     {-mime_type "text/plain"}
