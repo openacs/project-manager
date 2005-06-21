@@ -4,7 +4,7 @@
 
 set required_param_list [list]
 set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url]
-set optional_unset_list [list party_id role_id project_item_id]
+set optional_unset_list [list party_id role_id project_item_id instance_id]
 
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
@@ -152,8 +152,11 @@ set filters [list \
 				      label "[_ project-manager.Project_1]" \
 				      values {[pm::project::get_list_of_open]} \
 				      where_clause "t.parent_id = :project_item_id"
-				 ]
-	    ]
+				 ] \
+		 instance_id [list \
+				  where_clause "p.parent_id = :instance_id"
+			     ] \
+		]
 
 foreach element $elements {
 

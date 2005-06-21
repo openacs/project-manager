@@ -109,7 +109,7 @@ ad_form -name add_edit \
         
         {customer_id:text(select),optional
             {label "[_ project-manager.Customer]"}
-            {options {{"[_ project-manager.---_TBD_---]" ""} [db_list_of_lists get_customer "select o.name, o.organization_id from organizations o order by o.name"]}}
+            {options {{"[_ project-manager.---_TBD_---]" ""} [lang::util::localize_list_of_lists -list [db_list_of_lists get_customer "select o.name, o.organization_id from organizations o order by o.name"]]}}
         }
 
         {planned_start_date:text(text)
@@ -142,7 +142,7 @@ ad_form -name add_edit \
         
         {status_id:text(select)
             {label "[_ project-manager.Status_1]"}
-            {options {[db_list_of_lists get_status_codes { }]}}
+            {options {[lang::util::localize_list_of_lists -list [db_list_of_lists get_status_codes { }]]}}
         }
 
         {variables:text(multiselect),multiple
