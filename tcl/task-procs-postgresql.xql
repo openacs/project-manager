@@ -202,7 +202,6 @@
     <querytext>
         select pm_task__new_task_item (
         :project_id,
-        :task_id,
         :title,
         :description,
         :mime_type,
@@ -218,7 +217,8 @@
         :creation_user,
         :creation_ip,
         :package_id,
-	:priority)
+	:priority,
+        :task_id)
     </querytext>
   </fullquery>
 

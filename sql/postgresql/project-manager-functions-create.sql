@@ -436,11 +436,10 @@ end;
 -- If it is not associated with a project, then it is placed in the root
 -- project repository folder.
 
-select define_function_args('pm_task__new_task_item', 'project_id, task_id, title, description, html_p, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, status_id, process_instance_id, dform, creation_date, creation_user, creation_ip, package_id, priority');
+select define_function_args('pm_task__new_task_item', 'project_id, title, description, html_p, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, status_id, process_instance_id, dform, creation_date, creation_user, creation_ip, package_id, priority, task_id');
 
 create or replace function pm_task__new_task_item (
         integer,        -- project_id
-        integer,        -- task_id
         varchar,        -- title
         varchar,        -- description
         varchar,        -- html_p
@@ -456,28 +455,29 @@ create or replace function pm_task__new_task_item (
         integer,        -- creation_user
         varchar,        -- creation_ip
         integer,        -- package_id
-	integer		-- priority
+	integer,        -- priority
+        integer         -- task_id
 ) returns integer 
 as '
 declare
         p_project_id                            alias for $1;
-        p_task_id                               alias for $2;
-        p_title                                 alias for $3;
-        p_description                           alias for $4;
-        p_mime_type                             alias for $5;
-        p_end_date                              alias for $6;
-        p_percent_complete                      alias for $7;
-        p_estimated_hours_work                  alias for $8;
-        p_estimated_hours_work_min              alias for $9;
-        p_estimated_hours_work_max              alias for $10;
-        p_status_id                             alias for $11;
-        p_process_instance_id                   alias for $12;
-        p_dform                                 alias for $13;
-        p_creation_date                         alias for $14;
-        p_creation_user                         alias for $15;
-        p_creation_ip                           alias for $16;
-        p_package_id                            alias for $17;
-        p_priority                              alias for $18;
+        p_title                                 alias for $2;
+        p_description                           alias for $3;
+        p_mime_type                             alias for $4;
+        p_end_date                              alias for $5;
+        p_percent_complete                      alias for $6;
+        p_estimated_hours_work                  alias for $7;
+        p_estimated_hours_work_min              alias for $8;
+        p_estimated_hours_work_max              alias for $9;
+        p_status_id                             alias for $10;
+        p_process_instance_id                   alias for $11;
+        p_dform                                 alias for $12;
+        p_creation_date                         alias for $13;
+        p_creation_user                         alias for $14;
+        p_creation_ip                           alias for $15;
+        p_package_id                            alias for $16;
+        p_priority                              alias for $17;
+        p_task_id                               alias for $18;
 
         v_item_id               cr_items.item_id%TYPE;
         v_revision_id           cr_revisions.revision_id%TYPE;
@@ -486,9 +486,9 @@ begin
         -- We want to put the task under the project item
 
         -- create the task_number
-        
+
         v_item_id := content_item__new (
-                p_task_id::varchar      -- name
+                p_task_id::varchar,     -- name
                 p_project_id,           -- parent_id
                 p_task_id,              -- item_id
                 null,                   -- locale
@@ -592,7 +592,6 @@ begin
 
         v_revision_id := pm_task__new_task_item (
                 p_project_id,                 -- project_id
-                v_task_id,                    -- task_item_id
                 p_title,                      -- title
                 p_description,                -- description
                 p_mime_type,                  -- mime_type
@@ -608,7 +607,8 @@ begin
                 p_creation_user,              -- creation_user
                 p_creation_ip,                -- creation_ip
                 p_package_id,                 -- package_id
-                p_priority                    -- priority
+                p_priority,                   -- priority
+                v_task_id                     -- task_item_id
         );
 
         return v_revision_id;
