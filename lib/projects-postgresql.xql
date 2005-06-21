@@ -7,6 +7,7 @@
         SELECT
         p.item_id as project_item_id,
         p.project_id,
+	p.status_id,
         p.parent_id as folder_id,
         p.object_type as content_type,
         p.title as project_name,
@@ -46,11 +47,9 @@
                         ctg.deprecated_p = 'f')
                  c ON p.item_id = c.object_id, 
         cr_items i, 
-	cr_folders f,
-        pm_project_status s
+	cr_folders f
         WHERE 
-        p.project_id = i.live_revision and
-        s.status_id           = p.status_id
+        p.project_id = i.live_revision 
 	and i.parent_id = f.folder_id
         and f.package_id = :package_id 
         and exists (select 1 from acs_object_party_privilege_map ppm 
