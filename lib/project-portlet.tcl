@@ -48,3 +48,6 @@ if {[array exists dattr]} {
 	}
     }
 }
+
+set project_links ""
+callback pm::project_links -project_id $project_item_id

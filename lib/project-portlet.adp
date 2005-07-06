@@ -66,6 +66,7 @@
           <td colspan="2" class="fill-list-bottom">
             <ul> 
               <li> <a href="project-revisions?project_item_id=@project_item_id@">#project-manager.View_project_changes#</a></li>
+              @project_links;noquote@
             </ul>
           </td>
           <td class="fill-list-right">&nbsp;</td>

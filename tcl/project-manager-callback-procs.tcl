@@ -36,6 +36,11 @@ ad_proc -public -callback pm::project_close {
 } {
 }
 
+ad_proc -public -callback pm::project_links {
+    {-project_id:required}
+} {
+}
+
 ad_proc -public -callback pm::task_new {
     {-package_id:required}
     {-task_id:required}
