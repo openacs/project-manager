@@ -11,7 +11,7 @@ ad_page_contract {
 
 } {
     project_id:integer,optional
-    {dform:optional "implicit"}
+    {dform:optional "project"}
     {project_revision_id ""}
     {project_item_id ""}
     {project_name ""}
@@ -193,7 +193,15 @@ if {$use_project_code_p} {
         } 
 }
 
-dtype::form::add_elements -dform $dform -prefix pm -object_type pm_project -object_id [value_if_exists project_id] -form add_edit -exclude_static -cr_widget none
+if {[exists_and_not_null customer_id]} {
+    set dynamic_params(customer_id) $customer_id
+} elseif {[exists_and_not_null project_item_id]} {
+    set dynamic_params(customer_id) [db_string get_customer_id {}]
+} else {
+    set dynamic_params(customer_id) ""
+}
+
+dtype::form::add_elements -dform $dform -prefix pm -object_type pm_project -object_id [value_if_exists project_id] -form add_edit -exclude_static -cr_widget none -variables [array get dynamic_params]
 
 ad_form -extend -name add_edit \
     -new_request {

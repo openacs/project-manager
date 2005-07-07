@@ -28,6 +28,7 @@ set project(estimated_finish_date) [lc_time_fmt $project(estimated_finish_date) 
 set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) "%x"]
 set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) "%x"]
 set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
+set variables(customer_id) $project(customer_id)
 
 # ------------------
 # Dynamic Attributes
@@ -38,7 +39,7 @@ foreach element [dtype::form::metadata::widgets_list -object_type pm_project -ex
     lappend form_attributes [lindex $element 3]
 }
 
-dtype::get_object -object_id $project_id -object_type pm_project -array dattr -exclude_static
+dtype::get_object -object_id $project_id -object_type pm_project -array dattr -exclude_static -dform project -variables [array get variables]
 
 multirow create dynamic_attributes name value
 if {[array exists dattr]} {

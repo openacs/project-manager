@@ -31,6 +31,14 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="get_customer_id">
+    <querytext>
+	select customer_id
+	from pm_projects
+	where project_id = :project_id
+    </querytext>
+  </fullquery>
+
   <fullquery name="get_status_codes">
     <querytext>
 	SELECT
