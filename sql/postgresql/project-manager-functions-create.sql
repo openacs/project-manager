@@ -13,22 +13,6 @@
 -- can be identified.  Now we have to build that function.  In this case,
 -- we'll return a field called title as the name. 
 
-select define_function_args('pm_project__name', 'project_id');
-
-create or replace function pm_project__name (integer)
-returns varchar as '
-declare
-    p_pm_project_id      alias for $1;
-    v_pm_project_name    pm_projectsx.name%TYPE;
-begin
-        select name || ''_'' || p_pm_project_id into v_pm_project_name
-                from pm_projectsx
-                where item_id = p_pm_project_id;
-    return v_pm_project_name;
-end;
-' language 'plpgsql';
-
-
 -- Create a new root folder
 
 select define_function_args('pm_project__new_root_folder', 'package_id');
