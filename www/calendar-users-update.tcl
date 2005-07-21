@@ -10,14 +10,15 @@ ad_page_contract {
     @cvs-id $Id$
 } {
     {party_id:integer,multiple ""}
+    {return_url ""}
 } -properties {
 } -validate {
 } -errors {
 }
 
-set user_id [ad_maybe_redirect_for_registration]
+set user_id [auth::require_login]
 
-if {[empty_string_p party_id]} {
+if {[empty_string_p $party_id]} {
     set party_id [list $user_id]
 }
 
@@ -39,4 +40,8 @@ db_transaction {
     }
 }
 
-ad_returnredirect -message "[_ project-manager.lt_Updated_who_you_will_]" task-calendar
+if { [empty_string_p $return_url]} {
+    ad_returnredirect -message "Updated who you will see on the task calendar" task-calendar
+} else {
+    ad_returnredirect -message "Updated who you will see on the task calendar" $return_url
+}
