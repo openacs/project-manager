@@ -1,13 +1,6 @@
-  <table cellpadding="3" cellspacing="3">
    <multiple name=pm_packages>    
 
-
-
-    <tr>
-
     <if @filter_p@ ne 0>
-      <td class="project-filter-pane" valign="top">
-        
         <form method=post name=search action=index>
           #project-manager.Search#<br />
           <input type=text name=searchterm value="@searchterm@" size="15" />
@@ -16,19 +9,11 @@
         </form>
         
         @category_select;noquote@
-        
 
-        
-      </td>
       </if>
-      <td class="list-list-pane" valign="top">
-        
         <listtemplate name="@pm_packages.list_id@"></listtemplate>
         
-      </td>
-    </tr>
    </multiple>
-  </table>
 
 
 
