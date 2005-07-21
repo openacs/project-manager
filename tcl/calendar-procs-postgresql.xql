@@ -119,9 +119,9 @@
       t.parent_id as project_item_id,
       to_char(t.earliest_start,'J') as earliest_start_j,
       to_char(current_timestamp,'J') as today_j,
-      to_char(t.latest_start,'J') as latest_start_j,
+      to_char(t.end_date,'J') as latest_start_j,
       to_char(t.latest_finish,'J') as latest_finish_j,
-      to_char(t.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
+      to_char(t.end_date,'YYYY-MM-DD HH24:MI') as latest_start,
       to_char(t.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
       t.percent_complete,
       t.estimated_hours_work,
@@ -131,7 +131,7 @@
               else t.actual_hours_worked end as actual_hours_worked,
       to_char(t.earliest_start,'YYYY-MM-DD HH24:MI') as earliest_start,
       to_char(t.earliest_finish,'YYYY-MM-DD HH24:MI') as earliest_finish,
-      to_char(t.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
+      to_char(t.end_date,'YYYY-MM-DD HH24:MI') as latest_start,
       to_char(t.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
       p.first_names || ' ' || p.last_name || ' (' ||
         substring(r.one_line from 1 for 1) || ')' as full_name,
@@ -143,8 +143,9 @@
       pm_tasks_active ts, 
       pm_task_status s,
       cr_items i,
-      pm_tasks_revisionsx t 
-        LEFT JOIN pm_task_assignment ta
+      acs_objects o,
+      pm_tasks_revisionsx t
+         LEFT JOIN pm_task_assignment ta
         ON t.item_id = ta.task_id
           LEFT JOIN persons p 
           ON ta.party_id = p.person_id
@@ -157,15 +158,16 @@
       ts.task_id  = t.item_id and
       i.item_id   = t.item_id and
       t.task_revision_id = i.live_revision and
-      t.latest_start >= :first_of_month_date and
-      t.latest_start <= :last_of_month_date and
+      t.end_date >= :first_of_month_date and
+      t.end_date <= :last_of_month_date and
       t.parent_id = projecti.item_id and
+      o.object_id= t.item_id and
       projecti.live_revision = projectr.revision_id
       $instance_clause
       $hide_closed_clause
       $selected_users_clause
       ORDER BY
-      t.latest_start, ts.task_id, r.role_id, p.first_names, p.last_name
+      t.end_date, ts.task_id, r.role_id, p.first_names, p.last_name
 </querytext>
 </fullquery>
 

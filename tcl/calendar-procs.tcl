@@ -48,6 +48,7 @@ namespace eval pm::calendar {
         {-user_id:required}
         {-date ""}
         {-hide_closed_p "t"}
+	{-display_p ""}
     } {
         Creates a month widget for tasks
     } {
@@ -59,6 +60,7 @@ namespace eval pm::calendar {
 
 	set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
 	
+	set base_url [ad_conn package_url]project-manager/
 	
 	if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
 	    set instance_clause "and o.package_id=:package_id"
@@ -90,9 +92,11 @@ namespace eval pm::calendar {
         set last_task_id ""
         set last_latest_start_j ""
         set assignee_list [list]
-
-	
-	db_foreach select_monthly_tasks {} {
+	set task_query_name "select_monthly_tasks"
+	if { [string eq $display_p d]} {
+	    set task_query_name "select_monthly_tasks_by_deadline"
+	}
+	db_foreach  $task_query_name {} {
 	    
 	    # highlight what you're assigned to.
 	    if {[string equal $person_id $user_id]} {
@@ -134,7 +138,7 @@ namespace eval pm::calendar {
 		    }
 		    
 		    # begin setting up this calendar item
-		    set day_details "<span class=\"calendar-item\"><p>${detail_begin}<input type=\"checkbox\" name=\"task_item_id\" value=\"$task_id\" /><a href=\"task-one?task_id=$task_id\">$task_id</a><br />$title${detail_end}<blockquote>$project_name</blockquote>"
+		    set day_details "<span class=\"calendar-item\"><p>${detail_begin}<input type=\"checkbox\" name=\"task_item_id\" value=\"$task_id\" /><a href=\"${base_url}task-one?task_id=$task_id\">$task_id</a><br />$title${detail_end}<blockquote>$project_name</blockquote>"
 		    
 		    # only add to the list if we want to see closed tasks
 		    append day_details "<ul><li>${font_begin}${full_name}${font_end}</li>"

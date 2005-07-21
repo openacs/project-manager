@@ -50,15 +50,16 @@ set calendar [pm::calendar::one_month_display \
                   -user_id $user_id \
                   -date $date \
                   -hide_closed_p $hide_closed_p \
+		  -display_p $display_p \
                  ]
 
 
 if {[string is true $hide_closed_p]} {
     set hide_show_closed "Show closed"
-    set here [export_vars -base "task-calendar" {{hide_closed_p f} view date julian_date return_url }]
+    set here "?hide_closed_p=f&view=$view&date=$date&julian_date=$julian_date#top"
 } else {
     set hide_show_closed "Hide closed"
-    set here [export_vars -base "task-calendar" {{hide_closed_p t} view date julian_date return_url }]
+    set here "?hide_closed_p=t&view=$view&date=$date&julian_date=$julian_date#top"
 }
 
 # ---------------------------------------------

@@ -1,6 +1,12 @@
 <a name=top></a> 
   <a href="#viewoptions" class="button">View options</a>
   <a href="#key" class="button">Key</a>
+  <if @display_p@ eq d>
+  <a href="?display_p=l#top" class="button">By latest finish</a>
+  </if>
+  <else>
+  <a href="?display_p=d#top" class="button">By deadline</a>
+  </else>
    <br>
 <br>
   <form method="post" action="@base_url@task-add-edit">
