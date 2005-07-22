@@ -80,8 +80,6 @@ db_multirow roles roles_and_abbrevs {
 
 set users_to_view [pm::calendar::users_to_view]
 
-set subsite_id [ad_conn subsite_id]
-
 set community_id [dotlrn_community::get_community_id]
 
 set users_list "community_members"

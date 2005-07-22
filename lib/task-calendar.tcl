@@ -81,28 +81,16 @@ db_multirow roles roles_and_abbrevs {
 
 set users_to_view [pm::calendar::users_to_view]
 
-set subsite_id [ad_conn subsite_id]
+set community_id [dotlrn_community::get_community_id]
 
-set user_group_id [application_group::group_id_from_package_id \
-                       -package_id $subsite_id]
+set users_list "community_members"
+
+if {[empty_string_p $community_id]} {
+    set users_list  "dotlrn_members"
+}
 
 
-db_multirow -extend {checked_p} users users_list {
-      select
-        p.first_names || ' ' || p.last_name as name,
-        p.person_id as party_id
-        FROM
-        persons p,
-        acs_rels r,
-        membership_rels mr
-        WHERE
-        r.object_id_one = :user_group_id and
-        mr.rel_id = r.rel_id and
-        p.person_id = r.object_id_two and
-        member_state = 'approved'
-        ORDER BY
-        p.first_names, p.last_name
-} {
+db_multirow -extend {checked_p} users $users_list {} {
     if {[lsearch $users_to_view $party_id] == -1} {
         set checked_p f
     } else {
