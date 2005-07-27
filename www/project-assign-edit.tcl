@@ -60,8 +60,6 @@ db_foreach assignee_query {
     set assigned($party_id-$role_id) 1
 }
 
-set contact_id [application_data_link::get_linked -from_object_id $party_id -to_object_type "content_item"]
-
 set assignee_list_of_lists [pm::util::subsite_assignees_list_of_lists]
 
 
