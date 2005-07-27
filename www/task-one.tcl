@@ -217,7 +217,7 @@ set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/
 set nextyear_ansi [clock format [clock scan "+ 365 day"] -format "%Y-%m-%d"]
 set then_ansi [clock format [clock scan "-$logger_days days"] -format "%Y-%m-%d"]
 
-set day_widget "Last <input type=\"text\" name=\"logger_days\" value=\"$logger_days\" size=\"5\" /> Days"
+set day_widget "[_ project-manager.Last] <input type=\"text\" name=\"logger_days\" value=\"$logger_days\" size=\"5\" /> [_ project-manager.Days]"
 
 set variable_widget [logger::ui::variable_select_widget \
                          -project_id $logger_project \
@@ -265,7 +265,7 @@ template::list::create \
     -elements {
         first_names {
             label {
-                Who
+                "[_ project-manager.Who]"
             }
             display_template {
                 <if @people.is_lead_p@><i></if>@people.user_info@<if @people.is_lead_p@></i></if>

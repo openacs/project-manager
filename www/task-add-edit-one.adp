@@ -1,4 +1,4 @@
-<master>
+<master src="lib/master">
   <property name="title">@title;noquote@</property>
   <property name="context">@context@</property>
 

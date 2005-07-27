@@ -274,7 +274,7 @@
                 @variable_widget;noquote@
                 @variable_exports;noquote@
                 @day_widget;noquote@
-                <input type="submit" name="submit" value="View" />
+                <input type="submit" name="submit" value="#project-manager.View#" />
               </form>
             </td>
             <td class="list-right-bg">&nbsp;</td>
