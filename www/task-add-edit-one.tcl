@@ -364,7 +364,7 @@ if {[string is true $edit_p]} {
 }
 
 set roles_list [pm::role::select_list_filter]
-set assignee_options [pm::util::subsite_assignees_list_of_lists]
+set assignee_role_list [pm::project::assignee_role_list -project_item_id $project_item_id]
 
 # Get assignments for when using processes
 if {[string is true $using_process_p]} {
@@ -378,16 +378,21 @@ if {[string is true $using_process_p]} {
     set task_assignee_list [list]
 }
 
+foreach one_assignee $assignee_role_list {
+    set person_id [lindex $one_assignee 0]
+    set name [person::name -person_id $person_id]
+    lappend assignee_options [list $name $person_id]
+}
+
 foreach role_list $roles_list {
     set role_name [lindex $role_list 0]
     set role      [lindex $role_list 1]
 
     set assignees [list]
-    foreach one_assignee $assignee_options {
-	set name      [lindex $one_assignee 0]
-	set person_id [lindex $one_assignee 1]
-	
-	if {[lsearch $task_assignee_list [list $person_id $role]] >= 0} {
+    foreach one_assignee $assignee_role_list {
+	set person_id [lindex $one_assignee 0]
+	set person_role [lindex $one_assignee 1]
+	if {[lsearch $task_assignee_list [list $person_id $role]] >= 0 || $role == $person_role} {
 	    lappend assignees $person_id
 	}
     }
