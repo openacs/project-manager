@@ -1886,8 +1886,6 @@ ad_proc -private pm::task::assignee_filter_select_helper {
                 fullname"]
 }
 
-
-
 ad_proc -public pm::task::assignee_html {
     {-number:required}
     {-process_task_id ""}

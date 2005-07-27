@@ -30,12 +30,6 @@ set project_assign_categories_url [export_vars -base project-assign-from-categor
 # permissions
 permission::require_permission -party_id $user_id -object_id $project_item_id -privilege write
 
-set subsite_id [ad_conn subsite_id]
-
-set user_group_id [application_group::group_id_from_package_id \
-                       -package_id $subsite_id]
-
-
 set project_name [pm::project::name -project_item_id $project_item_id]
 
 set title "[_ project-manager.lt_Edit_project_assignee]"
@@ -68,21 +62,7 @@ db_foreach assignee_query {
 
 set contact_id [application_data_link::get_linked -from_object_id $party_id -to_object_type "content_item"]
 
-set assignee_list_of_lists [db_list_of_lists get_assignees {
-    select distinct
-    p.first_names || ' ' || p.last_name as name,
-    p.person_id
-    FROM
-    persons p,
-    acs_rels r,
-    membership_rels mr
-    WHERE
-    r.object_id_one = :user_group_id and
-    mr.rel_id = r.rel_id and
-    p.person_id = r.object_id_two and
-    member_state = 'approved'
-    ORDER BY name
-}]
+set assignee_list_of_lists [pm::util::subsite_assignees_list_of_lists]
 
 
 set html "<form action=\"project-assign-edit-2\" method=\"post\"><table border=0 width=\"100\%\"><tr>"

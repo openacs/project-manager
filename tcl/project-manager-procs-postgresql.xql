@@ -43,13 +43,11 @@
       p.person_id
       FROM
       persons p,
-      acs_rels r,
-      membership_rels mr
+      acs_object_party_privilege_map ppm
       WHERE
-      r.object_id_one = :user_group_id and
-      mr.rel_id = r.rel_id and
-      p.person_id = r.object_id_two and
-      member_state = 'approved'
+      ppm.object_id = :package_id
+      and ppm.privilege = 'read'
+      and ppm.party_id = p.person_id
       ORDER BY name
     </querytext>
   </fullquery>

@@ -735,11 +735,12 @@ ad_proc -public pm::util::subsite_assignees_list_of_lists_not_cached {
     @error 
 } {
 
-    if [empty_string_p $subsite_id] {
-	set subsite_id [ad_conn subsite_id]
-    }
+#    if [empty_string_p $subsite_id] {
+#	set subsite_id [ad_conn subsite_id]
+#    }
     
-    set user_group_id [application_group::group_id_from_package_id \
+    set package_id [ad_conn package_id]
+#    set user_group_id [application_group::group_id_from_package_id \
                            -package_id $subsite_id]
 
     set assignees [db_list_of_lists get_assignees { }]
