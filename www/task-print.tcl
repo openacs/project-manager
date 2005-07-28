@@ -46,11 +46,13 @@ ad_page_contract {
     comments_link:onevalue
 } -validate {
     task_id_exists {
+	set user_id    [ad_maybe_redirect_for_registration]
         if {![info exists task_id]} {
             set task_id [db_string get_task_id { }]
         }
     }
     revision_id_exists {
+	set user_id    [ad_maybe_redirect_for_registration]
         if {![info exists task_revision_id]} {
             set task_revision_id [db_string get_revision_id { }]
         }
@@ -59,6 +61,11 @@ ad_page_contract {
 
 
 # --------------------------------------------------------------- #
+
+# the unique identifier for this package
+set package_id [ad_conn package_id]
+set user_id    [ad_maybe_redirect_for_registration]
+
 
 # terminology
 set task_term       [_ project-manager.Task]
@@ -70,11 +77,6 @@ set project_term    [_ project-manager.Project]
 db_1row get_project_ids { }
 
 set context_bar [ad_context_bar "one?project_item_id=$project_item_id $project_term" "[_ project-manager.View]"]
-
-
-# the unique identifier for this package
-set package_id [ad_conn package_id]
-set user_id    [ad_maybe_redirect_for_registration]
 
 set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $task_id "[ad_conn url]?task_id=$task_id"]
 

@@ -19,7 +19,6 @@
 	    </td>
 	</table>
       </td>
-      <td class="fill-list-right">&nbsp;</td>
     </tr>
 </table>
   </if>

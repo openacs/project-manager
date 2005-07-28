@@ -1569,8 +1569,8 @@ ad_proc -public pm::project::get_project {
     
     @error 
 } {
-    set project_id [application_data_link::get_linked -this_object_id $logger_project -to_object_type "pm_project"]
-    if {[empty_string_p $project_id]} {
+    set project_id [application_data_link::get_linked -from_object_id $logger_project -to_object_type "pm_project"]
+    if {[empty_string_p $project_id]} {
 	return "no project"
     } else {
 	return $project_id    

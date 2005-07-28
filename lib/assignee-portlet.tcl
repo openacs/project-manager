@@ -38,7 +38,6 @@ if {$assigned_p} {
 
 set assignee_edit_url [export_vars -base project-assign-edit {project_item_id return_url}]
 
-
 db_multirow people project_people_query { }
 
 template::list::create \

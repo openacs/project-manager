@@ -8,6 +8,5 @@
       <li> @comments_link;noquote@
     </ul>
   </td>
-  <td class="fill-list-right">&nbsp;</td>
 </tr>
 </table>

@@ -34,6 +34,5 @@
       </tr>
     </table>
   </td>
-  <td class="fill-list-right">
 </tr>
 </table>

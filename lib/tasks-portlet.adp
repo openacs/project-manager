@@ -4,14 +4,12 @@
 <if @instance_html@ not nil>
   <tr>
     <td colspan="2" class="fill-list-middle">@instance_html;noquote@</td>
-    <td class="fill-list-right2">&nbsp;</td>
   </tr>
 </if>
 <tr>
   <td colspan="2" class="fill-list-middle">
     <include src=/packages/project-manager/lib/tasks project_id="@project_id@" project_item_id="@project_item_id@" return_url="@return_url@" elements="task_item_id status_type title parent_task_id priority slack_time latest_start end_date last_name" display_mode="list">
   </td>
-  <td class="fill-list-right2">&nbsp;</td>
 </tr>
 <tr class="list-button-bar">
   <td class="fill-list-bottom" colspan="2">
@@ -43,6 +41,5 @@
 	</if>
     </ul>
   </td>
-  <td class="fill-list-right">&nbsp;</td>
 </tr>
 </table>

@@ -46,7 +46,6 @@
 	</multiple>
       </table>
     </td>
-    <td class="fill-list-right">&nbsp;</td>
   </tr>
   <tr>
     <td colspan="2" class="fill-list-bottom">
@@ -57,6 +56,5 @@
 	@project_links;noquote@
       </ul>
     </td>
-    <td class="fill-list-right">&nbsp;</td>
   </tr>
 </table>

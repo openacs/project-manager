@@ -87,7 +87,8 @@ ad_page_contract {
 #set write_p  [permission::permission_p -object_id $task_id -privilege "write"]
 #set create_p [permission::permission_p -object_id $task_id -privilege "create"]
 
-
+# Master for the portlets
+set portlet_master "/packages/project-manager/lib/portlet"
 
 # terminology and other parameters
 set task_term       [_ project-manager.Task]
@@ -97,8 +98,9 @@ set watcher_term    [parameter::get -parameter "WatcherName" -default "Watcher"]
 set project_term    [_ project-manager.Project]
 set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
 
+
 set use_days_p      [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
-set urgency_threshold 8
+
 # the unique identifier for this package
 set package_id  [ad_conn package_id]
 set package_url [ad_conn package_url]
@@ -117,29 +119,6 @@ permission::require_permission -party_id $user_id -object_id $package_id -privil
 # Task info ----------------------------------------------------------
 
 db_1row task_query { } -column_array task_info
-
-# format the hours remaining section
-
-set task_info(hours_remaining) \
-    [pm::task::hours_remaining \
-         -estimated_hours_work $task_info(estimated_hours_work) \
-         -estimated_hours_work_min $task_info(estimated_hours_work_min) \
-         -estimated_hours_work_max $task_info(estimated_hours_work_max) \
-         -percent_complete $task_info(percent_complete)]
-
-set task_info(days_remaining) \
-    [pm::task::days_remaining \
-         -estimated_hours_work $task_info(estimated_hours_work) \
-         -estimated_hours_work_min $task_info(estimated_hours_work_min) \
-         -estimated_hours_work_max $task_info(estimated_hours_work_max) \
-         -percent_complete $task_info(percent_complete)]
-
-# format the dates according to the local settings
-set task_info(earliest_start)  [lc_time_fmt $task_info(earliest_start) "%x"]
-set task_info(earliest_finish) [lc_time_fmt $task_info(earliest_finish) "%x"]
-set task_info(latest_start)    [lc_time_fmt $task_info(latest_start) "%x"]
-set task_info(latest_finish)   [lc_time_fmt $task_info(latest_finish) "%x"]
-set task_info(end_date)        [lc_time_fmt $task_info(end_date) "%x"]
 
 # we do this for the hours include portion
 set project_item_id $task_info(project_item_id)
@@ -178,14 +157,6 @@ if {![empty_string_p $task_info(process_instance)]} {
     set process_html ""
 }
 
-# set link to comments
-
-set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $task_id "[pm::task::get_url $task_id]"]
-
-set comments_link "<a href=\"[export_vars -base "comments/add" {{ object_id $task_id} {title "$task_info(task_title)"} {return_url [ad_return_url]} {type task} }]\">[_ project-manager.Add_comment]</a>"
-
-set print_link "task-print?&task_id=$task_id&project_item_id=$task_info(project_item_id)"
-
 
 # how to get back here
 set return_url [ad_return_url]
@@ -203,18 +174,8 @@ if {[empty_string_p $logger_variable_id]} {
 
 set log_url [export_vars -base "${logger_url}log" -url {{project_id $logger_project} {pm_project_id $task_info(project_item_id)} {pm_task_id $task_id} return_url}]
 
-set assignee_add_self_widget "Add myself as <form method=\"post\" action=\"task-assign-add\">[export_vars -form {{task_item_id $task_id} user_id return_url}][pm::role::task_select_list -select_name "role_id" -task_item_id $task_id -party_id $user_id]<input type=\"Submit\" value=\"OK\" /></form>"
 
-# Only need a 'remove myself' link if you are already assigned
-set assigned_p [pm::task::assigned_p -task_item_id $task_id -party_id $user_id]
-if {$assigned_p} {
-    set assignee_remove_self_url [export_vars -base task-assign-remove {{task_item_id $task_id} user_id return_url}]
-}
 
-# Set the link to the permissions page
-set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/permissions/one?[export_vars {{object_id $task_id}}]"
-
-set nextyear_ansi [clock format [clock scan "+ 365 day"] -format "%Y-%m-%d"]
 set then_ansi [clock format [clock scan "-$logger_days days"] -format "%Y-%m-%d"]
 
 set day_widget "[_ project-manager.Last] <input type=\"text\" name=\"logger_days\" value=\"$logger_days\" size=\"5\" /> [_ project-manager.Days]"
@@ -237,74 +198,6 @@ set notification_chunk [notification::display::request_widget \
                             -url "[ad_conn url]?[ad_conn query]" \
                            ]
 
-# ------------------
-# Dynamic Attributes
-# ------------------
-
-set form_attributes [list]
-foreach element [dtype::form::metadata::widgets_list -object_type pm_task -exclude_static_p 1 -dform $task_info(dform)] {
-    lappend form_attributes [lindex $element 3]
-}
-
-dtype::get_object -object_id $task_revision_id -object_type pm_task -array dattr -exclude_static
-
-multirow create dynamic_attributes name value
-foreach attr [array names dattr] {
-    if {[lsearch -exact $form_attributes $attr] > -1} {
-	multirow append dynamic_attributes "[_ acs-translations.pm_task_$attr]" $dattr($attr)
-    }
-}
-
-
-# People, using list-builder ---------------------------------
-
-template::list::create \
-    -name people \
-    -multirow people \
-    -key item_id \
-    -elements {
-        first_names {
-            label {
-                "[_ project-manager.Who]"
-            }
-            display_template {
-                <if @people.is_lead_p@><i></if>@people.user_info@<if @people.is_lead_p@></i></if>
-            }
-        }
-        role_id {
-            label "[_ project-manager.Role]"
-            display_template "@people.one_line@"
-        }
-    } \
-    -sub_class {
-        narrow
-    } \
-    -filters {
-        party_id {}
-        task_id {}
-        orderby_depend_to {}
-        orderby_depend_from {}
-    } \
-    -orderby {
-        default_value role_id,desc
-        first_names {
-            orderby_asc "first_names asc, last_name asc"
-            orderby_desc "first_names desc, last_name desc"
-            default_direction asc
-        }
-        role_id {
-            orderby_asc "role_id asc, user_info asc"
-            orderby_desc "role_id desc, user_info asc"
-            default_direction asc
-        }
-        default_value role_id,asc
-    } \
-    -orderby_name orderby_people \
-    -html {
-        width 100%
-    }
-
-db_multirow people task_people_query { }
 
 ad_return_template
 

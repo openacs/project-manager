@@ -6,7 +6,6 @@
     <listtemplate name="subproject">
     </listtemplate>
   </td>
-  <td class="fill-list-right2">&nbsp;</td>
 </tr>
 <tr class="list-button-bar">
   <td class="fill-list-bottom" colspan="2">
@@ -17,6 +16,5 @@
       </li>
     </ul>
   </td>
-  <td class="fill-list-right2">&nbsp;</td>
 </tr>
 </table>

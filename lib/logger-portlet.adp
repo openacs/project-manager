@@ -7,10 +7,9 @@
       @variable_widget;noquote@
       @variable_exports;noquote@
       @day_widget;noquote@
-      <input type="submit" name="submit" value="View" />
+      <input type="submit" name="submit" value="#acs-kernel.common_View#" />
     </form>
   </td>
-  <td class="fill-list-right2">&nbsp;</td>
 </tr>
 <tr>
   <td colspan="2" class="fill-list-bottom">
@@ -28,6 +27,5 @@
       project_manager_url="@pm_url;noquote@"
       return_url="@return_url;noquote@" />
   </td>
-  <td class="fill-list-right">&nbsp;</td>
 </tr>
 </table>
