@@ -100,4 +100,4 @@ foreach role_list $roles_list_of_lists {
 
 set export_vars [export_vars -form {project_item_id return_url}]
 
-append html "<tr><td colspan=\"[llength $roles_list_of_lists]\" align=\"center\"><input type=\"Submit\" value=\"Save\"></td></tr></table>$export_vars</form>"
+append html "<tr><td colspan=\"[llength $roles_list_of_lists]\" align=\"center\"><input type=\"Submit\" value=\"[_ acs-kernel.common_Save]\"></td></tr></table>$export_vars</form>"
