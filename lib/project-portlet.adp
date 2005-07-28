@@ -3,12 +3,12 @@
 	<if @project.write_p@ eq t>
 	  <a href="@edit_url@">
 	    <img border="0" src="/shared/images/Edit16.gif"
-	      alt="Edit" />
+	      alt="#acs-kernel.common_Edit#" />
 	  </a>
 	</if>
 	<if @project.create_p@ eq t>
 	  <a href="@permissions_url@">
-	    <img border="0" src="resources/padlock.gif" alt="Set permissions" />
+	    <img border="0" src="resources/padlock.gif" alt="#project-manager.Set_permissions#" />
 	  </img>
 	  </a>
 	</if>
