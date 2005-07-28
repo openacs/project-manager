@@ -1,5 +1,6 @@
 <master src="/packages/project-manager/lib/portlet" />
 <property name="portlet_title">@task_term@</property>
+<table width="100%">
 <if @instance_html@ not nil>
   <tr>
     <td colspan="2" class="fill-list-middle">@instance_html;noquote@</td>
@@ -44,4 +45,4 @@
   </td>
   <td class="fill-list-right">&nbsp;</td>
 </tr>
-
+</table>

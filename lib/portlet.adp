@@ -8,5 +8,7 @@
       <img src="resources/tr-9999cc" align="top" />
     </th>
   </tr>
+  <tr>
   <slave>
+ </tr>
 </table>

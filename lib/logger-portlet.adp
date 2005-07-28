@@ -1,5 +1,6 @@
 <master src="@master;noquote@" />
 <property name="portlet_title">#project-manager.Logger#</property>
+<table width="100%">
 <tr class="list-button-bar">
   <td class="fill-list-middle" valign="top" colspan="2">
     <form action="one" method="post">
@@ -29,3 +30,4 @@
   </td>
   <td class="fill-list-right">&nbsp;</td>
 </tr>
+</table>

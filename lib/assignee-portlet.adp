@@ -1,5 +1,6 @@
 <master src="/packages/project-manager/lib/portlet" />
 <property name="portlet_title">#project-manager.Assignees#</property>
+<table width="100%">
 <tr>
   <td colspan="2" class="fill-list-middle">
     <listtemplate name="people">
@@ -25,4 +26,4 @@
   </td>
   <td class="fill-list-right">&nbsp</td>
 </tr>
-
+</table>
