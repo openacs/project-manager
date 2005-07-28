@@ -863,9 +863,9 @@ ad_proc -public pm::task::slack_time {
              [exists_and_not_null latest_start_j]} {
 
         if {$earliest_start_j < $today_j} {
-            set slack_time "[expr $latest_start_j - $today_j] days"
+            set slack_time "[expr $latest_start_j - $today_j] [_ project-manager.days]"
         } else {
-            set slack_time "[expr $latest_start_j - $earliest_start_j] days"
+            set slack_time "[expr $latest_start_j - $earliest_start_j] [_ project-manager.days]"
         }
 
     } else {
