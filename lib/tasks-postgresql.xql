@@ -4,7 +4,7 @@
 
 <fullquery name="tasks">
     <querytext>
-	SELECT
+	SELECT distinct
         t.item_id as task_item_id,
         t.parent_id as project_item_id,
         t.title,
