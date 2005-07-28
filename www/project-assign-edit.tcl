@@ -62,7 +62,6 @@ db_foreach assignee_query {
 
 set assignee_list_of_lists [pm::util::subsite_assignees_list_of_lists]
 
-
 set html "<form action=\"project-assign-edit-2\" method=\"post\"><table border=0 width=\"100\%\"><tr>"
 
 foreach role_list $roles_list_of_lists {
@@ -76,6 +75,7 @@ foreach role_list $roles_list_of_lists {
     foreach assignee_list $assignee_list_of_lists {
         set name [lindex $assignee_list 0]
         set person_id [lindex $assignee_list 1]
+	set email [party::email -party_id $person_id]
 
         if {[exists_and_not_null assigned($person_id-$role)]} {
             set checked "checked"
@@ -85,7 +85,7 @@ foreach role_list $roles_list_of_lists {
 
         append html "
           <input name=\"assignee\" value=\"$person_id-$role\"
-              type=\"checkbox\" $checked />$name
+              type=\"checkbox\" $checked />$name ($email)
           <br />
         "
 
