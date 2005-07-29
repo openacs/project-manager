@@ -85,22 +85,7 @@ ad_proc -public -callback forum::message_new -impl project_manager {
     }
 }
 
-ad_proc -public -callback fs::file_new -impl project_manager {
-    {-package_id:required}
-    {-file_id:required}
-} {
-    create a new task for each new file upload
-} {
-    db_1row file_info {
-	select i.parent_id as folder_id, r.title, r.description, r.mime_type
-	from cr_items i, cr_revisions r
-	where i.item_id = :file_id
-	and r.revision_id = i.latest_revision}
-
-    pm::link_new_tasks -object_id $file_id -linked_id $folder_id -role "Watcher" -title $title -description $description -mime_type $mime_type
-}
-
-ad_proc -public -callback fs::file_edit -impl project_manager {
+ad_proc -public -callback fs::file_revision_new -impl project_manager {
     {-package_id:required}
     {-file_id:required}
 } {
