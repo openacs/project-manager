@@ -11,6 +11,14 @@ set user_id [auth::require_login]
 # Set the link to the permissions page
 set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/permissions/one?[export_vars {{object_id $project_item_id}}]"
 
+# URL to close the project
+set return_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
+set vars { project_item_id return_url }
+set close_url "bulk-close?[export_vars $vars]"
+
+#URL to rate this project
+set rate_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
+
 # terminology and other parameters
 set project_term       [_ project-manager.Project]
 set use_goal_p         [parameter::get -parameter "UseGoalP" -default "1"]

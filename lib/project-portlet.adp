@@ -35,6 +35,17 @@
 	  </tr>
 	</if>
 	<tr>
+	  <td class="highlight" valign="top">#project-manager.Status#</td>
+	  <td class="fill-list-bg">
+		<if @project.status_type@ eq "o">
+		    <b>#project-manager.Open#</b> / <i><a title="#project-manager.Close_project#" href=@close_url@>#project-manager.Close#</a></i>
+		</if>
+	        <else>
+		    <b>#project-manager.Closed#</b> <small>(<a title="Rate this project#" href=@rate_url@>Rate</a>)</small>
+		</else>
+	  </td>
+	</tr>
+	<tr>
 	  <td class="highlight" valign="top">#project-manager.Description_1#</td>
 	  <td class="fill-list-bg">@project.description;noquote@</td>
 	</tr>
