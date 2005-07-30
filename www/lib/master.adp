@@ -18,7 +18,7 @@
    @import url(@package_url@style.css) all;
 </style>
 
-<!-- <include src="nav-bar" project_item_id="@project_item_id@"> -->
+<!-- include src="nav-bar" project_item_id="@project_item_id@" -->
 <p />
 
 <slave>

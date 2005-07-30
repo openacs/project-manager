@@ -11,6 +11,12 @@ set selected_users [pm::calendar::users_to_view]
 
 set package_id [ad_conn package_id]
 set instance_clause "and o.package_id=:package_id"
+set users_clause "and pa.project_id in (select  p.item_id
+          from pm_projectsx p 
+          where 
+          p.item_id = pa.project_id 
+          and p.object_package_id = :package_id)"
+
 
 set return_url [ad_return_url]\#top
 
@@ -116,7 +122,7 @@ db_foreach  $items_query {} {
     
     set users_list "<table>"
     foreach user $selected_users {
-	if {[db_string users {select 1 from pm_task_assignment where party_id=:user and task_id=:item_id} -default 0]} {
+	if {[db_string users {} -default 0]} {
 	    db_1row name {select p.first_names || ' ' || p.last_name  as full_name from persons p where person_id=:user}
 	    if { $user == $user_id } {
 		append users_list "<tr><td><span class=selected><small>$full_name</small></span></td></tr>"
@@ -175,16 +181,7 @@ set next_week_url "?view=week&date=[ad_urlencode [dt_julian_to_ansi [expr $first
 
 set users_to_view [pm::calendar::users_to_view]
 
-set community_id [dotlrn_community::get_community_id]
-
-set users_list "community_members"
-
-if {[empty_string_p $community_id]} {
-    set users_list  "dotlrn_members"
-}
-
-
-db_multirow -extend {checked_p} users $users_list {} {
+db_multirow -extend {checked_p} users assignees {} {
     if {[lsearch $users_to_view $party_id] == -1} {
         set checked_p f
     } else {

@@ -45,6 +45,7 @@ set header_stuff "
 set return_url [ad_return_url]\#top
 
 set edit_hidden_vars [export_vars -form {return_url {new_tasks "0"}}]
+set users_clause ""
 
 if { ![exists_and_not_null package_id]} {
     set calendar [pm::calendar::one_month_display \
@@ -53,6 +54,16 @@ if { ![exists_and_not_null package_id]} {
 		      -hide_closed_p $hide_closed_p \
 		      -display_p $display_p \
 		     ]
+    set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
+    if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
+	set users_clause "and pa.project_id in (select  p.item_id
+          from pm_projectsx p 
+          where 
+          p.item_id = pa.project_id 
+          and p.object_package_id = :package_id)"
+    }
+    
+    
 } else {
     set calendar [pm::calendar::one_month_display \
 		      -user_id $user_id \
@@ -91,16 +102,9 @@ db_multirow roles roles_and_abbrevs {
 
 set users_to_view [pm::calendar::users_to_view]
 
-set community_id [dotlrn_community::get_community_id]
-
-set users_list "community_members"
-
-if {[empty_string_p $community_id]} {
-    set users_list  "dotlrn_members"
-}
 
 
-db_multirow -extend {checked_p} users $users_list {} {
+db_multirow -extend {checked_p} users assignees {} {
     if {[lsearch $users_to_view $party_id] == -1} {
         set checked_p f
     } else {

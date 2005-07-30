@@ -1,10 +1,10 @@
 <a name=top></a> 
   <a href="#viewoptions" class="button">View options</a>
   <if @display_p@ eq d>
-  <a href="?display_p=l#top" class="button">By latest finish</a>
+  <a href="?display_p=l&date=@date@#top" class="button">By latest finish</a>
   </if>
   <else>
-  <a href="?display_p=d#top" class="button">By deadline</a>
+  <a href="?display_p=d&date=@date@#top" class="button">By deadline</a>
   </else>
    <br>
 <br>
