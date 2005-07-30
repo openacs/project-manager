@@ -479,6 +479,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Search">Search:</msg>
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
+  <msg key="search_user">Search User</msg>
   <msg key="Section">Section</msg>
   <msg key="Select_process">Select process:</msg>
   <msg key="Select_Project">Select Project</msg>

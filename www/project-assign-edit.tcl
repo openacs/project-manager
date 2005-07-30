@@ -17,11 +17,6 @@ ad_page_contract {
 } -errors {
 }
 
-
-# Validate that search_user_id is on persons table to get the user name
-ad_return_complaint 1 "[template::form is_valid search_user]"
-
-
 # The unique identifier for this package.
 set package_id [ad_conn package_id]
 
@@ -66,7 +61,16 @@ db_foreach assignee_query {
     set assigned($party_id-$role_id) 1
 }
 
+
 set assignee_list_of_lists [pm::util::subsite_assignees_list_of_lists]
+
+if { ![empty_string_p $search_user_id]} {
+    # Get the user name
+    set fullname [db_string get_user_fullname { } -default ""]
+    if { ![empty_string_p $fullname] && [string equal [lsearch $assignee_list_of_lists [list $fullname $search_user_id]] "-1"] } {
+	lappend assignee_list_of_lists [list $fullname $search_user_id]
+    }
+}
 
 
 set html "<form action=\"project-assign-edit-2\" method=\"post\"><table border=0 width=\"100\%\"><tr>"
@@ -110,17 +114,4 @@ set export_vars [export_vars -form {project_item_id return_url}]
 
 append html "<tr><td colspan=\"[llength $roles_list_of_lists]\" align=\"center\"><input type=\"Submit\" value=\"[_ acs-kernel.common_Save]\"></td></tr></table>$export_vars</form>"
 
-
-
-ad_form -name search_user -form {
-    {project_item_id:text(hidden)
-	{value $project_item_id}
-    }
-    {return_url:text(hidden)
-	{value $return_url}
-    }
-    {search_user_id:party_search(party_search),optional
-	{label "Search for User:"}
-    }
-}
 
