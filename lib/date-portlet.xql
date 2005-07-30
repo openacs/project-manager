@@ -10,12 +10,12 @@
     <fullquery name="project_query">
     <querytext>
 	SELECT
-	to_char(p.planned_start_date,'YYYY-MM-DD HH24:MI') as planned_start_date,
-	to_char(p.planned_end_date,'YYYY-MM-DD HH24:MI') as planned_end_date,
+	to_char(p.planned_start_date,'YYYY-MM-DD HH24:MI:SS') as planned_start_date,
+	to_char(p.planned_end_date,'YYYY-MM-DD HH24:MI:SS') as planned_end_date,
 	p.ongoing_p,
-        to_char(p.estimated_finish_date,'YYYY-MM-DD HH24:MI') as estimated_finish_date,
-        to_char(p.earliest_finish_date,'YYYY-MM-DD HH24:MI') as earliest_finish_date,
-        to_char(p.latest_finish_date,'YYYY-MM-DD HH24:MI') as latest_finish_date,
+        to_char(p.estimated_finish_date,'YYYY-MM-DD HH24:MI:SS') as estimated_finish_date,
+        to_char(p.earliest_finish_date,'YYYY-MM-DD HH24:MI:SS') as earliest_finish_date,
+        to_char(p.latest_finish_date,'YYYY-MM-DD HH24:MI:SS') as latest_finish_date,
         p.actual_hours_completed,
         p.estimated_hours_total
 	FROM

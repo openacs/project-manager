@@ -110,6 +110,19 @@ db_1row project_query { } -column_array project
 
 set project(logger_project) [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+#------------------------
+# Check if the project will be handled on daily basis or will show hours and minutes
+#------------------------
+
+set fmt "%x %r"
+if { $daily_p } {
+    set fmt "%x"
+} 
+
+
 # Context Bar and Title information
 set portlet_master "/packages/project-manager/lib/portlet"
 set project_root [pm::util::get_root_folder -package_id $package_id]

@@ -300,6 +300,8 @@ template::list::create \
 
 db_multirow -extend { item_url } "projects_${package_id}" project_folders {
 } {
+    set earliest_finish_date [lc_time_fmt $earliest_finish_date $fmt]
+    set latest_finish_date [lc_time_fmt $latest_finish_date $fmt]
     set item_url [export_vars -base "${base_url}one" {project_item_id}]
 }
 

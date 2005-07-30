@@ -12,8 +12,8 @@
         p.object_type as content_type,
         p.title as project_name,
         p.project_code,
-        to_char(p.planned_start_date, 'MM/DD/YY') as planned_start_date,
-        to_char(p.planned_end_date, 'MM/DD/YY') as planned_end_date,
+        to_char(p.planned_start_date, 'YYYY-MM-DD HH24:MI:SS') as planned_start_date,
+        to_char(p.planned_end_date, 'YYYY-MM-DD HH24:MI:SS') as planned_end_date,
         p.ongoing_p,
         c.category_id,
         c.category_name,
@@ -21,9 +21,9 @@
         p.latest_finish_date - current_date as days_to_latest_finish,
         p.actual_hours_completed,
         p.estimated_hours_total,
-        to_char(p.estimated_finish_date, 'MM/DD/YY') as estimated_finish_date,
-        to_char(p.earliest_finish_date, 'MM/DD/YY') as earliest_finish_date,
-        to_char(p.latest_finish_date, 'MM/DD/YY') as latest_finish_date,
+        to_char(p.estimated_finish_date, 'YYYY-MM-DD HH24:MI:SS') as estimated_finish_date,
+        to_char(p.earliest_finish_date, 'YYYY-MM-DD HH24:MI:SS') as earliest_finish_date,
+        to_char(p.latest_finish_date, 'YYYY-MM-DD HH24:MI:SS') as latest_finish_date,
         case when o.name is null then '--no customer--' else o.name
                 end as customer_name,
         o.organization_id as customer_id

@@ -44,14 +44,24 @@ set header_stuff "
 
 set return_url [ad_return_url]\#top
 
-set edit_hidden_vars [export_vars -form {return_url}]
+set edit_hidden_vars [export_vars -form {return_url {new_tasks "0"}}]
 
-set calendar [pm::calendar::one_month_display \
-                  -user_id $user_id \
-                  -date $date \
-                  -hide_closed_p $hide_closed_p \
-		  -display_p $display_p \
-                 ]
+if { ![exists_and_not_null package_id]} {
+    set calendar [pm::calendar::one_month_display \
+		      -user_id $user_id \
+		      -date $date \
+		      -hide_closed_p $hide_closed_p \
+		      -display_p $display_p \
+		     ]
+} else {
+    set calendar [pm::calendar::one_month_display \
+		      -user_id $user_id \
+		      -date $date \
+		      -hide_closed_p $hide_closed_p \
+		      -display_p $display_p \
+		      -package_id $package_id \
+		     ]
+}
 
 
 if {[string is true $hide_closed_p]} {

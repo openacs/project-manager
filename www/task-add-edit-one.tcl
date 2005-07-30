@@ -43,6 +43,10 @@ set use_day_p     [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
 set hours_day     [pm::util::hours_day]
 set root_folder_id [content::folder::get_folder_from_package -package_id $package_id]
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+
 if {[string is true $use_day_p]} {
     set work_units "[_ project-manager.days]"
 } else {
@@ -276,12 +280,30 @@ ad_form -extend -name task_add_edit \
 	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>y-m-d </b>\]
 	    }}
         }
-        {task_end_time:date,optional
-            {label "[_ project-manager.Deadline_Time]"}
-	    {value {[template::util::date::now]}}
-	    {format {[lc_get formbuilder_time_format]}} 
-        }
     }
+
+#------------------------
+# Check if the task will be handled on daily basis or will request hours and minutes
+#------------------------
+
+if { $daily_p } {
+    ad_form -extend -name task_add_edit \
+	-form {
+	    {task_end_time:text(hidden)
+		{value ""}
+	    }
+	}
+} else {
+    ad_form -extend -name task_add_edit \
+	-form {
+	    {task_end_time:date,optional
+		{label "[_ project-manager.Deadline_Time]"}
+		{value {[template::util::date::now]}}
+		{format {[lc_get formbuilder_time_format]}} 
+	    }
+	}
+}
+
 
 if {[string is true $edit_p]} {
     ad_form -extend -name task_add_edit \

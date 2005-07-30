@@ -7,6 +7,7 @@
 # @arch-tag: c502a3ed-d1c0-4217-832a-6ccd86256024
 # @cvs-id $Id$
 
+
 template::list::create \
     -name related_tasks \
     -multirow related_tasks \
@@ -56,10 +57,10 @@ db_multirow -extend { item_url earliest_start_pretty earliest_finish_pretty late
 } {
     set item_url [export_vars -base "task-one" -override {{task_id $x_task_id}}]
 
-    set earliest_start_pretty [lc_time_fmt $earliest_start "%x"]
-    set earliest_finish_pretty [lc_time_fmt $earliest_finish "%x"]
-    set latest_start_pretty [lc_time_fmt $latest_start "%x"]
-    set latest_finish_pretty [lc_time_fmt $latest_finish "%x"nn]
+    set earliest_start_pretty [lc_time_fmt $earliest_start $fmt]
+    set earliest_finish_pretty [lc_time_fmt $earliest_finish $fmt]
+    set latest_start_pretty [lc_time_fmt $latest_start $fmt]
+    set latest_finish_pretty [lc_time_fmt $latest_finish "$fmt"nn]
 
     set slack_time [pm::task::slack_time \
                         -earliest_start_j $earliest_start_j \

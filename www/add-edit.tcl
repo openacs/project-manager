@@ -49,6 +49,8 @@ set use_goal_p  [parameter::get -parameter "UseGoalP" -default "1"]
 set use_project_code_p  [parameter::get -parameter "UseUserProjectCodesP" -default "1"]
 set ongoing_by_default_p [parameter::get -parameter "OngoingByDefaultP" -default "f"]
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
 
 if {[exists_and_not_null project_item_id] && ![exists_and_not_null project_id]} {
     set project_id [pm::project::get_project_id -project_item_id $project_item_id]
@@ -118,22 +120,39 @@ ad_form -name add_edit \
 	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>d.m.y </b>\]
 	    }}
         }
-        
+    
+
         {planned_end_date:text(text)
             {label "[_ project-manager.Deadline_1]"}
 	    {html {id sel2}}
 	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>d.m.y </b>\]
 	    }}
         }
+    }
 
-        {planned_end_time:date
+#------------------------
+# Check if the project will be handled on daily basis or will request hours and minutes
+#------------------------
+
+if { $daily_p } {
+    ad_form -extend -name add_edit -form {
+	{planned_end_time:text(hidden)
+	    {value ""}
+        }
+    }
+} else {
+    ad_form -extend -name add_edit -form {
+	{planned_end_time:date
             {label "[_ project-manager.Deadline_Time]"}
 	    {value {[template::util::date::now]}}
 	    {format {[lc_get formbuilder_time_format]}} 
         }
+    }
+}
 
-        
-        {ongoing_p:text(select)
+
+ad_form -extend -name add_edit -form {
+	{ongoing_p:text(select)
             {label "[_ project-manager.Project_is_ongoing]"}
             {options {{"[_ acs-kernel.common_no]" f} {"[_ acs-kernel.common_Yes]" t}}}
             {value $ongoing_p}
@@ -315,6 +334,10 @@ ad_form -extend -name add_edit \
 	ad_returnredirect -message "[_ project-manager.lt_Changes_to_project_sa]" "one?[export_url_vars project_id]"
 	# to add back in subproject support, should use
 	# compute_parent_status
-	pm::project::compute_status $project_item_id
+	if { [parameter::get -parameter  UseDayInsteadOfHour -default f]} {
+	    pm::project::compute_status $project_item_id
+	} else {
+	    pm::project::compute_status_mins $project_item_id
+	}
 	ad_script_abort
 }

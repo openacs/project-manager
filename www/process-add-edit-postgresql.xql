@@ -2,7 +2,7 @@
 <queryset>
   <fullquery name="get_today">
     <querytext>
-        select current_timestamp from dual;
+        select to_date(current_timestamp,'YYYY-MM-DD HH24:MI') from dual;
     </querytext>
   </fullquery>
 

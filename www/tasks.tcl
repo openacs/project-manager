@@ -56,5 +56,16 @@ set user_id    [ad_maybe_redirect_for_registration]
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+#------------------------
+# Check if the project will be handled on daily basis or will show hours and minutes
+#------------------------
+
+set fmt "%x %r"
+if { $daily_p } {
+    set fmt "%x"
+} 
 
 

@@ -18,6 +18,9 @@ set admin_p [permission::permission_p -object_id $package_id -privilege admin]
 # The links used in the navbar on format url1 label1 url2 label2 ...
 set link_list {}
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
 
 if { [ad_conn user_id] != 0} {
     if { [empty_string_p $project_item_id] } {
@@ -28,8 +31,12 @@ if { [ad_conn user_id] != 0} {
 		       
     lappend link_list {}
     lappend link_list "[_ project-manager.Tasks]"
-
-    lappend link_list [list "${package_url}task-calendar"]
+    
+    if { $daily_p} {
+	lappend link_list [list "${package_url}task-calendar"]
+    } else {
+	lappend link_list [list "${package_url}task-week-calendar"]
+    }
     lappend link_list {}
     lappend link_list "[_ project-manager.Task_Calendar]"
 

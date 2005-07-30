@@ -9,7 +9,7 @@
         p.one_line,
         p.description,
         p.party_id,
-        to_char(p.creation_date,'YYYY-MM-DD') as creation_date_ansi,
+        to_char(p.creation_date,'YYYY-MM-DD HH24:MI:SS') as creation_date_ansi,
         (select count(*) from pm_process_instance i where i.process_id =
         p.process_id) as instances
         FROM 

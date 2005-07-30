@@ -781,8 +781,12 @@ ad_proc -public pm::task::delete {
     }
 
     db_dml mark_delete "update pm_tasks set deleted_p = 't' where task_id = :task_item_id"
-
-    pm::project::compute_status [pm::task::project_item_id -task_item_id $task_item_id]
+    
+    if {[parameter::get -parameter UseDayInsteadOfHour -default f]} {
+	pm::project::compute_status [pm::task::project_item_id -task_item_id $task_item_id]
+    } else {
+	pm::project::compute_status_mins [pm::task::project_item_id -task_item_id $task_item_id]
+    }
 
     return 1
 }

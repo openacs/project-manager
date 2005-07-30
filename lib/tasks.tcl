@@ -404,11 +404,11 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
     set edit_url [export_vars \
 		      -base "task-add-edit" {{task_id $task_item_id} project_item_id return_url}]
 
-    set earliest_start_pretty [lc_time_fmt $earliest_start "%x"]
-    set earliest_finish_pretty [lc_time_fmt $earliest_finish "%x"]
-    set latest_start_pretty [lc_time_fmt $latest_start "%x"]
-    set latest_finish_pretty [lc_time_fmt $latest_finish "%x"]
-    set end_date_pretty [lc_time_fmt $end_date "%x"]
+    set earliest_start_pretty [lc_time_fmt $earliest_start $fmt]
+    set earliest_finish_pretty [lc_time_fmt $earliest_finish $fmt]
+    set latest_start_pretty [lc_time_fmt $latest_start $fmt]
+    set latest_finish_pretty [lc_time_fmt $latest_finish $fmt]
+    set end_date_pretty [lc_time_fmt $end_date $fmt]
 
     if {[exists_and_not_null earliest_start_j]} {
 	set slack_time [pm::task::slack_time \

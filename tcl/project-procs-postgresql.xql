@@ -108,8 +108,8 @@
                 else t.actual_hours_worked end as worked,
         t.estimated_hours_work as to_work,
         t.item_id as my_iid,
-        to_char(end_date,'J') as task_deadline_j,
-        to_char(earliest_start,'J') as old_earliest_start_j,
+        to_char(to_date(to_char(end_date,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI'),'J') as task_deadline_j,
+        to_char(to_date(earliest_start,'YYYY-MM-DD HH24:MI'),'J') as old_earliest_start_j,
         to_char(earliest_finish,'J') as old_earliest_finish_j,
         to_char(latest_start,'J') as old_latest_start_j,
         to_char(latest_finish,'J') as old_latest_finish_j,
@@ -242,6 +242,136 @@
         pm_project_assignment a
         WHERE
 	project_id = :project_item_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.select_project_children">
+    <querytext>
+        SELECT
+        i.item_id, 
+        i.content_type 
+        FROM
+        cr_items i,
+        pm_tasks_active t
+        WHERE
+        i.item_id   = t.task_id and
+        i.parent_id = :project_item_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.tasks_group_query">
+    <querytext>
+        select
+        sum(t.actual_hours_worked) as actual_hours_completed,
+        sum(t.estimated_hours_work) as estimated_hours_total,
+        to_char(current_timestamp,'YYYY-MM-DD HH24:MI') as today
+        from
+        pm_tasks_revisionsx t, 
+        cr_items i,
+        pm_tasks_active a
+        where
+        i.item_id = a.task_id and
+        t.item_id in ([join $task_list ", "]) and
+        i.live_revision = t.revision_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.tasks_query">
+    <querytext>
+        SELECT
+        case when t.actual_hours_worked is null then 0 
+                else t.actual_hours_worked end as worked,
+        t.estimated_hours_work as to_work,
+        t.item_id as my_iid,
+        to_char(end_date,'YYYY-MM-DD HH24:MI') as task_deadline,
+        to_char(earliest_start,'YYYY-MM-DD HH24:MI') as old_earliest_start,
+        to_char(earliest_finish,'YYYY-MM-DD HH24::MI') as old_earliest_finish,
+        to_char(latest_start,'YYYY-MM-DD HH24::MI') as old_latest_start,
+        to_char(latest_finish,'YYYY-MM-DD HH24::MI') as old_latest_finish,
+        t.percent_complete as my_percent_complete,
+        s.status_type
+        from
+        pm_tasks_revisionsx t, 
+        cr_items i,
+        pm_tasks_active ti,
+        pm_task_status s
+        where
+        t.item_id in ([join $task_list ", "]) and
+        i.live_revision = t.revision_id and
+        i.item_id = ti.task_id and
+        ti.status = s.status_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.dependency_query">
+    <querytext>
+        select
+        d.dependency_id,
+        d.task_id as task_item_id,
+        d.parent_task_id,
+        d.dependency_type
+        from
+        pm_task_dependency d
+        where
+        d.task_id in ([join $task_list ", "])
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.project_info">
+    <querytext>
+        select
+        to_char(planned_start_date,'YYYY-MM-DD HH24:MI') as start_date,
+        to_char(planned_end_date,'YYYY-MM-DD HH24:MI') as end_date,
+        ongoing_p
+        from         
+        pm_projects 
+        where
+        project_id = (select live_revision from cr_items where item_id = :project_item_id)
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.update_project">
+    <querytext>
+        update
+        pm_projects
+        set 
+        actual_hours_completed = :actual_hours_completed,
+        estimated_hours_total  = :estimated_hours_total,
+        earliest_finish_date   = :max_earliest_finish,
+        latest_finish_date     = :min_latest_start
+        where
+        project_id = (select live_revision from cr_items where item_id = :project_item_id)
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_parent_status.get_parent_id">
+    <querytext>
+        select
+        parent_id
+        from
+        cr_items
+        where
+        item_id = :my_item_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_parent_status.get_root_folder">
+    <querytext>
+        select pm_project__get_root_folder (:package_id, 'f')
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::project::compute_status_mins.update_task">
+    <querytext>
+        update
+        pm_tasks_revisions
+        set 
+        earliest_start  = :es,
+        earliest_finish = :ef,
+        latest_start    = :ls,
+        latest_finish   = :lf
+        where
+        task_revision_id = (select live_revision from cr_items where item_id = :task_item)
     </querytext>
   </fullquery>
 

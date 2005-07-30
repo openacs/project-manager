@@ -175,7 +175,7 @@ ad_proc -private pm::project::log_hours {
                            -update_tasks_p $update_status_p]
 
         if {[string is true $update_status_p]} {
-            pm::project::compute_status $project_item_id
+            pm::project::compute_status  $project_item_id
         }
 
 	set log_title "$project_array(name)\: [pm::task::name -task_item_id $task_item_id]: logged $value $variable_array(unit)"
@@ -663,7 +663,7 @@ ad_proc -public pm::project::compute_status {project_item_id} {
     @error No error codes
 
 } {
-
+    
     # Before hacking on this, you might want to look at:
     # http://www.joelonsoftware.com/articles/fog0000000069.html
 
@@ -785,7 +785,7 @@ ad_proc -public pm::project::compute_status {project_item_id} {
             }
 
             set latest_finish($my_iid) $task_deadline_j
-
+	    
             set latest_start($my_iid) [pm::project::latest_start \
                                            -end_date_j $task_deadline_j \
                                            -hours_to_complete $activity_time($my_iid) \
@@ -2090,10 +2090,917 @@ ad_proc -public pm::project::index_default_orderby {
         return $return_val
 
     } else {
-
+	
         ad_set_client_property -- project-manager project-index-orderby $set
         return $set
-
+	
     }
 }
 
+
+
+ad_proc -public pm::project::compute_status_mins {
+    project_item_id
+} {
+    Compute status of project according to mins on the dates.
+} {
+    set debug 0
+    set hours_day [pm::util::hours_day]
+    
+    
+    # -------------------------
+    # get subprojects and tasks
+    # -------------------------
+    set task_list            [list]
+    set task_list_project    [list]
+    
+    foreach sub_item [db_list_of_lists select_project_children { }] {
+        set my_id   [lindex $sub_item 0]
+        set my_type [lindex $sub_item 1]
+
+        if {[string equal $my_type "pm_project"]} {
+
+            # ---------------------------------------------
+            # gets all tasks that are a part of subprojects
+            # ---------------------------------------------
+            set project_return [pm::project::compute_status $my_id]
+            set task_list_project [concat $task_list_project $project_return]
+
+        } elseif {[string equal $my_type "pm_task"]} {
+            lappend task_list    $my_id
+        }
+    }
+
+    set task_list [concat $task_list $task_list_project]
+
+    if {[string is true $debug]} {
+        ns_log Notice "Tasks in this project (task_list): $task_list"
+    }
+    
+    # -------------------------
+    # no tasks for this project
+    # -------------------------
+    if {[llength $task_list] == 0} {
+        return [list]
+    }
+    
+    # --------------------------------------------------------------
+    # we now have list of tasks that includes all subprojects' tasks
+    # --------------------------------------------------------------
+    
+    # returns actual_hours_completed, estimated_hours_total, and
+    # today (julian date for today)
+    db_1row tasks_group_query { }
+    
+    if {[string is true $debug]} {
+        ns_log notice "Today's date (julian format): $today"
+    }
+    
+    # --------------------------------------------------------------
+    # Set up activity_time for all tasks
+    # Also set up deadlines for tasks that have hard-coded deadlines
+    # --------------------------------------------------------------
+    
+    if {[string is true $debug]} {
+        ns_log notice "Going through tasks and saving their values"
+    }
+    
+    db_foreach tasks_query { } {
+	
+        # We now save information about all the tasks, so that we can
+        # save on database hits later. Specifically, what we'll do is
+        # we won't need to save changes if the earliest_start,
+        # earliest finish, latest_start and latest_finish all haven't
+        # changed at all. We also save whether the task is open (o) or
+        # closed(c).
+	
+        set old_ES($my_iid) $old_earliest_start
+        set old_EF($my_iid) $old_earliest_finish
+        set old_LS($my_iid) $old_latest_start
+        set old_LF($my_iid) $old_latest_finish
+        set task_percent_complete($my_iid) $my_percent_complete
+	
+        set activity_time($my_iid) [expr [expr $to_work * [expr 100 - $my_percent_complete] / 100]]
+	
+        if {[exists_and_not_null task_deadline]} {
+	    
+            if {[string is true $debug]} {
+                ns_log notice "$my_iid has a deadline (julian: $task_deadline)"
+            }
+	    
+	    set latest_finish($my_iid) $task_deadline
+	    set hours_to_complete $activity_time($my_iid) 
+	    
+	    set date [lindex [split $task_deadline " "] 0]
+	    set hours [lindex [split [lindex [split $task_deadline " "] 1] :] 0]
+	    set mins  [lindex [split [lindex [split $task_deadline " "] 1] :] 1]
+	    set mins [expr ($hours*60) + $mins]
+	    
+	    set date_j [dt_ansi_to_julian_single_arg $date]
+	    set today_j $date_j
+	    set mins_to_complete [expr $hours_to_complete * 60]
+	    set t_total_mins $mins_to_complete 
+	    
+	    
+	    
+	    while { $mins_to_complete > [expr $hours_day * 60]} {
+		
+		set  [expr $today_j - 1]
+		
+		# if it is a holiday, don't subtract from total time
+		
+		if {[is_workday_p $t_today]} {
+		    set t_total_mins [expr $t_total_mins - [expr $hours_day * 60]]
+		}
+		
+	    }
+	    
+	    set t_mins [expr $mins - $t_total_mins]
+	    set hours [expr round ($t_mins/60)]
+	    set t_mins [expr round($t_mins) % 60]
+            set latest_start($my_iid) "[dt_julian_to_ansi $date_j] $hours:$t_mins"
+            
+        }
+    }
+    
+    # --------------------------------------------------------------------
+    # We need to keep track of all the dependencies so we can meaningfully
+    # compute deadlines, earliest start times, etc..
+    # --------------------------------------------------------------------
+    
+    db_foreach dependency_query { } {
+	
+        # task_item_id depends on parent_task_id
+        lappend depends($task_item_id) $parent_task_id
+	
+        # parent_task_id is dependent on task_item_id
+        lappend dependent($parent_task_id) $task_item_id
+	
+        set dependency_types($task_item_id-$parent_task_id) $dependency_type
+	
+	if {[string is true $debug]} {
+	    ns_log Notice "dependency (id: $dependency_id) task: $task_item_id parent: $parent_task_id type: $dependency_type"
+	}
+    }
+    
+    
+    # --------------------------------------------------------------
+    # need to get some info on this project, so that we can base the
+    # task information off of them
+    # --------------------------------------------------------------
+    
+    # gives up end_date, start_date, and ongoing_p
+    # if ongoing_p is t, then end_date should be null
+    db_1row project_info { }
+    
+    if {[string is true $ongoing_p] && ![empty_string_p $end_date]} {
+        ns_log Error "Project cannot be ongoing and have a non-null end-date. Setting end date to blank"
+        set end_date ""
+    }
+    
+    
+    # --------------------------------------------------------------
+    # task_list contains all the tasks
+    # a subset of those do not depend on any other tasks
+    # --------------------------------------------------------------
+    
+    # ----------------------------------------------------------------------
+    # we want to go through and fill in all the values for earliest start.
+    # the brain-dead, brute force way of doing this, would be go through the
+    # task_list length(task_list) times, and each time, compute the values
+    # for each item that depends on one of those tasks. This is extremely
+    # inefficient.
+    # ----------------------------------------------------------------------
+    # Instead, we create two lists, one is of tasks we just added 
+    # earliest_start values for, the next is a new list of ones we're going to
+    # add earliest_start values for. We call these lists 
+    # present_tasks and future_tasks
+    # ----------------------------------------------------------------------
+
+    set present_tasks [list]
+    set future_tasks  [list]
+
+    # -----------------------------------------------------
+    # make a list of tasks that don't depend on other tasks
+    # -----------------------------------------------------
+    # while we're at it, save earliest_start and earliest_finish
+    # info for these items
+    # -----------------------------------------------------
+
+    foreach task_item $task_list {
+
+        if {![info exists depends($task_item)]} {
+
+            set earliest_start($task_item) $start_date
+	    
+	    set date [lindex [split $earliest_start($task_item) " "] 0]
+	    set hours [lindex [split [lindex [split $earliest_start($task_item) " "] 1] :] 0]
+	    set mins  [lindex [split [lindex [split $earliest_start($task_item) " "] 1] :] 1]
+	    set mins [expr ($hours*60) + $mins]
+	    
+	    set date_j [dt_ansi_to_julian_single_arg $date]
+	    set today_j $date_j
+	    set mins_to_complete [expr $activity_time($task_item) * 60]
+	    set t_total_mins $mins_to_complete 
+	    
+	    
+	    while { $mins_to_complete > [expr $hours_day * 60]} {
+		
+		set today_j [expr $today_j + 1]
+		
+		# if it is a holiday, don't subtract from total time
+		
+		if {[is_workday_p $today_j]} {
+		    set t_total_mins [expr $t_total_mins + [expr $hours_day * 60]]
+
+	    
+		}
+		
+	    }
+	    
+	    set t_mins [expr $mins + $t_total_mins]
+	    if { $t_mins > 60 } {
+		set hours [expr round ($t_mins/60)]
+	    } else {
+		set hours 0
+	    }
+	    set t_mins [expr round($t_mins) % 60]
+            set earliest_finish($task_item) "[dt_julian_to_ansi $date_j] $hours:$t_mins"
+
+            lappend present_tasks $task_item
+
+            if {[string is true $debug]} {
+                ns_log Notice "preliminary earliest_start($task_item): $earliest_start($task_item)"
+            }
+        }
+    }
+
+    # -------------------------------
+    # stop if we have no dependencies
+    # -------------------------------
+    if {[llength $present_tasks] == 0} {
+
+        if {[string is true $debug]} {
+            ns_log Notice "No tasks with dependencies"
+        }
+
+        return [list]
+    }
+
+    if {[string is true $debug]} {
+        ns_log Notice "present_tasks: $present_tasks"
+    }
+
+    # ------------------------------------------------------
+    # figure out the earliest start and finish times
+    # ------------------------------------------------------
+
+    while {[llength $present_tasks] > 0} {
+
+        set future_tasks [list]
+
+        foreach task_item $present_tasks {
+
+            if {[string is true $debug]} {
+                ns_log Notice "-this task_item: $task_item"
+            }
+
+            # -----------------------------------------------------
+            # some tasks may already have earliest_start filled in
+            # the first run of tasks, for example, had their values
+            # filled in earlier
+            # -----------------------------------------------------
+
+            if {![exists_and_not_null earliest_start($task_item)]} {
+
+                if {[string is true $debug]} {
+                    ns_log Notice " !info exists for $task_item"
+                }
+
+                # ---------------------------------------------
+                # set the earliest_start for this task = 
+                # max(activity_time(i-1) + earliest_start(i-1))
+                #
+                # (i-1 means an item that this task depends on)
+                # ---------------------------------------------
+
+                set max_earliest_start 0
+
+                # testing if this fixes the bug
+                if {![exists_and_not_null depends($task_item)]} {
+                    set depends($task_item) [list]
+                }
+
+                foreach dependent_item $depends($task_item) {
+
+                    set my_earliest_start [my_earliest_start $earliest_start($dependent_item) $activity_time($dependent_item) $hours_day]
+
+                    if {$my_earliest_start > $max_earliest_start} {
+                        set max_earliest_start $my_earliest_start
+                    }
+                }
+
+                set earliest_start($task_item) $max_earliest_start
+
+                set earliest_finish($task_item) [earliest_finish $max_earliest_start $activity_time($task_item) $hours_day]
+
+                if {[string is true $debug]} {
+                    ns_log Notice \
+                        " earliest_start ($task_item): $earliest_start($task_item)"
+                    ns_log Notice \
+                        " earliest_finish($task_item): $earliest_finish($task_item)"
+                }
+
+            }
+
+            # -------------------------------
+            # add to list of tasks to process
+            # -------------------------------
+
+            if {[info exists dependent($task_item)]} {
+                set future_tasks [concat $future_tasks $dependent($task_item)]
+            }
+        }
+
+        if {[string is true $debug]} {
+            ns_log Notice "future tasks: $future_tasks"
+        }
+
+        set present_tasks $future_tasks
+    }
+
+    # ----------------------------------------------
+    # set up earliest date project will be completed
+    # ----------------------------------------------
+
+    set max_earliest_finish $today
+
+    foreach task_item $task_list {
+
+        if {[string is true $debug] && [exists_and_not_null earliest_finish($task_item)]} {
+            ns_log Notice "* EF: ($task_item): $earliest_finish($task_item)"
+        }
+        
+        if {[exists_and_not_null earliest_finish($task_item)] && $max_earliest_finish < $earliest_finish($task_item)} {
+            set max_earliest_finish $earliest_finish($task_item)
+        }
+
+    }
+
+
+    # -----------------------------------------------------------------
+    # Now compute latest_start and latest_finish dates.
+    # Note the latest_finish dates may be set to an arbitrary deadline.
+    # Also note that it is possible for a project to be ongoing.
+    # In that case, the latest_start and latest_finish dates should
+    # be set to null, unless there is a hard deadline (end_date).
+    # -----------------------------------------------------------------
+    # If these represent the dependency hierarchy:
+    #               2155
+    #             /  |   \
+    #         2161  2173  2179
+    #          |           |
+    #         2167        2195
+    # ----------------------------------------------------------------------
+    # we want to go through and fill in all the values for latest start
+    # and latest_finish.
+    # the brain-dead, brute force way of doing this, would be go through the
+    # task_list length(task_list) times, and each time, compute the values
+    # for each item that depends on one of those tasks. This is extremely
+    # inefficient.
+    # ----------------------------------------------------------------------
+    # Instead, we create two lists, one is of tasks we just added 
+    # latest_finish values for, the next is a new list of ones we're going to
+    # add latest_finish values for. We call these lists 
+    # present_tasks and future_tasks
+    # ----------------------------------------------------------------------
+    # Here's a description of the algorithm.
+    # 1. The algorithm starts with those tasks that don't have other 
+    # tasks depending on them. 
+    # 
+    # So in the example above, we'll start with 
+    #   present_tasks: 2167 2173 2195
+    #   future tasks: 
+    #
+    # 2. While we make the present_tasks list, we store latest_start
+    # and latest_finish information for each of those tasks. If the
+    # project is ongoing, then we also keep track of tasks that have
+    # no latest_start or latest_finish. We keep this in the
+    # ongoing_task(task_id) array. If is exists, then we know that
+    # that task is an ongoing task, so no deadline will exist for it.
+    #
+    # 3. Stop if we don't have any dependencies
+    # 
+    # 4. Then we get into a loop.
+    #    While there are present_tasks:
+    #      Create the future_tasks list
+    #      For each present task:
+    #        If the task has a dependent task:
+    #          Go through these dependent tasks:
+    #            If the dependent task is ongoing don't defer
+    #            If the dependent task doesn't have LS set,
+    #             then defer, and add to future_tasks list
+    #            Otherwise set the LS value for that task
+    #          If there are no deferals, get the minimum LS of
+    #          dependents, set LF 
+    #        Add the dependent tasks to the future_tasks
+    #      Set present_tasks equal to future_tasks, clear future_tasks
+
+    # ----------------------------------------------------------------------
+    # The biggest problem with this algorithm is that you can have items at 
+    # two different levels in the hierarchy. 
+    # 
+    # if you trace through this algorithm, you'll see that we'll get to 2155
+    # before 2161's values have been set, which can cause an error. The 
+    # solution we arrive at is to defer to the future_tasks list any item
+    # that causes an error. That should work.
+
+    set present_tasks [list]
+    set future_tasks  [list]
+
+    # -----------------------------------------------------
+    # make a list of tasks that don't have tasks depend on them
+    # -----------------------------------------------------
+    # while we're at it, save latest_start and latest_finish
+    # info for these items
+    # -----------------------------------------------------
+
+    if {[string is true $debug]} {
+        ns_log Notice "Starting foreach task-item $task_list"
+    }
+
+    foreach task_item $task_list {
+	
+        if {![info exists dependent($task_item)]} {
+	    
+            if {[string is true $debug]} {
+                ns_log Notice " !info exists dependent($task_item)"
+            }
+	    
+            # we check this because some tasks already have
+            # hard deadlines set. 
+            if {[info exists latest_finish($task_item)]} {
+
+                # if the project needs to be completed before the
+                # actual hard deadline, then the project deadline 
+                # has precedence. However, sometimes the project is
+                # ongoing, so we have to make sure that there actually
+                # is an end_date
+
+                # commented out: we need to trust the user. If they
+                # set the deadline outside the project deadline,
+                # that's their business
+                
+                #if {![empty_string_p $end_date]} {
+                #    if {$end_date < $latest_finish($task_item)} {
+                #        set latest_finish($task_item) $end_date
+                #    }
+                #}
+
+                # we also set the latest_start date
+
+                if {[string is false [exists_and_not_null activity_time($task_item)]]} {
+                    set activity_time($task_item) 0
+                    ns_log Notice "setting activity_time($task_item) 0"
+                }
+		
+		
+		set hours_to_complete $activity_time($task_item) 
+		
+		set date [lindex [split $latest_finish($task_item) " "] 0]
+		set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
+		set mins  [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 1]
+		set mins [expr ($hours*60) + $mins]
+		
+		set date_j [dt_ansi_to_julian_single_arg $date]
+		set today_j $date_j
+		set mins_to_complete [expr $hours_to_complete * 60]
+		set t_total_mins $mins_to_complete 
+		
+		
+		
+		while { $mins_to_complete > [expr $hours_day * 60]} {
+		
+		    set  [expr $today_j - 1]
+		    
+		    # if it is a holiday, don't subtract from total time
+		    
+		    if {[is_workday_p $t_today]} {
+			set t_total_mins [expr $t_total_mins - [expr $hours_day * 60]]
+		    }
+		    
+		}
+		
+		set t_mins [expr $mins - $t_total_mins]
+		set hours [expr round ($t_mins/60)]
+		set t_mins [expr round($t_mins) % 60]
+		set late_start_temp "[dt_julian_to_ansi $date_j] $hours:$t_mins"
+                
+                if {$late_start_temp < $latest_start($task_item)} {
+                    set latest_start($task_item) $late_start_temp
+                }
+
+            } else {
+
+                # this section is for items that have no solid
+                # deadline, but also have no items dependent on them
+
+                # we either set the latest start and finish of the item or
+                # we specify that the task is an ongoing task
+                if {[empty_string_p $end_date]} {
+                    set ongoing_task($task_item) true
+
+                    if {[string is true $debug]} {
+                        ns_log Notice "NSDBAHNITD: end_date was empty ti:$task_item"
+                    }
+                } else {
+                    set latest_finish($task_item) $end_date
+
+                    if {[string is false [exists_and_not_null activity_time($task_item)]]} {
+                        set activity_time($task_item) 0
+                        ns_log Notice "setting activity_time($task_item) 0 (location 2)"
+                    }
+
+                    set latest_start($task_item) \
+                        [latest_start \
+                             -end_date $latest_finish($task_item) \
+                             -hours_to_complete $activity_time($task_item) \
+                             -hours_day $hours_day]
+                    
+                }
+            }
+            lappend present_tasks $task_item
+
+            if {[string is true $debug] && [exists_and_not_null latest_start($task_item)]} {
+                ns_log Notice "preliminary latest_start($task_item): $latest_start($task_item)"
+            }
+
+            if {[string is true $debug] && [exists_and_not_null latest_finish($task_item)]} {
+                ns_log Notice "preliminary latest_finish($task_item): $latest_finish($task_item)"
+            }
+
+
+
+        } else {
+            if {[string is true $debug]} {
+                ns_log Notice " info exists dependent($task_item)"
+            }
+        }
+    }
+
+
+    # -------------------------------
+    # stop if we have no dependencies
+    # -------------------------------
+    if {[llength $present_tasks] == 0} {
+        if {[string is true $debug]} {
+            ns_log Notice "No tasks with dependencies"
+        }
+        return [list]
+    }
+
+    if {[string is true $debug]} {
+        ns_log Notice "LATEST present_tasks: $present_tasks"
+    }
+
+    # ------------------------------------------------------
+    # figure out the latest start and finish times
+    # ------------------------------------------------------
+
+    while {[llength $present_tasks] > 0} {
+
+        set future_tasks [list]
+
+        foreach task_item $present_tasks {
+
+            if {[string is true $debug]} {
+                ns_log Notice "this task_item: $task_item"
+            }
+
+            # -----------------------------------------------------
+            # some tasks may already have latest_start filled in.
+            # the first run of tasks, for example, had their values
+            # filled in earlier
+            # -----------------------------------------------------
+
+            if {[info exists dependent($task_item)]} {
+
+                if {[string is true $debug]} {
+                    ns_log Notice " info exists for dependent($task_item)"
+                }
+
+                # ---------------------------------------------
+                # set the latest_start for this task = 
+                # min(latest_start(i+1) - activity_time(i))
+                #
+                # (i+1 means an item that depends on this task)
+                # (i means this task)
+                # ---------------------------------------------
+
+                # we set this to the end date, and then move it forward
+                # as we find dependent items that have earlier
+                # latest_start dates. The problem is that the
+                # end_date is empty when there is no deadline.
+                # So we need to remember that min_latest_start can
+                # be an empty value
+
+                set min_latest_start $end_date
+                
+                if {[string is true $debug]} {
+                    ns_log Notice " min_latest_start:  $end_date"
+                }
+
+                foreach dependent_item $dependent($task_item) {
+
+                    if {[string is true $debug]} {
+                        ns_log Notice " dependent_item: $dependent_item"
+                    }
+                                    
+                    if {[exists_and_not_null ongoing_task($dependent_item)]} {
+                        set defer_p f
+                        set my_latest_start ""
+
+                        if {[string is true $debug]} {
+                            ns_log Notice " ongoing_task, no defer"
+                        }
+                        
+                    } elseif {![exists_and_not_null latest_start($dependent_item)]} {
+                        # we defer the task if the dependent item has no
+                        # latest_start date set 
+
+                        if {[info exists defer_count($task_item)]} {
+                            incr defer_count($task_item)
+                        } else {
+                            set defer_count($task_item) 1
+                        }
+
+                        # we use a magic number here.
+                        # basically, we don't want to defer the
+                        # item forever. Ideally, this should
+                        # be cleaned up better. Defering is necessary
+                        # given this algorithm, but there are
+                        # times when you don't want to defer.
+                        # This is hackish, and I'm embarrased, but on
+                        # a deadline. :(
+                        if {$defer_count($task_item) > 5} {
+                            set defer_p f
+
+                                if {[string is true $debug]} {
+                                    ns_log Notice " no defer because defer count exceeded"
+                                }
+                        } else {
+                            lappend future_tasks $task_item
+
+                            if {[string is true $debug]} {
+                                ns_log Notice " defer"
+                            }
+
+                            set defer_p t
+                        }
+                        
+
+
+                    } else {
+                        
+                        # the dependent item has a deadline
+                        
+                        if {[string is false [exists_and_not_null activity_time($task_item)]]} {
+                            set activity_time($task_item) 0
+                            ns_log Notice "setting activity_time($task_item) 0 (location 3)"
+                        }
+
+                        set my_latest_start \
+                            [latest_start \
+                                 -end_date $latest_start($dependent_item) \
+                                 -hours_to_complete $activity_time($task_item) \
+                                 -hours_day $hours_day]
+                        
+                        if {[string is true $debug]} {
+                            ns_log Notice " my_latest_start: $my_latest_start"
+                        }
+
+                        # we also only want to move forward the latest_start
+                        # date if the dependent item is not already completed!
+
+                        if {$task_percent_complete($dependent_item) < 100} {
+                            if {[exists_and_not_null min_latest_start]} {
+                                if {$my_latest_start < $min_latest_start} {
+                                    set min_latest_start $my_latest_start
+                                }
+                            } else {
+                                set min_latest_start $my_latest_start
+                            }
+                        }
+                        
+                        set defer_p f
+                    }
+                    
+                }
+                
+                if {[string equal $defer_p f]} {
+                    
+                    # we check that latest_start doesn't already exist
+                    # which it might for hard-deadlines
+
+                    # we have to be fairly careful here. We want to
+                    # set the latest_start date to the minimum
+                    # latest_start, but only when min_latest_start
+                    # actually has a value
+
+                    if {[exists_and_not_null latest_start($task_item)]} {
+
+                        if {[exists_and_not_null min_latest_start]} {
+                        
+                            if {$min_latest_start < $latest_start($task_item)} {
+                                set latest_start($task_item) $min_latest_start
+                            }
+                            
+                        } else {
+
+                            if {[string is true $debug]} {
+                                ns_log notice " setting latest start date (ignoring min_latest_start"
+                            }
+
+                            if {[string is false [exists_and_not_null activity_time($task_item)]]} {
+                                set activity_time($task_item) 0
+                                ns_log Notice "setting activity_time($task_item) 0 (location 4)"
+                            }
+
+
+                            set latest_start($task_item) \
+                                [latest_start \
+                                     -end_date $latest_finish($task_item) \
+                                     -hours_to_complete $activity_time($task_item) \
+                                     -hours_day $hours_day]
+
+                        }
+                    } else {
+
+                        # so this task has no hard deadline.
+                        # We now set the value to the minimum of the
+                        # dependent tasks. Note that if the dependent
+                        # tasks all have no hard deadlines, and the
+                        # project is ongoing, then the value will be
+                        # set to ""
+
+                        set latest_start($task_item) $min_latest_start
+                    }
+
+                    if {[string is true $debug]} {
+                        ns_log Notice " min_latest_start: $min_latest_start"
+                    }
+
+                    # we now set the latest finish. Ongoing tasks set
+                    # the latest finish to empty (sometimes)
+                    if {[empty_string_p $latest_start($task_item)]} {
+                        set temp_lf ""
+                    } else {
+                        set temp_lf [my_latest_finish $min_latest_start $activity_time($task_item) $hours_day]
+                    }
+
+                    # if there is already a hard deadline for this
+                    # task, then we check whether temp_lf is earlier,
+                    # and set it to temp_lf if so
+                    
+                    if {[string is true $debug]} {
+                        ns_log Notice " temp_lf: $temp_lf"
+                    }
+
+                    if {[empty_string_p $temp_lf]} {
+                        
+                        # if the task is ongoing, we clear the
+                        # latest_finish. Otherwise, we leave the
+                        # latest_finish as it is.
+                        
+                        if {[exists_and_not_null ongoing_task($task_item)] && [string is true $ongoing_task($task_item)]} {
+                            set latest_finish($task_item) ""
+                        }
+
+                    } else {
+                        if {[exists_and_not_null latest_finish($task_item)]} {
+                            if {$temp_lf < $latest_finish($task_item)} {
+                                set latest_finish($task_item) $temp_lf
+                            }
+                        } else {
+                            set latest_finish($task_item) $temp_lf
+                        }
+                    }
+                    
+                    if {[string is true $debug]} {
+                        if {[exists_and_not_null latest_start($task_item)]} {
+                            ns_log Notice \
+                                " latest_start ($task_item): $latest_start($task_item)"
+                        }
+                        if {[exists_and_not_null latest_finish($task_item)]} {
+                            ns_log Notice \
+                                " latest_finish($task_item): $latest_finish($task_item)"
+                        }
+                    }
+
+                } else {
+                    if {[string is true $debug]} {
+                        ns_log Notice "Deferring $task_item"
+                    }
+                }
+            }    
+
+            # -------------------------------
+            # add to list of tasks to process
+            # -------------------------------
+
+            if {[info exists depends($task_item)]} {
+                set future_tasks [concat $future_tasks $depends($task_item)]
+            }
+        }
+
+        if {[string is true $debug]} {
+            ns_log Notice "future tasks: $future_tasks"
+        }
+
+        set present_tasks $future_tasks
+    }
+
+    # ----------------------------------------------
+    # set up latest start date for project
+    # ----------------------------------------------
+
+    if {[empty_string_p $end_date]} {
+        set min_latest_start ""
+        set max_earliest_finish ""
+    } else {
+        set min_latest_start $end_date
+        
+        foreach task_item $task_list {
+
+            if {[string is true $debug]} {
+                ns_log Notice "* LS ($task_item): $latest_start($task_item)"
+            }
+
+            if {[exists_and_not_null earliest_finish($task_item)] && $min_latest_start > $latest_start($task_item)} {
+                set max_earliest_finish $earliest_finish($task_item)
+            }
+        }
+
+        set max_earliest_finish "[set max_earliest_finish]"
+        set min_latest_start    "[set min_latest_start]"
+    }
+
+    
+    # estimated_finish_date
+    # latest_finish 
+
+    db_dml update_project { }
+
+    # now we go through and save all the values for the tasks!
+    # this is very inefficient and stupid
+
+    foreach task_item $task_list {
+
+        if {[exists_and_not_null earliest_start($task_item)]} {
+            set es "[set earliest_start($task_item)]"
+        } else {
+            set es ""
+        }
+
+        if {[exists_and_not_null earliest_finish($task_item)]} {
+            set ef "[set earliest_finish($task_item)]"
+        } else {
+            set ef ""
+        }
+
+        if {[exists_and_not_null latest_start($task_item)]} {
+            set ls "[set latest_start($task_item)]"
+        } else {
+            set ls ""
+        }
+
+        if {[exists_and_not_null latest_finish($task_item)]} {
+            set lf "$latest_finish($task_item)"
+        } else {
+            set lf ""
+        }
+
+        # Only update the task if something has actually
+        # changed. Hopefully this should help speed things up.
+        
+        if { \
+                 [string equal $es $old_ES($task_item)] && \
+                 [string equal $ef $old_EF($task_item)] && \
+                 [string equal $ls $old_LS($task_item)] && \
+                 [string equal $lf $old_LF($task_item)]} {
+            # do nothing
+        } else {
+            db_dml update_task { }
+        }
+        
+
+    }
+    
+    
+    if {[string is true $debug]} {
+        ns_log Notice "*******************"
+    }
+    
+    return $task_list
+    
+}

@@ -10,7 +10,7 @@
   <table>
 <tr valign=top>
 <td>
-  <include src="/packages/project-manager/lib/tasks" project_item_id="@project_item_id@" status_id="@status_id@" party_id="@party_id@" actions_p="1">
+  <include src="/packages/project-manager/lib/tasks" project_item_id="@project_item_id@" status_id="@status_id@" party_id="@party_id@" actions_p="1" fmt=@fmt@>
 </td>
 </tr>
 </table>

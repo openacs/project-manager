@@ -55,6 +55,19 @@ set write_p  [permission::permission_p -object_id $package_id -privilege write]
 set create_p [permission::permission_p -object_id $package_id -privilege create]
 set admin_p [permission::permission_p -object_id $package_id -privilege admin]
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+#------------------------
+# Check if the project will be handled on daily basis or will show hours and minutes
+#------------------------
+
+set fmt "%x %r"
+if { $daily_p } {
+    set fmt "%x"
+} 
+
+
 # root CR folder
 set root_folder [pm::util::get_root_folder -package_id $package_id]
 

@@ -1,2 +1,2 @@
 <master src="lib/master">
-<include src="../lib/task-calendar" date="@date@" julian_date="@julian_date@" hide_closed_p="@hide_closed_p@" display_p="t" view="@view@">
+<include src="../lib/task-calendar" date="@date@" julian_date="@julian_date@" hide_closed_p="@hide_closed_p@" display_p="t" view="@view@" package_id=@package_id@>

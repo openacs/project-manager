@@ -77,4 +77,5 @@ db_multirow -extend { item_url } dependency $query {
 } {
     set item_url [export_vars -base "task-one" -override {{task_id $parent_task_id}} { task_id $d_task_id }]
     # set item_url [export_vars -base "task-one" {{task_id $d_task_id}}]
+    set end_date [lc_time_fmt $end_date $fmt]
 }

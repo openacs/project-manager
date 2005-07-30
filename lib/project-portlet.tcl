@@ -30,11 +30,11 @@ set richtext_list [list $project(description) $project(mime_type)]
 set project(description) [template::util::richtext::get_property html_value $richtext_list]
 set project_root [pm::util::get_root_folder]
 
-set project(planned_start_date) [lc_time_fmt $project(planned_start_date) "%x"]
-set project(planned_end_date)   [lc_time_fmt $project(planned_end_date) "%x"]
-set project(estimated_finish_date) [lc_time_fmt $project(estimated_finish_date) "%x"]
-set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) "%x"]
-set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) "%x"]
+set project(planned_start_date) [lc_time_fmt $project(planned_start_date) $fmt]
+set project(planned_end_date)   [lc_time_fmt $project(planned_end_date) $fmt]
+set project(estimated_finish_date) [lc_time_fmt $project(estimated_finish_date) $fmt]
+set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) $fmt]
+set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) $fmt]
 set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
 set variables(customer_id) $project(customer_id)
 

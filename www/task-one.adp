@@ -83,10 +83,12 @@
 
         <P />
 	    <include src="/packages/project-manager/lib/task-dependency-portlet"
+
 	         task_id="@task_id@"
 		 task_term="@task_term@"
-		 return_url="@return_url@" />
-                
+		 return_url="@return_url@" 
+	         fmt= @fmt@ />
+        
       </td>
     </tr>
   </table>

@@ -5,7 +5,7 @@
     <querytext>
         SELECT
         t.title as task_title,
-        to_char(t.end_date,'MM/DD/YYYY') as end_date,
+        to_char(t.end_date,'YYYY-MM-DD HH24:MI') as end_date,
         t.percent_complete,
         i.live_revision,
         d.parent_task_id,
@@ -30,7 +30,7 @@
     <querytext>
         SELECT
         t.title as task_title,
-        to_char(t.end_date,'MM/DD/YYYY') as end_date,
+        to_char(t.end_date,'YYYY-MM-DD HH24:MI') as end_date,
         t.percent_complete,
         i.live_revision,
         d.parent_task_id,

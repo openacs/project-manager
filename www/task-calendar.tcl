@@ -14,6 +14,7 @@ ad_page_contract {
     {date ""}
     {julian_date ""}
     {hide_closed_p "t"}
+    {display_p "l"}
 } -properties {
     title:onevalue
     context:onevalue
@@ -63,6 +64,7 @@ set header_stuff "
 </style>"
 
 set return_url [ad_return_url]
+set package_id [ad_conn package_id]
 
 set edit_hidden_vars [export_vars -form {return_url}]
 
@@ -70,6 +72,8 @@ set calendar [pm::calendar::one_month_display \
                   -user_id $user_id \
                   -date $date \
                   -hide_closed_p $hide_closed_p \
+		  -package_id [ad_conn package_id] \
+		  -display_p $display_p \
                  ]
 
 

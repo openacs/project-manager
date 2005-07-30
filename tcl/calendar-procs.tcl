@@ -50,6 +50,7 @@ namespace eval pm::calendar {
         {-hide_closed_p "t"}
 	{-display_p "l"}
 	{-display_item "t"}
+	{-package_id ""}
     } {
         Creates a month widget for tasks if display_item=t 
 	Creates a month widget for projects if display_item=p
@@ -60,13 +61,14 @@ namespace eval pm::calendar {
         set next_nav_template "<a href=\"?view=month&date=\$ansi_date&user_id=$user_id\">&gt;</a>" 
 	set instance_clause ""
 	
-	set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
-	
-
+	if { [empty_string_p $package_id]} {
+	    set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
+	}
 	
 	if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
 	    set instance_clause "and o.package_id=:package_id"
 	} 
+
 	
         if {[empty_string_p $date]} {
             set date [dt_systime]
@@ -229,8 +231,8 @@ namespace eval pm::calendar {
             set hide_closed_clause ""
         }
 	
-        set selected_users [pm::calendar::users_to_view]
-        set selected_users_clause " and ts.project_id in (select project_id from pm_project_assignment where party_id in ([join $selected_users ", "]))"
+	set selected_users [pm::calendar::users_to_view]
+	set selected_users_clause " and i.item_id in (select project_id from pm_project_assignment where party_id in ([join $selected_users ", "]))"
 	
         set last_project_id ""
         set deadline ""
@@ -276,7 +278,7 @@ namespace eval pm::calendar {
 		    set day_details "<span class=\"calendar-item\"><p>${detail_begin}<a href=\"${base_url}one?project_id=$project_id\">$project_id</a><br />$project_name${detail_end}"
 		    
 		    # only add to the list if we want to see closed projects
-		    #append day_details "<ul><li>${font_begin}${full_name}${font_end}</li>"
+		    append day_details "<ul><li>${font_begin}${full_name}${font_end}</li>"
 		    
 		}
 	    

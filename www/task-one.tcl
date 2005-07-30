@@ -106,6 +106,19 @@ set package_id  [ad_conn package_id]
 set package_url [ad_conn package_url]
 set user_id     [ad_maybe_redirect_for_registration]
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+#------------------------
+# Check if the project will be handled on daily basis or will show hours and minutes
+#------------------------
+
+set fmt "%x %r"
+if { $daily_p } {
+    set fmt "%x"
+} 
+
+
 
 # permissions. This is a general 'does the user have permission to even ask for this page to be run?'
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
@@ -119,6 +132,29 @@ permission::require_permission -party_id $user_id -object_id $package_id -privil
 # Task info ----------------------------------------------------------
 
 db_1row task_query { } -column_array task_info
+
+# format the hours remaining section
+
+set task_info(hours_remaining) \
+    [pm::task::hours_remaining \
+         -estimated_hours_work $task_info(estimated_hours_work) \
+         -estimated_hours_work_min $task_info(estimated_hours_work_min) \
+         -estimated_hours_work_max $task_info(estimated_hours_work_max) \
+         -percent_complete $task_info(percent_complete)]
+
+set task_info(days_remaining) \
+    [pm::task::days_remaining \
+         -estimated_hours_work $task_info(estimated_hours_work) \
+         -estimated_hours_work_min $task_info(estimated_hours_work_min) \
+         -estimated_hours_work_max $task_info(estimated_hours_work_max) \
+         -percent_complete $task_info(percent_complete)]
+
+# format the dates according to the local settings
+set task_info(earliest_start)  [lc_time_fmt $task_info(earliest_start) $fmt]
+set task_info(earliest_finish) [lc_time_fmt $task_info(earliest_finish) $fmt]
+set task_info(latest_start)    [lc_time_fmt $task_info(latest_start) $fmt]
+set task_info(latest_finish)   [lc_time_fmt $task_info(latest_finish) $fmt]
+set task_info(end_date)        [lc_time_fmt $task_info(end_date) $fmt]
 
 # we do this for the hours include portion
 set project_item_id $task_info(project_item_id)

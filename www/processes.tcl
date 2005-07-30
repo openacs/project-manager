@@ -49,6 +49,19 @@ set write_p  [permission::permission_p -object_id $package_id -privilege write]
 set create_p [permission::permission_p -object_id $package_id -privilege create]
 set admin_p [permission::permission_p -object_id $package_id -privilege admin]
 
+# daily?
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+#------------------------
+# Check if the project will be handled on daily basis or will show hours and minutes
+#------------------------
+
+set fmt "%x %r"
+if { $daily_p } {
+    set fmt "%x"
+} 
+
+
 # root CR folder
 # set root_folder [db_string get_root "select pm_project__get_root_folder (:package_id, 'f')"]
 
@@ -106,7 +119,7 @@ template::list::create \
 db_multirow -extend { delete_url creation_date } processes process_query {
 } {
     set delete_url [export_vars -base "process-delete" {process_id}]
-    set creation_date [lc_time_fmt $creation_date_ansi "%x"]
+    set creation_date [lc_time_fmt $creation_date_ansi $fmt]
 }
 
 

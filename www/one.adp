@@ -10,19 +10,63 @@
 <if @project.live_revision@ ne @project.project_id@>
   <h4>#project-manager.lt_not_current_set_live#</h4>
 </if>
-<table width="100%">
-  <tr>
-    <td width="50%" valign="top">
-      <include
-	src="/packages/project-manager/lib/project-portlet"
-	project_id="@project_id@"
-	project_item_id="@project_item_id@" />
-      <p />
-      <include
-	src="/packages/project-manager/lib/date-portlet"
-	project_id="@project_id@"
-	project_item_id="@project_item_id@"
+<include
+  src="/packages/project-manager/lib/project-portlet"
+  project_id="@project_id@"
+  project_item_id="@project_item_id@" 
+  fmt=@fmt@ />
+<p />
+<include
+  src="/packages/project-manager/lib/date-portlet"
+  project_id="@project_id@"
+  project_item_id="@project_item_id@" />
+<p />
+<include
+  src=/packages/project-manager/lib/assignee-portlet
+  project_id="@project_id@"
+  project_item_id="@project_item_id@"
+  return_url="@return_url@" />
+  <p />
+  <include
+    src="/packages/project-manager/lib/categories-portlet"
+    item_id="@project_id@" />
+  <p />
+  <if @use_subprojects_p@>
+    <include
+      src="/packages/project-manager/lib/subprojects"
+      project_id="@project_id@"
+      project_item_id="@project_item_id@" 
+      base_url=@package_url@
+      />
+    <p />
+  </if>
+  <include
+    src="/packages/project-manager/lib/comments-portlet"
+    project_id="@project_id@"
+    project_item_id="@project_item_id@"
+    return_url="@return_url@" />
+</td>
+  <td valign="top">
+    <include
+      src="/packages/project-manager/lib/tasks-portlet"
+      project_id="@project_id@"
+      project_item_id="@project_item_id@"
+      return_url="@return_url@"
+      instance_id="@instance_id@" 
+      fmt=@fmt@ 
 	/>
+    <p />
+    <include
+      src="/packages/project-manager/lib/logger-portlet"
+      project_item_id="@project_item_id@"
+      return_url="@return_url@"
+      master="@portlet_master@"
+      logger_project="@project.logger_project@"
+      logger_days="@logger_days@"
+      return_url="@return_url;noquote@"
+      pm_url="@package_url;noquote@" />
+    <p />
+    <if @use_project_customizations_p@>
       <p />
       <include
 	src="/packages/project-manager/lib/assignee-portlet"

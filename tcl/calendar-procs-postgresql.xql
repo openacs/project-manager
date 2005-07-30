@@ -129,9 +129,9 @@
       t.parent_id = projecti.item_id and
       o.object_id= t.item_id and
       projecti.live_revision = projectr.revision_id
+      $selected_users_clause
       $instance_clause
       $hide_closed_clause
-      $selected_users_clause
       ORDER BY
       t.end_date, ts.task_id, r.role_id, p.first_names, p.last_name
 </querytext>
@@ -161,12 +161,19 @@
         to_char(p.estimated_finish_date, 'MM/DD/YY') as estimated_finish_date,
         to_char(p.earliest_finish_date, 'MM/DD/YY') as earliest_finish_date,
         to_char(p.latest_finish_date, 'MM/DD/YY') as latest_finish_date,
+	persons.first_names || ' ' || persons.last_name || ' (' ||
+        substring(r.one_line from 1 for 1) || ')' as full_name,
+        persons.person_id,
         case when o.name is null then '--no customer--' else o.name
                 end as customer_name,
         o.organization_id as customer_id
         FROM pm_projectsx p 
              LEFT JOIN pm_project_assignment pa 
-                ON p.item_id = pa.project_id
+                ON p.item_id = pa.project_id	
+             LEFT JOIN persons 
+             ON pa.party_id = persons.person_id
+                LEFT JOIN pm_roles r
+                 ON pa.role_id = r.role_id
              LEFT JOIN organizations o ON p.customer_id =
                 o.organization_id 
              LEFT JOIN (
@@ -189,6 +196,7 @@
         p.project_id = i.live_revision 
 	and i.parent_id = f.folder_id
 	$instance_clause
+	$selected_users_clause
         and exists (select 1 from acs_object_party_privilege_map ppm 
                     where ppm.object_id = p.project_id
                     and ppm.privilege = 'read'

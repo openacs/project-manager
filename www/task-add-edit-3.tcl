@@ -94,8 +94,11 @@ foreach num $number {
         -privilege create
 
     if {[lsearch $computed_projects $project_item_id($num)] < 0} {
-
-        pm::project::compute_status $project_item_id($num)
+	if {[parameter::get -parameter "UseDayInsteadOfHour" -default "f" -package_id $package_id]} {
+	    pm::project::compute_status $project_item_id($num) 
+	} else {
+	    pm::project::compute_status_mins $project_item_id($num) 
+	}
         lappend computed_projects $project_item_id($num)
     }
 }
