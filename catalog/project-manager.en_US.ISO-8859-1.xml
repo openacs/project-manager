@@ -467,6 +467,8 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Projects">Projects</msg>
   <msg key="Projects_ongoing">Projects ongoing</msg>
   <msg key="Quantity">Quantity:</msg>
+  <msg key="rate">Rate</msg>
+  <msg key="rate_this_project">Rate This Project</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>
   <msg key="Remaining_work">Remaining Work</msg>
   <msg key="Remove">myself</msg>
@@ -479,7 +481,6 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Search">Search:</msg>
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
-  <msg key="search_user">Search User</msg>
   <msg key="Section">Section</msg>
   <msg key="Select_process">Select process:</msg>
   <msg key="Select_Project">Select Project</msg>
