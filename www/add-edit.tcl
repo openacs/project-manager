@@ -24,7 +24,7 @@ ad_page_contract {
     {planned_end_date ""}
     {deadline_scheduling ""}
     {ongoing_p ""}
-    {status_id ""}
+    {status_id "1"}
     {extra_data:optional ""}
 
 } -properties {
@@ -38,6 +38,7 @@ ad_page_contract {
 # the unique identifier for this package
 set package_id [ad_conn package_id]
 set user_id    [ad_maybe_redirect_for_registration]
+set include_url [parameter::get -parameter "ProjectAdd"]
 
 # permissions. Check that user has write permission on the package.
 permission::require_permission -party_id $user_id -object_id $package_id -privilege write
@@ -77,7 +78,7 @@ if {[ad_form_new_p -key project_item_id]} {
     set logger_project ""
     set logger_values ""
 } else {
-
+    
     set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
     set logger_values [logger::project::get_variables -project_id $logger_project]
 
@@ -90,7 +91,7 @@ ad_form -name add_edit \
         {parent_id:text(hidden)
             {value $parent_id}
         }
-
+	
         {project_item_id:text(hidden)
             {value $project_item_id}
         }
@@ -103,18 +104,57 @@ ad_form -name add_edit \
             {value $project_name}
             {html {size 50}}
         }
-        
+        {ongoing_p:text(hidden)
+            {value "f"}
+        }
+    }
+
+
+if {$use_project_code_p} {
+    ad_form -extend -name add_edit \
+        -form {
+            {project_code:text,optional
+                {label "[_ project-manager.lt_set_project_term_code]"}
+                {value $project_code}
+            }
+        } 
+}
+
+ad_form -extend -name add_edit \
+    -form {
         {description:text(textarea),optional
             {label "[_ project-manager.Description]"}
             {value $description}
             {html { rows 5 cols 40 wrap soft}}}
         
-        {customer_id:text(select),optional
-            {label "[_ project-manager.Customer]"}
-            {options {{"[_ project-manager.---_TBD_---]" ""} [lang::util::localize_list_of_lists -list [db_list_of_lists get_customer "select o.name, o.organization_id from organizations o order by o.name"]]}}
-        }
+    }
 
-        {planned_start_date:text(text)
+
+if {[exists_and_not_null customer_id]} {
+    set customer_name [organizations::name -organization_id $customer_id]
+    ad_form -extend -name add_edit \
+	-form {
+	    {customer_id:text(hidden)
+		{value $customer_id}
+	    } 
+	    {customer_name:text(inform)
+		{label "[_ project-manager.Customer]"}
+		{values "$customer_name"}
+	    }
+	}
+} else {
+    ad_form -extend -name add_edit \
+	-form {
+	    {customer_id:text(select),optional
+		{label "[_ project-manager.Customer]"}
+		{options {{"[_ project-manager.---_TBD_---]" ""} [lang::util::localize_list_of_lists -list [db_list_of_lists get_customer "select o.name, o.organization_id from organizations o order by o.name"]]}}
+	    }
+	}
+}
+
+ad_form -extend -name add_edit \
+    -form {
+	{planned_start_date:text(text)
             {label "[_ project-manager.Starts]"}
 	    {html {id sel1}}
 	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>d.m.y </b>\]
@@ -134,7 +174,7 @@ ad_form -name add_edit \
 # Check if the project will be handled on daily basis or will request hours and minutes
 #------------------------
 
-if { $daily_p } {
+if { $daily_p == "t"} {
     ad_form -extend -name add_edit -form {
 	{planned_end_time:text(hidden)
 	    {value ""}
@@ -150,28 +190,6 @@ if { $daily_p } {
     }
 }
 
-
-ad_form -extend -name add_edit -form {
-	{ongoing_p:text(select)
-            {label "[_ project-manager.Project_is_ongoing]"}
-            {options {{"[_ acs-kernel.common_no]" f} {"[_ acs-kernel.common_Yes]" t}}}
-            {value $ongoing_p}
-            {help_text "[_ project-manager.lt_If_yes_then_this_proj]"}
-        }
-        
-        {status_id:text(select)
-            {label "[_ project-manager.Status_1]"}
-            {options {[lang::util::localize_list_of_lists -list [db_list_of_lists get_status_codes { }]]}}
-        }
-
-        {variables:text(multiselect),multiple
-            {label "[_ project-manager.Logged_variables]"}
-            {options {[logger::ui::variable_options_all]}}
-            {values {$logger_values}}
-            {html {size 6}}
-        }
-
-    } 
 
 if {[exists_and_not_null project_id]} {
     if {![empty_string_p [category_tree::get_mapped_trees $package_id]]} {
@@ -191,27 +209,6 @@ if {[exists_and_not_null project_id]} {
     }
 }
 
-if {$use_goal_p} {
-    ad_form -extend -name add_edit \
-        -form {
-            {goal:text(textarea),optional
-                {label "[_ project-manager.lt_set_project_term_goal]"}
-                {value $goal}
-                {html { rows 5 cols 40 wrap soft}}}
-        } 
-}
-
-
-if {$use_project_code_p} {
-    ad_form -extend -name add_edit \
-        -form {
-            {project_code:text,optional
-                {label "[_ project-manager.lt_set_project_term_code]"}
-                {value $project_code}
-            }
-        } 
-}
-
 if {[exists_and_not_null customer_id]} {
     set dynamic_params(customer_id) $customer_id
 } elseif {[exists_and_not_null project_item_id]} {
@@ -228,7 +225,7 @@ ad_form -extend -name add_edit \
         if {[string equal $ongoing_by_default_p t]} {
             set ongoing_p t
         }
-
+	
 	set planned_end_date [dt_sysdate]
 	set planned_start_date [dt_sysdate]
 
@@ -244,7 +241,9 @@ ad_form -extend -name add_edit \
         set peeraddr [ad_conn peeraddr]
 	set folder_id [pm::util::get_root_folder -package_id $package_id]
 	set callback_data(organization_id) $customer_id
-	set callback_data(variables) $variables
+	if {[exists_and_not_null variables]} {
+	    set callback_data(variables) $variables
+	}
 	foreach {key value} $extra_data {
 	    set callback_data($key) $value
 	}
@@ -298,6 +297,9 @@ ad_form -extend -name add_edit \
 	    if {[exists_and_not_null category_ids]} {
 		category::map_object -object_id $project_id $category_ids
 	    }
+
+	    set employees_group_id [group::get_id -group_name "Employees"]
+	    permission::grant -object_id $project_item_id -party_id $employees_group_id -privilege admin
 
 	    callback pm::project_new -package_id $package_id -project_id $project_item_id -data [array get callback_data]
 	}
