@@ -482,9 +482,12 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
   <msg key="Section">Section</msg>
+  <msg key="select_assignee_in_this">Select Assigne in this project to send a message</msg>
   <msg key="Select_process">Select process:</msg>
   <msg key="Select_Project">Select Project</msg>
   <msg key="Send_email">Send email?</msg>
+  <msg key="send_mail">Send Mail</msg>
+  <msg key="send_message_to">Send message to:</msg>
   <msg key="Set_up">Set up</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
   <msg key="Slack">Slack:</msg>
