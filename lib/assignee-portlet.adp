@@ -21,6 +21,9 @@
       <li>
 	<a href="@assignee_edit_url;noquote@">#project-manager.Edit_1#</a>
       </li>
+      <li>
+        <a href="@send_email_url;noquote@">#project-manager.send_mail#</a>
+      </li>
     </ul>
   </td>
 </tr>
