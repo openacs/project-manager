@@ -225,7 +225,7 @@ template::list::create \
 	}
         status_type {
             label "[_ project-manager.Done_1]"
-            display_template {<a href="@tasks.base_url@task-add-edit?task_id=@tasks.task_item_id@&project_item_id=@tasks.project_item_id@"><if @tasks.status_type@ eq c><img border="0" src="/resources/checkboxchecked.gif" /></if><else><img border="0" src="/resources/checkbox.gif" /></else></a>
+            display_template {<a href="@tasks.task_close_url@"><if @tasks.status_type@ eq c><img border="0" src="/resources/checkboxchecked.gif" /></if><else><img border="0" src="/resources/checkbox.gif" /></else></a>
             }
         }
 	title {
@@ -309,11 +309,9 @@ template::list::create \
 	    hide_p {[ad_decode [exists_and_not_null project_item_id] 1 1 0]}
 	}
 	log_url {
-	    label "[_ project-manager.Log]"
 	    display_template {<a href="@tasks.base_url@@tasks.log_url@">L</a>}
 	}
 	edit_url {
-	    label "[_ acs-kernel.common_Edit]"
 	    display_template {<a href="@tasks.base_url@@tasks.edit_url@">E</a>}
 	}
 	percent_complete {
@@ -393,7 +391,7 @@ template::list::create \
 	}
     }
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url} tasks tasks {} {
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url} tasks tasks {} {
 
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
@@ -403,6 +401,12 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
 
     set edit_url [export_vars \
 		      -base "task-add-edit" {{task_id $task_item_id} project_item_id return_url}]
+
+    if {[parameter::get -parameter "UseDayInsteadOfHour"] == "f"} {
+	set fmt "%x %X"
+    } else {
+	set fmt "%x"
+    }
 
     set earliest_start_pretty [lc_time_fmt $earliest_start $fmt]
     set earliest_finish_pretty [lc_time_fmt $earliest_finish $fmt]
@@ -448,6 +452,7 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
 
     acs_object::get -object_id $task_item_id -array task_array
     set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]
+    set task_close_url [export_vars -base "${base_url}task-close" -url {task_item_id return_url}]
 }
 
 # ------------------------- END OF FILE -------------------------
