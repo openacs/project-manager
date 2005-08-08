@@ -9,4 +9,26 @@
     </querytext>
 </fullquery>
 
+<fullquery name="get_assignees">
+    <querytext>	
+	select	
+	        party_id,
+	        role_id
+        from
+        	pm_project_assignment a
+	where
+        	project_id = :project_item_id
+    </querytext>
+</fullquery>
+
+<fullquery name="get_dimensions_list">
+    <querytext>	
+	select 
+		dimension_key, 
+		title 
+	from 
+		rating_dimensions 
+    </querytext>
+</fullquery>
+
 </queryset>
