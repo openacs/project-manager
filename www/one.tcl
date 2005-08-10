@@ -141,5 +141,5 @@ if {[string equal $project(parent_id) $project_root]} {
 }
 
 
-ad_return_template
+ad_return_template "../templates/project-one"
 # ------------------------- END OF FILE ------------------------- #

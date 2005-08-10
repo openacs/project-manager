@@ -347,3 +347,5 @@ ad_form -extend -name add_edit \
 	}
 	ad_script_abort
 }
+
+ad_return_template "../templates/project-ae"

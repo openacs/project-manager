@@ -714,4 +714,4 @@ ad_form -extend -name task_add_edit -new_request {
     ad_script_abort
 }
 
-ad_return_template
+ad_return_template "../templates/project-taeo"

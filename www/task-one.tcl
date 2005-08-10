@@ -235,6 +235,6 @@ set notification_chunk [notification::display::request_widget \
                            ]
 
 
-ad_return_template
+ad_return_template "../templates/project-to"
 
 # ------------------------- END OF FILE ------------------------- #
