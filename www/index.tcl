@@ -19,6 +19,8 @@ ad_page_contract {
     orderby:optional
     {status_id:integer,optional}
     {searchterm ""}
+    {end_range_f ""}
+    {start_range_f ""}
     category_id:multiple,optional
     {format "normal"}
     {assignee_id ""}
@@ -34,7 +36,11 @@ ad_page_contract {
     task_term_lower:onevalue
     project_term:onevalue
     project_term_lower:onevalue
+    date_range:onevalue
 }
+
+# Sending only one value to the include
+set date_range "${start_range_f}/$end_range_f"
 
 # --------------------------------------------------------------- #
 

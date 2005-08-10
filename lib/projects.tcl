@@ -6,7 +6,7 @@
 # @cvs-id $Id$
 
 set required_param_list [list package_id]
-set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url customer_id]
+set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url customer_id end_date_f]
 set optional_unset_list [list assignee_id]
 
 foreach required_param $required_param_list {
@@ -126,6 +126,28 @@ if {![empty_string_p $searchterm]} {
     set search_term_where ""
 }
 
+##############################################
+# Filter for planned_end_date
+if { ![empty_string_p $date_range] } {
+    set start_range_f [lindex [split $date_range "/"] 0]
+    set end_range_f [lindex [split $date_range "/"] 1]
+    if {![empty_string_p $start_range_f] && ![empty_string_p $end_range_f]} {
+	set p_range_where "to_char(p.planned_end_date,'YYYY-MM-DD') >= :start_range_f and
+                       to_char(p.planned_end_date,'YYYY-MM-DD') <= :end_range_f"
+    } else {
+	if {![empty_string_p $start_range_f] } {
+	    set p_range_where "to_char(p.planned_end_date,'YYYY-MM-DD') >= :start_range_f"
+	} elseif { ![empty_string_p $end_range_f] } {
+	    set p_range_where "to_char(p.planned_end_date,'YYYY-MM-DD') <= :end_range_f"
+	} else {
+	    set p_range_where ""
+	}
+    }
+} else {
+    set p_range_where ""
+}
+
+##############################################
 
 set default_orderby [pm::project::index_default_orderby]
 
@@ -226,6 +248,10 @@ template::list::create \
             label "[_ project-manager.Search_1]"
             where_clause {$search_term_where}
         }
+	date_range {
+	    label "[_ project-manager.Planned_end_date]"
+	    where_clause {$p_range_where}
+	}
         status_id {
             label "[_ project-manager.Status_1]" 
             values {[pm::status::project_status_select]}
