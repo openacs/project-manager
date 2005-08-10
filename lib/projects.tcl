@@ -7,7 +7,7 @@
 
 set required_param_list [list package_id]
 set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url customer_id end_date_f]
-set optional_unset_list [list assignee_id]
+set optional_unset_list [list assignee_id date_range]
 
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
@@ -128,7 +128,7 @@ if {![empty_string_p $searchterm]} {
 
 ##############################################
 # Filter for planned_end_date
-if { ![empty_string_p $date_range] } {
+if {[exists_and_not_null date_range] } {
     set start_range_f [lindex [split $date_range "/"] 0]
     set end_range_f [lindex [split $date_range "/"] 1]
     if {![empty_string_p $start_range_f] && ![empty_string_p $end_range_f]} {
