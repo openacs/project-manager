@@ -6,7 +6,7 @@
 # @cvs-id $Id$
 
 set required_param_list [list package_id]
-set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url customer_id end_date_f]
+set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url end_date_f]
 set optional_unset_list [list assignee_id date_range]
 
 foreach required_param $required_param_list {

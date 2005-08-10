@@ -113,7 +113,7 @@ if {![empty_string_p $searchterm]} {
 
     if {[info exists party_id]} {
         unset party_id
-    }
+    } 
 
     if {[regexp {([0-9]+)} $searchterm match query_digits]} {
         set search_term_where " (upper(t.title) like upper('%$searchterm%')
@@ -169,6 +169,20 @@ foreach element $elements {
 	set element "actual_${days_string}_worked"
     }
 
+
+    # We need to filter by the user if a party_id is given
+    if {[exists_and_not_null party_id]} {
+	set party_where_clause "and t.party_id = :party_id"
+
+	# Do we want to show observer tasks as well?
+	if {[parameter::get -parameter "ShowObserverTasksP"] == 0} {
+	    append party_where_clause "\n and r.is_observer_p = 'f' "
+	}
+    } else {
+	set party_where_clause ""
+    }
+
+
     # If we display the items of a single user, show the role. Otherwise
     # show all players.
 
@@ -188,7 +202,7 @@ foreach element $elements {
 						label "[_ project-manager.People]" \
 						values "[pm::task::assignee_filter_select \
 -status_id $status_id]" \
-						where_clause "ta.party_id = :party_id"
+						where_clause ""
 					   ]
 			    ]
 	}

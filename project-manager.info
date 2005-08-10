@@ -7,14 +7,14 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.0d8" url="http://openacs.org/repository/download/apm/project-manager-3.0d8.apm">
+    <version name="3.0d13" url="http://openacs.org/repository/download/apm/project-manager-3.0d13.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <summary>Project management tool for OpenACS</summary>
         <release-date>2005-01-13</release-date>
         <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
 
-        <provides url="project-manager" version="3.0d8"/>
+        <provides url="project-manager" version="3.0d13"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.1.3"/>
         <requires url="acs-templating" version="5.1.6d1"/>
@@ -44,7 +44,11 @@
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseSubprojectsP"  default="1" description="Currently, subprojects are implemented in the data model, but they are not perfectly reflected in the UI. So they work about 90%. By default, the option to see and manipulate subprojects is not included. You can allow it if you would prefer to see subprojects. Changing this value does nothing to your data, it just hides subproject options." section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseUncertainCompletionTimesP"  default="1" description="Uses PERT-style completion times, which factors in uncertainty into calculations and allows for probability estimates for on-time project completion. Set to 1 to use." section_name="PERT"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseUserProjectCodesP"  default="1" description="If set to 1, then the user can set user-specified project codes. Otherwise, not shown" section_name="projects"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packagesproject-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectAdd"  default="/packages/project-manager/templates/project-ae" description="The template for adding/editing of an individual project" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskOne"  default="/packages/project-manager/templates/task-one" description="The template for the display of an individual task" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>
         </parameters>
-
     </version>
 </package>

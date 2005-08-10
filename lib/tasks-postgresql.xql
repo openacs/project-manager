@@ -82,6 +82,7 @@
         t.revision_id   = i.live_revision and
         t.item_id       = ti.task_id and
         ti.status       = s.status_id
+	$party_where_clause
 	and ar.object_id_one = t.parent_id
 	and ar.rel_type = 'application_data_link'
 	and o.object_id = ar.object_id_two
