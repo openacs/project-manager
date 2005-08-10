@@ -424,6 +424,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Percents_complete">Percents complete</msg>
   <msg key="Plain_Text">Plain Text</msg>
   <msg key="Planned_end_date">Planned end date</msg>
+  <msg key="planned_end_date_between">Planned end date between:</msg>
   <msg key="Planned_end_dates">Planned end dates</msg>
   <msg key="Planned_start_date">Planned start date</msg>
   <msg key="Planned_start_dates">Planned start dates</msg>
@@ -496,6 +497,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Slack_time">Slack time</msg>
   <msg key="Sort_order">Sort order</msg>
   <msg key="Start">Start</msg>
+  <msg key="Start_date">Start date</msg>
   <msg key="Starting">Starting...</msg>
   <msg key="Starts">Starts</msg>
   <msg key="Status">Status:</msg>
