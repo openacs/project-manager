@@ -1982,7 +1982,8 @@ ad_proc -public pm::project::assigned_p {
 
 
 ad_proc -public pm::project::name {
-    -project_item_id:required
+    -project_item_id
+    -project_id
 } {
     Returns the name for a project
     
@@ -1995,18 +1996,30 @@ ad_proc -public pm::project::name {
     
     @error 
 } {
-    return [db_string get_name {
-        SELECT
-        title
-        FROM
-        cr_revisions p,
-        cr_items i
-        WHERE
-        i.live_revision = p.revision_id
-        and i.item_id = :project_item_id
-    } -default ""]
-}
 
+    if {[exists_and_not_null project_item_id]} {
+        return [db_string get_name {
+            SELECT
+            title
+            FROM
+            cr_revisions p,
+            cr_items i
+            WHERE
+            i.live_revision = p.revision_id
+            and i.item_id = :project_item_id
+        } -default ""]
+    } else {
+        return [db_string get_name {
+            SELECT
+            title
+            FROM
+            pm_projectsx
+            WHERE
+            project_id = :project_id
+        } -default ""]
+    }
+}        
+    
 
 ad_proc -public pm::project::url {
     -project_item_id:required

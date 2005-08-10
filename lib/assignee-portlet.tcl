@@ -20,6 +20,9 @@ foreach optional_param {} {
 
 set user_id     [auth::require_login]
 
+# Get the URL for contacts
+set contacts_url [site_node::get_package_url -package_key contacts]
+
 # Send Email URL
 set send_email_url "send-mail?project_id=$project_id"
 
@@ -41,25 +44,40 @@ if {$assigned_p} {
 
 set assignee_edit_url [export_vars -base project-assign-edit {project_item_id return_url}]
 
-db_multirow people project_people_query { }
+db_multirow -extend {contact_url complaint_url} people project_people_query {} {
+    
+    # If contacts is installed provide a link to the contacts party_id, otherwise don't
+    if {![empty_string_p $contacts_url]} {
+        set contact_url "${contacts_url}$party_id"
+        set complaint_url [export_vars -base "${contacts_url}complaint-ae" {{project_id $project_id} {supplier_id $party_id}}]
+    } else {
+        set contact_url ""
+    }
+ }
+
+set elements [list \
+                  user_name [list \
+                                 label "[_ project-manager.Who]" \
+                                 display_template {<if @people.is_lead_p@><i></if>
+                                     <a href="@people.contact_url@">@people.user_name@</a>
+                                     <if @people.is_lead_p@></i></if>
+                                 } \
+                             ] \
+                  role_name [list \
+                                 label "[_ project-manager.Role]" \
+                             ] \
+                  complaint [list \
+                                 label "[_ contacts.Complaint]" \
+                                 display_template {<a href="@people.complaint_url@">[_ project-manager.Add_complaint]</a>
+                                 } \
+                             ] \
+                  ]
 
 template::list::create \
     -name people \
     -multirow people \
     -key item_id \
-    -elements {
-        user_name {
-            label "[_ project-manager.Who]"
-            display_template {
-                <if @people.is_lead_p@><i></if>
-                @people.user_name@
-                <if @people.is_lead_p@></i></if>
-            }
-        }
-        role_name {
-            label "[_ project-manager.Role]"
-        }
-    } \
+    -elements $elements \
     -sub_class {
         narrow
     } \

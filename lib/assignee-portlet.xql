@@ -13,6 +13,7 @@
         a.project_id,
         r.one_line as role_name,
         p.first_names || ' ' || p.last_name as user_name,
+        a.party_id,
         r.is_lead_p
         FROM 
         pm_project_assignment a,
