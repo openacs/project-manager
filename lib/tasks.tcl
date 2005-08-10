@@ -317,9 +317,7 @@ template::list::create \
 	}
 	project_item_id {
 	    label "[_ project-manager.Project_1]"
-	    display_col project_name
-	    link_url_eval {[export_vars \
-				-base one {project_item_id $tasks(project_item_id)}]}
+	    display_template {<a href="@tasks.project_url@">@tasks.project_name@</a>}
 	    hide_p {[ad_decode [exists_and_not_null project_item_id] 1 1 0]}
 	}
 	log_url {
@@ -405,7 +403,7 @@ template::list::create \
 	}
     }
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url} tasks tasks {} {
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url} tasks tasks {} {
 
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
@@ -467,6 +465,7 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
     acs_object::get -object_id $task_item_id -array task_array
     set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]
     set task_close_url [export_vars -base "${base_url}task-close" -url {task_item_id return_url}]
+    set project_url [export_vars -base "${base_url}one" {project_item_id $tasks(project_item_id)}]
 }
 
 # ------------------------- END OF FILE -------------------------
