@@ -298,8 +298,12 @@ ad_form -extend -name add_edit \
 		category::map_object -object_id $project_id $category_ids
 	    }
 
+	    # We need to check if the group exists before trying to
+	    # give the group privileges
 	    set employees_group_id [group::get_id -group_name "Employees"]
-	    permission::grant -object_id $project_item_id -party_id $employees_group_id -privilege admin
+	    if { ![empty_string_p $employees_group_id] } {
+		permission::grant -object_id $project_item_id -party_id $employees_group_id -privilege admin
+	    }
 
 	    callback pm::project_new -package_id $package_id -project_id $project_item_id -data [array get callback_data]
 	}
