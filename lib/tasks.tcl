@@ -154,7 +154,7 @@ set filters [list \
 				      where_clause "t.parent_id = :project_item_id"
 				 ] \
 		 instance_id [list \
-				  where_clause "p.parent_id = :instance_id"
+				  where_clause "p.object_package_id = :instance_id"
 			     ] \
 		]
 
