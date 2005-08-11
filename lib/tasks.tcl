@@ -3,7 +3,7 @@
 # role_id
 
 set required_param_list [list]
-set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url]
+set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url watcher_p page_num]
 set optional_unset_list [list party_id role_id project_item_id instance_id]
 
 foreach required_param $required_param_list {
@@ -175,9 +175,16 @@ foreach element $elements {
 	set party_where_clause "and t.party_id = :party_id"
 
 	# Do we want to show observer tasks as well?
-	if {[parameter::get -parameter "ShowObserverTasksP"] == 0} {
-	    append party_where_clause "\n and r.is_observer_p = 'f' "
+	if {$watcher_p == 1} {
+	    append party_where_clause "\n and r.is_observer_p = 't' "
+	    set actions [list "[_ project-manager.View_Active]" [export_vars -base "[ad_conn url]" {{watcher_p 0} page_num}] "[_ project-manager.View_only_Active]"]
+	} else {
+	    if {[parameter::get -parameter "ShowObserverTasksP" -default 0] == 0} {
+		append party_where_clause "\n and r.is_observer_p = 'f' "
+	    }
+	    set actions [list "[_ project-manager.View_Watcher]" [export_vars -base "[ad_conn url]" {{watcher_p 1} page_num}] "[_ project-manager.View_only_Observer]"]
 	}
+       
     } else {
 	set party_where_clause ""
     }
@@ -219,10 +226,10 @@ if {$bulk_p == 1} {
 }
 
 if {$actions_p == 1} {
-    set actions [list "[_ project-manager.Add_task]" [export_vars \
+#    set actions [list "[_ project-manager.Add_task]" [export_vars \
 							  -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
 } else {
-    set actions [list]
+#    set actions [list "[_ project-manager.Watcher]" [export_vars -base "[ad_conn url]" {{watcher_p 1} page_num}] "[_ project_manager.Watcher]"]
 }
 
 template::list::create \

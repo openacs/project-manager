@@ -226,6 +226,9 @@ template::list::create \
             label "[_ project-manager.Latest_Finish]"
             display_template "<if @projects_${package_id}.days_to_latest_finish@ gt 1>@projects_${package_id}.latest_finish_date@</if><else><font color=\"red\">@projects_${package_id}.latest_finish_date@</font></else>"
         }
+        planned_end_date {
+            label "[_ project-manager.Latest_Finish]"
+        }
         actual_hours_completed {
             label "[_ project-manager.Hours_completed]"
             display_template "@projects_${package_id}.actual_hours_completed@/@projects_${package_id}.estimated_hours_total@"
