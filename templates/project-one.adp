@@ -1,4 +1,5 @@
 <master src="../www/lib/master" />
+
 <if @project.status_type@ eq c>
   <property name="title">@my_title;noquote@ -- #project-manager.Closed#</property>
 </if>
