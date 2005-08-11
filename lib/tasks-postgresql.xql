@@ -142,6 +142,7 @@
         t.revision_id   = i.live_revision and
         t.item_id       = ti.task_id and
         ti.status       = s.status_id
+	$party_where_clause
         and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = ti.task_id
                     and ppm.privilege = 'read'
