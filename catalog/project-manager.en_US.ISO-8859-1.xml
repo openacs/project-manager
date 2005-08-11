@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.0d8" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.0d13" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -23,6 +23,7 @@
   <msg key="Add_a_task">Add a task</msg>
   <msg key="Add_assignment">Add assignment</msg>
   <msg key="Add_comment">Add comment</msg>
+  <msg key="Add_complaint">Add complaint</msg>
   <msg key="Add_myself_as">Add myself as</msg>
   <msg key="Add_process">Add process</msg>
   <msg key="Add_project">Add project</msg>
