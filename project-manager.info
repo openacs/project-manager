@@ -7,48 +7,50 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.0d13" url="http://openacs.org/repository/download/apm/project-manager-3.0d13.apm">
+    <version name="3.0d14" url="http://openacs.org/repository/download/apm/project-manager-3.0d14.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <summary>Project management tool for OpenACS</summary>
-        <release-date>2005-01-13</release-date>
+        <release-date>2005-08-12</release-date>
         <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
+        <maturity>0</maturity>
 
-        <provides url="project-manager" version="3.0d13"/>
+        <provides url="project-manager" version="3.0d14"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.1.3"/>
         <requires url="acs-templating" version="5.1.6d1"/>
         <requires url="calendar" version="2.0.1"/>
         <requires url="categories" version="1.0d5"/>
+        <requires url="dynamic-types" version="0.1"/>
         <requires url="general-comments" version="4.0"/>
         <requires url="logger" version="1.1b2"/>
         <requires url="notifications" version="5.0.0a5"/>
         <requires url="organizations" version="0.3d"/>
-        <requires url="dynamic-types" version="0.1"/>
         <requires url="ratings" version="0.1d1"/>
 
         <callbacks>
-            <callback type="after-install" proc="pm::install::package_install"/>
-            <callback type="after-instantiate" proc="pm::install::package_instantiate"/>
-            <callback type="after-upgrade" proc="pm::install::after_upgrade"/>
-            <callback type="before-uninstantiate" proc="pm::install::package_uninstantiate"/>
+            <callback type="after-install"  proc="pm::install::package_install"/>
+            <callback type="after-instantiate"  proc="pm::install::package_instantiate"/>
+            <callback type="after-upgrade"  proc="pm::install::after_upgrade"/>
+            <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
         </callbacks>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectAdd"  default="/packages/project-manager/templates/project-ae" description="The template for adding/editing of an individual project" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packagesproject-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="SendDailyEmail"  default="0" description="Whether or not to send a daily email reminder to all people who are assigned tasks. A 1 indicates yes, and a 0 indicates no." section_name="email"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskOne"  default="/packages/project-manager/templates/task-one" description="The template for the display of an individual task" section_name="Templates"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="UseDayInsteadOfHour"  default="f" description="Use day measurements instead of hour measurements. t or f." section_name="project-manager"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseGoalP"  default="1" description="If set to 1, then shows the option of including project goals" section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseProjectCustomizationsP"  default="0" description="This allows you to use the project-manager-custom-create and drop scripts to add extra columns to your projects table. When creating or editing a project, you will have a second page that you can customize for your company's specific needs, add-edit-2. If you have set up no customization, set to 0, otherwise, set to 1. You should leave this set to 0 unless you have a programmer who has done local modifications to the code!" section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseSubprojectsP"  default="1" description="Currently, subprojects are implemented in the data model, but they are not perfectly reflected in the UI. So they work about 90%. By default, the option to see and manipulate subprojects is not included. You can allow it if you would prefer to see subprojects. Changing this value does nothing to your data, it just hides subproject options." section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseUncertainCompletionTimesP"  default="1" description="Uses PERT-style completion times, which factors in uncertainty into calculations and allows for probability estimates for on-time project completion. Set to 1 to use." section_name="PERT"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseUserProjectCodesP"  default="1" description="If set to 1, then the user can set user-specified project codes. Otherwise, not shown" section_name="projects"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packagesproject-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectAdd"  default="/packages/project-manager/templates/project-ae" description="The template for adding/editing of an individual project" section_name="Templates"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskOne"  default="/packages/project-manager/templates/task-one" description="The template for the display of an individual task" section_name="Templates"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>
         </parameters>
+
     </version>
 </package>

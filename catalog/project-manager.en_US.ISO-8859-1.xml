@@ -390,6 +390,9 @@ allows the system to automatically compute schedules. However, you can
   <msg key="lt_you_need_to_start_wor">you need to start working on these soon to avoid affecting deadlines</msg>
   <msg key="Max">Max:</msg>
   <msg key="Min">Min:</msg>
+  <msg key="move_help">Choose one project to move the task to.</msg>
+  <msg key="Move_task">Move Task</msg>
+  <msg key="Move_task_to">Move task to project:</msg>
   <msg key="na">n/a</msg>
   <msg key="Name">Name</msg>
   <msg key="Name_1">Name:</msg>
@@ -412,8 +415,10 @@ allows the system to automatically compute schedules. However, you can
   <msg key="One_line_description">One line description</msg>
   <msg key="One_process">One process</msg>
   <msg key="One_project_term">One %project_term%</msg>
+  <msg key="one_task">One Task</msg>
   <msg key="Ongoing">Ongoing</msg>
   <msg key="Open">Open</msg>
+  <msg key="or_search_for">Or search for another project:</msg>
   <msg key="Order">Order</msg>
   <msg key="Overdue_Tasks">Overdue Tasks</msg>
   <msg key="Overview_of_process">Overview of process:</msg>
@@ -477,12 +482,14 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Remove_myself">Remove myself</msg>
   <msg key="Removed">Removed</msg>
   <msg key="Removed_old">Removed: %old%</msg>
+  <msg key="Results">Results:</msg>
   <msg key="Role">Role</msg>
   <msg key="Role_ID">Role ID</msg>
   <msg key="Roles">Roles</msg>
   <msg key="Search">Search:</msg>
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
+  <msg key="search_help">Enter a keyword to search for projects.</msg>
   <msg key="Section">Section</msg>
   <msg key="select_assignee_in_this">Select Assigne in this project to send a message</msg>
   <msg key="Select_process">Select process:</msg>

@@ -2686,3 +2686,90 @@ ad_proc -public pm::task::today_html {
 
     return $return_val
 }
+
+ad_proc -public pm::task::move {
+    -task_item_id:required
+    -project_item_id:required
+} {
+    Moves one task from one project to another project.
+
+    @author Miguel Marin (miguelmarin@viaro.net)
+    @author Viaro Networks www.viaro.net
+    @creation-date 2005-08-12
+
+    @param task_item_id  The task_item_id of the task to move
+    @param project_item_id The project_item_id of the project to move the task into.
+} {
+    # Get the package_id of the project where the task will be created
+    set project_package_id [db_string get_project_package_id { }]
+    set user_id [ad_conn user_id]
+    permission::require_permission -party_id $user_id  -object_id $project_item_id -privilege create
+
+    pm::task::get -tasks_item_id $task_item_id \
+	-one_line_array one_line \
+	-description_array description \
+	-description_mime_type_array mime_type_array \
+	-estimated_hours_work_array estimated_hours_work \
+	-estimated_hours_work_min_array estimated_hours_work_min \
+	-estimated_hours_work_max_array estimated_hours_work_max \
+	-dependency_array dependency_array \
+	-percent_complete_array percent_complete \
+	-end_date_day_array end_date_day \
+	-end_date_month_array end_date_month \
+	-end_date_year_array end_date_year \
+	-project_item_id_array project_item_id_array \
+	-priority_array priority
+    
+    set end_date "$end_date_year($task_item_id)-$end_date_month($task_item_id)-$end_date_day($task_item_id)"
+
+    set new_task_id [pm::task::new \
+			 -project_id $project_item_id \
+			 -title "$one_line($task_item_id)" \
+			 -description "$description($task_item_id)" \
+			 -mime_type $mime_type_array($task_item_id) \
+			 -end_date $end_date \
+			 -percent_complete "$percent_complete($task_item_id)" \
+			 -estimated_hours_work "$estimated_hours_work($task_item_id)" \
+			 -estimated_hours_work_min "$estimated_hours_work_min($task_item_id)" \
+			 -estimated_hours_work_max "$estimated_hours_work_max($task_item_id)" \
+			 -creation_date [dt_sysdate] \
+			 -creation_user $user_id \
+			 -creation_ip [ad_conn peeraddr] \
+			 -package_id $project_package_id \
+			 -priority $priority($task_item_id)]
+
+    db_dml update_extra_info { }
+    
+    set task_revision_id [pm::task::get_revision_id -task_item_id $task_item_id]
+    set new_task_revision_id [pm::task::get_revision_id -task_item_id $new_task_id]
+
+    db_1row get_original_times { }
+
+    db_dml update_task_times { }
+
+    # Add all assignees
+    set assignee_list [pm::task::assignee_role_list -task_item_id $task_item_id]
+    foreach assignee $assignee_list {
+	pm::task::assign \
+	    -task_item_id $new_task_id \
+	    -party_id     [lindex $assignee 0] \
+	    -role_id      [lindex $assignee 1]
+    }
+        
+    # Add in dependencies
+    set dependency $dependency_array($task_item_id)    
+    if {[exists_and_not_null dependency]} {
+	pm::task::dependency_add \
+	    -task_item_id    $new_task_id \
+	    -parent_id       $dependency \
+	    -dependency_type finish_before_start \
+	    -project_item_id $project_item_id
+    }
+    
+    callback pm::task_new -package_id $project_package_id -task_id $new_task_id
+
+    # Delete the task
+    pm::task::delete -task_item_id $task_item_id
+
+    return $new_task_id
+}

@@ -39,4 +39,57 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="pm::task::move.get_project_package_id">
+    <querytext>
+	select 
+		package_id 
+	from 
+		acs_objects 
+	where 
+		object_id =:project_item_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::task::move.update_extra_info">
+    <querytext>
+	update 
+		pm_tasks
+	set 
+		task_number = 1, 
+		status = 1
+	where
+		task_id = :new_task_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::task::move.get_original_times">
+    <querytext>
+	select
+		earliest_start,
+ 		earliest_finish,
+ 		latest_start,
+	 	latest_finish
+	from
+		pm_tasks_revisions
+	where
+		task_revision_id = :task_revision_id
+    </querytext>
+  </fullquery>
+
+
+  <fullquery name="pm::task::move.update_task_times">
+    <querytext>
+	update 
+		pm_tasks_revisions
+	set 
+		earliest_start  = :earliest_start,
+ 		earliest_finish = :earliest_finish,
+ 		latest_start    = :latest_start,
+	 	latest_finish   = :latest_finish
+	where
+		task_revision_id = :new_task_revision_id
+    </querytext>
+  </fullquery>
+
+
 </queryset>
