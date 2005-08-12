@@ -30,6 +30,10 @@ set richtext_list [list $project(description) $project(mime_type)]
 set project(description) [template::util::richtext::get_property html_value $richtext_list]
 set project_root [pm::util::get_root_folder]
 
+if {![exists_and_not_null fmt]} {
+    set fmt "%x"
+}
+
 set project(planned_start_date) [lc_time_fmt $project(planned_start_date) $fmt]
 set project(planned_end_date)   [lc_time_fmt $project(planned_end_date) $fmt]
 set project(estimated_finish_date) [lc_time_fmt $project(estimated_finish_date) $fmt]
@@ -56,6 +60,21 @@ if {[array exists dattr]} {
 	    multirow append dynamic_attributes "[_ acs-translations.pm_project_$attr]" $dattr($attr)
 	}
     }
+}
+
+# categories
+
+set cat_trees [list]
+set cat_list [category::get_mapped_categories $project_id]
+foreach cat $cat_list {
+    set tree_id [category::get_tree $cat]
+    lappend cat_trees [list [category_tree::get_name $tree_id] [category::get_name $cat] $tree_id]
+}
+
+multirow create categories tree_id tree_name category_name
+foreach cat [lsort -dictionary -index 0 $cat_trees] {
+    util_unlist $cat tree_name cat_name tree_id
+    multirow append categories $tree_id $tree_name $cat_name
 }
 
 set project_links ""
