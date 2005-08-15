@@ -32,13 +32,6 @@
       />
     <p />
   </if>
-  <include
-    src="/packages/project-manager/lib/comments-portlet"
-    project_id="@project_id@"
-    project_item_id="@project_item_id@"
-    return_url="@return_url@" />
-</td>
-  <td valign="top">
     <include
       src="/packages/project-manager/lib/tasks-portlet"
       project_id="@project_id@"
@@ -48,6 +41,17 @@
       fmt=@fmt@ 
 	/>
     <p />
+  <include
+    src="/packages/project-manager/lib/fs-portlet"
+    folder_id="@folder_id@" />
+	<p />
+  <include
+    src="/packages/project-manager/lib/comments-portlet"
+    project_id="@project_id@"
+    project_item_id="@project_item_id@"
+    return_url="@return_url@" />
+<p /> 
+
     <include
       src="/packages/project-manager/lib/logger-portlet"
       project_item_id="@project_item_id@"
@@ -82,8 +86,11 @@
 	project_id="@project_id@"
 	project_item_id="@project_item_id@"
 	return_url="@return_url@" />
-    </td>
-    <td width="50%" valign="top">
+      <include
+	src="/packages/project-manager/lib/comments-portlet"
+	project_id="@project_id@"
+	project_item_id="@project_item_id@"
+	return_url="@return_url@" />
       <include
 	src="/packages/project-manager/lib/tasks-portlet"
 	project_id="@project_id@"
@@ -115,8 +122,5 @@
 	  forum_id="@forum_id@" />
       </if>
       <p />
-      <if @folder_id@ ge 0>
-	<include
-	  src="/packages/project-manager/lib/fs-portlet"
-	  folder_id="@folder_id@" />
-      </if>
+
+
