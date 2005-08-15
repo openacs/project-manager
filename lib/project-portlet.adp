@@ -28,7 +28,16 @@
 	    <td class="fill-list-bg">@project.project_code@</td>
 	  </tr>
 	</if>
-	<if @use_goal_p@ eq 1>
+	  <tr>
+	    <td class="highlight">#project-manager.Customer#</td>
+            <if @project.customer_name@ ne "">
+              <td class="fill-list-bg"><a href="@contacts_url@@project.customer_id@">@project.customer_name@</td>
+            </if> 
+            <else>
+	      <td class="fill-list-bg">@project.customer_id@</td>
+            </else>
+	  </tr>
+       	<if @use_goal_p@ eq 1>
 	  <tr>
 	    <td class="highlight">#project-manager.Goal_1#</td>
 	    <td class="fill-list-bg">@project.goal@</td>
@@ -41,7 +50,7 @@
 		    <b>#project-manager.Open#</b> / <i><a title="#project-manager.Close_project#" href=@close_url@>#project-manager.Close#</a></i>
 		</if>
 	        <else>
-		    <b>#project-manager.Closed#</b> <small>(<a title="Rate this project#" href=@rate_url@>Rate</a>)</small>
+		    <b>#project-manager.Closed#</b> <small>(<a title="#project-manager.Rate_this_project#" href=@rate_url@>#project-manager.Rate#</a>)</small>
 		</else>
 	  </td>
 	</tr>
