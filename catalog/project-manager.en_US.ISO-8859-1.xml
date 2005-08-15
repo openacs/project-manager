@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.0d13" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.0d14" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -474,7 +474,9 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Projects">Projects</msg>
   <msg key="Projects_ongoing">Projects ongoing</msg>
   <msg key="Quantity">Quantity:</msg>
+  <msg key="Rate">Rate</msg>
   <msg key="rate">Rate</msg>
+  <msg key="Rate_this_project">Rate this project</msg>
   <msg key="rate_this_project">Rate This Project</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>
   <msg key="Remaining_work">Remaining Work</msg>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.0d13" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.0d14" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--All_Categories--">--Alle Kategorien--</msg>
@@ -112,11 +112,14 @@
   <msg key="Project_name">Names des Projekts</msg>
   <msg key="Project_Search">Suche nach Projekt:</msg>
   <msg key="Projects">Projekte</msg>
+  <msg key="Rate">Bewertung</msg>
+  <msg key="Rate_this_project">Bewertung der Mitarbeiter des Projektes</msg>
   <msg key="Related_task_terms">Zugehörige %task_term%n</msg>
   <msg key="Remaining_work">Verbleibende Arbeit</msg>
   <msg key="Role">Rolle</msg>
   <msg key="Search">Suchen:</msg>
   <msg key="Select_Project">Projekt wählen</msg>
+  <msg key="send_mail">Nachricht versenden</msg>
   <msg key="Slack">Pufferzeit:</msg>
   <msg key="Slack_1">Puffer-&lt;br&gt;zeit</msg>
   <msg key="Start">Start</msg>
