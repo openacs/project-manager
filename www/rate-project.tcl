@@ -32,9 +32,15 @@ ad_form -name rate_project -form {
 set users_list [list]
 db_multirow -extend { label } assignees get_assignees { } {
     set assignee_id $party_id
-    acs_user::get -user_id $assignee_id -array user_info
-    set role [pm::role::name -role_id $role_id]
-    set label "$user_info(first_names) $user_info(last_name) ($role):"
+    set role [pm::role::name -role_id $role_id]    
+
+    if {[apm_package_url_from_key "contacts"] == ""} {
+	acs_user::get -user_id $assignee_id -array user_info
+	set label "$user_info(first_names) $user_info(last_name) ($role):"
+    } else {
+	set label "[contact::name -party_id $assignee_id] ($role):"
+    }
+
     lappend users_list [list $party_id $label]
 }
 
