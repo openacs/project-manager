@@ -556,12 +556,14 @@ allows the system to automatically compute schedules. However, you can
   <msg key="View">View</msg>
   <msg key="View_all_tasks">View all tasks</msg>
   <msg key="View_customers">View customers</msg>
+  <msg key="View_only_Observer">View only tasks where you are an observer</msg>
   <msg key="View_options">View options</msg>
   <msg key="View_project_changes">View project changes</msg>
   <msg key="View_Revisions">View Revisions</msg>
   <msg key="View_task_changes">View task changes</msg>
   <msg key="View_this_revision">View this revision</msg>
   <msg key="View_this_task">View this task</msg>
+  <msg key="View_Watcher">View Watcher tasks</msg>
   <msg key="Watcher">Watcher</msg>
   <msg key="Who">Who</msg>
   <msg key="Work">Work</msg>

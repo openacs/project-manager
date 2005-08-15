@@ -21,7 +21,7 @@
   <msg key="Close">Schlieﬂen</msg>
   <msg key="Close_project">Projekt schlieﬂen</msg>
   <msg key="Closed">Abgeschlossen</msg>
-  <msg key="Code_1">Code:</msg>
+  <msg key="Code_1">Jobnummer:</msg>
   <msg key="Comment">Kommentar:</msg>
   <msg key="Comments">Kommentare</msg>
   <msg key="Complete">Fertig:</msg>
@@ -64,7 +64,7 @@
   <msg key="Latest_finish">Sp‰testes Ende</msg>
   <msg key="Latest_Start">Sp‰tester Start</msg>
   <msg key="Latest_start">Sp‰tester Start</msg>
-  <msg key="Lead">Lead</msg>
+  <msg key="Lead">Verantwortlicher</msg>
   <msg key="LF">LF</msg>
   <msg key="Link_task">Aufgabe verbinden:</msg>
   <msg key="Log">Log</msg>
@@ -82,9 +82,9 @@
   <msg key="lt_projectactual_hours_c">%project.actual_hours_completed% von %project.estimated_hours_total%</msg>
   <msg key="lt_Send_email_to_assigne">e-Mail an Beteiligte schicken?</msg>
   <msg key="lt_set_according_to_task">Von den Aufgabenzuteilungen aus zuteilen</msg>
-  <msg key="lt_set_project_term_code">%project_term%code</msg>
+  <msg key="lt_set_project_term_code">%project_term%nummer</msg>
   <msg key="lt_set_project_term_goal">%project_term%ziel</msg>
-  <msg key="lt_set_project_term_name">%project_term%name</msg>
+  <msg key="lt_set_project_term_name">%project_term%ID</msg>
   <msg key="lt_Set_to_100_to_close_t">Auf 100 setzen, um diese Aufgabe zu schlieﬂen.</msg>
   <msg key="lt_task_terms_depending_">%task_term%n die von dieser %task_term% abh‰ngen</msg>
   <msg key="lt_task_terms_this_depen">%task_term%n von denen diese Aufgabe  abh‰ngt.</msg>
@@ -93,7 +93,7 @@
   <msg key="Max">Max:</msg>
   <msg key="Min">Min:</msg>
   <msg key="na">n/a</msg>
-  <msg key="Name_1">Name:</msg>
+  <msg key="Name_1">Job ID:</msg>
   <msg key="New_project_term">Neues %project_term%</msg>
   <msg key="New_task_term">Neue %task_term%</msg>
   <msg key="No">Nein</msg>
@@ -102,11 +102,11 @@
   <msg key="Open">Offen</msg>
   <msg key="Percent_complete">% komplett</msg>
   <msg key="Plain_Text">Nur Text</msg>
-  <msg key="Player">Player</msg>
+  <msg key="Player">Bearbeiter</msg>
   <msg key="Priority">Priorit‰t:</msg>
   <msg key="Priority_1">Priorit‰t</msg>
   <msg key="Processes">Prozesse</msg>
-  <msg key="Project">Projekt</msg>
+  <msg key="Project">Job</msg>
   <msg key="Project_1">Projekt</msg>
   <msg key="Project_is_ongoing">Laufendes Projekt?</msg>
   <msg key="Project_name">Names des Projekts</msg>

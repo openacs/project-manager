@@ -66,9 +66,9 @@ if {[parameter::get \
     set days_string "hours"
 }
 
-set exporting_vars {status_id party_id orderby}
+set exporting_vars {status_id party_id orderby page_num}
 set hidden_vars [export_vars \
-		     -form $exporting_vars]
+		     -no_empty -form $exporting_vars]
 
 # how to get back here
 
@@ -158,6 +158,15 @@ set filters [list \
 			     ] \
 		]
 
+# Setup the actions, so we can append the rest later on
+if {$actions_p == 1} {
+    set actions [list "[_ project-manager.Add_task]" [export_vars \
+							  -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
+} else {
+    set actions [list]
+}
+
+
 foreach element $elements {
 
     # Special treatement for days / hours
@@ -168,7 +177,6 @@ foreach element $elements {
     if {$element == "worked"} {
 	set element "actual_${days_string}_worked"
     }
-
 
     # We need to filter by the user if a party_id is given
     if {[exists_and_not_null party_id]} {
@@ -223,13 +231,6 @@ if {$bulk_p == 1} {
 } else {
     set bulk_actions [list]
     set bulk_action_export_vars [list]
-}
-
-if {$actions_p == 1} {
-#    set actions [list "[_ project-manager.Add_task]" [export_vars \
-							  -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
-} else {
-#    set actions [list "[_ project-manager.Watcher]" [export_vars -base "[ad_conn url]" {{watcher_p 1} page_num}] "[_ project_manager.Watcher]"]
 }
 
 template::list::create \
