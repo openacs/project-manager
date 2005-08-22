@@ -2,6 +2,7 @@
 <property name="portlet_title">
   @write_html;noquote@&nbsp;&nbsp;@project_term@ @project.project_name@
   </property>
+<!-- Project Portlet Start -->
 <table width="100%">
   <tr>
     <td bgcolor="#eeeeee" colspan="2" class="fill-list-bottom">
@@ -25,12 +26,6 @@
 	      <td class="fill-list-bg">@project.customer_id@</td>
             </else>
 	  </tr>
-       	<if @use_goal_p@ eq 1>
-	  <tr>
-	    <td class="highlight">#project-manager.Goal_1#</td>
-	    <td class="fill-list-bg">@project.goal@</td>
-	  </tr>
-	</if>
 	<tr>
 	  <td class="highlight" valign="top">#project-manager.Status#</td>
 	  <td class="fill-list-bg">
@@ -52,33 +47,6 @@
 	    <td class="fill-list-bg">@dynamic_attributes.value@</td>
 	  </tr>
 	</multiple>
-	<tr>
-	  <th colspan="2" align="center">Dates</th>
-	</tr>
-	<tr>
-	  <td class="highlight">#project-manager.Start#</td>
-	  <td class="fill-list-bg">@project.planned_start_date@</td>
-	</tr>
-	<tr>
-	  <td class="highlight">#project-manager.Earliest_finish#</td>
-	  <if @project.ongoing_p@ eq f>
-	    <td class="fill-list-bg">@project.earliest_finish_date@</td>
-	  </if>
-	  <else>
-	    <td class="fill-list-bg">#project-manager.Ongoing#</td>
-	  </else>
-	</tr>
-	<tr>
-	  <td class="highlight">#project-manager.Latest_finish#</td>
-	  <if @project.ongoing_p@ eq f>
-	    <td class="fill-list-bg">
-	      <b>@project.latest_finish_date@</b>
-	    </td>
-	  </if>
-	  <else>
-	    <td class="fill-list-bg">#project-manager.Ongoing#</td>
-	  </else>
-	</tr>
 	<tr>
 	  <td class="highlight">#project-manager.Deadline#</td>
 	  <if @project.ongoing_p@ eq f>
@@ -118,3 +86,4 @@
     </td>
   </tr>
 </table>
+<!-- Project Portlet Ends -->

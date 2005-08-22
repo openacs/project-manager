@@ -1,5 +1,6 @@
 <master src="/packages/project-manager/lib/portlet" />
 <property name="portlet_title">@task_term@</property>
+<!-- Tasks Portlet Start -->
 <table width="100%">
 <if @instance_html@ not nil>
   <tr>
@@ -43,3 +44,4 @@
   </td>
 </tr>
 </table>
+<!-- Tasks Portlet Ends -->

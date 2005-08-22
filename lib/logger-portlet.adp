@@ -1,5 +1,6 @@
 <master src="@master;noquote@" />
 <property name="portlet_title">#project-manager.Logger#</property>
+<!-- Logger Portlet Start -->
 <table width="100%">
 <tr class="list-button-bar">
   <td class="fill-list-middle" valign="top" colspan="2">
@@ -29,3 +30,4 @@
   </td>
 </tr>
 </table>
+<!-- Logger Portlet Stops -->

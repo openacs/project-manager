@@ -1,5 +1,6 @@
 <master src="/packages/project-manager/lib/portlet" />
 <property name="portlet_title">#project-manager.Subprojects#</property>
+<!-- Subproject Portlet Start -->
 <table width="100%">
 <tr>
   <td colspan="2" class="fill-list-middle">
@@ -18,3 +19,4 @@
   </td>
 </tr>
 </table>
+<!-- Subproject Portlet Ends -->
