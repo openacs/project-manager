@@ -10,7 +10,9 @@
 <if @project.live_revision@ ne @project.project_id@>
   <h4>#project-manager.lt_not_current_set_live#</h4>
 </if>
-
+<table>
+<tr>
+<td>
 <include
   src="/packages/project-manager/lib/project-portlet"
   project_id="@project_id@"
@@ -32,6 +34,8 @@
       />
     <p />
   </if>
+</td>
+<td>
     <include
       src="/packages/project-manager/lib/tasks-portlet"
       project_id="@project_id@"
@@ -122,5 +126,7 @@
 	  forum_id="@forum_id@" />
       </if>
       <p />
-
+</td>
+</tr>
+</table>
 
