@@ -40,6 +40,8 @@
         p.title as project_name,
 	ar.object_id_two as logger_project
 	FROM
+	pm_roles pr,
+	pm_task_assignment pa,
 	(select tr.item_id,
                 ta.party_id,
                 ta.role_id,
@@ -102,6 +104,8 @@
      select distinct task_item_id from (SELECT
         t.item_id as task_item_id
 	FROM
+	pm_roles pr,
+	pm_task_assignment pa,
 	(select tr.item_id,
                 ta.party_id,
                 ta.role_id,

@@ -24,6 +24,8 @@ ad_page_contract {
     category_id:multiple,optional
     {format "normal"}
     {assignee_id ""}
+    {user_space_p "0"}
+    {is_observer_p ""}
     
 } -properties {
 
@@ -51,8 +53,8 @@ set hidden_vars [export_vars -form $exporting_vars]
 set context [list]
 
 # the unique identifier for this package
-set package_id [ad_conn package_id]
 set user_id    [ad_maybe_redirect_for_registration]
+set package_id [ad_conn package_id]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
@@ -276,7 +278,6 @@ db_multirow -extend { item_url } projects project_folders {
 
 
 list::write_output -name projects
-
 
 
 # ------------------------- END OF FILE ------------------------- #

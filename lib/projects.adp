@@ -15,6 +15,7 @@
           <input type="submit" value="Go" />
         </form>
         @category_select;noquote@
+	<listfilters name="@pm_packages.list_id@" style="select-menu"></listfilters>
     </if>
     <listtemplate name="@pm_packages.list_id@"></listtemplate>
    </multiple>

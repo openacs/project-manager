@@ -6,9 +6,10 @@
 # @cvs-id $Id$
 
 set required_param_list [list package_id]
-set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url end_date_f]
-set optional_unset_list [list assignee_id date_range]
+set optional_param_list [list orderby status_id searchterm bulk_p action_p filter_p base_url end_date_f user_space_p]
+set optional_unset_list [list assignee_id date_range is_observer_p]
 
+set user_id [ad_conn user_id]
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
 	return -code error "$required_param is a required parameter."
@@ -33,6 +34,12 @@ if {![info exists format]} {
     set format "normal"
 }
 
+if [empty_string_p $user_space_p] {
+    set user_space_p 0
+}
+# This indicates that it came from the user space
+# So we check that the user has lead or player role
+# to show the projects.
 
 
 # --------------------------------------------------------------- #
@@ -201,6 +208,45 @@ if {$actions_p == 1} {
     set actions [list "Project: $community_name" "$base_url"]
 }
 
+if { $user_space_p } {
+    set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p"
+} else {
+    set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p and f.package_id = :package_id"
+}
+
+set filters [list \
+		 searchterm [list \
+				 label "[_ project-manager.Search_1]" \
+				 where_clause {$search_term_where}
+			    ] \
+		 date_range [list \
+				 label "[_ project-manager.Planned_end_date]" \
+				 where_clause {$p_range_where}
+			    ] \
+		 status_id [list \
+				label "[_ project-manager.Status_1]"  \
+				values {[pm::status::project_status_select]} \
+				where_clause {$status_where_clause} \
+			       ] \
+		 assignee_id [list \
+				  label "[_ project-manager.Assignee]" \
+				  values {$assignees_filter} \
+				  where_clause {pa.party_id = :assignee_id} 
+			     ] \
+		 category_id [list \
+				  label Categories \
+				  where_clause {c.category_id = [join [value_if_exists category_id] ","]}
+			     ] \
+		 user_space_p [list] \
+		 is_observer_p [list \
+				    label "[_ project-manager.Observer]" \
+				    values { {True t } { False f} } \
+				    where_clause { $user_space_clause }
+			       ] \
+		]
+
+
+	     
 template::list::create \
     -name "projects_${package_id}" \
     -multirow projects_${package_id} \
@@ -240,36 +286,16 @@ template::list::create \
 	    label "[_ project-manager.Status_1]"
 	    display_template "<if @projects_${package_id}.status_id@ eq 2>#project-manager.Closed#</if><else>#project-manager.Open#</else>"
 	}
+	planned_end_date {
+	    label "[_ project-manager.Planned_end_date]"
+	}
     } \
     -actions $actions \
     -bulk_actions $bulk_actions \
     -sub_class {
         narrow
     } \
-    -filters {
-        searchterm {
-            label "[_ project-manager.Search_1]"
-            where_clause {$search_term_where}
-        }
-	date_range {
-	    label "[_ project-manager.Planned_end_date]"
-	    where_clause {$p_range_where}
-	}
-        status_id {
-            label "[_ project-manager.Status_1]" 
-            values {[pm::status::project_status_select]}
-            where_clause {$status_where_clause}
-        }
-        assignee_id {
-            label "[_ project-manager.Assignee]"
-            values {$assignees_filter}
-            where_clause {pa.party_id = :assignee_id}
-        }
-        category_id {
-            label Categories
-            where_clause {c.category_id = [join [value_if_exists category_id] ","]}
-        }
-    } \
+    -filters $filters \
     -orderby {
         default_value $default_orderby
         project_name {
@@ -327,8 +353,7 @@ template::list::create \
         width 100%
     }
 
-db_multirow -extend { item_url } "projects_${package_id}" project_folders {
-} {
+db_multirow -extend { item_url } "projects_${package_id}" project_folders " " {
     set earliest_finish_date [lc_time_fmt $earliest_finish_date $fmt]
     set latest_finish_date [lc_time_fmt $latest_finish_date $fmt]
     set item_url [export_vars -base "${base_url}one" {project_item_id}]

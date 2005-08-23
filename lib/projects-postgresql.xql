@@ -47,11 +47,11 @@
                         ctg.deprecated_p = 'f')
                  c ON p.item_id = c.object_id, 
         cr_items i, 
-	cr_folders f
+	cr_folders f,
+        pm_roles pr
         WHERE 
         p.project_id = i.live_revision 
 	and i.parent_id = f.folder_id
-        and f.package_id = :package_id 
         and exists (select 1 from acs_object_party_privilege_map ppm 
                     where ppm.object_id = p.project_id
                     and ppm.privilege = 'read'

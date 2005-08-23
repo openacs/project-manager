@@ -4,7 +4,7 @@
 
 set required_param_list [list]
 set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url watcher_p page_num]
-set optional_unset_list [list party_id role_id project_item_id instance_id]
+set optional_unset_list [list party_id role_id project_item_id instance_id is_observer_p]
 
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
@@ -41,7 +41,6 @@ if ![info exists format] {
 if ![info exists package_id] {
     set package_id [ad_conn package_id]
 }
-
 
 # ---------------------------------------------------------------
 
@@ -98,7 +97,7 @@ set user_id [ad_maybe_redirect_for_registration]
 if {![exists_and_not_null status_id]} {
     set status_where_clause ""
 } else {
-    set status_where_clause {ts.status = :status_id}
+    set status_where_clause {ti.status = :status_id}
 }
 
 # permissions
@@ -138,6 +137,15 @@ if {![exists_and_not_null elements]} {
     set elements [list task_item_id title slack_time role latest_start latest_finish status_type remaining worked project_item_id percent_complete log_url edit_url]
 }
 
+
+set is_observer_clause "t.item_id = pa.task_id and pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p"
+
+if ![info exist instance_id] { 
+    set project_item_clause [pm::project::get_list_of_open]
+} else {
+    set project_item_clause [pm::project::get_list_of_open -object_package_id $package_id]
+}
+
 set filters [list \
 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
@@ -150,12 +158,17 @@ set filters [list \
 			   ] \
 		 project_item_id [list \
 				      label "[_ project-manager.Project_1]" \
-				      values {[pm::project::get_list_of_open]} \
+				      values { $project_item_clause } \
 				      where_clause "t.parent_id = :project_item_id"
 				 ] \
 		 instance_id [list \
 				  where_clause "p.object_package_id = :instance_id"
 			     ] \
+		 is_observer_p [list \
+				    label "[_ project-manager.Observer]" \
+				    values { {True t} {False f} } \
+				    where_clause "$is_observer_clause"
+			       ]\
 		]
 
 # Setup the actions, so we can append the rest later on
@@ -165,7 +178,6 @@ if {$actions_p == 1} {
 } else {
     set actions [list]
 }
-
 
 foreach element $elements {
 
@@ -213,7 +225,7 @@ foreach element $elements {
 			    ]
 	} else {
 	    set element "party_id"
-	    lappend filters [list party_id [list \
+	    lappend filters [list parties_id [list \
 						label "[_ project-manager.People]" \
 						values "[pm::task::assignee_filter_select \
 -status_id $status_id]" \
@@ -224,6 +236,7 @@ foreach element $elements {
     }
     append row_list "$element {}\n"
 }
+
 
 if {$bulk_p == 1} {
     set bulk_actions [list "[_ project-manager.Log_hours]" "${base_url}log-bulk" "[_ project-manager.lt_Log_hours_for_several]" "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]"]

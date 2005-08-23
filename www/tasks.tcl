@@ -27,6 +27,8 @@ ad_page_contract {
     {page_size 25}
     role_id:optional
     {project_item_id ""}
+    {instance_id ""}
+    {is_observer_p ""}
 } -properties {
     task_term:onevalue
    context:onevalue
