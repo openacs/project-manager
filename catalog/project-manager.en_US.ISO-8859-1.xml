@@ -425,6 +425,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="page">page)</msg>
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
+  <msg key="People">People</msg>
   <msg key="Percent_Complete">Percent Complete\</msg>
   <msg key="Percent_complete">Percent complete</msg>
   <msg key="Percents_complete">Percents complete</msg>
