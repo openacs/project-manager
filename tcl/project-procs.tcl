@@ -1579,8 +1579,11 @@ ad_proc -public pm::project::get_project {
 
 
 ad_proc -public pm::project::get_list_of_open {
+    {-object_package_id ""}
 } {
     Returns a list of lists, of all open project ids and their names.
+    If object_package_id is provided then it returns all open projects
+    with the same object_package_id value.
 
     We should util_memoize this. It will dramatically improve the
     speed of the task edits.
@@ -1592,9 +1595,12 @@ ad_proc -public pm::project::get_list_of_open {
     
     @error 
 } {
-
-    set return_val [db_list_of_lists get_vals { }]
-
+    set extra_query ""
+    if { ![empty_string_p $object_package_id] } {
+	set extra_query "p.object_package_id = :object_package_id and"
+    }
+    set return_val [db_list_of_lists get_vals " "]
+    
     return $return_val
 }
 

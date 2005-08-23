@@ -214,6 +214,7 @@
       WHERE 
       p.project_id  = i.live_revision and
       s.status_id   = p.status_id and
+      $extra_query
       s.status_type = 'o'
       ORDER BY
       lower(p.title), lower(o.name) 
