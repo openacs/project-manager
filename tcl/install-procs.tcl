@@ -183,5 +183,7 @@ ad_proc -private pm::install::after_upgrade {
 		content::type::attribute::new -content_type {pm_project} -attribute_name {dform} -datatype {string} -pretty_name {[_ project-manager.Dynamic_Form]} -pretty_plural {[_ project-manager.Dynamic_Forms]} -column_spec {varchar(100)}
 		content::type::attribute::new -content_type {pm_task} -attribute_name {dform} -datatype {string} -pretty_name {[_ project-manager.Dynamic_Form]} -pretty_plural {[_ project-manager.Dynamic_Forms]} -column_spec {varchar(100)}
 	    }
+	    3.1d2 3.1d3 {
+		apm_parameter_register "DefaultPortletLayoutP" "The src for the layout to user on project manager portlets master tag" "project-manager" "/packages/project-manager/lib/portlet" "string"
 	}
 }
