@@ -7,7 +7,7 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.1d2" url="http://openacs.org/repository/download/apm/project-manager-3.1d2.apm">
+    <version name="3.1d3" url="http://openacs.org/repository/download/apm/project-manager-3.1d3.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <summary>Project management tool for OpenACS</summary>
         <release-date>2005-08-12</release-date>
@@ -15,7 +15,7 @@
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
-        <provides url="project-manager" version="3.1d2"/>
+        <provides url="project-manager" version="3.1d3"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.1.3"/>
         <requires url="acs-templating" version="5.1.6d1"/>
@@ -35,6 +35,7 @@
             <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
         </callbacks>
         <parameters>
+	    <parameter datatype="string" min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portal" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
