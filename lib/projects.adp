@@ -1,4 +1,3 @@
-   <multiple name=pm_packages>    
     <if @filter_p@ ne 0>
         <form method=post name=search action=index>
           <b>#project-manager.Search#</b><br />
@@ -14,10 +13,11 @@
           <input type='reset' value='...' onclick="return showCalendar('sel2', 'y-m-d');"> [<b>YYYY-MM-DD</b>]
           <input type="submit" value="Go" />
         </form>
-        @category_select;noquote@
-	<listfilters name="@pm_packages.list_id@" style="select-menu"></listfilters>
+	<multiple name="projects">
+             @projects.category_select;noquote@
+        </multiple>
+	<listfilters name=projects style="select-menu"></listfilters>
     </if>
-    <listtemplate name="@pm_packages.list_id@"></listtemplate>
-   </multiple>
+    <listtemplate name=projects></listtemplate>
 
 
