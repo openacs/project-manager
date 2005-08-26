@@ -1,5 +1,5 @@
   <if @categories:rowcount@ gt 0>
-    <master src="/packages/project-manager/lib/portlet" />
+    <master src="@default_layout_url;noquote@" />
     <property name="portlet_title">#project-manager.Categories#</property>
 <table width="100%">
     <tr>

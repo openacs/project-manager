@@ -1,4 +1,4 @@
-<master src="/packages/project-manager/lib/portlet" />
+<master src="@default_layout_url@" />
 <property name="portlet_title">#project-manager.Assignees#</property>
 <table width="100%">
   <tr>

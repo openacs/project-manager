@@ -1,4 +1,4 @@
-<master src="/packages/project-manager/lib/portlet" />
+<master src="@default_layout_url;noquote@" />
 <property name="portlet_title">#project-manager.Project_information#</property>
 <tr>
   <td colspan="2" class="fill-list-bottom">

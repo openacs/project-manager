@@ -1,4 +1,4 @@
-  <master src="/packages/project-manager/lib/portlet" />
+<master src="@default_layout_url;noquote@" />
 <property name="portlet_title">
   @write_html;noquote@&nbsp;&nbsp;@project_term@ @project.project_name@
   </property>

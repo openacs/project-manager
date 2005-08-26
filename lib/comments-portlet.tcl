@@ -7,6 +7,8 @@
 # @arch-tag: 4bf09cbf-1cdd-4346-9346-a4347faf76ba
 # @cvs-id $Id$
 
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
+
 # ----------------
 # general comments
 # ----------------

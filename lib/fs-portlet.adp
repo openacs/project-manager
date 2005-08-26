@@ -1,4 +1,4 @@
-<master src="/packages/project-manager/lib/portlet" />
+<master src="@default_layout_url;noquote@" />
 <property name="portlet_title">#file-storage.Folder#</property>
 <!-- FS Portlet Start -->
 <table width="100%">

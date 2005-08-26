@@ -19,6 +19,7 @@ foreach optional_param {} {
 }
 
 set user_id     [auth::require_login]
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
 # Get the URL for contacts
 set contacts_url [site_node::get_package_url -package_key contacts]

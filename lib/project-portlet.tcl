@@ -16,6 +16,8 @@ set return_url "rate-project?project_id=$project_id&project_item_id=$project_ite
 set vars { project_item_id return_url }
 set close_url "bulk-close?[export_vars $vars]"
 
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
+
 #URL to rate this project
 set rate_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
 

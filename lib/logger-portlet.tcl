@@ -14,7 +14,7 @@ foreach required_param {logger_project logger_days project_item_id pm_url return
 }
 foreach optional_param {master} {
     if {![info exists $optional_param]} {
-	set $optional_param {}
+	set $optional_param [parameter::get -parameter DefaultPortletLayoutP]
     }
 }
 

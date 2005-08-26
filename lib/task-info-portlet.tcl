@@ -12,6 +12,8 @@ set urgency_threshold 8
 set task_term       [_ project-manager.Task]
 set task_term_lower [_ project-manager.task]
 
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
+
 set task_id $task_info(item_id)
 set print_link "task-print?&task_id=$task_info(item_id)&project_item_id=$task_info(project_item_id)"
 

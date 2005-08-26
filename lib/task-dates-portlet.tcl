@@ -1,0 +1,1 @@
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]

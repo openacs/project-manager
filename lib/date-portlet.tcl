@@ -13,7 +13,7 @@ set user_id [auth::require_login]
 set project_term       [_ project-manager.Project]
 set use_goal_p         [parameter::get -parameter "UseGoalP" -default "1"]
 set use_project_code_p [parameter::get -parameter "UseUserProjectCodesP" -default "1"]
-
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 # daily?
 set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
 

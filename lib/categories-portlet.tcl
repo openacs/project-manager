@@ -9,6 +9,7 @@
 
 # categories
 
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 set cat_trees [list]
 set cat_list [category::get_mapped_categories $item_id]
 foreach cat $cat_list {

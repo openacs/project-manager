@@ -25,6 +25,7 @@ if {[empty_string_p $project_item_id]} {
 }
 
 set user_id [auth::require_login]
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 # Subprojects, using list-builder ---------------------------------
 
 template::list::create \

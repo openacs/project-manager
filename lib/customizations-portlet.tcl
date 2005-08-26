@@ -8,6 +8,7 @@
 # @cvs-id $Id$
 
 
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
 # -------------------------CUSTOMIZATIONS--------------------------
 # If there are customizations, put them in a multirow called custom

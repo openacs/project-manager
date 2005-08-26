@@ -26,7 +26,7 @@ if {![info exists format]} {
 set user_id     [auth::require_login]
 set task_term          [_ project-manager.Task]
 set hide_done_tasks_p  [parameter::get -parameter "HideDoneTaskP" -default "1"]
-
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
 set process_instance_options [pm::process::instance_options \
                                   -project_item_id $project_item_id \
