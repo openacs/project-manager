@@ -45,10 +45,36 @@ if [empty_string_p $user_space_p] {
 # to show the projects.
 
 
+set assignees_filter [pm::project::assignee_filter_select -status_id $status_id]
+
 # Set status
+set status_where_clause "p.status_id = :status_id"
 if { ![exists_and_not_null status_id]} {
-    set status_id [pm::status::default_open]
-} 
+    set status_id [pm::project::default_status_open]
+} elseif { [string equal $status_id "-1"] } {
+    set assignees_filter [pm::project::assignee_filter_select]
+    set all_status [db_list_of_lists get_all_status { select status_id from pm_project_status }]
+    set all_status [join $all_status ","]
+    set status_where_clause "p.status_id in ($all_status)"
+}
+
+set assignees_filter [linsert $assignees_filter 0 [list "All" "-1"]]
+
+# Set assigne
+set assignee_where_clause "pa.party_id = :assignee_id"
+if { ![exists_and_not_null assignee_id]} {
+    set assignee_id $user_id
+
+} elseif { [string equal $assignee_id "-1"] } {
+    set asg_ids [list]
+    foreach assignee $assignees_filter {
+	lappend asg_ids [lindex $assignee 1]
+    }
+    set asg_ids [join $asg_ids ","]
+    set assignee_where_clause "pa.party_id in ($asg_ids)"
+}
+
+
     
 # We want to set up a filter for each category tree.
 
@@ -64,8 +90,6 @@ if {[exists_and_not_null category_id]} {
     }
 }
     
-set assignees_filter [pm::project::assignee_filter_select -status_id 2]
-
 if {![empty_string_p $searchterm]} {
     
     if {[regexp {([0-9]+)} $searchterm match query_digits]} {
@@ -166,15 +190,15 @@ set filters [list \
 				] \
 		 status_id [list \
 				label "[_ project-manager.Status_1]"  \
-				default_value [pm::status::default_open] \
-				values {[pm::status::project_status_select]} \
-				where_clause {p.status_id = :status_id} \
+				default_value [pm::project::default_status_open] \
+				values { {All "-1"} [pm::status::project_status_select]} \
+				where_clause { $status_where_clause } \
 			       ] \
 		 assignee_id [list \
 				  label "[_ project-manager.Assignee]" \
 				  default_value $user_id \
-				  values {$assignees_filter} \
-				  where_clause {pa.party_id = :assignee_id} 
+				  values { $assignees_filter } \
+				  where_clause {$assignee_where_clause} 
 			     ] \
 		 category_id [list \
 				  label Categories \
@@ -222,7 +246,7 @@ template::list::create \
             display_template "<if @projects.days_to_latest_finish@ gt 1>@projects.latest_finish_date@</if><else><font color=\"red\">@projects.latest_finish_date@</font></else>"
         }
 	planned_end_date {
-	    label "[_ project-manager.Latest_Finish]"
+	    label "[_ project-manager.End_date]"
 	}
 	actual_hours_completed {
             label "[_ project-manager.Hours_completed]"
@@ -272,6 +296,12 @@ template::list::create \
 	    label "[_ project-manager.Start_date]"
 	    orderby_desc "p.planned_start_date desc"
 	    orderby_asc "p.planned_start_date asc"
+	    default_direction asc
+	}
+	planned_end_date {
+	    label "[_ project-manager.End_date]"
+	    orderby_desc "p.planned_end_date desc"
+	    orderby_asc "p.planned_end_date asc"
 	    default_direction asc
 	}
 	latest_finish_date {
@@ -327,7 +357,7 @@ db_multirow -extend { item_url customer_url category_select } projects project_f
     # root CR folder
     set root_folder [pm::util::get_root_folder -package_id $package_id]
     
-    set category_select [pm::util::category_selects \
+    # set category_select [pm::util::category_selects \
 			     -export_vars $export_vars \
 			     -category_id $temp_category_id \
 			     -package_id $package_id \
