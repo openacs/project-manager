@@ -1,14 +1,16 @@
+<div class="portlet-wrap-shadow">
+  <div class="portlet-wrap-bl">
+     <div class="portlet-wrap-tr">
+        <div class="portlet">
+            <h2>@portlet_title;noquote@</h2>
+            <slave>
+	 </div> <!-- portlet -->
+      </div> <!-- portlet-wrap-tr -->
+   </div> <!-- portlet-wrap-bl -->
+</div> <!-- portlet-wrap-shadow -->
+        
 
-<!-- Wrapper Portlet Starts -->
-<!-- 9999cc -->
-<table class="list" cellpadding="0" cellspacing="0" width="100%" border="0">
-  <tr>
-    <th class="project" align="left">@portlet_title;noquote@</th>
-  </tr>
-  <tr>
-   <td width="100%">
-  <slave>
-   </td>
- </tr>
-</table>
-<!-- Wrapper portlet stops -->
+
+
+
+
