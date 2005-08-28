@@ -58,20 +58,14 @@
 	    <td class="fill-list-bg">#project-manager.Ongoing#</td>
 	  </else>
 	</tr>
-	<tr>
-	  <td class="highlight">#categories.Categories#</td>
-	  <td class="fill-list-bg">
-	    <ul>
-	      <multiple name="categories">
-		<li>@categories.tree_name@:
-		  <group column="tree_id" delimiter=", ">
-		    @categories.category_name@
-		  </group>
-		</li>
-	      </multiple>
-	    </ul>
-	  </td>
-	</tr>
+        <multiple name="categories">
+	  <tr>
+	    <td class="highlight">@categories.tree_name@:</td>
+	    <td class="fill-list-bg">
+              <group column="tree_id" delimiter=", ">@categories.category_name@</group>
+	    </td>
+	  </tr>
+	</multiple>
       </table>
     </td>
   </tr>
