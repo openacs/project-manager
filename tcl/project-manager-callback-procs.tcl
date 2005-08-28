@@ -97,7 +97,7 @@ ad_proc -public -callback fs::file_revision_new -impl project_manager {
 	where i.item_id = :file_id
 	and r.revision_id = i.latest_revision}
 
-    pm::link_new_tasks -object_id $file_id -linked_id $folder_id -role "Watcher" -title $title -description $description -mime_type $mime_type
+    # pm::link_new_tasks -object_id $file_id -linked_id $folder_id -role "Watcher" -title $title -description $description -mime_type $mime_type
 }
 
 ad_proc -public -callback contact::contact_form -impl project_manager {
