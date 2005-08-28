@@ -35,7 +35,7 @@
             <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
         </callbacks>
         <parameters>
-	    <parameter datatype="string" min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portal" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
+	    <parameter datatype="string" min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
