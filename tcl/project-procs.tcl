@@ -1711,6 +1711,15 @@ ad_proc -public pm::project::open_p {
 }
 
 
+ad_proc -public pm::project::get_status_description {
+    {-project_item_id:required}
+} {
+    get the project status description
+} {
+    return [db_string project_status {} -default ""]
+}
+
+
 ad_proc -public pm::project::assign {
     {-project_item_id:required}
     {-role_id:required}

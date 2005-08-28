@@ -221,6 +221,18 @@
     </querytext>
   </fullquery>
 
+   <fullquery name="pm::project::get_status_description.project_status">
+         <querytext>
+
+	select s.description
+	from cr_items i, pm_projects p, pm_project_status s
+	where i.item_id = :project_item_id
+	and p.project_id = i.latest_revision
+	and s.status_id = p.status_id
+
+         </querytext>
+   </fullquery>
+
   <fullquery name="pm::project::assigned_p.assigned_p">
     <querytext>
       SELECT
