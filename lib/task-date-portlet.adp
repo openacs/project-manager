@@ -4,27 +4,35 @@
   <tr>
     <td colspan="2">
       <table border="0" width="100%">
-	<tr>
-	  <td class="highlight">#project-manager.Earliest_start#</td>
-	  <td>@task_info.earliest_start@&nbsp;</td>
-	</tr>
+        <if @task_info.earliest_start@ not nil>
+	  <tr>
+	    <td class="highlight">#project-manager.Earliest_start#</td>
+	    <td>@task_info.earliest_start@&nbsp;</td>
+	  </tr>
+        </if>
 	
-	<tr>
-	  <td class="highlight">#project-manager.Earliest_finish#</td>
-	  <td>@task_info.earliest_finish@</td>
-	</tr>
+        <if @task_info.earliest_finish@ not nil>
+	  <tr>
+	    <td class="highlight">#project-manager.Earliest_finish#</td>
+	    <td>@task_info.earliest_finish@</td>
+	  </tr>
+        </if>
 	
-	<tr>
-	  <td class="highlight">#project-manager.Latest_start#</td>
-	  <td>@task_info.latest_start@</td>
-	</tr>
+        <if @task_info.latest_start@ not nil>
+	  <tr>
+	    <td class="highlight">#project-manager.Latest_start#</td>
+	    <td>@task_info.latest_start@</td>
+	  </tr>
+        </if>
 	
-	<tr>
-	  <td class="highlight">#project-manager.Latest_finish#</td>
-	  <td><b>@task_info.latest_finish@</b></td>
-	</tr>
+        <if @task_info.latest_finish@ not nil>
+	  <tr>
+	    <td class="highlight">#project-manager.Latest_finish#</td>
+	    <td><b>@task_info.latest_finish@</b></td>
+	  </tr>
+        </if>
 
-	<if @task_info.latest_finish@ ne @task_info.end_date@>
+        <if @task_info.end_date@ not nil and @task_info.latest_finish@ ne @task_info.end_date@>
 	  <tr>
 	    <td class="highlight">#project-manager.Deadline_1#</td>
 	    <td><b>@task_info.end_date@</b></td>
