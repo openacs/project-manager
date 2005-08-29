@@ -185,5 +185,6 @@ ad_proc -private pm::install::after_upgrade {
 	    }
 	    3.1d2 3.1d3 {
 		apm_parameter_register "DefaultPortletLayoutP" "The src for the layout to user on project manager portlets master tag" "project-manager" "/packages/project-manager/lib/portlet" "string"
+	    }
 	}
 }
