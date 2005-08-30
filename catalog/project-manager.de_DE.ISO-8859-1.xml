@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.0d14" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d3" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--All_Categories--">--Alle Kategorien--</msg>
@@ -38,7 +38,7 @@
   <msg key="Deadline_Time">Liefertermin Uhrzeit</msg>
   <msg key="Dep">Abt.</msg>
   <msg key="Dependency">Abhängigkeiten:</msg>
-  <msg key="Description">Beschreibung</msg>
+  <msg key="Description">Projekt-Beschreibung</msg>
   <msg key="Description_1">Beschreibung:</msg>
   <msg key="Done_1">Erledigt</msg>
   <msg key="Earliest_finish">Frühestes Ende</msg>
@@ -77,14 +77,14 @@
   <msg key="lt_Enter_a_number_for_or">Bitte geben Sie eine Nummer für die Priorität ein. 0 ist der Standardwert der vergeben wird und entspricht der niedrigsten Prioritätsstufe.</msg>
   <msg key="lt_Hours_remaining_task_">Verbleibende Stunden: %task_info.hours_remaining%</msg>
   <msg key="lt_If_yes_then_this_proj">Wenn ja, dann hat dieses Projekt keinen Liefertermin.</msg>
-  <msg key="lt_Last_input_typetext_n">Last &amp;lt;input type=&amp;quot;text&amp;quot; name=&amp;quot;logger_days&amp;quot; value=&amp;quot;%logger_days%&amp;quot; size=&amp;quot;5&amp;quot; /&amp;gt; Tage</msg>
+  <msg key="lt_Last_input_typetext_n">Last &lt;input type=&quot;text&quot; name=&quot;logger_days&quot; value=&quot;%logger_days%&quot; size=&quot;5&quot;&gt; Tage</msg>
   <msg key="lt_Priority_task_infopri">Priorität: %task_info.priority%</msg>
   <msg key="lt_projectactual_hours_c">%project.actual_hours_completed% von %project.estimated_hours_total%</msg>
   <msg key="lt_Send_email_to_assigne">e-Mail an Beteiligte schicken?</msg>
   <msg key="lt_set_according_to_task">Von den Aufgabenzuteilungen aus zuteilen</msg>
   <msg key="lt_set_project_term_code">%project_term%nummer</msg>
   <msg key="lt_set_project_term_goal">%project_term%ziel</msg>
-  <msg key="lt_set_project_term_name">%project_term%ID</msg>
+  <msg key="lt_set_project_term_name">%project_term%ID Nummer</msg>
   <msg key="lt_Set_to_100_to_close_t">Auf 100 setzen, um diese Aufgabe zu schließen.</msg>
   <msg key="lt_task_terms_depending_">%task_term%n die von dieser %task_term% abhängen</msg>
   <msg key="lt_task_terms_this_depen">%task_term%n von denen diese Aufgabe  abhängt.</msg>
@@ -102,6 +102,7 @@
   <msg key="Open">Offen</msg>
   <msg key="Percent_complete">% komplett</msg>
   <msg key="Plain_Text">Nur Text</msg>
+  <msg key="Planned_end_date">Lieferdatum</msg>
   <msg key="Player">Bearbeiter</msg>
   <msg key="Priority">Priorität:</msg>
   <msg key="Priority_1">Priorität</msg>

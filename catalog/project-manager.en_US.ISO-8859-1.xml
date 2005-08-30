@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.0d15" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d3" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -556,8 +556,10 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Users_to_view">Users to view</msg>
   <msg key="variables">variables</msg>
   <msg key="View">View</msg>
+  <msg key="View_Active">View active tasks</msg>
   <msg key="View_all_tasks">View all tasks</msg>
   <msg key="View_customers">View customers</msg>
+  <msg key="View_only_Active">View only tasks where you actively collaborating</msg>
   <msg key="View_only_Observer">View only tasks where you are an observer</msg>
   <msg key="View_options">View options</msg>
   <msg key="View_project_changes">View project changes</msg>
