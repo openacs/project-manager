@@ -2,6 +2,9 @@
 <property name="portlet_title">
   @write_html;noquote@&nbsp;&nbsp;@project_term@ @project.project_name@
   </property>
+<property name="name">
+  @write_html;noquote@&nbsp;&nbsp;@project_term@ @project.project_name@
+  </property>
 <!-- Project Portlet Start -->
 <table width="100%">
   <tr>
@@ -30,10 +33,10 @@
 	  <td class="highlight" valign="top">#project-manager.Status#</td>
 	  <td class="fill-list-bg">
 		<if @project.status_type@ eq "o">
-		    <b>#project-manager.Open#</b> / <i><a title="#project-manager.Close_project#" href=@close_url@>#project-manager.Close#</a></i>
+		    <b>@project.status_pretty@</b> / <i><a title="#project-manager.Close_project#" href=@close_url@>#project-manager.Close#</a></i>
 		</if>
 	        <else>
-		    <b>#project-manager.Closed#</b> <small>(<a title="#project-manager.Rate_this_project#" href=@rate_url@>#project-manager.Rate#</a>)</small>
+		    <b>@project.status_pretty@</b> <small>(<a title="#project-manager.Rate_this_project#" href=@rate_url@>#project-manager.Rate#</a>)</small>
 		</else>
 	  </td>
 	</tr>

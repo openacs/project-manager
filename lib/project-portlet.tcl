@@ -43,6 +43,7 @@ set project(earliest_finish_date) [lc_time_fmt $project(earliest_finish_date) $f
 set project(latest_finish_date) [lc_time_fmt $project(latest_finish_date) $fmt]
 set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
 set variables(customer_id) $project(customer_id)
+set project(status_pretty) [pm::project::get_status_description -project_item_id $project_item_id]
 
 set contacts_url [apm_package_url_from_key contacts]
 if {![empty_string_p contacts_url]} {

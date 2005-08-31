@@ -18,6 +18,8 @@ foreach optional_param {master} {
     }
 }
 
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
+
 # we can also get the link to the logger instance.
 set logger_url [pm::util::logger_url]
 set logger_project_url "$logger_url?project_id=$logger_project"

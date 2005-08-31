@@ -1,4 +1,4 @@
-<master src="@master;noquote@" />
+<master src="@default_layout_url;noquote@" />
 <property name="portlet_title">#project-manager.Logger#</property>
 <!-- Logger Portlet Start -->
 <table width="100%">
