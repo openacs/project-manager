@@ -364,7 +364,7 @@ ad_proc -public pm::project::edit {
      "]
 
     if {!$no_callback_p} {
-	callback pm::project_edit -package_id $package_id -project_id $project_item_id
+	callback pm::project_edit -package_id $package_id -project_id $project_item_id -data [list organization_id $organization_id]
     }
 
     return $returnval

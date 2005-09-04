@@ -81,14 +81,6 @@
 	  use_days_p="@use_days_p@"
 	  pm_task_id="@task_id@" />
 
-        <P />
-	    <include src="/packages/project-manager/lib/task-dependency-portlet"
-
-	         task_id="@task_id@"
-		 task_term="@task_term@"
-		 return_url="@return_url@" 
-	         fmt= @fmt@ />
-        
       </td>
     </tr>
   </table>

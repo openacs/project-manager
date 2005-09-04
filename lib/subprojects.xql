@@ -16,8 +16,8 @@
 	p.object_type as content_type,
 	p.title as project_name,
 	p.project_code,
-	to_char(p.planned_start_date, 'Mon DD') as planned_start_date,
-	to_char(p.planned_end_date, 'Mon DD') as planned_end_date,
+	to_char(p.planned_start_date, 'YYYY-MM-DD HH24:MI:SS') as planned_start_date,
+	to_char(p.planned_end_date, 'YYYY-MM-DD HH24:MI:SS') as planned_end_date,
 	p.ongoing_p,
         p.actual_hours_completed,
         p.estimated_hours_total

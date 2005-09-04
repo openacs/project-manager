@@ -21,6 +21,9 @@ if {[exists_and_not_null project_item_id] && ![exists_and_not_null project_id]} 
     set project_id [pm::project::get_project_id -project_item_id $project_item_id]
 }
 
+if {[empty_string_p $project_name]} {
+    set project_name [db_nextval pm_project_title_seq]
+}
 
 if {[exists_and_not_null project_id]} {
     set title "[_ project-manager.lt_Edit_a_project_term_l]"
@@ -67,6 +70,7 @@ ad_form -name add_edit \
             {label "[_ project-manager.lt_set_project_term_name]"}
             {value $project_name}
             {html {size 50}}
+	    {mode display}
         }
         {ongoing_p:text(hidden)
             {value "f"}
@@ -116,15 +120,26 @@ if {[exists_and_not_null customer_id]} {
 	}
 }
 
+if {[exists_and_not_null customer_id]} {
+    set dynamic_params(customer_id) $customer_id
+} elseif {[exists_and_not_null project_item_id]} {
+    set dynamic_params(customer_id) [db_string get_customer_id {}]
+} else {
+    set dynamic_params(customer_id) ""
+}
+
+dtype::form::add_elements -dform $dform -prefix pm -object_type pm_project -object_id [value_if_exists project_id] -form add_edit -exclude_static -cr_widget none -variables [array get dynamic_params]
+
+set status_options [lang::util::localize [pm::status::project_status_select]]
+
 ad_form -extend -name add_edit \
     -form {
-	{planned_start_date:text(text)
-            {label "[_ project-manager.Starts]"}
-	    {html {id sel1}}
-	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel1', 'y-m-d');\"> \[<b>d.m.y </b>\]
-	    }}
+        {status_id:text(select)
+            {label "[_ project-manager.Status_1]"}
+	    {options $status_options}
         }
-    
+
+	{planned_start_date:text(hidden)}
 
         {planned_end_date:text(text)
             {label "[_ project-manager.Deadline_1]"}
@@ -173,19 +188,8 @@ if {[exists_and_not_null project_id]} {
     }
 }
 
-if {[exists_and_not_null customer_id]} {
-    set dynamic_params(customer_id) $customer_id
-} elseif {[exists_and_not_null project_item_id]} {
-    set dynamic_params(customer_id) [db_string get_customer_id {}]
-} else {
-    set dynamic_params(customer_id) ""
-}
-
-dtype::form::add_elements -dform $dform -prefix pm -object_type pm_project -object_id [value_if_exists project_id] -form add_edit -exclude_static -cr_widget none -variables [array get dynamic_params]
-
 ad_form -extend -name add_edit \
     -new_request {
-        
         if {[string equal $ongoing_by_default_p t]} {
             set ongoing_p t
         }

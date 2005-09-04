@@ -26,6 +26,7 @@
   <msg key="Comments">Kommentare</msg>
   <msg key="Complete">Fertig:</msg>
   <msg key="create_project">Projekt erzeugen</msg>
+  <msg key="Creation_date">Erstellt am</msg>
   <msg key="CSV">CSV</msg>
   <msg key="Customer">Kunde</msg>
   <msg key="Customers">Kunden</msg>
@@ -38,7 +39,7 @@
   <msg key="Deadline_Time">Liefertermin Uhrzeit</msg>
   <msg key="Dep">Abt.</msg>
   <msg key="Dependency">Abhängigkeiten:</msg>
-  <msg key="Description">Projekt-Beschreibung</msg>
+  <msg key="Description">Interne Projekt-Beschreibung</msg>
   <msg key="Description_1">Beschreibung:</msg>
   <msg key="Done_1">Erledigt</msg>
   <msg key="Earliest_finish">Frühestes Ende</msg>
@@ -98,17 +99,19 @@
   <msg key="New_task_term">Neue %task_term%</msg>
   <msg key="No">Nein</msg>
   <msg key="number">#</msg>
+  <msg key="Observer">Beobachter?</msg>
   <msg key="OK">OK</msg>
   <msg key="Open">Offen</msg>
   <msg key="Percent_complete">% komplett</msg>
   <msg key="Plain_Text">Nur Text</msg>
-  <msg key="Planned_end_date">Lieferdatum</msg>
+  <msg key="Planned_end_date">Interne Deadline</msg>
   <msg key="Player">Bearbeiter</msg>
   <msg key="Priority">Priorität:</msg>
   <msg key="Priority_1">Priorität</msg>
   <msg key="Processes">Prozesse</msg>
   <msg key="Project">Job</msg>
   <msg key="Project_1">Projekt</msg>
+  <msg key="Project_code">Jobnummer</msg>
   <msg key="Project_is_ongoing">Laufendes Projekt?</msg>
   <msg key="Project_name">Names des Projekts</msg>
   <msg key="Project_Search">Suche nach Projekt:</msg>

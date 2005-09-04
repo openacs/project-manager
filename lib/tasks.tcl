@@ -83,9 +83,10 @@ set contacts_url [util_memoize [list site_node::get_package_url \
 
 set context [list "[_ project-manager.Tasks]"]
 
-# Get the currently available Status
 
-set status_list [db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]
+set status_list [lang::util::localize_list_of_lists -list [db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]]
+
+set status_list [linsert $status_list 0 [list "All" "-1"]]
 
 # the unique identifier for this package
 
@@ -94,7 +95,7 @@ set user_id [ad_maybe_redirect_for_registration]
 
 # status defaults to open
 
-if {![exists_and_not_null status_id]} {
+if {![exists_and_not_null status_id] || $status_id == "-1"} {
     set status_where_clause ""
 } else {
     set status_where_clause {ti.status = :status_id}

@@ -6,12 +6,16 @@ ad_page_contract {
     @author Miguel Marin (miguelmarin@viaro.net)
     @author Viaro Networks www.viaro.net
 } {
-    project_id:integer,notnull
+    project_id:integer,optional
     project_item_id:integer,notnull
 }
 
 set page_title [_ project-manager.rate_this_project]
 set context [list [list "one?project_id=$project_id" "One Project"] $page_title]
+
+if {![exists_and_not_null project_id]} {
+    set project_id [pm::project::get_project_id -project_item_id $project_item_id]
+}
 
 set user_id [ad_conn user_id]
 set context_object_id $project_id
@@ -76,7 +80,7 @@ ad_form -extend -name rate_project -on_submit {
 	set object_id [lindex $element_info 0]
 	set dimension_key [lindex $element_info 1]
 	set rating_id [ratings::rate -dimension_key $dimension_key \
-			   -object_id $object_id \
+			   -object_id $project_id \
 			   -user_id $user_id \
 			   -rating $rating \
 			   -nomem_p "t"]

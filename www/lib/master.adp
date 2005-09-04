@@ -4,9 +4,7 @@
 <if @focus@ not nil><property name="focus">@focus;noquote@</property></if>
 <property name="header_stuff">
   @header_stuff;noquote@
-  <style type="text/css">
-    @import url(@package_url@style.css) all;
-  </style>
+  <link rel="stylesheet" type="text/css" href="@package_url@style.css" media="all" />
 </property>
 <property name="doc_type">
 <?xml version="1.0"?>

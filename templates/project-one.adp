@@ -31,6 +31,7 @@
       project_id="@project_id@"
       project_item_id="@project_item_id@" 
       base_url=@package_url@
+      fmt=@fmt@
       />
     <p />
   </if>
