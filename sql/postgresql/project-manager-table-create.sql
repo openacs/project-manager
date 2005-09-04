@@ -513,7 +513,7 @@ comment on table pm_users_viewed is '
 ';
 
 
-#### Create missing indexes
+-- Create missing indexes
 CREATE INDEX pm_workgroup_parties_party_id_inx ON pm_workgroup_parties(party_id);
 CREATE INDEX pm_workgroup_parties_role_id_inx ON pm_workgroup_parties(role_id);
 CREATE INDEX pm_users_viewed_viewed_user_inx ON pm_users_viewed(viewed_user);
