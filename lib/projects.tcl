@@ -225,6 +225,9 @@ template::list::create \
 	    link_url_col item_url
 	    link_html { title "[_ project-manager.lt_View_this_project_ver]" }
 	}
+	project_code {
+	    label "[_ project-manager.Project_code]"
+	}
 	customer_name {
 	    label "[_ project-manager.Customer]"
 	    display_template "
@@ -272,6 +275,12 @@ template::list::create \
 	    label "[_ project-manager.Project_name]"
 	    orderby_desc "upper(p.title) desc"
 	    orderby_asc "upper(p.title) asc"
+	    default_direction asc
+	}
+	project_code {
+	    label "[_ project-manager.Project_code]"
+	    orderby_desc "lower(p.project_code) desc"
+	    orderby_asc "lower(p.project_code) asc"
 	    default_direction asc
 	}
 	customer_name {
