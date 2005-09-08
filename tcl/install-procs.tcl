@@ -66,7 +66,7 @@ ad_proc -private pm::install::package_instantiate {
     # create a content folder
 
     set folder_id [content::folder::new \
-		       -name "project_manager_$package_id" -package_id $package_id]
+		       -name "project_manager_$package_id" -package_id $package_id -context_id $package_id]
 
     # register the allowed content types for a folder
 
