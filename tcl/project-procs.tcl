@@ -1748,7 +1748,22 @@ ad_proc -public pm::project::assign {
         VALUES
         (:project_item_id, :role_id, :party_id)
         }
-        
+
+    # We need to give the user permission. Leads will get "Admin". Players "Write" 
+    # and watchers get "read".
+
+    db_1row role_information {
+	select is_observer_p, is_lead_p from pm_roles where role_id = :role_id
+    }
+
+    if {$is_lead_p == "t"} {
+	permission::grant -object_id $project_item_id -party_id $party_id -privilege admin
+    } elseif {$is_observer_p == "t"} {
+	permission::grant -object_id $project_item_id -party_id $party_id -privilege read
+    } else {
+	permission::grant -object_id $project_item_id -party_id $party_id -privilege write
+    }	
+       
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     util_memoize_flush [list pm::role::project_select_list_filter_not_cached -project_item_id $project_item_id -party_id $party_id]
 
