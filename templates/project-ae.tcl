@@ -21,10 +21,6 @@ if {[exists_and_not_null project_item_id] && ![exists_and_not_null project_id]} 
     set project_id [pm::project::get_project_id -project_item_id $project_item_id]
 }
 
-if {[empty_string_p $project_name]} {
-    set project_name [db_nextval pm_project_title_seq]
-}
-
 if {[exists_and_not_null project_id]} {
     set title "[_ project-manager.lt_Edit_a_project_term_l]"
     set context_bar [ad_context_bar "[_ project-manager.Edit_project_term]"]
@@ -70,7 +66,6 @@ ad_form -name add_edit \
             {label "[_ project-manager.lt_set_project_term_name]"}
             {value $project_name}
             {html {size 50}}
-	    {mode display}
         }
         {ongoing_p:text(hidden)
             {value "f"}
