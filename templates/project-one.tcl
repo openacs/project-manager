@@ -15,6 +15,7 @@ set user_id     [auth::require_login]
 set project_term       [_ project-manager.Project]
 set use_project_customizations_p [parameter::get -parameter "UseProjectCustomizationsP" -default "0"]
 set use_subprojects_p  [parameter::get -parameter "UseSubprojectsP" -default "0"]
+set use_fs_p [apm_package_installed_p file-storage]
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read

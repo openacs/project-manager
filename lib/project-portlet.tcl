@@ -18,6 +18,9 @@ set close_url "bulk-close?[export_vars $vars]"
 
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
+# Check if contacts is installed
+set contacts_installed_p [apm_package_installed_p contacts]
+
 #URL to rate this project
 set rate_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
 
@@ -46,7 +49,7 @@ set variables(customer_id) $project(customer_id)
 set project(status_pretty) [pm::project::get_status_description -project_item_id $project_item_id]
 
 set contacts_url [apm_package_url_from_key contacts]
-if {![empty_string_p contacts_url]} {
+if {![empty_string_p contacts_url] && $contacts_installed_p} {
     set project(customer_name) [contact::name -party_id $project(customer_id)]
 } else {
     set project(customer_name) ""

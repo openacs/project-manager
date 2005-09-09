@@ -9,6 +9,7 @@ set required_param_list [list package_id]
 set optional_param_list [list orderby status_id searchterm bulk_p action_p \
 			     filter_p base_url end_date_f user_space_p hidden_vars]
 set optional_unset_list [list assignee_id date_range is_observer_p]
+set dotlrn_installed_p [apm_package_installed_p dotlrn]
 
 set user_id [ad_conn user_id]
 foreach required_param $required_param_list {
@@ -355,14 +356,16 @@ db_multirow -extend { item_url customer_url category_select } projects project_f
     
     set item_url [export_vars -base "${base_url}one" {project_item_id}]
     
-    set community_id [dotlrn_community::get_community_id_from_url -url $base_url]
+    if {$dotlrn_installed_p} {
+        set community_id [dotlrn_community::get_community_id_from_url -url $base_url]
     
-    if { ![empty_string_p $community_id] } {
-	set community_name [dotlrn_community::get_community_name  $community_id]
-	set portal_info_name "Project: $community_name" 
-	set portal_info_url  "$base_url" 
+        if { ![empty_string_p $community_id] } {
+            set community_name [dotlrn_community::get_community_name  $community_id]
+            set portal_info_name "Project: $community_name" 
+            set portal_info_url  "$base_url" 
 	}
     
+    }
     # root CR folder
     set root_folder [pm::util::get_root_folder -package_id $package_id]
     

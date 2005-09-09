@@ -46,10 +46,12 @@
       fmt=@fmt@ 
 	/>
     <p />
+  <if @use_fs_p@>
   <include
     src="/packages/project-manager/lib/fs-portlet"
     folder_id="@folder_id@" />
 	<p />
+  </if>
   <include
     src="/packages/project-manager/lib/comments-portlet"
     project_id="@project_id@"

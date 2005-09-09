@@ -24,6 +24,9 @@ set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 # Get the URL for contacts
 set contacts_url [site_node::get_package_url -package_key contacts]
 
+# Check if contacts is installed
+set contacts_installed_p [apm_package_installed_p contacts]
+
 # Send Email URL
 set send_email_url "send-mail?project_id=$project_id"
 
@@ -66,13 +69,18 @@ set elements [list \
                              ] \
                   role_name [list \
                                  label "[_ project-manager.Role]" \
-                             ] \
-                  complaint [list \
-                                 label "[_ contacts.Complaint]" \
-                                 display_template {<a href="@people.complaint_url@">[_ project-manager.Add_complaint]</a>
-                                 } \
-                             ] \
-                  ]
+                             ]
+             ]
+
+if {$contacts_installed_p} {
+    lappend elements [list \
+                          complaint [list \
+                                         label "[_ contacts.Complaint]" \
+                                         display_template {<a href="@people.complaint_url@">[_ project-manager.Add_complaint]</a>
+                                         } \
+                                        ] \
+                         ]
+}
 
 template::list::create \
     -name people \
