@@ -97,16 +97,10 @@ callback pm::project_links -project_id $project_item_id
 set write_html ""
 if {$project(write_p) == "t"} {
     append write_html "
-    <a href=\"$edit_url\">
-      <img border=\"0\" src=\"/shared/images/Edit16.gif\"
-	alt=\"#acs-kernel.common_Edit#\" />
-    </a>"
+    <a href=\"$edit_url\"><img border=\"0\" src=\"/shared/images/Edit16.gif\" alt=\"#acs-kernel.common_Edit#\" /></a>"
 }
 
 if {$project(create_p) == "t"} {
-    append write_html "<a href=\"@permissions_url@\">
-      <img border=\"0\" src=\"resources/padlock.gif\" alt=\"#project-manager.Set_permissions#\" />
-    </img>
-    </a>"
+    append write_html "<a href=\"$permissions_url\"><img border=\"0\" src=\"resources/padlock.gif\" alt=\"#project-manager.Set_permissions#\" /></a>"
 }
 
