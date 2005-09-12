@@ -12,8 +12,8 @@
   </listfilters>
 </if>
 <if @display_mode@ eq "all">
-  <table cellpadding="3" cellspacing="3">
-      <td class="list-filter-pane" valign="top" width="200">
+  <table cellpadding="3" cellspacing="3" border="0" width="100%">
+      <td class="list-filter-pane" valign="top">
 	<form method="post" name="search" action="tasks">
 	  #project-manager.Search#<br />
 	  <input type="text" name="searchterm" value="@searchterm@" size="12" />
