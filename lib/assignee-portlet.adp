@@ -22,9 +22,11 @@
       <li>
 	<a href="@assignee_edit_url;noquote@">#project-manager.Edit_1#</a>
       </li>
+      <if @contacts_installed_p@>
       <li>
         <a href="@send_email_url;noquote@">#project-manager.send_mail#</a>
       </li>
+      </if>
     </ul>
   </td>
 </tr>
