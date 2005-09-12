@@ -1,5 +1,7 @@
 <master src=lib/master>
 <property name=title>Title</property>
+<property name=header_stuff><link href="/resources/calendar/calendar.css" rel="stylesheet" type="text/css"></property>
+
 <a name=top></a> 
   <if @display_p@ eq d>
   <a href="?date=@date@&display_p=l#top" class="button">By latest finish</a>
