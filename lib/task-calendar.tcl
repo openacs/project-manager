@@ -1,10 +1,10 @@
 set user_id [auth::require_login]
 
 set date [calendar::adjust_date -date $date -julian_date $julian_date]
-set base_url [ad_conn package_url]project-manager/
+set base_url [ad_conn package_url]
 
 
-set title "Task calendar"
+set title "#project-manager.Task_calendar#"
 set context [list $title]
 set header_stuff "
 <style type=\"text/css\">
@@ -76,10 +76,10 @@ if { ![exists_and_not_null package_id]} {
 
 
 if {[string is true $hide_closed_p]} {
-    set hide_show_closed "Show closed"
+    set hide_show_closed "#project-manager.Show_closed#"
     set here "?hide_closed_p=f&view=$view&date=$date&julian_date=$julian_date#top"
 } else {
-    set hide_show_closed "Hide closed"
+    set hide_show_closed "#project-manager.Hide_closed#"
     set here "?hide_closed_p=t&view=$view&date=$date&julian_date=$julian_date#top"
 }
 
