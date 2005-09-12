@@ -195,8 +195,7 @@ begin
                 p_description,          -- description
                 p_mime_type,            -- mime_type
                 null,                   -- nls_language
-                null,                   -- data
-                p_package_id            -- package_id
+                null                    -- data
         );
 
         v_revision_id := content_revision__new (
@@ -210,8 +209,7 @@ begin
                 NULL,                   -- revision_id
                 now(),                  -- creation_date
                 p_creation_user,        -- creation_user
-                p_creation_ip,          -- creation_ip
-                p_package_id            -- package_id
+                p_creation_ip           -- creation_ip
         );
 
         PERFORM content_item__set_live_revision (v_revision_id);
@@ -243,7 +241,6 @@ begin
         return v_revision_id;
 end;' language 'plpgsql';
 
-
 -- The delete function deletes a record and all related overhead. 
 
 select define_function_args('pm_project__delete_project_item', 'project_id');
@@ -272,7 +269,6 @@ begin
         PERFORM content_item__delete(p_project_id);
         return 0;
 end;' language 'plpgsql';
-
 
 select define_function_args('pm_project__new_project_revision', 'item_id, project_name, project_code, parent_id, goal, description, planned_start_date, planned_end_date, actual_start_date, actual_end_date, ongoing_p, status_id, organization_id, dform, creation_date, creation_user, creation_ip, package_id');
 
@@ -333,8 +329,7 @@ begin
                 NULL,                   -- revision_id
                 now(),                  -- creation_date
                 p_creation_user,        -- creation_user
-                p_creation_ip,          -- creation_ip
-                p_package_id            -- package_id
+                p_creation_ip           -- creation_ip
         );
 
         PERFORM content_item__set_live_revision (v_revision_id);
@@ -464,17 +459,23 @@ declare
         p_task_id                               alias for $18;
 
         v_item_id               cr_items.item_id%TYPE;
+        v_id                    cr_items.item_id%TYPE;
         v_revision_id           cr_revisions.revision_id%TYPE;
         v_task_number           integer;
 begin
         -- We want to put the task under the project item
 
         -- create the task_number
+        if p_task_id is null then
+           select
+        else
+           v_id := p_task_id;
+        end if;
 
         v_item_id := content_item__new (
-                p_task_id::varchar,     -- name
+                v_id::varchar,          -- name
                 p_project_id,           -- parent_id
-                p_task_id,              -- item_id
+                v_id,                   -- item_id
                 null,                   -- locale
                 now(),                  -- creation_date
                 p_creation_user,        -- creation_user
@@ -611,6 +612,7 @@ begin
 
         return v_revision_id;
 end;' language 'plpgsql';
+
 
 
 -- The delete function deletes a record and all related overhead. 

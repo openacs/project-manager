@@ -2246,15 +2246,17 @@ ad_proc -public pm::project::compute_status_mins {
 	    
 	    
 	    
-	    while { $mins_to_complete > [expr $hours_day * 60]} {
+	    while { $t_total_mins > [expr $hours_day * 60]} {
 		
-		set  [expr $today_j - 1]
+		set t_today [expr $today_j - 1]
 		
 		# if it is a holiday, don't subtract from total time
 		
 		if {[is_workday_p $t_today]} {
 		    set t_total_mins [expr $t_total_mins - [expr $hours_day * 60]]
-		}
+		} else {
+                    set t_total_mins 0
+                }
 		
 	    }
 	    
@@ -2347,7 +2349,7 @@ ad_proc -public pm::project::compute_status_mins {
 	    set t_total_mins $mins_to_complete 
 	    
 	    
-	    while { $mins_to_complete > [expr $hours_day * 60]} {
+	    while { $t_total_mins > [expr $hours_day * 60]} {
 		
 		set today_j [expr $today_j + 1]
 		
@@ -2357,7 +2359,9 @@ ad_proc -public pm::project::compute_status_mins {
 		    set t_total_mins [expr $t_total_mins + [expr $hours_day * 60]]
 
 	    
-		}
+		} else {
+                    set t_total_mins 0
+                }
 		
 	    }
 	    
@@ -2622,15 +2626,17 @@ ad_proc -public pm::project::compute_status_mins {
 		
 		
 		
-		while { $mins_to_complete > [expr $hours_day * 60]} {
+		while { $t_total_mins > [expr $hours_day * 60]} {
 		
-		    set  [expr $today_j - 1]
+		    set t_today [expr $today_j - 1]
 		    
 		    # if it is a holiday, don't subtract from total time
 		    
 		    if {[is_workday_p $t_today]} {
 			set t_total_mins [expr $t_total_mins - [expr $hours_day * 60]]
-		    }
+		    } else {
+                        set t_total_mins 0
+                    }
 		    
 		}
 		
