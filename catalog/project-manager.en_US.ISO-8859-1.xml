@@ -47,6 +47,7 @@
   <msg key="Attach_a_file">Attach a file?</msg>
   <msg key="Average">Average</msg>
   <msg key="back_to_admin_page">back to admin page</msg>
+  <msg key="By_deadline">By deadline</msg>
   <msg key="Cancel">Cancel</msg>
   <msg key="Cancel_do_not_delete">Cancel, do not delete</msg>
   <msg key="Categories">Categories</msg>
@@ -112,6 +113,7 @@
   <msg key="Edit_Process">Edit Process</msg>
   <msg key="Edit_project_term">Edit %project_term%</msg>
   <msg key="Edit_task_term">Edit %task_term%</msg>
+  <msg key="Edit_Tasks">Edit Tasks</msg>
   <msg key="Edit_tasks">Edit tasks</msg>
   <msg key="Edit_this_role">Edit this role</msg>
   <msg key="EF">EF</msg>
@@ -501,7 +503,9 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Send_email">Send email?</msg>
   <msg key="send_mail">Send Mail</msg>
   <msg key="send_message_to">Send message to:</msg>
+  <msg key="Set_permissions">Set permissions</msg>
   <msg key="Set_up">Set up</msg>
+  <msg key="Show_closed">Show closed</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
   <msg key="Slack">Slack:</msg>
   <msg key="Slack_1">Slack</msg>
