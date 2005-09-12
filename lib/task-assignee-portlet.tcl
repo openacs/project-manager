@@ -21,7 +21,7 @@ foreach optional_param {} {
 set user_id     [auth::require_login]
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
-set assignee_add_self_widget "Add myself as <form method=\"post\" action=\"task-assign-add\">[export_vars -form {{task_item_id $task_id} user_id return_url}][pm::role::task_select_list -select_name "role_id" -task_item_id $task_id -party_id $user_id]<input type=\"Submit\" value=\"OK\" /></form>"
+set assignee_add_self_widget "[_ project-manager.Add_myself_as] <form method=\"post\" action=\"task-assign-add\">[export_vars -form {{task_item_id $task_id} user_id return_url}][pm::role::task_select_list -select_name "role_id" -task_item_id $task_id -party_id $user_id]<input type=\"Submit\" value=\"OK\" /></form>"
 
 # Only need a 'remove myself' link if you are already assigned
 set assigned_p [pm::task::assigned_p -task_item_id $task_id -party_id $user_id]
