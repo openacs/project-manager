@@ -9,20 +9,11 @@
 	<th>
       </else>
       <if @task_info.write_p@ eq t>
-	<a href="@task_edit_url;noquote@">
-	  <img border="0" src="/shared/images/Edit16.gif"
-	    alt="Edit" />
-	</a>
+	<a href="@task_edit_url;noquote@"><img border="0" src="/shared/images/Edit16.gif" alt="Edit" /></a>
       </if>
-      <a href="@print_link@">
-	<img border="0" src="resources/print-16.png"
-	  alt="Print" />
-      </a>
+      <a href="@print_link@"><img border="0" src="resources/print-16.png" alt="Print" /></a>
       <if @task_info.create_p@ eq t>
-	<a href="@permissions_url@">
-	  <img border="0" src="resources/padlock.gif" alt="Set permissions" />
-	</img>
-	</a>
+	<a href="@permissions_url@"><img border="0" src="resources/padlock.gif" alt="Set permissions" /></a>
       </if>
       <if @task_info.priority@ ge @urgency_threshold@>
 	<font color="red">
