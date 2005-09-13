@@ -186,5 +186,8 @@ ad_proc -private pm::install::after_upgrade {
 	    3.1d2 3.1d3 {
 		apm_parameter_register "DefaultPortletLayoutP" "The src for the layout to user on project manager portlets master tag" "project-manager" "/packages/project-manager/lib/portlet" "string"
 	    }
+	    3.1d3 3.1d4 {
+		apm_parameter_register "AssignGroupP" "Allows to assign a group instead of a user to projects and tasks. Set it to 1 if you want to allow this functionallity and to 0 if you don't. Default 0" "project-manager" "0" "number" "project-manager"
+	    }
 	}
 }
