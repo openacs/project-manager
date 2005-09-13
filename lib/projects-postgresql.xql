@@ -5,6 +5,17 @@
   <fullquery name="project_folders">
     <querytext>
         SELECT
+        CASE
+        WHEN SUM(rx.estimated_hours_work) = 0
+        THEN
+        100
+        WHEN SUM(rx.estimated_hours_work) IS NULL
+        THEN
+        0
+        ELSE
+        FLOOR(SUM(rx.percent_complete * rx.estimated_hours_work) /
+        SUM(rx.estimated_hours_work))
+        END AS percent_complete,
         p.item_id as project_item_id,
         p.project_id,
 	p.status_id,
@@ -31,6 +42,8 @@
 	to_char(p.creation_date, 'YYYY-MM_DD HH24:MI:SS') as creation_date,
 	to_char(p.planned_start_date, 'YYYY-MM_DD HH24:MI:SS') as start_date
         FROM pm_projectsx p 
+             LEFT JOIN pm_tasks_revisionsx rx ON rx.parent_id = 
+                p.item_id
              LEFT JOIN pm_project_assignment pa 
                 ON p.item_id = pa.project_id
              LEFT JOIN organizations o ON p.customer_id =
@@ -50,10 +63,12 @@
                         ctg.deprecated_p = 'f')
                  c ON p.item_id = c.object_id, 
         cr_items i, 
+        cr_items i2,
 	cr_folders f,
         pm_roles pr
         WHERE 
-        p.project_id = i.live_revision 
+        p.project_id = i.live_revision
+        and rx.object_id = i2.live_revision
 	and i.parent_id = f.folder_id
 	and f.package_id in ($package_ids)
         and exists (select 1 from acs_object_party_privilege_map ppm 
@@ -61,6 +76,28 @@
                     and ppm.privilege = 'read'
                     and ppm.party_id = :user_id)
         [template::list::filter_where_clauses -and -name projects]
+        GROUP BY
+        p.item_id,
+        p.project_id,
+        p.status_id,
+        p.parent_id,
+        p.object_type,
+        p.title,
+        p.project_code,
+        p.planned_start_date,
+        p.planned_end_date,
+        p.ongoing_p,
+        c.category_id,
+        c.category_name,
+        p.earliest_finish_date,
+        p.latest_finish_date,
+        p.actual_hours_completed,
+        p.estimated_hours_total,
+        p.estimated_finish_date,
+        o.name,
+        o.organization_id,
+        f.package_id,
+        p.creation_date
         [template::list::orderby_clause -orderby -name projects]
     </querytext>
 </fullquery>

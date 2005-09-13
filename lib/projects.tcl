@@ -146,9 +146,9 @@ set contact_coloum "fff"
 
 
 
-set row_list "checkbox {}\nproject_name {}\n" 
+set row_list "checkbox {}\npercent_complete {} \nproject_name {}\n" 
 foreach element $elements {
-    append row_list "$element {}\n"
+        append row_list "$element {}\n"
 }
 
 
@@ -221,7 +221,10 @@ template::list::create \
     -selected_format $format \
     -key project_item_id \
     -elements {
-	project_name {
+        percent_complete {                                                                                                     
+            label "%"                                                                                                          
+            display_template "<div style=\"margin:0;align:left;background-color:green;width:@projects.percent_complete@%;text-align:left;\">&nbsp;</div>@projects.percent_complete@%"                                                                                 }
+        project_name {
 	    label "[_ project-manager.Project_name]"
 	    link_url_col item_url
 	    link_html { title "[_ project-manager.lt_View_this_project_ver]" }
@@ -272,7 +275,12 @@ template::list::create \
     -filters $filters \
     -orderby {
 	default_value $default_orderby
-	project_name {
+        percent_complete {
+            label "[_ project-manager.percent]"
+            orderby_desc "percent_complete desc"
+            orderby_asc "percent_complete asc"
+        }
+        project_name {
 	    label "[_ project-manager.Project_name]"
 	    orderby_desc "upper(p.title) desc"
 	    orderby_asc "upper(p.title) asc"
