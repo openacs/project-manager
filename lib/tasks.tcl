@@ -6,6 +6,8 @@ set required_param_list [list]
 set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url watcher_p page_num]
 set optional_unset_list [list party_id role_id project_item_id instance_id is_observer_p]
 
+set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
+
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
 	return -code error "$required_param is a required parameter."
@@ -239,9 +241,10 @@ foreach element $elements {
 }
 
 
-if {$bulk_p == 1} {
+if {$use_bulk_p == 1} {
+    set row_list "multiselect {}\n $row_list multiselect"
     set bulk_actions [list "[_ project-manager.Log_hours]" "${base_url}log-bulk" "[_ project-manager.lt_Log_hours_for_several]" "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]"]
-    set bulk_action_export_vars [list [list return_url]]
+    set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 } else {
     set bulk_actions [list]
     set bulk_action_export_vars [list]
@@ -401,6 +404,7 @@ template::list::create \
 	}
     } \
     -actions $actions \
+    -checkbox_name multiselect \
     -bulk_actions $bulk_actions \
     -bulk_action_export_vars $bulk_action_export_vars \
     -page_size_variable_p 1 \

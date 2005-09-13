@@ -35,8 +35,9 @@ ad_page_contract {
 } -errors {
 }
 
+set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
 
-if {$new_tasks == "1"} {
+if {$new_tasks == "1" && $use_bulk_p == "0"} {
     ad_returnredirect [export_vars -base task-add-edit-one {task_item_id project_item_id process_id process_task_id:multiple return_url}]
     ad_script_abort
 }

@@ -157,6 +157,7 @@
   <msg key="Linking">Linking</msg>
   <msg key="Log">Log</msg>
   <msg key="Log_entry">Log entry:</msg>
+  <msg key="Log_hours">Log hours</msg>
   <msg key="Log_time">Log time</msg>
   <msg key="Logged_variables">Logged variables</msg>
   <msg key="Logger">Logger</msg>
@@ -239,6 +240,7 @@
   <msg key="lt_Link_instances">This page allows you to link other package instances to this project manager</msg>
   <msg key="lt_Linked_logger_project">Linked logger project</msg>
   <msg key="lt_Linked_logger_project_1">Linked logger projects</msg>
+  <msg key="lt_Log_hours_for_several">Log hours</msg>
   <msg key="lt_Log_time_for_multiple">Log time for multiple tasks</msg>
   <msg key="lt_Logger_is_a_package">Logger is a package that lets you log time, expenses, and
   other . Project manager requires you to

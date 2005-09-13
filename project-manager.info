@@ -6,12 +6,13 @@
     <pretty-plural>Project Managers</pretty-plural>
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
-    
+    <auto-mount>Alex Kroman</auto-mount>
+
     <version name="3.1d3" url="http://openacs.org/repository/download/apm/project-manager-3.1d3.apm">
-        <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
+        <owner url="mailto:alexk@bread.com">Alex Kroman</owner>
         <summary>Project management tool for OpenACS</summary>
-        <release-date>2005-08-12</release-date>
-        <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
+        <release-date>2005-09-13</release-date>
+        <vendor url="mailto:alexk@bread.com">Integrated Bakery Resources</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
@@ -35,7 +36,7 @@
             <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
         </callbacks>
         <parameters>
-	    <parameter datatype="string" min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/sloan-portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/sloan-portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
@@ -45,6 +46,7 @@
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskOne"  default="/packages/project-manager/templates/task-one" description="The template for the display of an individual task" section_name="Templates"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseBulkP"  default="0" description="If set to 1 the user can edit multiple tasks at once" section_name="All"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="UseDayInsteadOfHour"  default="f" description="Use day measurements instead of hour measurements. t or f." section_name="project-manager"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseGoalP"  default="1" description="If set to 1, then shows the option of including project goals" section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseProjectCustomizationsP"  default="0" description="This allows you to use the project-manager-custom-create and drop scripts to add extra columns to your projects table. When creating or editing a project, you will have a second page that you can customize for your company's specific needs, add-edit-2. If you have set up no customization, set to 0, otherwise, set to 1. You should leave this set to 0 unless you have a programmer who has done local modifications to the code!" section_name="projects"/>
