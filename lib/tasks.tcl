@@ -242,7 +242,7 @@ foreach element $elements {
 
 
 if {$use_bulk_p == 1} {
-    set row_list "multiselect {}\n $row_list multiselect"
+    set row_list "multiselect {}\n $row_list"
     set bulk_actions [list "[_ project-manager.Log_hours]" "${base_url}log-bulk" "[_ project-manager.lt_Log_hours_for_several]" "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]"]
     set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 } else {
