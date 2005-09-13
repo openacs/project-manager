@@ -496,6 +496,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Role_ID">Role ID</msg>
   <msg key="Roles">Roles</msg>
   <msg key="Search">Search:</msg>
+  <msg key="search">Search</msg>
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
   <msg key="search_help">Enter a keyword to search for projects.</msg>

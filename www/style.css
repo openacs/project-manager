@@ -102,3 +102,10 @@ td.fill-list-middle {
 td.fill-list-bg {
   background-color: #eaf2ff;
 }
+
+#search-block { 
+  border:1px solid #000; 
+  background-color: #EAF2FF;
+  padding:5px; 
+  width:70%;
+}
