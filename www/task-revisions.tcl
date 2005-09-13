@@ -20,6 +20,9 @@ ad_page_contract {
 } -errors {
 }
 
+set user_id [ad_conn user_id]
+set package_id [ad_conn package_id]
+
 # permissions. This is a general 'does the user have permission to even ask for this page to be run?'
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
 
