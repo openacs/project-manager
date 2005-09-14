@@ -88,11 +88,11 @@
   <msg key="Dep">Dep</msg>
   <msg key="dependencies">dependencies</msg>
   <msg key="Dependency">Dependency:</msg>
-  <msg key="Dependency_1">Dependency\</msg>
+  <msg key="Dependency_1">Dependency</msg>
   <msg key="Dependency_types">Dependency types</msg>
   <msg key="Description">Description</msg>
   <msg key="Description_1">Description:</msg>
-  <msg key="Description_2">Description\</msg>
+  <msg key="Description_2">Description</msg>
   <msg key="Description_changed">Description changed</msg>
   <msg key="Done">Done.</msg>
   <msg key="Done_1">Done</msg>

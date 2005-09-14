@@ -178,33 +178,33 @@ db_foreach dependency_query {} -column_array tasks {
         }
     }
 
-    append add_edit_definition {
+     append add_edit_definition "
         {task_id.$tasks(task_id):text(hidden)
- {value {$tasks(task_id)}}
+            {value {$tasks(task_id)}}
         }
 
-{task_title.$tasks(task_id):text(hidden)
-    {section {$tasks(task_title)}}
-    {label \"[_ project-manager.Subject_2]"}
+        {task_title.$tasks(task_id):text(hidden)
+            {section {$tasks(task_title)}}
+            {label \"#project-manager.Subject_2#\"}
             {value {$tasks(task_title)}}
         }
 
-{description.$tasks(task_id):text(inform)
-    {label \"[_ project-manager.Description_2]"}
+        {description.$tasks(task_id):text(inform)
+            {label \"#project-manager.Description_2#\"}
             {value {$tasks(description)}}
         }
 
-{dependency_type.$tasks(task_id):text(hidden)
-    {value {finish_before_start}}
-}
+        {dependency_type.$tasks(task_id):text(hidden)
+            {value {finish_before_start}}
+        }
 
-{dependency_task_id.$tasks(task_id):text(select)
-    {label \"[_ project-manager.Dependency_1]"}
+        {dependency_task_id.$tasks(task_id):text(select)
+            {label \"#project-manager.Dependency_1#\"}
             {options {$dependency_options_full}}
             {value {$tasks(parent_task_id)}}
             {help_text {$task_term the dependency is based on}}
         }
-        }
+        "
     }
 
     ad_form -extend -name add_edit -form $add_edit_definition
