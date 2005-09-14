@@ -2669,13 +2669,40 @@ ad_proc -public pm::project::compute_status_mins {
                         set activity_time($task_item) 0
                         ns_log Notice "setting activity_time($task_item) 0 (location 2)"
                     }
-
+                    
+                    set date [lindex [split $latest_finish($task_item) " "] 0]
+                    set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
+                    set hours [lc_parse_number $hours en_US]
+                    set mins  [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 1]
+                    set mins [expr ($hours*60) + $mins]
+                    set date_j [dt_ansi_to_julian_single_arg $date]
+                    set today_j $date_j
+                    set mins_to_complete [expr $hours_to_complete * 60]
+                    set t_total_mins $mins_to_complete 
+		
+                    while { $t_total_mins > [expr $hours_day * 60]} {
+                        set t_today [expr $today_j - 1]
+		    
+                        # if it is a holiday, don't subtract from total time
+                        
+                        if {[is_workday_p $t_today]} {
+                            set t_total_mins [expr $t_total_mins - [expr $hours_day * 60]]
+                        } else {
+                            set t_total_mins 0
+                        }
+                    }
+		
+                    set t_mins [expr $mins - $t_total_mins]
+                    set hours [expr round ($t_mins/60)]
+                    set t_mins [expr round($t_mins) % 60]
+                    
                     set latest_start($task_item) \
                         [latest_start \
-                             -end_date $latest_finish($task_item) \
+                             -end_date_j  $date_j \
                              -hours_to_complete $activity_time($task_item) \
                              -hours_day $hours_day]
-                    
+
+                    set latest_start($task_item) "[dt_julian_to_ansi $latest_start($task_item)] $hours:$t_mins"
                 }
             }
             lappend present_tasks $task_item
@@ -2878,7 +2905,7 @@ ad_proc -public pm::project::compute_status_mins {
 
                             set latest_start($task_item) \
                                 [latest_start \
-                                     -end_date $latest_finish($task_item) \
+                                     -end_date_j $latest_finish($task_item) \
                                      -hours_to_complete $activity_time($task_item) \
                                      -hours_day $hours_day]
 
