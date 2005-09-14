@@ -59,4 +59,6 @@ if {[empty_string_p $instance_id]} {
 
 set processes_html [pm::process::select_html]
 
-
+if {![info exists instance_id]} {
+    set instance_id 0
+}

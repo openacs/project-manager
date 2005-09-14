@@ -1,10 +1,13 @@
 # Possible
 # party_id
 # role_id
-
 set required_param_list [list]
 set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url watcher_p page_num]
-set optional_unset_list [list party_id role_id project_item_id instance_id is_observer_p]
+set optional_unset_list [list party_id role_id project_item_id is_observer_p]
+
+if {$instance_id == 0} {
+    unset instance_id
+}
 
 set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
 
@@ -165,7 +168,7 @@ set filters [list \
 				      where_clause "t.parent_id = :project_item_id"
 				 ] \
 		 instance_id [list \
-				  where_clause "p.object_package_id = :instance_id"
+				  where_clause "ti.process_instance = :instance_id"
 			     ] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
