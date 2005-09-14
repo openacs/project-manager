@@ -12,6 +12,7 @@
   <li> 
     <form action="process-task-add-edit" method="post"> 
 #project-manager.lt_add_new_tasks#
+        <input type="hidden" name="process_id" value="@process_id@">
       <input type="submit" name="submit" value="#project-manager.Go#" />
     </form>
   </li>
