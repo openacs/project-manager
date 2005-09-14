@@ -21,6 +21,12 @@ if {[exists_and_not_null project_item_id] && ![exists_and_not_null project_id]} 
     set project_id [pm::project::get_project_id -project_item_id $project_item_id]
 }
 
+# We want to use project numbers if no project_name is given.
+# If the user wants, he can still provide a project_name
+if {[empty_string_p $project_name]} {
+    set project_name [db_nextval pm_project_title_seq]
+}
+
 if {[exists_and_not_null project_id]} {
     set title "[_ project-manager.lt_Edit_a_project_term_l]"
     set context_bar [ad_context_bar "[_ project-manager.Edit_project_term]"]
