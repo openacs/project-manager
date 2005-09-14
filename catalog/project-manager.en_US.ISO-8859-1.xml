@@ -110,6 +110,7 @@
   <msg key="Edit_a_Process">Edit a Process</msg>
   <msg key="Edit_assignees">Edit assignees</msg>
   <msg key="Edit_categories">Edit categories</msg>
+  <msg key="Edit_multiple_tasks">Edit multiple tasks</msg>
   <msg key="Edit_Process">Edit Process</msg>
   <msg key="Edit_project_term">Edit %project_term%</msg>
   <msg key="Edit_task_term">Edit %task_term%</msg>
@@ -185,6 +186,7 @@
   <msg key="lt_Add_a_process_task_te">Add a process %task_term_lower%</msg>
   <msg key="lt_Add_a_process_task_te_1">Add a process %task_term_lower% (assignment)</msg>
   <msg key="lt_Add_a_project_term_lo">Add a %project_term_lower%</msg>
+  <msg key="lt_add_new_tasks">Add new tasks</msg>
   <msg key="lt_Add_task_term_lower_d_1">Add %task_term_lower% dependencies</msg>
   <msg key="lt_Administrator_needs_t">Administrator needs to set up logger integration</msg>
   <msg key="lt_After_they_have_done_">After they have done this, you can go
