@@ -39,8 +39,8 @@
                 end as customer_name,
         o.organization_id as customer_id,
 	f.package_id,
-	to_char(p.creation_date, 'YYYY-MM_DD HH24:MI:SS') as creation_date,
-	to_char(p.planned_start_date, 'YYYY-MM_DD HH24:MI:SS') as start_date
+	to_char(p.creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date,
+	to_char(p.planned_start_date, 'YYYY-MM-DD HH24:MI:SS') as start_date
         FROM pm_projectsx p 
              LEFT JOIN pm_tasks_revisionsx rx ON rx.parent_id = 
                 p.item_id
