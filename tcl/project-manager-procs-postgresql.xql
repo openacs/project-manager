@@ -52,6 +52,22 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="pm::util::subsite_assignees_list_of_lists_not_cached.get_assignees_from_groups">
+    <querytext>
+      SELECT DISTINCT
+      g.group_name,
+      g.group_id
+      FROM
+      groups g,
+      acs_object_party_privilege_map ppm
+      WHERE
+      ppm.object_id = :package_id
+      and ppm.privilege = 'read'
+      and ppm.party_id = g.group_id
+      ORDER BY group_name
+    </querytext>
+  </fullquery>
+
     <fullquery name="pm::util::get_root_folder.get_root_folder">
     <querytext>
         select pm_project__get_root_folder (:package_id, 'f')

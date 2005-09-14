@@ -47,10 +47,20 @@ if ![info exists package_id] {
     set package_id [ad_conn package_id]
 }
 
+
+set extra_column ""
+set extra_join ""
+if { [parameter::get -parameter "AssignGroupP" -default 0] } {
+    set extra_column "g.group_name,"
+    set extra_join " LEFT JOIN groups g ON t.party_id = g.group_id"
+}
+
+
 # ---------------------------------------------------------------
 
 # Hide finished tasks. This should be added as a filter, but I did not
 # have time to look it up in the howto. <openacs@sussdorff.de>
+
 
 set hide_done_tasks_p [parameter::get \
 			   -parameter "HideDoneTaskP" -default "1"]
@@ -359,8 +369,30 @@ template::list::create \
 	}
         last_name {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if>
-		@tasks.first_names@&nbsp;@tasks.last_name@ <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template { 
+		<group column="task_item_id"> 
+		    <if @tasks.person_id@ eq @tasks.my_user_id@> 
+                        <span class="selected"> 
+		    </if> 
+		    <if @tasks.is_lead_p@>
+                        <i>
+                    </if>
+		    <if @tasks.first_names@ not eq "">
+		    @tasks.first_names@&nbsp;@tasks.last_name@ 
+		    </if>
+                    <else>
+		        <if @tasks.group_name@ not nil>
+		            @tasks.group_name@
+		        </if>
+		    </else>
+                    <if @tasks.is_lead_p@>
+                        </i>
+                    </if> 
+                    <if @tasks.person_id@ eq @tasks.my_user_id@> 
+                        </span> 
+                    </if> 
+                    <br> 
+		</group>
             }
 	}
     } \
@@ -432,8 +464,7 @@ template::list::create \
 	}
     }
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url} tasks tasks {} {
-
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url} tasks tasks " " {
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
 

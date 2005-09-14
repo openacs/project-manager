@@ -40,24 +40,7 @@ set project_task_assignee_url [export_vars -base project-assign-task-assignees {
 
 set roles_list_of_lists [pm::role::select_list_filter]
 
-db_foreach assignee_query {
-    SELECT
-    a.party_id,
-    r.role_id
-    FROM
-    pm_project_assignment a,
-    pm_roles r,
-    persons p
-    WHERE
-    a.role_id = r.role_id and
-    a.party_id = p.person_id and
-    a.project_id = :project_item_id
-    ORDER BY
-    r.role_id,
-    p.first_names,
-    p.last_name
-
-} {
+db_foreach assignee_query { } {
     set assigned($party_id-$role_id) 1
 }
 
@@ -67,6 +50,9 @@ set assignee_list_of_lists [pm::util::subsite_assignees_list_of_lists]
 if { ![empty_string_p $search_user_id]} {
     # Get the user name
     set fullname [db_string get_user_fullname { } -default ""]
+    if { [empty_string_p $fullname] } {
+	set fullname [db_string get_group_name { } -default ""]
+    }
     if { ![empty_string_p $fullname] && [string equal [lsearch $assignee_list_of_lists [list $fullname $search_user_id]] "-1"] } {
 	lappend assignee_list_of_lists [list $fullname $search_user_id]
     }
@@ -86,9 +72,7 @@ foreach role_list $roles_list_of_lists {
     foreach assignee_list $assignee_list_of_lists {
         set name [lindex $assignee_list 0]
         set person_id [lindex $assignee_list 1]
-	set email Email
-	#[party::email -party_id $person_id]
-
+	set email [party::email -party_id $person_id]
         if {[exists_and_not_null assigned($person_id-$role)]} {
             set checked "checked"
         } else {
@@ -97,10 +81,14 @@ foreach role_list $roles_list_of_lists {
 
         append html "
           <input name=\"assignee\" value=\"$person_id-$role\"
-              type=\"checkbox\" $checked />$name ($email)
-          <br />
-        "
-
+              type=\"checkbox\" $checked />$name "
+	if { ![empty_string_p $email] } {
+	    append html "
+     	    ($email)
+            "
+	}
+	append html "
+            <br />"
     }
 
     # Add the list of Employees from the customer as well if they are

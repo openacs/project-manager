@@ -41,7 +41,7 @@ template::list::create \
                 "[_ project-manager.Who]"
             }
             display_template {
-                <if @people.is_lead_p@><i></if>@people.user_info@<if @people.is_lead_p@></i></if>
+                <if @people.is_lead_p@><i></if>@people.assign_name@<if @people.is_lead_p@></i></if>
             }
         }
         role_id {
@@ -60,14 +60,9 @@ template::list::create \
     } \
     -orderby {
         default_value role_id,desc
-        first_names {
-            orderby_asc "first_names asc, last_name asc"
-            orderby_desc "first_names desc, last_name desc"
-            default_direction asc
-        }
         role_id {
-            orderby_asc "role_id asc, user_info asc"
-            orderby_desc "role_id desc, user_info asc"
+            orderby_asc "role_id asc"
+            orderby_desc "role_id desc"
             default_direction asc
         }
         default_value role_id,asc
@@ -77,4 +72,17 @@ template::list::create \
         width 100%
     }
 
-db_multirow people task_people_query { }
+set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+
+if { $assign_group_p } {
+    set query_name "task_people_group_query"
+} else {
+    set query_name "task_people_query"
+}
+
+db_multirow -extend { assign_name } people $query_name { } {
+    set assign_name [db_string get_user_name { } -default ""]
+    if { $assign_group_p && [empty_string_p $assign_name] } {
+	set assign_name [db_string get_group_name { } -default ""]
+    }
+}

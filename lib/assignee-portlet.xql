@@ -7,6 +7,7 @@
 <!-- @cvs-id $Id$ -->
 
 <queryset>
+
     <fullquery name="project_people_query">
     <querytext>
         SELECT
@@ -18,10 +19,10 @@
         FROM 
         pm_project_assignment a,
         pm_roles r,
-        persons p
+	persons p
         WHERE
         a.role_id = r.role_id and
-        a.party_id = p.person_id and
+	a.party_id = p.person_id and
         project_id = :project_item_id
         and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = :project_item_id
@@ -32,4 +33,47 @@
     </querytext>
   </fullquery>
 
+    <fullquery name="project_people_groups_query">
+    <querytext>
+        SELECT
+        a.project_id,
+        r.one_line as role_name,
+        a.party_id,
+        r.is_lead_p
+        FROM 
+        pm_project_assignment a,
+        pm_roles r
+        WHERE
+        a.role_id = r.role_id and
+        project_id = :project_item_id
+        and exists (select 1 from acs_object_party_privilege_map ppm
+                    where ppm.object_id = :project_item_id
+                    and ppm.privilege = 'read'
+                    and ppm.party_id = :user_id)
+        ORDER BY
+        r.role_id
+    </querytext>
+  </fullquery>
+
+<fullquery name="get_group_name">
+    <querytext>
+	select
+		group_name
+	from
+		groups
+	where
+		group_id = :party_id
+    </querytext>
+</fullquery>
+
+<fullquery name="get_user_name">
+    <querytext>
+	select
+	        p.first_names || ' ' || p.last_name as name
+	from
+		persons p
+	where
+		person_id = :party_id
+    </querytext>
+</fullquery>
 </queryset>

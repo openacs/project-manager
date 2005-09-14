@@ -237,6 +237,7 @@ ad_proc -private pm::util::word_diff {
 	# element to start the list with.
 	set old_w [linsert [split $old $split_by] 0 {}]
 	set sv 1
+	set res ""
 
 #	For debugging purposes:
 #	set diff_pipe [open "| diff -f $old_f $new_f" "r"]
@@ -289,6 +290,7 @@ ad_proc -private pm::util::word_diff {
 			set sv [expr $d_end + 1]
 		}
 	}
+	
 	
 	for {set i $sv} {$i < [llength $old_w]} {incr i} {
 		append res "${split_by}[lindex $old_w $i]"
@@ -740,11 +742,17 @@ ad_proc -public pm::util::subsite_assignees_list_of_lists_not_cached {
 #    }
     
     set package_id [ad_conn package_id]
-#    set user_group_id [application_group::group_id_from_package_id \
-                           -package_id $subsite_id]
-
-    set assignees [db_list_of_lists get_assignees { }]
+    #    set user_group_id [application_group::group_id_from_package_id -package_id $subsite_id]
     
+    set assignees [db_list_of_lists get_assignees { }]
+
+    if { [parameter::get -parameter "AssignGroupP" -default 0]} {
+	# We need to have the groups also in the list to assign
+	set group_assignees [db_list_of_lists get_assignees_from_groups { }]
+	foreach assignee $group_assignees {
+	    lappend assignees $assignee
+	}
+    }
     return $assignees
 }
 

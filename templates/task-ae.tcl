@@ -368,8 +368,19 @@ if {[string is true $using_process_p]} {
 
 foreach one_assignee $assignee_role_list {
     set person_id [lindex $one_assignee 0]
-    set name [person::name -person_id $person_id]
-    lappend assignee_options [list $name $person_id]
+    if { [parameter::get -parameter "AssignGroupP" -default 0] } {
+	set name [db_string get_group_name { } -default ""]
+	if { [empty_string_p $name] } {
+	    set name [person::name -person_id $person_id]
+	}
+	lappend assignee_options [list $name $person_id]
+    } else {
+	set name [db_string get_group_name { } -default ""]
+	if { [empty_string_p $name] } {
+	    set name [person::name -person_id $person_id]
+	    lappend assignee_options [list $name $person_id]
+	}
+    }
 }
 
 foreach role_list $roles_list {

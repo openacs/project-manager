@@ -48,8 +48,18 @@ if {$assigned_p} {
 
 set assignee_edit_url [export_vars -base project-assign-edit {project_item_id return_url}]
 
-db_multirow -extend {contact_url complaint_url} people project_people_query {} {
-    
+set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+if { $assign_group_p } {
+    set query_name "project_people_groups_query"
+} else {
+    set query_name "project_people_query"
+}
+
+db_multirow -extend {contact_url complaint_url name} people $query_name {} {
+    set name [db_string get_user_name { } -default ""]
+    if { $assign_group_p && [empty_string_p $name] } {
+	set name [db_string get_group_name { } -default ""]
+    }
     # If contacts is installed provide a link to the contacts party_id, otherwise don't
     if {![empty_string_p $contacts_url]} {
         set contact_url "${contacts_url}$party_id"
@@ -60,13 +70,13 @@ db_multirow -extend {contact_url complaint_url} people project_people_query {} {
  }
 
 set elements [list \
-                  user_name [list \
-                                 label "[_ project-manager.Who]" \
-                                 display_template {<if @people.is_lead_p@><i></if>
-                                     <a href="@people.contact_url@">@people.user_name@</a>
-                                     <if @people.is_lead_p@></i></if>
-                                 } \
-                             ] \
+                  name [list \
+			    label "[_ project-manager.Who]" \
+			    display_template {<if @people.is_lead_p@><i></if>
+				<a href="@people.contact_url@">@people.name@</a>
+				<if @people.is_lead_p@></i></if>
+			    } \
+			   ] \
                   role_name [list \
                                  label "[_ project-manager.Role]" \
                              ]

@@ -25,6 +25,7 @@
         u.person_id,
         u.first_names,
         u.last_name,
+	$extra_column
         t.percent_complete,
         d.parent_task_id,
         d.dependency_type,
@@ -66,6 +67,9 @@
            persons u 
            ON 
            t.party_id = u.person_id 
+
+	   $extra_join
+
            LEFT JOIN
            pm_roles r
            ON t.role_id = r.role_id,  
@@ -130,6 +134,9 @@
            persons u 
            ON 
            t.party_id = u.person_id 
+
+  	   $extra_join
+
            LEFT JOIN
            pm_roles r
            ON t.role_id = r.role_id,  

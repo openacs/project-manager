@@ -54,4 +54,15 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="get_group_name">
+    <querytext>
+	select 
+		group_name
+	from 
+		groups
+	where 
+		group_id = :person_id
+    </querytext>
+  </fullquery>
+
 </queryset>
