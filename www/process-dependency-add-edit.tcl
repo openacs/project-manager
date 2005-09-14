@@ -28,6 +28,8 @@ ad_page_contract {
 
 # ---------------------------------------------------------------
 
+set add_edit_definition ""
+
 # turn the use_dependency
 
 if {[llength [array get use_dependency]] > 0} {
@@ -110,7 +112,8 @@ ad_form -name add_edit -form {
 
     foreach tr $use_dependency_list {
 
-	set type_id $dependency_type($tr)
+        set type_id $dependency_type($tr)
+        
         set parent_tsk_id $dependency_task_id($tr)
 
 	set tsk_revision_id $tr
@@ -160,7 +163,7 @@ ad_form -name add_edit -form {
 set dependency_keys [list]
 
 db_foreach get_dependency_tasks {} -column_array dependency_tasks {
-
+    
     set dependency_options($dependency_tasks(task_title)) $dependency_tasks(task_id)
 
     lappend dependency_keys $dependency_tasks(task_title)}
@@ -168,7 +171,6 @@ db_foreach get_dependency_tasks {} -column_array dependency_tasks {
 # get the information on tasks from their task_id numbers
 
 db_foreach dependency_query {} -column_array tasks {
-
     # set up the tasks that can be viewed. Takes out the current task
 
     set dependency_options_full [list]
