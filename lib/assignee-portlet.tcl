@@ -72,14 +72,12 @@ set elements [list \
                              ]
              ]
 
-if {$contacts_installed_p} {
-    lappend elements [list \
-                          complaint [list \
-                                         label "[_ contacts.Complaint]" \
-                                         display_template {<a href="@people.complaint_url@">[_ project-manager.Add_complaint]</a>
-                                         } \
-                                        ] \
-                         ]
+if { $contacts_installed_p } {
+    lappend elements complaint [list \
+				    label "[_ contacts.Complaint]" \
+				    display_template {<a href="@people.complaint_url@">[_ project-manager.Add_complaint]</a>
+				    } \
+				   ]
 }
 
 template::list::create \
