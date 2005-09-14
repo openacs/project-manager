@@ -398,8 +398,7 @@ ad_proc -public pm::process::url {
     @error 
 } {
 
-    return [pm::util::url -fully_qualified_p $fully_qualified_p][export_vars -base one {project_item_id {instance_id $process_instance_id}}]
-
+    return [export_vars -base one {project_item_id {instance_id $process_instance_id}}]
 }
 
 
