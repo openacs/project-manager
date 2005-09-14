@@ -4,9 +4,16 @@
 <table width="100%">
 <if @instance_html@ not nil>
   <tr>
-    <td colspan="2" class="fill-list-middle">@instance_html;noquote@</td>
-  </tr>
-</if>
+    <td colspan="2" class="fill-list-middle">
+        <form action="one" method="get">
+        @instance_html;noquote@
+        <if @instance_id@ gt 0>
+          <a href="@process_reminder_url@">#project-manager.lt_Send_a_process_remind#</a>
+        </if>
+        </form>
+      </td>
+    </tr>
+  </if>
 <tr>
   <td colspan="2" class="fill-list-middle">
     <include src=/packages/project-manager/lib/tasks
@@ -36,12 +43,7 @@
 	  </select>
 	  <input type="submit" name="submit" value="Use" />
 	</form>
-	<if @instance_id@ not nil>
-	  <li>
-	    <a href="@process_reminder_url@">#project-manager.lt_Send_a_process_remind#</a>
-	  </li>
-	</if>
-    </ul>
+      </ul>
   </td>
 </tr>
 </table>

@@ -37,14 +37,13 @@ if {[empty_string_p $process_instance_options]} {
 } else {
 
     set instance_html "
-<form action=\"one\" method=\"get\">
   [export_vars -form -entire_form -exclude {instance_id}]
   <select name=\"instance_id\">
     <option value=\"\">[_ project-manager.View_all_tasks]</option>
     $process_instance_options
   </select>
   <input type=\"submit\" name=\"submit\" value=\"[_ project-manager.Go]\" />
-</form>"
+"
 }
 
 # Process Information
