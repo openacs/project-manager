@@ -135,6 +135,9 @@ create table pm_project_assignment (
         unique (project_id, role_id, party_id)
 );
 
+create index pm_project_assignment_role_id_idx on pm_project_assignment(role_id);
+create index pm_project_assignment_project_id_idx on pm_project_assignment(project_id);
+create index pm_project_assignment_party_id_idx on pm_project_assignment(party_id);
 
 comment on table pm_project_assignment is '
   Maps who is a part of what project, and in what capacity
