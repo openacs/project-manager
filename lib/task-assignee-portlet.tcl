@@ -81,8 +81,8 @@ if { $assign_group_p } {
 }
 
 db_multirow -extend { assign_name } people $query_name { } {
-    set assign_name [db_string get_user_name { } -default ""]
+    set assign_name [person::name -person_id $party_id]
     if { $assign_group_p && [empty_string_p $assign_name] } {
-	set assign_name [db_string get_group_name { } -default ""]
+	set assign_name	[group::title -group_id $party_id]
     }
 }

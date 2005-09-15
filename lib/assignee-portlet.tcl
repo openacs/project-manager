@@ -56,9 +56,9 @@ if { $assign_group_p } {
 }
 
 db_multirow -extend {contact_url complaint_url name} people $query_name {} {
-    set name [db_string get_user_name { } -default ""]
+    set name [person::name -person_id $party_id]
     if { $assign_group_p && [empty_string_p $name] } {
-	set name [db_string get_group_name { } -default ""]
+	set name [group::title -group_id $party_id]
     }
     # If contacts is installed provide a link to the contacts party_id, otherwise don't
     if {![empty_string_p $contacts_url]} {

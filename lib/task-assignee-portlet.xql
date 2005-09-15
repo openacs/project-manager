@@ -53,26 +53,4 @@
     </querytext>
   </fullquery>
 
-<fullquery name="get_user_name">
-    <querytext>
-	select
-		u.first_names || ' ' || u.last_name as assign_name
-	from
-		persons u
-	where
-		u.person_id = :party_id
-    </querytext>
-</fullquery>
-
-<fullquery name="get_group_name">
-    <querytext>
-	select
-		group_name as assign_name
-	from
-		groups
-	where
-		group_id = :party_id
-    </querytext>
-</fullquery>
-
 </queryset>
