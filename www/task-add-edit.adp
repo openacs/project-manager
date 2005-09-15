@@ -30,7 +30,7 @@
             
             <td colspan="2">
               <if @edit_p@ true>
-                @task_term_lower;noquote@ &nbsp;@tasks.task_item_id@
+                @task_term_lower;noquote@ &nbsp;@tasks.task_item_id@:@tasks.one_line@
               </if>
               <else>
                 @task_term_lower;noquote@ &nbsp;@tasks.rownum@
@@ -157,7 +157,7 @@
             
             <p />
           
-            <div class="shaded">
+            
 
               #project-manager.lt_Deadline_tasksend_dat#</p>
 

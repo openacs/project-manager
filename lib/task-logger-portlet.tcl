@@ -47,3 +47,5 @@ set nextyear_ansi [clock format [clock scan "+ 365 day"] -format "%Y-%m-%d"]
 #set task_info(hours_remaining) $task_info_hours_remaining
 #set task_info(hours_remaining) $task_info_percent
 set day_widget "[_ project-manager.lt_Last_input_typetext_n]"
+
+set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]

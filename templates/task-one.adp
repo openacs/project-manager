@@ -13,34 +13,27 @@
     
     <tr>
       <td valign="top">
-      
-      <if @process_html@ not nil>
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="list">
-          <tr>
-            <th align="left" valign="top" width="10">
-              <img src="resources/tl-e6e6fa" align="top" />
-            </th>
-            <th>#project-manager.Process_status#</th>
-            <th align="right" valign="top" width="10">
-              <img src="resources/tr-e6e6fa" align="top" />
-            </th>
-          </tr>
-
-          <tr>
-            <td class="list-bottom-bg" colspan="3">@process_html;noquote@</td>
-          </tr>
-        </table>
-        <p />
-      </if>
 
   <include
     src="/packages/project-manager/lib/task-info-portlet"
 	  &task_info=task_info
+          process_html=@process_html;noquote@
 	  task_edit_url=@task_edit_url@
-	  task_revision_id=@task_revision_id@/>
+	  task_revision_id=@task_revision_id@ />
         
         <P />
         
+<include src="/packages/project-manager/lib/task-logger-portlet"
+	  project_item_id="@project_item_id@"
+	  master="@portlet_master@"
+	  logger_project="@logger_project@"
+	  logger_days="@logger_days@"
+	  return_url="@return_url;noquote@"
+	  pm_url="@package_url;noquote@"
+	  &task_info=task_info
+	  use_days_p="@use_days_p@"
+	  pm_task_id="@task_id@" />
+
   <include
     src="/packages/project-manager/lib/categories-portlet"
     item_id="@task_revision_id@" />
@@ -55,14 +48,15 @@
       <td>
         &nbsp;
       </td>
-      <td valign="top">
-
+      <td width="20%" valign="top">
+       
+      <if 0 eq 1>
       <include src="/packages/project-manager/lib/task-date-portlet"
 	  &task_info=task_info
 	  />
 
         <p />
-
+       </if>
 	<include
 	  src="/packages/project-manager/lib/task-assignee-portlet"
 	  task_id="@task_id@"
@@ -70,17 +64,7 @@
 
         <p />
 
-        <include src="/packages/project-manager/lib/task-logger-portlet"
-	  project_item_id="@project_item_id@"
-	  master="@portlet_master@"
-	  logger_project="@logger_project@"
-	  logger_days="@logger_days@"
-	  return_url="@return_url;noquote@"
-	  pm_url="@package_url;noquote@"
-	  &task_info=task_info
-	  use_days_p="@use_days_p@"
-	  pm_task_id="@task_id@" />
-
+        
       </td>
     </tr>
   </table>
