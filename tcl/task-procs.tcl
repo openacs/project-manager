@@ -974,6 +974,10 @@ ad_proc -public pm::task::link {
     
     @error 
 } {
+    if {![db_0or1row check_for_task_1 "select 1 from pm_tasks where task_id = :task_item_id_1"] ||
+        ![db_0or1row check_for_task_2 "select 1 from pm_tasks where task_id = :task_item_id_2"]} {
+                 return 0
+    }
 
     if {[string equal $task_item_id_1 $task_item_id_2]} {
         # do nothing
@@ -1309,6 +1313,8 @@ ad_proc -public pm::task::email_status {} {
         set longterm_title "<h3>[_ project-manager.Long_Term_Tasks]</h3>"
 
         set longterm_description "[_ project-manager.lt_look_over_these_to_pl]"
+
+        set cur_task_count $task_count($party)
 
         # okay, let's now set up the email body
 
