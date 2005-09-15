@@ -55,20 +55,24 @@ namespace eval pm::calendar {
         Creates a month widget for tasks if display_item=t 
 	Creates a month widget for projects if display_item=p
     } {
-	
+        set dotlrn_installed_p [apm_package_installed_p dotlrn]
         set day_template "<a href=?julian_date=\$julian_date>\$day_number</a>"
         set prev_nav_template "<a href=\"?view=month&date=\$ansi_date&user_id=$user_id\">&lt;</a>" 
         set next_nav_template "<a href=\"?view=month&date=\$ansi_date&user_id=$user_id\">&gt;</a>" 
 	set instance_clause ""
 	
-	if { [empty_string_p $package_id]} {
-	    set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
-	}
-	
-	if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
-	    set instance_clause "and o.package_id=:package_id"
-	} 
-
+        if {$dotlrn_installed_p} {
+            if { [empty_string_p $package_id]} {
+                set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
+            } else {
+                set package_id [ad_conn package_id]
+            }
+            if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
+                set instance_clause "and o.package_id=:package_id"
+            } 
+        } else {
+            set package_id [ad_conn package_id]
+        }
 	
         if {[empty_string_p $date]} {
             set date [dt_systime]
