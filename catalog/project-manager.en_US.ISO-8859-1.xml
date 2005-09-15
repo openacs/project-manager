@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d3" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d5" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -88,11 +88,11 @@
   <msg key="Dep">Dep</msg>
   <msg key="dependencies">dependencies</msg>
   <msg key="Dependency">Dependency:</msg>
-  <msg key="Dependency_1">Dependency</msg>
+  <msg key="Dependency_1">Dependency\</msg>
   <msg key="Dependency_types">Dependency types</msg>
   <msg key="Description">Description</msg>
   <msg key="Description_1">Description:</msg>
-  <msg key="Description_2">Description</msg>
+  <msg key="Description_2">Description\</msg>
   <msg key="Description_changed">Description changed</msg>
   <msg key="Done">Done.</msg>
   <msg key="Done_1">Done</msg>
@@ -110,7 +110,6 @@
   <msg key="Edit_a_Process">Edit a Process</msg>
   <msg key="Edit_assignees">Edit assignees</msg>
   <msg key="Edit_categories">Edit categories</msg>
-  <msg key="Edit_multiple_tasks">Edit multiple tasks</msg>
   <msg key="Edit_Process">Edit Process</msg>
   <msg key="Edit_project_term">Edit %project_term%</msg>
   <msg key="Edit_task_term">Edit %task_term%</msg>
@@ -186,7 +185,6 @@
   <msg key="lt_Add_a_process_task_te">Add a process %task_term_lower%</msg>
   <msg key="lt_Add_a_process_task_te_1">Add a process %task_term_lower% (assignment)</msg>
   <msg key="lt_Add_a_project_term_lo">Add a %project_term_lower%</msg>
-  <msg key="lt_add_new_tasks">Add new tasks</msg>
   <msg key="lt_Add_task_term_lower_d_1">Add %task_term_lower% dependencies</msg>
   <msg key="lt_Administrator_needs_t">Administrator needs to set up logger integration</msg>
   <msg key="lt_After_they_have_done_">After they have done this, you can go
@@ -482,6 +480,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Projection">Projection</msg>
   <msg key="Projects">Projects</msg>
   <msg key="Projects_ongoing">Projects ongoing</msg>
+  <msg key="Projects_reports">Projects Reports</msg>
   <msg key="Quantity">Quantity:</msg>
   <msg key="Rate">Rate</msg>
   <msg key="rate">Rate</msg>
@@ -502,7 +501,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
   <msg key="search_help">Enter a keyword to search for projects.</msg>
-  <msg key="search_user">Search Users</msg>
+  <msg key="search_user">Search Users or Groups</msg>
   <msg key="Section">Section</msg>
   <msg key="select_assignee_in_this">Select Assigne in this project to send a message</msg>
   <msg key="Select_process">Select process:</msg>
