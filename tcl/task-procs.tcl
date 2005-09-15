@@ -1646,6 +1646,10 @@ ad_proc -public pm::task::hours_remaining {
         return 0
     }
 
+    if {$percent_complete == ""} {
+        set percent_complete 0
+    }
+
     if {[string equal $percent_complete 0]} {
         return [pm::task::estimated_hours_work \
                     -estimated_hours_work $estimated_hours_work \
@@ -1699,6 +1703,10 @@ ad_proc -public pm::task::days_remaining {
 
     if {[string equal $percent_complete 100]} {
         return 0
+    }
+
+    if {$percent_complete == ""} {
+        set percent_complete 0
     }
 
     if {[string equal $percent_complete 0]} {
