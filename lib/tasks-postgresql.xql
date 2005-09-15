@@ -22,10 +22,7 @@
 	t.latest_finish - current_date as days_to_latest_finish,
 	to_char(t.end_date,'YYYY-MM-DD HH24:MI:SS') as end_date,
 	t.end_date - current_date as days_to_end_date,
-        u.person_id,
-        u.first_names,
-        u.last_name,
-	$extra_column
+	t.party_id,
         t.percent_complete,
         d.parent_task_id,
         d.dependency_type,
@@ -63,13 +60,6 @@
          from pm_tasks_revisionsx tr
          LEFT JOIN
          pm_task_assignment ta ON tr.item_id = ta.task_id) t 
-           LEFT JOIN 
-           persons u 
-           ON 
-           t.party_id = u.person_id 
-
-	   $extra_join
-
            LEFT JOIN
            pm_roles r
            ON t.role_id = r.role_id,  
@@ -130,13 +120,6 @@
          from pm_tasks_revisionsx tr
          LEFT JOIN
          pm_task_assignment ta ON tr.item_id = ta.task_id) t 
-           LEFT JOIN 
-           persons u 
-           ON 
-           t.party_id = u.person_id 
-
-  	   $extra_join
-
            LEFT JOIN
            pm_roles r
            ON t.role_id = r.role_id,  

@@ -80,7 +80,7 @@ ad_form -extend -name rate_project -on_submit {
 	set object_id [lindex $element_info 0]
 	set dimension_key [lindex $element_info 1]
 	set rating_id [ratings::rate -dimension_key $dimension_key \
-			   -object_id $project_id \
+			   -object_id $object_id \
 			   -user_id $user_id \
 			   -rating $rating \
 			   -nomem_p "t"]

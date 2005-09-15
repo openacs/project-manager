@@ -25,7 +25,7 @@ ad_form -name search_user -form {
 	{value $return_url}
     }
     {search_user_id:party_search(party_search),optional
-	{label "Search for User:"}
+	{label "[_ project-manager.search_user]:"}
     }
 } -after_submit {
     ad_returnredirect "project-assign-edit?project_item_id=$project_item_id&search_user_id=$search_user_id&return_url=$return_url"

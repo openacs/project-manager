@@ -50,11 +50,6 @@ if ![info exists package_id] {
 
 set extra_column ""
 set extra_join ""
-if { [parameter::get -parameter "AssignGroupP" -default 0] } {
-    set extra_column "g.group_name,"
-    set extra_join " LEFT JOIN groups g ON t.party_id = g.group_id"
-}
-
 
 # ---------------------------------------------------------------
 
@@ -300,7 +295,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.person_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.base_url@@tasks.user_url@">@tasks.first_names@ @tasks.last_name@</a> <if @tasks.is_lead_p@></i></if> <if @tasks.person_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template {<group column="task_item_id"> <if @tasks.party_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.base_url@@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_lead_p@></i></if> <if @tasks.party_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
             }
 	}
 	role {
@@ -371,24 +366,19 @@ template::list::create \
             label "[_ project-manager.Who]"
             display_template { 
 		<group column="task_item_id"> 
-		    <if @tasks.person_id@ eq @tasks.my_user_id@> 
+		    <if @tasks.party_id@ eq @tasks.my_user_id@> 
                         <span class="selected"> 
 		    </if> 
 		    <if @tasks.is_lead_p@>
                         <i>
                     </if>
-		    <if @tasks.first_names@ not eq "">
-		    @tasks.first_names@&nbsp;@tasks.last_name@ 
+		    <if @tasks.assignee_name@ not eq "">
+		    @tasks.assignee_name@
 		    </if>
-                    <else>
-		        <if @tasks.group_name@ not nil>
-		            @tasks.group_name@
-		        </if>
-		    </else>
                     <if @tasks.is_lead_p@>
                         </i>
                     </if> 
-                    <if @tasks.person_id@ eq @tasks.my_user_id@> 
+                    <if @tasks.party_id@ eq @tasks.my_user_id@> 
                         </span> 
                     </if> 
                     <br> 
@@ -404,37 +394,31 @@ template::list::create \
 	default_value $default_orderby
 	title {
 	    label "[_ project-manager.Subject_1]"
-	    orderby_desc "t.title desc, ts.task_item_id, u.first_names, u.last_name"
-	    orderby_asc "t.title asc, ts.task_item_id, u.first_names, u.last_name"
-	    default_direction asc
-	}
-	full_name {
-	    label "[_ project-manager.Who]"
-	    orderby_desc "u.first_names desc,u.last_name desc, ts.task_item_id"
-	    orderby_asc "u.first_names, u.last_name, ts.task_item_id"
+	    orderby_desc "t.title desc, ts.task_item_id"
+	    orderby_asc "t.title asc, ts.task_item_id"
 	    default_direction asc
 	}
 	description {
 	    label "[_ project-manager.Description]"
-	    orderby_desc "t.description desc, ts.task_item_id, u.first_names, u.last_name"
-	    orderby_asc "t.description, ts.task_item_id, u.first_names, u.last_name"
+	    orderby_desc "t.description desc, ts.task_item_id"
+	    orderby_asc "t.description, ts.task_item_id"
 	    default_direction asc
 	}
 	slack_time {
 	    label "[_ project-manager.Slack_1]"
-	    orderby_desc "(latest_start - earliest_start) desc, ts.task_item_id, u.first_names, u.last_name"
-	    orderby_asc "(latest_start - earliest_start), ts.task_item_id, u.first_names, u.last_name"
+	    orderby_desc "(latest_start - earliest_start) desc, ts.task_item_id"
+	    orderby_asc "(latest_start - earliest_start), ts.task_item_id"
 	    default_direction asc
 	}
 	status {
 	    label "[_ project-manager.Status_1]"
-	    orderby_desc "status desc, t.latest_finish desc, ts.task_item_id, u.first_names, u.last_name"
-	    orderby_asc "status asc, t.latest_finish desc, ts.task_item_id, u.first_names, u.last_name"
+	    orderby_desc "status desc, t.latest_finish desc, ts.task_item_id"
+	    orderby_asc "status asc, t.latest_finish desc, ts.task_item_id"
 	    default_direction asc
 	}
 	end_date {
-	    orderby_asc "end_date, task_item_id asc, u.first_names, u.last_name"
-	    orderby_desc "end_date desc, task_item_id desc, u.first_names, u.last_name"
+	    orderby_asc "end_date, task_item_id asc"
+	    orderby_desc "end_date desc, task_item_id desc"
 	    default_direction asc
 	}
     } \
@@ -464,7 +448,26 @@ template::list::create \
 	}
     }
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url} tasks tasks " " {
+
+set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name} tasks tasks " " {
+    
+    if { $assign_group_p } {
+	# We are going to show all asignees including groups
+	if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
+	    # person::name give us an error so its probably a group so we get
+	    # the title
+	    set assignee_name [group::title -group_id $party_id]
+	}
+    } else {
+	if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
+	    # person::name give us an error so its probably a group, here we don't want
+	    # to show any group so we just continue the multirow
+	    continue
+	}
+    }
+
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
 
@@ -520,7 +523,7 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
     }
     set my_user_id $user_id
     set user_url [export_vars \
-		      -base "${contacts_url}contact" {{party_id $person_id}}]
+		      -base "${contacts_url}contact" {{party_id $party_id}}]
 
     acs_object::get -object_id $task_item_id -array task_array
     set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]

@@ -36,6 +36,11 @@ foreach ass $assignee {
         set send_email_p t
     }
 
+    # We check if the party has read privilege or not over the pm instance, if not we give them
+    if { ![permission::permission_p -party_id $party_id -object_id [ad_conn package_id] -privilege read] } {
+	permission::grant -party_id $party_id -object_id [ad_conn package_id] -privilege read
+    }
+
     pm::project::assign \
         -project_item_id $project_item_id \
         -party_id $party_id \

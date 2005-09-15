@@ -366,21 +366,27 @@ if {[string is true $using_process_p]} {
     set task_assignee_list [list]
 }
 
+
+set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+
 foreach one_assignee $assignee_role_list {
     set person_id [lindex $one_assignee 0]
-    if { [parameter::get -parameter "AssignGroupP" -default 0] } {
-	set name [group::title -group_id $person_id]
-	if { [empty_string_p $name] } {
-	    set name [person::name -person_id $person_id]
-	}
-	lappend assignee_options [list $name $person_id]
+
+    if { $assign_group_p } {
+        # We are going to show all asignees including groups
+        if { [catch {set assignee_name [person::name -person_id $person_id] } err] } {
+            # person::name give us an error so its probably a group so we get
+            # the title
+            set assignee_name [group::title -group_id $person_id] 
+        }
     } else {
-	set name [group::title -group_id $person_id]
-	if { [empty_string_p $name] } {
-	    set name [person::name -person_id $person_id]
-	    lappend assignee_options [list $name $person_id]
-	}
+        if { [catch {set assignee_name [person::name -person_id $person_id] } err] } {
+            # person::name give us an error so its probably a group, here we don't want
+            # to show any group so we just continue the multirow
+            continue
+        }
     }
+    lappend assignee_options [list $assignee_name $person_id]
 }
 
 foreach role_list $roles_list {

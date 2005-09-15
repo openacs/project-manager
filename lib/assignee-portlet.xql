@@ -8,31 +8,6 @@
 
 <queryset>
 
-    <fullquery name="project_people_query">
-    <querytext>
-        SELECT
-        a.project_id,
-        r.one_line as role_name,
-        p.first_names || ' ' || p.last_name as user_name,
-        a.party_id,
-        r.is_lead_p
-        FROM 
-        pm_project_assignment a,
-        pm_roles r,
-	persons p
-        WHERE
-        a.role_id = r.role_id and
-	a.party_id = p.person_id and
-        project_id = :project_item_id
-        and exists (select 1 from acs_object_party_privilege_map ppm
-                    where ppm.object_id = :project_item_id
-                    and ppm.privilege = 'read'
-                    and ppm.party_id = :user_id)
-        ORDER BY
-        r.role_id, p.first_names, p.last_name
-    </querytext>
-  </fullquery>
-
     <fullquery name="project_people_groups_query">
     <querytext>
         SELECT

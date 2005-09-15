@@ -74,15 +74,21 @@ template::list::create \
 
 set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
 
-if { $assign_group_p } {
-    set query_name "task_people_group_query"
-} else {
-    set query_name "task_people_query"
-}
+set query_name "task_people_group_query"
 
 db_multirow -extend { assign_name } people $query_name { } {
-    set assign_name [person::name -person_id $party_id]
-    if { $assign_group_p && [empty_string_p $assign_name] } {
-	set assign_name	[group::title -group_id $party_id]
+    if { $assign_group_p } {
+        # We are going to show all asignees including groups
+        if { [catch {set assign_name [person::name -person_id $party_id] } err] } {
+            # person::name give us an error so its probably a group so we get
+            # the title
+            set assign_name [group::title -group_id $party_id]
+        }
+    } else {
+        if { [catch {set assign_name [person::name -person_id $party_id] } err] } {
+            # person::name give us an error so its probably a group, here we don't want
+            # to show any group so we just continue the multirow
+            continue
+        }
     }
 }

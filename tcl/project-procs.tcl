@@ -2065,7 +2065,7 @@ ad_proc -public pm::project::url {
     
     @error 
 } {
-    set package_id [db_string package_id "select object_package_id from pm_projectsx where item_id = :project_item_id"]
+    set package_id [db_string package_id "select distinct object_package_id from pm_projectsx where item_id = :project_item_id"]
     return "[apm_package_url_from_id $package_id]one?project_item_id=$project_item_id"
     
 }
