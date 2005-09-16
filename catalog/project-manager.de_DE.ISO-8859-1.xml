@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d3" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d5" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -47,6 +47,7 @@
   <msg key="Attach_a_file">Eine Datei hinzufügen?</msg>
   <msg key="Average">Durchschnitt</msg>
   <msg key="back_to_admin_page">zurück zur Admin Seite</msg>
+  <msg key="By_deadline">Nach Abgabedatum</msg>
   <msg key="Cancel">Abbrechen</msg>
   <msg key="Cancel_do_not_delete">Abbrechen, nicht löschen</msg>
   <msg key="Categories">Kategorien</msg>
@@ -112,6 +113,7 @@
   <msg key="Edit_Process">Prozess ändern</msg>
   <msg key="Edit_project_term">Ändern %project_term%</msg>
   <msg key="Edit_task_term">Ändern %task_term%</msg>
+  <msg key="Edit_Tasks">Aufgaben ändern</msg>
   <msg key="Edit_tasks">Aufgabe ändern</msg>
   <msg key="Edit_this_role">Diese Rolle ändern</msg>
   <msg key="EF">EF</msg>
@@ -429,6 +431,7 @@
   <msg key="send_message_to">Send Nachricht an:</msg>
   <msg key="Set_permissions">Berechtigungen setzen</msg>
   <msg key="Set_up">Einrichten</msg>
+  <msg key="Show_closed">auch Abgeschlossene anzeigen</msg>
   <msg key="Skip_this_task">Diese Aufgabe auslassen?</msg>
   <msg key="Slack">Pufferzeit:</msg>
   <msg key="Slack_1">Puffer-&lt;br&gt;zeit</msg>
@@ -479,6 +482,7 @@
   <msg key="Use_a_process">Einen Prozess anwenden</msg>
   <msg key="Use_process">Prozess anwenden</msg>
   <msg key="User">User</msg>
+  <msg key="Users_to_view">Anzuzeigende User</msg>
   <msg key="variables">Variable</msg>
   <msg key="View">Ansehen</msg>
   <msg key="View_Active">aktive Aufgaben ansehen</msg>
@@ -486,7 +490,7 @@
   <msg key="View_customers">Kunden ansehen</msg>
   <msg key="View_only_Active">Aufgaben ansehen, an denen sie beteiligt sind</msg>
   <msg key="View_only_Observer">Aufgaben ansehen, die Sie beobachten</msg>
-  <msg key="View_options">Optionen ansehen</msg>
+  <msg key="View_options">Optionen anzeigen</msg>
   <msg key="View_project_changes">Projektänderungen ansehen</msg>
   <msg key="View_Revisions">Versionen ansehen</msg>
   <msg key="View_task_changes">Aufgaben Änderungen ansehen</msg>
