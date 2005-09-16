@@ -59,13 +59,13 @@ db_multirow -extend {contact_url complaint_url name} people project_people_group
             set name [group::title -group_id $party_id]
         }
     } else {
-        if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
+        if { [catch {set name [person::name -person_id $party_id] } err] } {
             # person::name give us an error so its probably a group, here we don't want
             # to show any group so we just continue the multirow
             continue
         }
     }
-    
+
     # If contacts is installed provide a link to the contacts party_id, otherwise don't
     if {![empty_string_p $contacts_url]} {
         set contact_url "${contacts_url}$party_id"
