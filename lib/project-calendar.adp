@@ -1,5 +1,5 @@
 <a name=top_p></a> 
- <!-- <a href="#pviewoptions" class="button">View options</a>-->
+ <!-- <a href="#pviewoptions" class="button">#project-manager.View_options#</a>-->
 <br>
 <br>
   <form method="post" action="@base_url@task-add-edit">
@@ -10,11 +10,11 @@
     
   </form>
 
-<!--  <a name="pviewoptions"><h3>View options</h3></a>
+<!--  <a name="pviewoptions"><h3>#project-manager.View_options#</h3></a>
 
   <a href="@here;noquote@" class="button">@hide_show_closed;noquote@</a>-->
 
-  <h3>Users to view</h3>
+  <h3>#project-manager.Users_to_view#</h3>
 
   <form method="post" name="users_to_view" action="@base_url@calendar-users-update">
     @edit_hidden_vars;noquote@
@@ -34,3 +34,4 @@
      </select>	
     <input type="submit" value="Save" />
   </form>
+

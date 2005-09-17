@@ -46,6 +46,7 @@
   <msg key="Assignments_saved">Beauftraungen gespeichert</msg>
   <msg key="Attach_a_file">Eine Datei hinzufügen?</msg>
   <msg key="Average">Durchschnitt</msg>
+  <msg key="back_one_week">Eine Woche zurück</msg>
   <msg key="back_to_admin_page">zurück zur Admin Seite</msg>
   <msg key="By_deadline">Nach Abgabedatum</msg>
   <msg key="Cancel">Abbrechen</msg>
@@ -128,6 +129,7 @@
   <msg key="Estimated_hours_work">Geschätzte Stunden an Arbeit</msg>
   <msg key="Fixed-width_Text">Text mit gesetzter Breite</msg>
   <msg key="Format">Format:</msg>
+  <msg key="forward_one_week">Eine Woche vor</msg>
   <msg key="Go">Starte</msg>
   <msg key="Go_back">Zurück gehen</msg>
   <msg key="Goal">Ziel</msg>
@@ -441,7 +443,7 @@
   <msg key="send_message_to">Send Nachricht an:</msg>
   <msg key="Set_permissions">Berechtigungen setzen</msg>
   <msg key="Set_up">Einrichten</msg>
-  <msg key="Show_closed">auch Abgeschlossene anzeigen</msg>
+  <msg key="Show_closed">Auch Abgeschlossene anzeigen</msg>
   <msg key="Skip_this_task">Diese Aufgabe auslassen?</msg>
   <msg key="Slack">Pufferzeit:</msg>
   <msg key="Slack_1">Puffer-&lt;br&gt;zeit</msg>

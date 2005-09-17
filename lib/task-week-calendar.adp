@@ -1,8 +1,8 @@
   <if @display_p@ eq d>
-  <a href="?t_date=@t_date@&display_p=l#top" class="button">By latest finish</a>
+  <a href="?t_date=@t_date@&display_p=l#top" class="button">#project-manager.By_latest_finish#</a>
   </if>
   <else>
-  <a href="?t_date=@t_date@&display_p=d#top" class="button">By deadline</a>
+  <a href="?t_date=@t_date@&display_p=d#top" class="button">#project-manager.By_deadline#</a>
   </else>
    <br>
 <br>
@@ -11,9 +11,9 @@
  <table class="cal-table-display" cellpadding="0" cellspacing="0" border="0" width="99%">
   <tr>
     <td class="cal-month-title-text">
-      <a href="@previous_week_url@"><img border=0 src="<%=[dt_left_arrow]%>" alt="back one week"></a>
+      <a href="@previous_week_url@"><img border=0 src="<%=[dt_left_arrow]%>" alt="#project-manager.back_one_week#"></a>
       @dates@
-      <a href="@next_week_url@"><img border=0 src="<%=[dt_right_arrow]%>" alt="forward one week"></a>
+      <a href="@next_week_url@"><img border=0 src="<%=[dt_right_arrow]%>" alt="#project-manager.forward_one_week"></a>
     </td>
   </tr>
   <tr>
@@ -69,11 +69,11 @@
   </tr>
 </table>
 <br>
-<input type="submit" value="Edit Tasks" />
+<input type="submit" value="#project-manager.Edit_Tasks#" />
 </form>
 <br>
 <br>
-  <h3>Users to view</h3>
+  <h3>#project-manager.Users_to_view#</h3>
 
   <form method="post" name="users_to_view" action="@base_url@calendar-users-update">
     @edit_hidden_vars;noquote@

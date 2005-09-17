@@ -16,7 +16,7 @@
     
   </form>
 
-  <a name="viewoptions"><h3>View options</h3></a>
+  <a name="viewoptions"><h3>#project-manager.View_options#</h3></a>
 
   <a href="@here;noquote@" class="button">@hide_show_closed;noquote@</a>
 
@@ -39,3 +39,4 @@
 </select>
     <input type="submit" value="#acs-kernel.common_Save#" />
   </form>
+

@@ -46,8 +46,10 @@
   <msg key="Assignments_saved">Assignments saved</msg>
   <msg key="Attach_a_file">Attach a file?</msg>
   <msg key="Average">Average</msg>
+  <msg key="back_one_week">back one week</msg>
   <msg key="back_to_admin_page">back to admin page</msg>
   <msg key="By_deadline">By deadline</msg>
+  <msg key="By_latest_finish">By latest finish</msg>
   <msg key="Cancel">Cancel</msg>
   <msg key="Cancel_do_not_delete">Cancel, do not delete</msg>
   <msg key="Categories">Categories</msg>
@@ -128,6 +130,7 @@
   <msg key="Estimated_hours_work">Estimated hours work</msg>
   <msg key="Fixed-width_Text">Fixed-width Text</msg>
   <msg key="Format">Format:</msg>
+  <msg key="forward_one_week">forward one week</msg>
   <msg key="Go">Go</msg>
   <msg key="Go_back">Go back</msg>
   <msg key="Goal">Goal</msg>

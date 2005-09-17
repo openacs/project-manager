@@ -2,9 +2,11 @@
  <table class="cal-table-display" cellpadding="0" cellspacing="0" border="0" width="99%">
   <tr>
     <td class="cal-month-title-text">
-      <a href="@previous_week_url@"><img border=0 src="<%=[dt_left_arrow]%>" alt="back one week"></a>
+      <a href="@previous_week_url@"><img border=0 src="<%=[dt_left_arrow]%>"
+ alt="#project-manager.back_one_week#"></a>
       @dates@
-      <a href="@next_week_url@"><img border=0 src="<%=[dt_right_arrow]%>" alt="forward one week"></a>
+      <a href="@next_week_url@"><img border=0 src="<%=[dt_right_arrow]%>"
+ alt="#project-manager.forward_one_week#"></a>
     </td>
   </tr>
   <tr>
@@ -61,7 +63,7 @@
 </table>
 <br>
 <br>
-  <h3>Users to view</h3>
+  <h3>#project-manager.Users_to_view#</h3>
 
   <form method="post" name="users_to_view" action="@base_url@calendar-users-update">
     @edit_hidden_vars;noquote@
@@ -79,3 +81,4 @@
 </select>
     <input type="submit" value="Save" />
   </form>
+

@@ -96,7 +96,7 @@ set context [list "[_ project-manager.Tasks]"]
 
 set status_list [lang::util::localize_list_of_lists -list [db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]]
 
-set status_list [linsert $status_list 0 [list "All" "-1"]]
+set status_list [linsert $status_list 0 [list "#acs-kernel.common_All#" "-1"]]
 
 # the unique identifier for this package
 
