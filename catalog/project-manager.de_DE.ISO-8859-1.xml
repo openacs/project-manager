@@ -157,6 +157,7 @@
   <msg key="Linking">Verbindung</msg>
   <msg key="Log">Log</msg>
   <msg key="Log_entry">Log Eintrag:</msg>
+  <msg key="Log_hours">Stunden erfassen</msg>
   <msg key="Log_time">Zeit erfassen</msg>
   <msg key="Logged_variables">Variablen, die in das Log&lt;br&gt; eingetragen werden können</msg>
   <msg key="Logger">Logger</msg>
@@ -213,6 +214,7 @@
   <msg key="lt_Estimated_minimum_hou">Geschätzte min. Stunden</msg>
   <msg key="lt_Finishes_before_this_">Endet before dieses startet</msg>
   <msg key="lt_Finishes_before_this__1">Endet bevor dieses endet</msg>
+  <msg key="lt_For_new_tasks_a_proje">Um neue Aufgaben zu erstellen muss ein Projekt übergeben werden</msg>
   <msg key="lt_Hard_deadline_changed">Fixer Abgabetermin verändert &lt;i&gt;von&lt;/i&gt; %date_old% &lt;i&gt;auf&lt;/i&gt; &lt;b&gt;%date_new%&lt;/b&gt;</msg>
   <msg key="lt_Hours_remaining_task_">Verbleibende Stunden: %task_info.hours_remaining%</msg>
   <msg key="lt_If_the_row_is_in_red_">Wenn die Reihe in rot erscheint, sind Sie an der Aufgabe beteiligt. Wenn Sie grau erscheint, so ist die Aufgabe schon abgeschlossen.</msg>
@@ -222,6 +224,7 @@
   <msg key="lt_Link_instances">Diese Seite erlaubt es Ihnen, andere Package Instanzen zu diesem Projekt Manager zu verbinden.</msg>
   <msg key="lt_Linked_logger_project">Verbundenes Log Projekt</msg>
   <msg key="lt_Linked_logger_project_1">Verbundene Log Projekte</msg>
+  <msg key="lt_Log_hours_for_several">Stunden erfassen</msg>
   <msg key="lt_Log_time_for_multiple">Zeiten für mehrere Aufgaben erfassen</msg>
   <msg key="lt_Logger_is_a_package">Das Log ist ein Package welches Sie Zeit und Kosten erfassen läßt.  Der Projektmanager erfordert es, dass Sie zumnidestens eine Instanz des Loggers installieren und zuweisen, da der Projektmanager den Log dafür nutzt, Zeiten und andere Variablen gegen den Projektfortschritt und die Aufgaben zu vergleichen. Sie können aber unterschiedliche Level der Integration mit dem Log bestimmen. Diese Sektion definiert, welche Log-Instanzen voll mit dem Projektmanager integriert werden, so dass jedes neue Projektmanager Projekt in der LOg-Instanz auftaucht.</msg>
   <msg key="lt_Logger_is_a_package_t">Das Log ist ein Package welches Sie Zeit und Kosten erfassen läßt.</msg>
@@ -334,6 +337,7 @@
   <msg key="New_task_term">Neue %task_term%</msg>
   <msg key="No">Nein</msg>
   <msg key="no_hard_deadline">keine harter Abgabetermin</msg>
+  <msg key="No_project_passed_in">Es wurde kein Projekt übergeben</msg>
   <msg key="No_UI">Kein User Interface</msg>
   <msg key="not_set_up">nicht eingerichtet</msg>
   <msg key="Nothing">Nichts</msg>
@@ -355,6 +359,9 @@
   <msg key="Overview_of_process">Überblick über den Prozess:</msg>
   <msg key="page">Seite)</msg>
   <msg key="Parameters">Parameter</msg>
+  <msg key="Party_ID">Party ID</msg>
+  <msg key="People">Personen</msg>
+  <msg key="percent">Prozent fertig</msg>
   <msg key="Percent_Complete">Prozent fertig\</msg>
   <msg key="Percent_complete">% komplett</msg>
   <msg key="Percents_complete">Prozent fertig</msg>
@@ -403,6 +410,7 @@
   <msg key="Projection">Projektion</msg>
   <msg key="Projects">Projekte</msg>
   <msg key="Projects_ongoing">Laufende Projekte</msg>
+  <msg key="Projects_reports">Projektberichte</msg>
   <msg key="Quantity">Quantität:</msg>
   <msg key="Rate">Bewertung</msg>
   <msg key="rate">Bewertung</msg>
@@ -419,9 +427,11 @@
   <msg key="Role_ID">Rollen ID</msg>
   <msg key="Roles">Rollen</msg>
   <msg key="Search">Suchen:</msg>
+  <msg key="search">Suche</msg>
   <msg key="Search:">Suche:</msg>
   <msg key="Search_1">Suche</msg>
   <msg key="search_help">Geben Sie ein Schlüsselwort ein, um nach Projekten zu suchen.</msg>
+  <msg key="search_user">User oder Gruppen suchen</msg>
   <msg key="Section">Sektion</msg>
   <msg key="select_assignee_in_this">Wählen Sie aus dem Projekt einen Beauftragten aus um eine Nachricht zu versenden </msg>
   <msg key="Select_process">Wähle Prozess:</msg>
@@ -448,6 +458,7 @@
   <msg key="Status_update_sent">Status Update gesendet</msg>
   <msg key="Subject">Thema:</msg>
   <msg key="Subject_1">Thema</msg>
+  <msg key="Subject_2">Betreff\</msg>
   <msg key="Subprojects">Subprojekte</msg>
   <msg key="Subtotal">Zwischensumme</msg>
   <msg key="Subtotal_Average">Zwischensumme Durchschnitt</msg>
