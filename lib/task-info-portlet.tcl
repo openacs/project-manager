@@ -6,6 +6,15 @@
 # @creation-date 2005-05-01
 # @arch-tag: c502a3ed-d1c0-4217-832a-6ccd86256024
 # @cvs-id $Id$
+#
+
+# Initialize Variables that might not exist
+
+foreach optional_param {slack_time} {
+    if {![info exists task_info($optional_param)]} {
+	set task_info($optional_param) {}
+    }
+}
 
 set user_id [auth::require_login]
 set urgency_threshold 8
