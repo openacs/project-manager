@@ -276,7 +276,8 @@
       SELECT
       p.email as to_address,
       r.one_line as role,
-      r.is_lead_p
+      r.is_lead_p,
+      p.party_id
       FROM
       pm_task_assignment a,
       parties p,

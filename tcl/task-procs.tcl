@@ -1529,7 +1529,7 @@ ad_proc -public pm::task::email_alert {
         set to_address [lindex $ass 0]
         set role       [lindex $ass 1]
         set is_lead_p  [lindex $ass 2]
-
+	set assignee_id [lindex $ass 3]
         set notification_text "${intro_text}${comment_text}
 <h3>[_ project-manager.Task_overview]</h3>
 <table border=\"0\" bgcolor=\"#ddddff\">
@@ -1571,7 +1571,7 @@ $process_html
             -to_addr  $to_address \
             -from_addr $from_address \
             -subject $subject_out \
-            -body $notification_text \
+            -body [lang::util::localize $notification_text [lang::user::locale -user_id $assignee_id]] \
             -mime_type "text/html"
     }
 }
