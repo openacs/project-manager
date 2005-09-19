@@ -26,6 +26,7 @@ ad_page_contract {
     {dform:optional "implicit"}
     {project_item_id:integer ""}
     {process_id:integer ""}
+    {process_name ""}
     {process_task_id:integer,multiple ""}
     {return_url ""}
     {assignee:array,multiple,optional}
