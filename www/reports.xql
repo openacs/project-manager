@@ -13,7 +13,7 @@
     	where
     		p.project_id = i.live_revision
     		and p.item_id = i.item_id
---     		and p.object_package_id = :package_id
+     		and p.object_package_id = :package_id
     		and exists (
 			select 1 from acs_object_party_privilege_map ppm
 			where ppm.object_id = p.project_id
