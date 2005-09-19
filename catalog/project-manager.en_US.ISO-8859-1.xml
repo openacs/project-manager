@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d5" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d7" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -34,6 +34,7 @@
   <msg key="Added">Added:</msg>
   <msg key="Added_new">Added: %new%</msg>
   <msg key="Admin">Admin</msg>
+  <msg key="aggregate_projects">Aggregate projects from this time of past years and beyond.</msg>
   <msg key="Assign_from_categories">Assign from categories</msg>
   <msg key="assign_removed">%assign% removed</msg>
   <msg key="assign_saved">%assign% saved</msg>
@@ -143,6 +144,7 @@
   <msg key="HTML">HTML</msg>
   <msg key="ID">ID</msg>
   <msg key="Key">Key</msg>
+  <msg key="last_years">Last Years</msg>
   <msg key="Latest_Finish">Latest Finish</msg>
   <msg key="Latest_finish">Latest finish</msg>
   <msg key="Latest_finish_date">Latest finish date</msg>
@@ -398,6 +400,8 @@ allows the system to automatically compute schedules. However, you can
   <msg key="lt_you_need_to_start_wor">you need to start working on these soon to avoid affecting deadlines</msg>
   <msg key="Max">Max:</msg>
   <msg key="Min">Min:</msg>
+  <msg key="Min_amount">Minimal Amount</msg>
+  <msg key="min_amount_help">Minimal amount made by projects.</msg>
   <msg key="move_help">Choose one project to move the task to.</msg>
   <msg key="Move_task">Move Task</msg>
   <msg key="Move_task_to">Move task to project:</msg>
@@ -514,6 +518,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Set_permissions">Set permissions</msg>
   <msg key="Set_up">Set up</msg>
   <msg key="Show_closed">Show closed</msg>
+  <msg key="show_this_projects">Show this projects</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
   <msg key="Slack">Slack:</msg>
   <msg key="Slack_1">Slack</msg>
@@ -555,6 +560,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Title">Title</msg>
   <msg key="Title_1">Title\</msg>
   <msg key="Total">Total</msg>
+  <msg key="Total_amount">Total Amount</msg>
   <msg key="Total_work">Total work</msg>
   <msg key="Total_work_required">Total work required:</msg>
   <msg key="Type">Type</msg>
