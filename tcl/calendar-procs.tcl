@@ -134,7 +134,7 @@ namespace eval pm::calendar {
 	    
 	    # if this is another row of the same item, just add the name.
 	    if {[string equal $last_task_id $task_id]} {
-		append day_details "<li>, ${font_begin}${full_name}${font_end}</li>"
+		#append day_details "<li>, ${font_begin}${full_name}${font_end}</li>"
 	    } else {
 		
 		# this is the beginning of an item.
@@ -155,10 +155,10 @@ namespace eval pm::calendar {
 		    }
 		    
 		    # begin setting up this calendar item
-		    set day_details "<span class=\"calendar-item\"><p>${detail_begin}<input type=\"checkbox\" name=\"task_item_id\" value=\"$task_id\" /><a href=\"${base_url}task-one?task_id=$task_id\">$task_id</a><br />$title${detail_end}<blockquote>$project_name</blockquote>"
-		    
+                    set day_details "<span class=\"calendar-item\"><p>${detail_begin}<input type=\"checkbox\" name=\"task_item_id\" value=\"$task_id\" /><a href=\"task-one?task_id=$task_id\">$title${detail_end}</a> - <small><em>$project_name</em></small>"
+
 		    # only add to the list if we want to see closed tasks
-		    append day_details "<ul><li>${font_begin}${full_name}${font_end}</li>"
+		    #append day_details "<ul><li>${font_begin}${full_name}${font_end}</li>"
 		    
 		}
 	    

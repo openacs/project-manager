@@ -1,3 +1,4 @@
+<if @format@ ne print>
 <a name=top></a> 
   <a href="#viewoptions" class="button">#project-manager.View_options#</a>
   <if @display_p@ eq d>
@@ -6,14 +7,16 @@
   <else>
   <a href="?display_p=d&date=@date@#top" class="button">#project-manager.By_deadline#</a>
   </else>
+  <a target="format_print" href="?format=print" class="button">#project-manager.Format_print#</a>
    <br>
 <br>
   <form method="post" action="@base_url@task-add-edit">
     <input type="submit" value="#project-manager.Edit_Tasks#" />
     @edit_hidden_vars;noquote@
-      
+</if>      
     @calendar;noquote@
-    
+
+<if @format@ ne print>
   </form>
 
   <a name="viewoptions"><h3>#project-manager.View_options#</h3></a>
@@ -39,4 +42,4 @@
 </select>
     <input type="submit" value="#acs-kernel.common_Save#" />
   </form>
-
+</if>

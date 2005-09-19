@@ -15,6 +15,7 @@ ad_page_contract {
     {julian_date ""}
     {hide_closed_p "t"}
     {display_p "l"}
+    {format:optional ""}
 } -properties {
     title:onevalue
     context:onevalue
