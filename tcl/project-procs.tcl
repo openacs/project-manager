@@ -1600,8 +1600,7 @@ ad_proc -public pm::project::get_list_of_open {
 	set extra_query "p.object_package_id = :object_package_id and"
     }
     set return_val [db_list_of_lists get_vals " "]
-    
-    return $return_val
+    return [lang::util::localize_list_of_lists -list $return_val]
 }
 
 
