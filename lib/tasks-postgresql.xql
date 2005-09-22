@@ -38,8 +38,6 @@
         p.title as project_name,
 	ar.object_id_two as logger_project
 	FROM
-	pm_roles pr,
-	pm_task_assignment pa,
 	(select tr.item_id,
                 ta.party_id,
                 ta.role_id,
@@ -78,7 +76,6 @@
         t.revision_id   = i.live_revision and
         t.item_id       = ti.task_id and
         ti.status       = s.status_id
-	$party_where_clause
 	and ar.object_id_one = t.parent_id
 	and ar.rel_type = 'application_data_link'
 	and o.object_id = ar.object_id_two
@@ -98,8 +95,6 @@
      select distinct task_item_id from (SELECT
         t.item_id as task_item_id
 	FROM
-	pm_roles pr,
-	pm_task_assignment pa,
 	(select tr.item_id,
                 ta.party_id,
                 ta.role_id,
@@ -136,7 +131,6 @@
         t.revision_id   = i.live_revision and
         t.item_id       = ti.task_id and
         ti.status       = s.status_id
-	$party_where_clause
         and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = ti.task_id
                     and ppm.privilege = 'read'

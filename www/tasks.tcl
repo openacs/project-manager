@@ -25,10 +25,14 @@ ad_page_contract {
     {status_id ""}
     {page ""}
     {page_size 25}
+    {page_num ""}
     role_id:optional
     {project_item_id ""}
     {instance_id ""}
     {is_observer_p ""}
+    {filter_package_id ""}
+    {role_id ""}
+    {base_url ""}
 } -properties {
     task_term:onevalue
    context:onevalue
@@ -54,6 +58,11 @@ set context [list "[_ project-manager.Tasks]"]
 # the unique identifier for this package
 set package_id [ad_conn package_id]
 set user_id    [ad_maybe_redirect_for_registration]
+
+# If we are in .LRN, then filter by package_id. This is actually a crude hack...
+if {[expr [string match "/dotlrn/*" [ad_conn url]]]} {
+    set filter_package_id $package_id
+}
 
 # permissions
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read

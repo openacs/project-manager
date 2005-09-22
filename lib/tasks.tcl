@@ -2,12 +2,8 @@
 # party_id
 # role_id
 set required_param_list [list]
-set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url watcher_p page_num]
-set optional_unset_list [list party_id role_id project_item_id is_observer_p]
-
-if {$instance_id == 0} {
-    unset instance_id
-}
+set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url page_num page_size]
+set optional_unset_list [list party_id role_id project_item_id is_observer_p instance_id filter_package_id]
 
 set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
 
@@ -51,20 +47,12 @@ if ![info exists package_id] {
 set extra_column ""
 set extra_join ""
 
-# ---------------------------------------------------------------
-
-# Hide finished tasks. This should be added as a filter, but I did not
-# have time to look it up in the howto. <openacs@sussdorff.de>
-
-
-set hide_done_tasks_p [parameter::get \
-			   -parameter "HideDoneTaskP" -default "1"]
-
-if {$hide_done_tasks_p} {
+if {$status_id == "1"} {
     set done_clause "and t.percent_complete < 100"
 } else {
     set done_clause ""
 }
+
 
 # Deal with the fact that we might work with days instead of hours
 
@@ -148,13 +136,10 @@ if {![exists_and_not_null elements]} {
     set elements [list task_item_id title slack_time role latest_start latest_finish status_type remaining worked project_item_id percent_complete log_url edit_url]
 }
 
-
-set is_observer_clause "t.item_id = pa.task_id and pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p"
-
-if ![info exist instance_id] { 
+if ![info exist filter_package_id] { 
     set project_item_clause [pm::project::get_list_of_open]
 } else {
-    set project_item_clause [pm::project::get_list_of_open -object_package_id $package_id]
+    set project_item_clause [pm::project::get_list_of_open -object_package_id $filter_package_id]
 }
 
 set filters [list \
@@ -178,10 +163,17 @@ set filters [list \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
 				    values { {True t} {False f} } \
-				    where_clause "$is_observer_clause"
-			       ]\
-		]
-
+				    where_clause "r.is_observer_p = 't'"
+			       ] \
+		 party_id [list \
+				    label "[_ project-manager.People]" \
+				    values "[pm::task::assignee_filter_select -status_id $status_id]" \
+				    where_clause "t.party_id = :party_id"
+			       ] \
+		 filter_package_id [list \
+				    where_clause "p.object_package_id = :filter_package_id"
+			       ] \
+	    ]
 # Setup the actions, so we can append the rest later on
 if {$actions_p == 1} {
     set actions [list "[_ project-manager.Add_task]" [export_vars \
@@ -201,49 +193,12 @@ foreach element $elements {
 	set element "actual_${days_string}_worked"
     }
 
-    # We need to filter by the user if a party_id is given
-    if {[exists_and_not_null party_id]} {
-	set party_where_clause "and t.party_id = :party_id"
-
-	# Do we want to show observer tasks as well?
-	if {$watcher_p == 1} {
-	    append party_where_clause "\n and r.is_observer_p = 't' "
-	    set actions [list "[_ project-manager.View_Active]" [export_vars -base "[ad_conn url]" {{watcher_p 0} page_num}] "[_ project-manager.View_only_Active]"]
-	} else {
-	    if {[parameter::get -parameter "ShowObserverTasksP" -default 0] == 0} {
-		append party_where_clause "\n and r.is_observer_p = 'f' "
-	    }
-	    set actions [list "[_ project-manager.View_Watcher]" [export_vars -base "[ad_conn url]" {{watcher_p 1} page_num}] "[_ project-manager.View_only_Observer]"]
-	}
-       
-    } else {
-	set party_where_clause ""
-    }
-
 
     # If we display the items of a single user, show the role. Otherwise
     # show all players.
 
     if {$element == "role"} {
-	if {[exists_and_not_null party_id]
-	    && $user_id == $party_id} {
-	    set element "role"
-	    lappend filters [list role_id [list \
-					       label "[_ project-manager.Roles]" \
-					       values {[pm::role::select_list_filter]} \
-					       where_clause "ta.role_id = :role_id"
-					  ]
-			    ]
-	} else {
 	    set element "party_id"
-	    lappend filters [list parties_id [list \
-						label "[_ project-manager.People]" \
-						values "[pm::task::assignee_filter_select \
--status_id $status_id]" \
-						where_clause ""
-					   ]
-			    ]
-	}
     }
     append row_list "$element {}\n"
 }
@@ -257,6 +212,7 @@ if {$use_bulk_p == 1} {
     set bulk_actions [list]
     set bulk_action_export_vars [list]
 }
+
 
 template::list::create \
     -name tasks \
@@ -447,7 +403,6 @@ template::list::create \
 	    row $row_list
 	}
     }
-
 
 set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
 
