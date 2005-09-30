@@ -26,7 +26,10 @@ set options [list]
 
 set party_ids [list]
 foreach user $users_list {
-    lappend party_ids [lindex $user 0]
+    set user [lindex $user 0]
+    if { ![empty_string_p [party::email -party_id $user]] } {
+	lappend party_ids $user
+    }
 }
 
 
