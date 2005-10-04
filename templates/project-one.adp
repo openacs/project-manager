@@ -78,6 +78,11 @@
             forum_id="@forum_id@" />
         </if>
         <p />
+    <p />
+	<if @mt_installed_p@>
+	    <include src="/packages/project-manager/lib/mail-portlet" project_item_id=@project_item_id@>
+	</if>
+    <p />
 </td>
 </tr>
 </table>
