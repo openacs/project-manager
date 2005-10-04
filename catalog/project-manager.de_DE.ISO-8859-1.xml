@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d5" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d7" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -34,6 +34,7 @@
   <msg key="Added">Hinzugefügt:</msg>
   <msg key="Added_new">Hinzugefügt: %new%</msg>
   <msg key="Admin">Admin</msg>
+  <msg key="aggregate_projects">Aggregiere die Projekte von diesem Zeitpunkt der letzten Jahre und davor</msg>
   <msg key="Assign_from_categories">Von den Kategorien aus zuteilen</msg>
   <msg key="assign_removed">%assign% entfernt</msg>
   <msg key="assign_saved">%assign% gespeichert</msg>
@@ -46,7 +47,6 @@
   <msg key="Assignments_saved">Beauftraungen gespeichert</msg>
   <msg key="Attach_a_file">Eine Datei hinzufügen?</msg>
   <msg key="Average">Durchschnitt</msg>
-  <msg key="back_one_week">Eine Woche zurück</msg>
   <msg key="back_to_admin_page">zurück zur Admin Seite</msg>
   <msg key="By_deadline">Nach Abgabedatum</msg>
   <msg key="Cancel">Abbrechen</msg>
@@ -77,7 +77,7 @@
   <msg key="days">Tage</msg>
   <msg key="Days_work">Arbeits-&lt;br&gt;tage</msg>
   <msg key="Days_worked">Tage&lt;br&gt; gearbeitet</msg>
-  <msg key="Deadline">Liefertermin:</msg>
+  <msg key="Deadline">Interne Deadline:</msg>
   <msg key="Deadline_1">Liefertermin</msg>
   <msg key="Deadline_Time">Liefertermin Uhrzeit</msg>
   <msg key="Default_roles">Standardrollen</msg>
@@ -111,6 +111,7 @@
   <msg key="Edit_a_Process">Einen Prozess ändern</msg>
   <msg key="Edit_assignees">Beteiligte ändern</msg>
   <msg key="Edit_categories">Kategorien ändern</msg>
+  <msg key="Edit_multiple_tasks">Mehrer Aufgaben auf einmal editieren</msg>
   <msg key="Edit_Process">Prozess ändern</msg>
   <msg key="Edit_project_term">Ändern %project_term%</msg>
   <msg key="Edit_task_term">Ändern %task_term%</msg>
@@ -129,7 +130,7 @@
   <msg key="Estimated_hours_work">Geschätzte Stunden an Arbeit</msg>
   <msg key="Fixed-width_Text">Text mit gesetzter Breite</msg>
   <msg key="Format">Format:</msg>
-  <msg key="forward_one_week">Eine Woche vor</msg>
+  <msg key="Format_print">Drucker freundliches Format</msg>
   <msg key="Go">Starte</msg>
   <msg key="Go_back">Zurück gehen</msg>
   <msg key="Goal">Ziel</msg>
@@ -143,6 +144,7 @@
   <msg key="HTML">HTML</msg>
   <msg key="ID">ID</msg>
   <msg key="Key">Kennziffer</msg>
+  <msg key="last_years">Letzte Jahre</msg>
   <msg key="Latest_Finish">Spätestes Ende</msg>
   <msg key="Latest_finish">Spätestes Ende</msg>
   <msg key="Latest_finish_date">Spätestes Enddatum</msg>
@@ -175,6 +177,7 @@
   <msg key="lt_Add_a_process_task_te">Einen Prozess hinzufügen %task_term_lower%</msg>
   <msg key="lt_Add_a_process_task_te_1">Einen Prozess hinzufügen %task_term_lower% (Beauftragung)</msg>
   <msg key="lt_Add_a_project_term_lo">Hinzufügen eines %project_term_lower%s</msg>
+  <msg key="lt_add_new_tasks">Neue Aufgaben hinzufügen</msg>
   <msg key="lt_Add_task_term_lower_d_1">Hinzufügen von %task_term_lower% Abhängigkeiten</msg>
   <msg key="lt_Administrator_needs_t">Administrator muss Log-Integration aufsetzen</msg>
   <msg key="lt_After_they_have_done_">Nachdem dieses erledigt wurde, können Sie zu der vorherigen Seite zurückgehen und Stunden hinzufügen bzw. diese verändern </msg>
@@ -327,6 +330,8 @@
   <msg key="lt_you_need_to_start_wor">Wenn es vermieden werden soll, Abgabetermine zu verschieben, müssen Sie hiermit bald beginnen</msg>
   <msg key="Max">Max:</msg>
   <msg key="Min">Min:</msg>
+  <msg key="Min_amount">Mindestbetrag</msg>
+  <msg key="min_amount_help">Mindestbetrag der beim Projekt umgesetzt wurde</msg>
   <msg key="move_help">Wählen Sie ein Projekt aus, zu dem die Aufgabe verschoben werden soll</msg>
   <msg key="Move_task">Aufgabe verschieben</msg>
   <msg key="Move_task_to">Verschiebe Aufgabe zu Projekt</msg>
@@ -412,7 +417,7 @@
   <msg key="Projection">Projektion</msg>
   <msg key="Projects">Projekte</msg>
   <msg key="Projects_ongoing">Laufende Projekte</msg>
-  <msg key="Projects_reports">Projektberichte</msg>
+  <msg key="Projects_reports">Projekte Reports</msg>
   <msg key="Quantity">Quantität:</msg>
   <msg key="Rate">Bewertung</msg>
   <msg key="rate">Bewertung</msg>
@@ -444,6 +449,7 @@
   <msg key="Set_permissions">Berechtigungen setzen</msg>
   <msg key="Set_up">Einrichten</msg>
   <msg key="Show_closed">Auch Abgeschlossene anzeigen</msg>
+  <msg key="show_this_projects">Dieses Projekt anzeigen</msg>
   <msg key="Skip_this_task">Diese Aufgabe auslassen?</msg>
   <msg key="Slack">Pufferzeit:</msg>
   <msg key="Slack_1">Puffer-&lt;br&gt;zeit</msg>
@@ -485,6 +491,7 @@
   <msg key="Title">Titel</msg>
   <msg key="Title_1">Titel\</msg>
   <msg key="Total">Gesamt</msg>
+  <msg key="Total_amount">Gesamtbetrag</msg>
   <msg key="Total_work">Gesamte Arbeit</msg>
   <msg key="Total_work_required">Gesamte benötigte Arbeit:</msg>
   <msg key="Type">Typ</msg>
