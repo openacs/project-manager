@@ -170,3 +170,34 @@ ad_proc -public -callback contact::organization_new -impl project_manager {
     }
 }
 
+ad_proc -public -callback subsite::url -impl pm_project {
+    {-package_id:required}
+    {-object_id:required}
+    {-type ""}
+} {
+    return the page_url for an object of type pm_project
+} {
+
+    set base_url [apm_package_url_from_id $package_id]
+    if {$type=="edit"} {
+	return [export_vars -base "${base_url}add-edit" -url {{project_id $object_id}}]
+    } else {
+	return [export_vars -base "${base_url}one" -url {{project_id $object_id}}]
+    }
+}
+
+ad_proc -public -callback subsite::url -impl pm_task {
+    {-package_id:required}
+    {-object_id:required}
+    {-type ""}
+} {
+    return the page_url for an object of type pm_task
+} {
+
+    set base_url [apm_package_url_from_id $package_id]
+    if {$type=="edit"} {
+	return [export_vars -base "${base_url}task-add-edit-one" -url {{task_item_id $object_id}}]
+    } else {
+	return [export_vars -base "${base_url}task-one" -url {{task_id $object_id}}]
+    }
+}
