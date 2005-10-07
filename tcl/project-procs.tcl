@@ -1786,8 +1786,8 @@ ad_proc -public pm::project::assign {
         pm::util::email \
             -to_addr $to_addr \
             -from_addr $from_addr \
-            -subject $subject \
-            -body $content \
+            -subject [lang::util::localize $subject] \
+            -body [lang::util::localize $content] \
             -mime_type "text/html"
     }
 

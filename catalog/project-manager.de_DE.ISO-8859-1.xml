@@ -185,7 +185,7 @@
   <msg key="lt_Are_you_sure_you_want">Sind Sie sich sicher, dass Sie diesen Prozess löschen wollen: %one_line%</msg>
   <msg key="lt_Are_you_sure_you_want_1">Sind Sie sich sicher, dass Sie diesen Log-Eintrag mit %value% %variable.unit% %variable.name% on %time_stamp%?' löschen wollen</msg>
   <msg key="lt_Are_you_sure_youd_lik">Sind Sie sicher, dass Sie diese %task_term_lower%n löschen wollen?</msg>
-  <msg key="lt_Assigned_to_project_p">Zugewiesen zu Projekt: project_name%</msg>
+  <msg key="lt_Assigned_to_project_p">Zugewiesen zu Projekt: %project_name%</msg>
   <msg key="lt_be_patient____this_ta">(seien Sie geduldig, dies dauert eine kleine Weile; in der Zwischenzeit können Sie die LOg-Files lesen, um zu sehen, was passiert.)</msg>
   <msg key="lt_Begin_synchronization">Starte Synchronisation</msg>
   <msg key="lt_Changes_to_project_sa">Änderungen am Projekt wurden gespeichert</msg>

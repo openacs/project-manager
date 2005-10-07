@@ -1570,7 +1570,7 @@ $process_html
         pm::util::email \
             -to_addr  $to_address \
             -from_addr $from_address \
-            -subject $subject_out \
+            -subject [lang::util::localize $subject_out] \
             -body [lang::util::localize $notification_text [lang::user::locale -user_id $assignee_id]] \
             -mime_type "text/html"
     }
