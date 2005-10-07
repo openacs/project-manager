@@ -27,9 +27,11 @@ foreach optional_unset $optional_unset_list {
     }
 }
 
+
 if ![info exists page_size] {
     set page_size 25
 }
+
 
 if ![info exists display_mode] {
     set display_mode "all"
@@ -163,7 +165,7 @@ set filters [list \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
 				    values { {True t} {False f} } \
-				    where_clause "r.is_observer_p = 't'"
+				    where_clause "r.is_observer_p = :is_observer_p"
 			       ] \
 		 party_id [list \
 				    label "[_ project-manager.People]" \
@@ -350,26 +352,26 @@ template::list::create \
 	default_value $default_orderby
 	title {
 	    label "[_ project-manager.Subject_1]"
-	    orderby_desc "t.title desc, ts.task_item_id"
-	    orderby_asc "t.title asc, ts.task_item_id"
+	    orderby_desc "t.title desc, task_item_id"
+	    orderby_asc "t.title asc, task_item_id"
 	    default_direction asc
 	}
 	description {
 	    label "[_ project-manager.Description]"
-	    orderby_desc "t.description desc, ts.task_item_id"
-	    orderby_asc "t.description, ts.task_item_id"
+	    orderby_desc "t.description desc, task_item_id"
+	    orderby_asc "t.description, task_item_id"
 	    default_direction asc
 	}
 	slack_time {
 	    label "[_ project-manager.Slack_1]"
-	    orderby_desc "(latest_start - earliest_start) desc, ts.task_item_id"
-	    orderby_asc "(latest_start - earliest_start), ts.task_item_id"
+	    orderby_desc "(latest_start - earliest_start) desc, task_item_id"
+	    orderby_asc "(latest_start - earliest_start), task_item_id"
 	    default_direction asc
 	}
 	status {
 	    label "[_ project-manager.Status_1]"
-	    orderby_desc "status desc, t.latest_finish desc, ts.task_item_id"
-	    orderby_asc "status asc, t.latest_finish desc, ts.task_item_id"
+	    orderby_desc "status desc, t.latest_finish desc, task_item_id"
+	    orderby_asc "status asc, t.latest_finish desc, task_item_id"
 	    default_direction asc
 	}
 	end_date {
@@ -404,7 +406,9 @@ template::list::create \
 	}
     }
 
-set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+if { ![exists_and_not_null assign_group_p] } {
+    set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+}
 
 db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name} tasks tasks " " {
     

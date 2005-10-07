@@ -19,7 +19,7 @@ ad_page_contract {
     still allow people to view everyone.
 
 } {
-    orderby:optional
+    {orderby ""}
     {party_id ""}
     {searchterm ""}
     {status_id ""}
