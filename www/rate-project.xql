@@ -18,6 +18,7 @@
         	pm_project_assignment a
 	where
         	project_id = :project_item_id
+		and party_id is not null
     </querytext>
 </fullquery>
 
