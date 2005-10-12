@@ -11,7 +11,7 @@
 
 set required_param_list [list group_name]
 set optional_param_list [list]
-set optional_unset_list [list orderby customer_filter]
+set optional_unset_list [list orderby customer_filter package_id]
 
 # Checking required parameters
 foreach required_param $required_param_list {
@@ -55,12 +55,13 @@ if { ![empty_string_p $community_id] } {
 # Get the group members list
 set group_members_list [group::get_members -group_id $group_id]
 
+set customer_list {}
 # Get the customers list associated to this package_id
-set customer_list [list]
-db_foreach get_customers { } {
-    set customer_name [contact::name -party_id $customer_id]
-    lappend customer_list [list $customer_name $customer_id]
-}
+#set customer_list [list]
+#db_foreach get_customers { } {
+#    set customer_name [contact::name -party_id $customer_id]
+#    lappend customer_list [list $customer_name $customer_id]
+#}
 
 template::list::create \
     -name members \
@@ -88,6 +89,9 @@ template::list::create \
 	    label "[_ project-manager.Customer]"
 	    values { $customer_list }
 	    where_clause { customer_id = :customer_filter }
+	}
+	package_id {
+	    where_clause { proj.object_package_id = :package_id }
 	}
     } \
     -orderby_name orderby \

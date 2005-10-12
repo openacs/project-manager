@@ -54,8 +54,8 @@ ad_proc -private pm::install::package_install {
 
     # Create new relationship type for Application Links
 
-    # rel_types::new "application_link" "Application Link" "Application Links" apm_package 0 "" apm_package 0 ""
-    # rel_types::new "application_data_link" "Application Data Link" "Application Data Links" acs_object 0 "" acs_object 0 ""
+    rel_types::new "application_link" "Application Link" "Application Links" apm_package 0 "" apm_package 0 ""
+    rel_types::new "application_data_link" "Application Data Link" "Application Data Links" acs_object 0 "" acs_object 0 ""
 }
 
 ad_proc -private pm::install::package_instantiate {
