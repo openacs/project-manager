@@ -21,12 +21,11 @@ foreach optional_param $optional_param_list {
 
 foreach optional_unset $optional_unset_list {
     if {[info exists $optional_unset]} {
-	if {[empty_string_p [set $optional_unset]]} {
+        if {[empty_string_p [set $optional_unset]] || [set $optional_unset] == 0} {
 	    unset $optional_unset
 	}
     }
 }
-
 
 if ![info exists page_size] {
     set page_size 25
@@ -160,7 +159,7 @@ set filters [list \
 				      where_clause "t.parent_id = :project_item_id"
 				 ] \
 		 instance_id [list \
-				  where_clause "ti.process_instance = :instance_id"
+                                 where_clause "ti.process_instance = :instance_id"
 			     ] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
