@@ -18,6 +18,9 @@ ad_page_contract {
 
 set optional_unset_list [list status_id]
 
+# Check if contacts is installed
+set invoices_installed_p [apm_package_installed_p invoices]
+
 foreach optional_unset $optional_unset_list {
     if {[info exists $optional_unset]} {
         if {[empty_string_p [set $optional_unset]]} {
@@ -143,13 +146,16 @@ if { [exists_and_not_null year] && [exists_and_not_null month] && [exists_and_no
 	set planned_end_date [lindex $project 2]
 	set offer_item_id [pm::project::get_iv_offer -project_item_id $project_item_id]
 	set offer_id [content::item::get_latest_revision -item_id $offer_item_id]
-	set billed_p [iv::offer::billed_p -offer_id $offer_id]
-	if { $billed_p } {
-	    set amount_total [db_string get_amount_total { }]
-	    if { $amount_total >= $min_amount } {
-		template::multirow append projects $title $amount_total 0 $planned_end_date
-	    }
-	}
+	
+        if { $invoices_installed_p } {
+            set billed_p [iv::offer::billed_p -offer_id $offer_id]
+            if { $billed_p } {
+                set amount_total [db_string get_amount_total { }]
+                if { $amount_total >= $min_amount } {
+                    template::multirow append projects $title $amount_total 0 $planned_end_date
+                }
+            }
+        }
     }
 } else {
     # We accumulate the amount_total and the number of billed projects to show on the list
@@ -160,14 +166,17 @@ if { [exists_and_not_null year] && [exists_and_not_null month] && [exists_and_no
 	set title [lindex $project 1]
 	set offer_item_id [pm::project::get_iv_offer -project_item_id $project_item_id]
 	set offer_id [content::item::get_latest_revision -item_id $offer_item_id]
-	set billed_p [iv::offer::billed_p -offer_id $offer_id]
-	if { $billed_p } {
-	    set amount_total [db_string get_amount_total { }]
-	    if { $amount_total >= $min_amount } {
-		set tot_proj_amount [expr $tot_proj_amount + $amount_total]
-		incr projects_num
-	    }
-	}
+        
+        if { $invoices_installed_p } {
+            set billed_p [iv::offer::billed_p -offer_id $offer_id]
+            if { $billed_p } {
+                set amount_total [db_string get_amount_total { }]
+                if { $amount_total >= $min_amount } {
+                    set tot_proj_amount [expr $tot_proj_amount + $amount_total]
+                    incr projects_num
+                }
+            }
+        }
     }
     template::multirow append projects "[_ project-manager.Projects]" $tot_proj_amount $projects_num "- - - - - - - - - - -"
 }
