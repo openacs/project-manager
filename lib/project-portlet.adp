@@ -79,6 +79,9 @@
 	<li>
 	  <a href="project-revisions?project_item_id=@project_item_id@">#project-manager.View_project_changes#</a>
 	</li>
+        <li>
+	  <a href="project-emails?project_item_id=@project_item_id@">#project-manager.View_project_emails#</a>
+	</li>
       </ul>
     </td>
   </tr>

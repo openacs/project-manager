@@ -54,5 +54,3 @@ if {[string equal $project(parent_id) $project_root]} {
     set parent_name [pm::util::get_project_name -project_item_id $project(parent_id)]
     set context [list [list "one?project_item_id=$project(parent_id)" "$parent_name"] "$project(project_name)"]
 }
-
-set mt_installed_p [apm_package_installed_p "mail-tracking"]
