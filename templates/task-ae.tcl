@@ -37,6 +37,7 @@ if {[exists_and_not_null task_item_id] || ![ad_form_new_p -key task_id]} {
     set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
     set logger_variable_id [logger::project::get_primary_variable -project_id $logger_project]
     logger::variable::get -variable_id $logger_variable_id -array logger_variable
+    set logger_variable(unit) "[_ [regsub -all {#} $logger_variable(unit) ""]]"
 
     set open_p [pm::project::open_p -project_item_id $project_item_id]
     if {[string is false $open_p]} {
