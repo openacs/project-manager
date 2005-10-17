@@ -144,6 +144,8 @@
   <msg key="hrs">hrs</msg>
   <msg key="HTML">HTML</msg>
   <msg key="ID">ID</msg>
+  <msg key="Jobid">Jobid</msg>
+  <msg key="Jobid_help">Insert a keyword to search for a Jobid (project name).</msg>
   <msg key="Key">Key</msg>
   <msg key="last_years">Last Years</msg>
   <msg key="Latest_Finish">Latest Finish</msg>
