@@ -324,6 +324,7 @@ ad_proc -public pm::util::general_comment_add {
     {-user_id ""}
     {-peeraddr ""}
     {-type "task"}
+    {-to ""}
     {-send_email_p "f"}
 } {
     Adds a general comment to a task or project
@@ -346,6 +347,8 @@ ad_proc -public pm::util::general_comment_add {
     If empty, set to the ad_conn peeraddr
 
     @param type Either task or project. 
+    
+    @param to Emails of users to send the message.
 
     @param send_email_p Whether or not to send out an email
     notification t or f
@@ -435,8 +438,12 @@ ad_proc -public pm::util::general_comment_add {
         # task
 
         if {[string equal $type task]} {
-
-            set assignees [pm::task::assignee_email_list -task_item_id $object_id]
+	    
+	    if { [exists_and_not_null $to]} {
+		set assignees $to
+	    } else {
+		set assignees [pm::task::assignee_email_list -task_item_id $object_id]
+	    }
 
             if {[llength $assignees] > 0} {
 
@@ -453,13 +460,16 @@ ad_proc -public pm::util::general_comment_add {
                 set comment_html [template::util::richtext::get_property html_value $richtext_list]
 
                 set content "<a href=\"$task_url\">$title</a> <p />$comment_html"
-                
+
+		set project_item_id [pm::task::project_item_id -task_item_id $object_id]
+
                 pm::util::email \
                     -to_addr  $to_address \
                     -from_addr $from_address \
                     -subject $subject \
                     -body $content \
-                    -mime_type "text/html"
+                    -mime_type "text/html" \
+		    -object_id "$project_item_id"
             }
 
         }
@@ -468,7 +478,11 @@ ad_proc -public pm::util::general_comment_add {
 
         if {[string equal $type project]} {
 
-            set assignees [pm::project::assignee_email_list -project_item_id $object_id]
+	    if { [exists_and_not_null $to]} {
+		set assignees $to
+	    } else {
+		set assignees [pm::project::assignee_email_list -project_item_id $object_id]
+	    }
 
             if {[llength $assignees] > 0} {
 
@@ -493,9 +507,9 @@ ad_proc -public pm::util::general_comment_add {
                     -from_addr $from_address \
                     -subject $subject \
                     -body $content \
-                    -mime_type "text/html"
+                    -mime_type "text/html" \
+		    -object_id "$object_id"
             }
-
 
         }
     }
@@ -511,6 +525,7 @@ ad_proc -public pm::util::email {
     {-subject:required}
     {-body ""}
     {-mime_type "text/plain"}
+    {-object_id ""}
 } {
     Wrapper to send out email, also converts body to text/plain format
     
@@ -560,13 +575,15 @@ ad_proc -public pm::util::email {
     set content [ns_set get $message_data body]
 
     foreach to $to_addr {
-
-        acs_mail_lite::send \
-            -to_addr  "$to" \
-            -from_addr "$from_addr" \
-            -subject "$subject" \
-            -body $content \
-            -extraheaders $extra_headers
+	if { ![empty_string_p $to] } {
+	    acs_mail_lite::complex_send \
+		-send_immediately \
+		-to_addr  "$to" \
+		-from_addr "$from_addr" \
+		-subject "$subject" \
+		-body $content \
+		-object_id $object_id
+	}
     }
 }
 
