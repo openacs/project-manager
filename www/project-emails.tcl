@@ -20,6 +20,6 @@ permission::require_permission -object_id $project_item_id -privilege "read"
 
 set title "[_ project-manager.Project_Emails]"
 
-set context [list "one?project_item_id=$project_item_id" "[_ project-manager.Project_1]" "[_ project-manager.Project_Emails]"]
+set context [list [list "one?project_item_id=$project_item_id" "[_ project-manager.Project_1]"] "[_ project-manager.Project_Emails]"]
 
 set mt_installed_p [apm_package_installed_p "mail-tracking"]
