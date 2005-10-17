@@ -52,6 +52,7 @@
   <msg key="Cancel">Cancel</msg>
   <msg key="Cancel_do_not_delete">Cancel, do not delete</msg>
   <msg key="Categories">Categories</msg>
+  <msg key="check_uncheck">Check/Uncheck</msg>
   <msg key="Close">Close</msg>
   <msg key="Close_project">Close project</msg>
   <msg key="Closed">Closed</msg>
