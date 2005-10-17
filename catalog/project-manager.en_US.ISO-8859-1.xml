@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d8" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d9" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -491,7 +491,6 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Projection">Projection</msg>
   <msg key="Projects">Projects</msg>
   <msg key="Projects_ongoing">Projects ongoing</msg>
-  <msg key="Projects_reports">Reports</msg>
   <msg key="Quantity">Quantity:</msg>
   <msg key="Rate">Rate</msg>
   <msg key="rate">Rate</msg>
@@ -586,7 +585,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="View_only_Observer">View only tasks where you are an observer</msg>
   <msg key="View_options">View options</msg>
   <msg key="View_project_changes">View project changes</msg>
-  <msg key="View_project_emails">View project emails</msg>
+  <msg key="View_project_emails">View Project Emails</msg>
   <msg key="View_Revisions">View Revisions</msg>
   <msg key="View_task_changes">View task changes</msg>
   <msg key="View_this_revision">View this revision</msg>
