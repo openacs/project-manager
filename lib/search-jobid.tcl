@@ -13,31 +13,26 @@
 # Expects:
 # keyword
 
-set output ""
+set focus_message "if(this.value=='[_ project-manager.Search_jobid]')this.value='';"
+set blur_message "if(this.value=='')this.value='[_ project-manager.Search_jobid]';"
 
 ad_form -name search_jobid -form {
     {keyword:text(text)
-	{label "[_ project-manager.Jobid]:"}
-	{help_text "[_ project-manager.Jobid_help]"}
-	{html {size 20}}
+	{html {size 20 onfocus "$focus_message" onblur "$blur_message" class search_jobid}}
+	{value "[_ project-manager.Search_jobid]"}
     }
 } -on_submit {
+    set match_projects [db_list_of_lists get_projects { }]
+    if { [string equal [llength $match_projects] 1] } {
+	set project_item_id [lindex [lindex $match_projects 0] 0]
+	set object_package_id [lindex [lindex $match_projects 0] 2]
 
-    set project_item_id [db_string get_project { } -default 0]
-
-    if { [string equal $project_item_id 0] } {
-	set projects_list [db_list_of_lists get_projects { }]
-	if { [string equal [llength $projects_list] 0] } {
-	    append output "<b>Available Options:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;<i>No Match</i>"
-	} else {
-	    append output "<b>Available Options:</b><br><ul>"
-	    foreach project $projects_list {
-		append output "<table><tr><td><li>[lindex $project 1]</td>"
-		append output "<td><a href=\"one?project_item_id=[lindex $project 0]\">Go</a></td></tr></table>"
-	    }
-	    append output "</ul>"
-	}
-    } else {
-	ad_returnredirect "/o/$project_item_id"
+	# We get the node_id from the package_id and use it 
+	# to get the url of the project-manager
+	set pm_node_id [site_node::get_node_id_from_object_id -object_id $object_package_id]
+       	set pm_url [site_node::get_url -node_id $pm_node_id]
+	
+	# Just redirect to the pm_url and project_item_id
+	ad_returnredirect "${pm_url}one?project_item_id=$project_item_id"
     }
 }
