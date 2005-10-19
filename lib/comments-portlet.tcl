@@ -12,7 +12,7 @@ set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 # ----------------
 # general comments
 # ----------------
-set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $project_item_id "[ad_conn url]?project_item_id=$project_item_id"]
+set comments [general_comments_get_comments -print_content_p 0 -print_attachments_p 0 -print_user_info_p 0 $project_item_id "[ad_conn url]?project_item_id=$project_item_id"]
 
 set comments_link "<a href=\"[export_vars -base "comments/add" {{ object_id $project_item_id} {title "[pm::util::get_project_name -project_item_id $project_item_id -project_id $project_id]"} {return_url [ad_return_url]} {type project} }]\">[_ project-manager.Add_comment]</a>"
 
