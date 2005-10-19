@@ -513,6 +513,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Search:">Search:</msg>
   <msg key="Search_1">Search</msg>
   <msg key="search_help">Enter a keyword to search for projects.</msg>
+  <msg key="Search_jobid">Search Jobid</msg>
   <msg key="search_user">Search Users</msg>
   <msg key="Section">Section</msg>
   <msg key="select_assignee_in_this">Select Assigne in this project to send a message</msg>
