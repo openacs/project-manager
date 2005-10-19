@@ -26,6 +26,9 @@
       <li>
         <a href="@send_email_url;noquote@">#project-manager.send_mail#</a>
       </li>
+      <li>
+        <a href="@rate_url;noquote@">#project-manager.Rate_Assignees#</a>
+      </li>
       </if>
     </ul>
   </td>

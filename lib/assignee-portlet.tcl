@@ -30,6 +30,9 @@ set contacts_installed_p [apm_package_installed_p contacts]
 # Send Email URL
 set send_email_url "send-mail?project_id=$project_id"
 
+# Rate URL
+set rate_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
+
 # There is no point showing an empty listbox, which happens if the user assigns all roles to himself. Doing it this way avoids another trip to the database.
 set select_list_html [pm::role::project_select_list -select_name "role_id" -project_item_id $project_item_id -party_id $user_id]
 if {[string compare $select_list_html "<select name=\"role_id\"></select>"]} {
