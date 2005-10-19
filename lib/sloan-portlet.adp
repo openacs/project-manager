@@ -2,7 +2,7 @@
   <div class="portlet-wrap-bl">
      <div class="portlet-wrap-tr">
         <div class="portlet">
-            <h2>@portlet_title;noquote@</h2>
+            <h3>@portlet_title;noquote@</h3>
             <slave>
 	 </div> <!-- portlet -->
       </div> <!-- portlet-wrap-tr -->
