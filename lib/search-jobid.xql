@@ -4,7 +4,7 @@
 <fullquery name="get_project">
     <querytext>
 	select 
-		item_id
+		distinct item_id
 	from
 		pm_projectsx
 	where

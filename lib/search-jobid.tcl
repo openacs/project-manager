@@ -38,6 +38,6 @@ ad_form -name search_jobid -form {
 	    append output "</ul>"
 	}
     } else {
-	ad_returnredirect "one?project_item_id=$project_item_id"
+	ad_returnredirect "/o/$project_item_id"
     }
 }
