@@ -23,6 +23,10 @@ if {![info exists format]} {
     set format "normal"
 }
 
+if {![exists_and_not_null elements]} {
+    set elements "task_item_id status_type title parent_task_id priority slack_time latest_start end_date last_name"
+}
+
 set user_id     [auth::require_login]
 set task_term          [_ project-manager.Task]
 set hide_done_tasks_p  [parameter::get -parameter "HideDoneTaskP" -default "1"]
@@ -52,12 +56,5 @@ set process_reminder_url [export_vars -base process-reminder {instance_id projec
 
 # we do this so that the list builder templates don't add a where
 # claus when instance_id is set.
-if {[empty_string_p $instance_id]} {
-    unset instance_id
-}
 
 set processes_html [pm::process::select_html]
-
-if {![info exists instance_id]} {
-    set instance_id 0
-}
