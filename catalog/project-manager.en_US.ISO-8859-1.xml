@@ -496,6 +496,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Quantity">Quantity:</msg>
   <msg key="Rate">Rate</msg>
   <msg key="rate">Rate</msg>
+  <msg key="Rate_Assignees">Rate Assignees</msg>
   <msg key="Rate_this_project">Rate this project</msg>
   <msg key="rate_this_project">Rate This Project</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>

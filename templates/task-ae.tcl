@@ -196,7 +196,7 @@ if {[string is true $edit_p]} {
 if {!$use_uncertain_completion_times_p} {
     ad_form -extend -name task_add_edit \
 	-form {
-	    {estimated_hours_work:text
+	    {estimated_hours_work:float
 		{label " "}
 		{html {size 5}}
 		{after_html $work_units}
@@ -206,14 +206,14 @@ if {!$use_uncertain_completion_times_p} {
 } elseif {[string is true $use_day_p]} {
     ad_form -extend -name task_add_edit \
 	-form {
-	    {estimated_days_work_min:text
+	    {estimated_days_work_min:float
 		{label "[_ project-manager.Min]"}
 		{html {size 5}}
 		{after_html $work_units}
 		{section "[_ project-manager.Work_required]"}
 	    }
         
-	    {estimated_days_work_max:text
+	    {estimated_days_work_max:float
 		{label "[_ project-manager.Max]"}
 		{html {size 5}}
 		{after_html $work_units}
@@ -223,14 +223,14 @@ if {!$use_uncertain_completion_times_p} {
 } else {
     ad_form -extend -name task_add_edit \
 	-form {
-	    {estimated_hours_work_min:text
+	    {estimated_hours_work_min:float
 		{label "[_ project-manager.Min]"}
 		{html {size 5}}
 		{after_html $work_units}
 		{section "[_ project-manager.Work_required]"}
 	    }
         
-	    {estimated_hours_work_max:text
+	    {estimated_hours_work_max:float
 		{label "[_ project-manager.Max]"}
 		{html {size 5}}
 		{after_html $work_units}
@@ -448,6 +448,7 @@ ad_form -extend -name task_add_edit -new_request {
     set end_date(month)  [lindex [set end_date_split] 1]
     set end_date(year)   [lindex [set end_date_split] 0]
     set end_date(format) ""
+
     ad_page_contract_filter_proc_date end_date end_date
 
     set task_end_date_list [split $end_date(date) "-"]
