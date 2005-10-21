@@ -8,7 +8,7 @@
 set required_param_list [list package_id]
 set optional_param_list [list orderby status_id searchterm bulk_p action_p \
 			     filter_p base_url end_date_f user_space_p hidden_vars]
-set optional_unset_list [list assignee_id date_range is_observer_p]
+set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
 
 set user_id [ad_conn user_id]
@@ -180,6 +180,13 @@ if { $user_space_p } {
     set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p and f.package_id = :package_id"
 }
 
+# If this filter is provided we can watch the projects in 
+# all project manager instances
+set previous_status_where_clause ""
+if { ![exists_and_not_null previous_status_f] } {
+    set previous_status_where_clause "and f.package_id in ($package_ids)"
+}
+
 set filters [list \
 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
@@ -211,6 +218,11 @@ set filters [list \
 				    values { {True t } { False f} } \
 				    where_clause { $user_space_clause }
 			       ] \
+		 previous_status_f [list \
+					label "[_ project-manager.Previous_Status]" \
+					values { [pm::status::project_status_select] } \
+					where_clause { exists ( select 1 from pm_projectsx pf where pf.status_id = :previous_status_f and pf.item_id = p.item_id ) }
+				   ] \
 		]
 
 

@@ -26,6 +26,7 @@ ad_page_contract {
     {assignee_id ""}
     {user_space_p "0"}
     {is_observer_p ""}
+    {previous_status_f ""}
     
 } -properties {
 

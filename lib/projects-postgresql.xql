@@ -70,7 +70,7 @@
         p.project_id = i.live_revision
         and rx.object_id = i2.live_revision
 	and i.parent_id = f.folder_id
-	and f.package_id in ($package_ids)
+	$previous_status_where_clause
         and exists (select 1 from acs_object_party_privilege_map ppm 
                     where ppm.object_id = p.project_id
                     and ppm.privilege = 'read'
