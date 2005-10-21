@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d11" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d12" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -35,6 +35,7 @@
   <msg key="Added_new">Added: %new%</msg>
   <msg key="Admin">Admin</msg>
   <msg key="aggregate_projects">Aggregate projects from this time of past years and beyond.</msg>
+  <msg key="All">All</msg>
   <msg key="Assign_from_categories">Assign from categories</msg>
   <msg key="assign_removed">%assign% removed</msg>
   <msg key="assign_saved">%assign% saved</msg>
@@ -68,6 +69,7 @@
   <msg key="Created">Created</msg>
   <msg key="Creation_date">Creation date</msg>
   <msg key="CSV">CSV</msg>
+  <msg key="Current">Current</msg>
   <msg key="Currently_integrated">Currently integrated:</msg>
   <msg key="Currently_selected">Currently selected:</msg>
   <msg key="Customer">Customer</msg>
@@ -132,6 +134,7 @@
   <msg key="Estimated_Hours_Max">Estimated Hours (Max)</msg>
   <msg key="Estimated_Hours_Min">Estimated Hours (Min)</msg>
   <msg key="Estimated_hours_work">Estimated hours work</msg>
+  <msg key="False">False</msg>
   <msg key="Fixed-width_Text">Fixed-width Text</msg>
   <msg key="Format">Format:</msg>
   <msg key="Format_print">Printer friendly format</msg>
@@ -441,6 +444,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Order">Order</msg>
   <msg key="Overdue_Tasks">Overdue Tasks</msg>
   <msg key="Overview_of_process">Overview of process:</msg>
+  <msg key="Package">Package Instance</msg>
   <msg key="page">page)</msg>
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
@@ -583,6 +587,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Total_amount">Total Amount</msg>
   <msg key="Total_work">Total work</msg>
   <msg key="Total_work_required">Total work required:</msg>
+  <msg key="True">True</msg>
   <msg key="Type">Type</msg>
   <msg key="Unmounted">Unmounted</msg>
   <msg key="Update_all">Update all</msg>
