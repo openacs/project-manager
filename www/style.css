@@ -109,3 +109,10 @@ td.fill-list-bg {
   padding:5px; 
   width:70%;
 }
+
+#search-block-big { 
+  border:1px solid #000; 
+  background-color: #EAF2FF;
+  padding:5px; 
+  width:80%;
+}
