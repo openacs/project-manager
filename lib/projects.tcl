@@ -8,7 +8,7 @@
 set required_param_list [list package_id]
 set optional_param_list [list orderby status_id searchterm bulk_p action_p \
 			     filter_p base_url end_date_f user_space_p hidden_vars]
-set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f]
+set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f current_package_f]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
 
 set user_id [ad_conn user_id]
@@ -40,6 +40,12 @@ if {![info exists format]} {
 
 if [empty_string_p $user_space_p] {
     set user_space_p 0
+    set dotlrn_club_id [dotlrn_community::get_community_id]
+    set pm_package_id [dotlrn_community::get_package_id_from_package_key \
+			   -package_key "project-manager" \
+			   -community_id $dotlrn_club_id]
+} else {
+    set pm_package_id [ad_conn package_id]
 }
 # This indicates that it came from the user space
 # So we check that the user has lead or player role
@@ -177,16 +183,63 @@ if {$actions_p == 1} {
 if { $user_space_p } {
     set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p"
 } else {
-    set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p and f.package_id = :package_id"
+    set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p 
+                           and f.package_id = :package_id and i.parent_id = f.folder_id"
 }
 
 # If this filter is provided we can watch the projects in 
 # all project manager instances
-set previous_status_where_clause ""
-if { ![exists_and_not_null previous_status_f] } {
-    set previous_status_where_clause "and f.package_id in ($package_ids)"
+if { [exists_and_not_null current_package_f] } {
+    if { [string equal $current_package_f 1] } {
+	set current_package_where_clause ""
+    } else {
+	set current_package_where_clause "and f.package_id = :current_package_f and i.parent_id = f.folder_id"
+    }
+} else {
+    set current_package_where_clause "and f.package_id in ($package_ids) and i.parent_id = f.folder_id"
 }
 
+# We are going to create the available options for the possible pairs
+# of status_id's of the projects, to have options like "where status is open and closed"
+set available_status [pm::status::project_status_select]
+set control_list [list]
+foreach option $available_status {
+    set option_name [lindex $option 0]
+    set option_id   [lindex $option 1]
+    lappend previous_status_options [list $option_name $option_id]
+    lappend control_list $option_id
+    foreach option2 $available_status {
+	set option_name2 [lindex $option2 0]
+	set option_id2   [lindex $option2 1]
+	if {![string equal $option_name $option_name2] && \
+		[string equal [lsearch -exact $control_list "${option_id2},$option_id"] "-1"] } {
+	    lappend previous_status_options [list "$option_name and $option_name2" "${option_id},$option_id2"]
+	    lappend control_list "${option_id},$option_id2"
+	}
+    }
+}
+
+if { [exists_and_not_null previous_status_f] } {
+    set status_values [split $previous_status_f ","]
+    if { [string equal [llength $status_values] 1] } {
+	# We are looking for one version of the project
+	# that has status_id like the filter.
+	set previous_status_where_clause "exists ( 
+                                                 select distinct 1 from pm_projectsx pf 
+                                                 where pf.status_id = $previous_status_f 
+                                                 and pf.item_id = p.item_id )"
+    } else {
+	# We are looking of one project
+	set previous_status_where_clause "exists ( 
+                                                 select distinct 1 from pm_projectsx pmp, pm_projectsx pmp2 
+                                                 where pmp.status_id = [lindex $status_values 0] 
+                                                 and pmp2.status_id = [lindex $status_values 1] 
+                                                 and pmp.item_id = pmp2.item_id 
+                                                 and pmp.item_id = p.item_id) "
+    }
+} else {
+    set previous_status_where_clause ""
+}
 set filters [list \
 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
@@ -215,17 +268,19 @@ set filters [list \
 		 user_space_p [list] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
-				    values { {True t } { False f} } \
+				    values { {"[_ project-manager.True]" t } { [_ project-manager.False]" f} } \
 				    where_clause { $user_space_clause }
 			       ] \
 		 previous_status_f [list \
 					label "[_ project-manager.Previous_Status]" \
-					values { [pm::status::project_status_select] } \
-					where_clause { exists ( select 1 from pm_projectsx pf where pf.status_id = :previous_status_f and pf.item_id = p.item_id ) }
+					values { $previous_status_options } \
+					where_clause { $previous_status_where_clause }
 				   ] \
+		 current_package_f [list \
+				     label "[_ project-manager.Package]" \
+				     values {{"[_ project-manager.All]" 1} {"[_ project-manager.Current]" $pm_package_id}} \
+				 ] \
 		]
-
-
 
 template::list::create \
     -name projects \
@@ -233,8 +288,8 @@ template::list::create \
     -selected_format $format \
     -key project_item_id \
     -elements {
-        percent_complete {                                                                                                     
-            label "%"                                                                                                          
+        percent_complete {
+            label "%"
             display_template "<div style=\"margin:0;align:left;background-color:green;width:@projects.percent_complete@%;text-align:left;\">&nbsp;</div>@projects.percent_complete@%"                                                                                 }
         project_name {
 	    label "[_ project-manager.Project_name]"
