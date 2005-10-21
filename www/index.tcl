@@ -27,6 +27,7 @@ ad_page_contract {
     {user_space_p "0"}
     {is_observer_p ""}
     {previous_status_f ""}
+    {current_package_f ""}
     
 } -properties {
 
