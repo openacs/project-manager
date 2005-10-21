@@ -10,10 +10,16 @@ ad_page_contract {
     @cvs-id $Id$
 
 } {
-    project_item_id:integer
+    project_item_id:optional,integer
+    {page "1"}
+    object:optional,integer
 } -properties {
 } -validate {
 } -errors {
+}
+
+if { [exists_and_not_null object]} {
+    set project_item_id $object
 }
 
 permission::require_permission -object_id $project_item_id -privilege "read"

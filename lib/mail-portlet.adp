@@ -8,8 +8,8 @@
       <tr>
 	<td>
 	    <include src="/packages/mail-tracking/lib/messages" 
-		object_id=@project_item_id@ 
-		from_package_id=@package_id@ 
+		object_id=@project_item_id@
+		page=@page@
 		show_filter_p="f"
 	    >
 	</td>
