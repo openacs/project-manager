@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d7" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d11" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -47,11 +47,13 @@
   <msg key="Assignments_saved">Beauftraungen gespeichert</msg>
   <msg key="Attach_a_file">Eine Datei hinzufügen?</msg>
   <msg key="Average">Durchschnitt</msg>
+  <msg key="back_one_week">Zurück eine Woche</msg>
   <msg key="back_to_admin_page">zurück zur Admin Seite</msg>
   <msg key="By_deadline">Nach Abgabedatum</msg>
   <msg key="Cancel">Abbrechen</msg>
   <msg key="Cancel_do_not_delete">Abbrechen, nicht löschen</msg>
   <msg key="Categories">Kategorien</msg>
+  <msg key="check_uncheck">Alle/Keine auswählen</msg>
   <msg key="Close">Schließen</msg>
   <msg key="Close_project">Projekt schließen</msg>
   <msg key="Closed">Abgeschlossen</msg>
@@ -61,6 +63,7 @@
   <msg key="Comment_1">Kommentar</msg>
   <msg key="Comments">Kommentare</msg>
   <msg key="Complete">Fertig:</msg>
+  <msg key="Contact">Ansprechpartner</msg>
   <msg key="create_project">Projekt erzeugen</msg>
   <msg key="Created">Erstellt</msg>
   <msg key="Creation_date">Erstellt am</msg>
@@ -78,8 +81,8 @@
   <msg key="Days_work">Arbeits-&lt;br&gt;tage</msg>
   <msg key="Days_worked">Tage&lt;br&gt; gearbeitet</msg>
   <msg key="Deadline">Interne Deadline:</msg>
-  <msg key="Deadline_1">Liefertermin</msg>
-  <msg key="Deadline_Time">Liefertermin Uhrzeit</msg>
+  <msg key="Deadline_1">Interne Deadline</msg>
+  <msg key="Deadline_Time">Interne Deadline Uhrzeit</msg>
   <msg key="Default_roles">Standardrollen</msg>
   <msg key="Delete">Löschen</msg>
   <msg key="Delete_one_line">Löschen: %one_line%</msg>
@@ -119,6 +122,7 @@
   <msg key="Edit_tasks">Aufgabe ändern</msg>
   <msg key="Edit_this_role">Diese Rolle ändern</msg>
   <msg key="EF">EF</msg>
+  <msg key="Email">Email</msg>
   <msg key="End_date">Enddatum</msg>
   <msg key="End_dates">Enddatums</msg>
   <msg key="Enhanced_Text">Erweiterter Text</msg>
@@ -131,6 +135,7 @@
   <msg key="Fixed-width_Text">Text mit gesetzter Breite</msg>
   <msg key="Format">Format:</msg>
   <msg key="Format_print">Drucker freundliches Format</msg>
+  <msg key="forward_one_week">Eine Woche vorwärts</msg>
   <msg key="Go">Starte</msg>
   <msg key="Go_back">Zurück gehen</msg>
   <msg key="Goal">Ziel</msg>
@@ -143,6 +148,8 @@
   <msg key="hrs">Stunden</msg>
   <msg key="HTML">HTML</msg>
   <msg key="ID">ID</msg>
+  <msg key="Jobid">JobID</msg>
+  <msg key="Jobid_help">Fügen Sie eine Suchbegriff ein um nach der JobID (ProjektName) zu suchen</msg>
   <msg key="Key">Kennziffer</msg>
   <msg key="last_years">Letzte Jahre</msg>
   <msg key="Latest_Finish">Spätestes Ende</msg>
@@ -185,7 +192,7 @@
   <msg key="lt_Are_you_sure_you_want">Sind Sie sich sicher, dass Sie diesen Prozess löschen wollen: %one_line%</msg>
   <msg key="lt_Are_you_sure_you_want_1">Sind Sie sich sicher, dass Sie diesen Log-Eintrag mit %value% %variable.unit% %variable.name% on %time_stamp%?' löschen wollen</msg>
   <msg key="lt_Are_you_sure_youd_lik">Sind Sie sicher, dass Sie diese %task_term_lower%n löschen wollen?</msg>
-  <msg key="lt_Assigned_to_project_p">Zugewiesen zu Projekt: %project_name%</msg>
+  <msg key="lt_Assigned_to_project_p">Zugewiesen zu Projekt: project_name%</msg>
   <msg key="lt_be_patient____this_ta">(seien Sie geduldig, dies dauert eine kleine Weile; in der Zwischenzeit können Sie die LOg-Files lesen, um zu sehen, was passiert.)</msg>
   <msg key="lt_Begin_synchronization">Starte Synchronisation</msg>
   <msg key="lt_Changes_to_project_sa">Änderungen am Projekt wurden gespeichert</msg>
@@ -381,6 +388,7 @@
   <msg key="Player">Bearbeiter</msg>
   <msg key="Please_wait">Bitte warten Sie...</msg>
   <msg key="Pressing_Tasks">Dringende Aufgaben</msg>
+  <msg key="Previous_Status">Vorheriger Status</msg>
   <msg key="Priorities">Prioritäten</msg>
   <msg key="Priority">Priorität:</msg>
   <msg key="Priority_1">Priorität</msg>
@@ -402,16 +410,24 @@
   <msg key="Project_categories">Projektkategorien</msg>
   <msg key="Project_Changes">Änderungen am Projekt</msg>
   <msg key="Project_code">Jobnummer</msg>
+  <msg key="project_code_help">Projekt Code der z.b. vom Kunden verwendet wird</msg>
   <msg key="Project_codes">Projektkennziffern</msg>
+  <msg key="project_customer_help">Kunde für den dieses Projekt durchgeführt wird</msg>
+  <msg key="project_description_help">Beschreibung um was es bei dem Projekt geht</msg>
+  <msg key="Project_Emails">Projekt Emails</msg>
+  <msg key="project_end_date_help">Interne Deadline des Projektes (wann muss die Projektabwicklung fertig sein)</msg>
+  <msg key="project_end_time_help">Zeitpunkt der Deadline des Projektes</msg>
   <msg key="Project_goal">Projektziel</msg>
   <msg key="Project_goals">Projektziele</msg>
   <msg key="Project_information">Projektinformationen</msg>
   <msg key="Project_is_ongoing">Laufendes Projekt?</msg>
   <msg key="Project_missing">Projekt fehlt</msg>
-  <msg key="Project_name">Names des Projekts</msg>
+  <msg key="Project_name">Job ID</msg>
+  <msg key="project_name_help">JobID des Projektes</msg>
   <msg key="Project_ongoing">Permanentes Projekt</msg>
   <msg key="Project_Search">Suche nach Projekt:</msg>
   <msg key="Project_Search_term">Projekt Suchausdruck</msg>
+  <msg key="project_status_help">Status des Projektes</msg>
   <msg key="project_termnoquotes">%project_term;noquote%s</msg>
   <msg key="project_terms">%project_term%e</msg>
   <msg key="Projection">Projektion</msg>
@@ -421,6 +437,7 @@
   <msg key="Quantity">Quantität:</msg>
   <msg key="Rate">Bewertung</msg>
   <msg key="rate">Bewertung</msg>
+  <msg key="Rate_Assignees">Beteiligte bewerten</msg>
   <msg key="Rate_this_project">Bewertung der Mitarbeiter des Projektes</msg>
   <msg key="rate_this_project">Bewerte dieses Projekt</msg>
   <msg key="Related_task_terms">Zugehörige %task_term%n</msg>
@@ -438,6 +455,7 @@
   <msg key="Search:">Suche:</msg>
   <msg key="Search_1">Suche</msg>
   <msg key="search_help">Geben Sie ein Schlüsselwort ein, um nach Projekten zu suchen.</msg>
+  <msg key="Search_jobid">JobID suchen</msg>
   <msg key="search_user">User oder Gruppen suchen</msg>
   <msg key="Section">Sektion</msg>
   <msg key="select_assignee_in_this">Wählen Sie aus dem Projekt einen Beauftragten aus um eine Nachricht zu versenden </msg>
@@ -512,6 +530,7 @@
   <msg key="View_only_Observer">Aufgaben ansehen, die Sie beobachten</msg>
   <msg key="View_options">Optionen anzeigen</msg>
   <msg key="View_project_changes">Projektänderungen ansehen</msg>
+  <msg key="View_project_emails">Projekt Emails anzeigen</msg>
   <msg key="View_Revisions">Versionen ansehen</msg>
   <msg key="View_task_changes">Aufgaben Änderungen ansehen</msg>
   <msg key="View_this_revision">Diese Version ansehen</msg>

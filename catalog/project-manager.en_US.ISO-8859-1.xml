@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d10" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d11" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -47,6 +47,7 @@
   <msg key="Assignments_saved">Assignments saved</msg>
   <msg key="Attach_a_file">Attach a file?</msg>
   <msg key="Average">Average</msg>
+  <msg key="back_one_week">Back one week</msg>
   <msg key="back_to_admin_page">back to admin page</msg>
   <msg key="By_deadline">By deadline</msg>
   <msg key="Cancel">Cancel</msg>
@@ -62,6 +63,7 @@
   <msg key="Comment_1">Comment</msg>
   <msg key="Comments">Comments</msg>
   <msg key="Complete">Complete:</msg>
+  <msg key="Contact">Contact</msg>
   <msg key="create_project">Create project</msg>
   <msg key="Created">Created</msg>
   <msg key="Creation_date">Creation date</msg>
@@ -133,6 +135,7 @@
   <msg key="Fixed-width_Text">Fixed-width Text</msg>
   <msg key="Format">Format:</msg>
   <msg key="Format_print">Printer friendly format</msg>
+  <msg key="forward_one_week">Forward one week</msg>
   <msg key="Go">Go</msg>
   <msg key="Go_back">Go back</msg>
   <msg key="Goal">Goal</msg>
@@ -477,26 +480,35 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Project_categories">Project categories</msg>
   <msg key="Project_Changes">Project Changes</msg>
   <msg key="Project_code">Project code</msg>
+  <msg key="project_code_help">Project Code, e.g. used by the customer</msg>
   <msg key="Project_codes">Project codes</msg>
+  <msg key="project_customer_help">Customer for whom this project is run</msg>
+  <msg key="project_description_help">Description of the project (what is it about)
+</msg>
   <msg key="Project_Emails">Project Emails</msg>
+  <msg key="project_end_date_help">Deadline of the project</msg>
+  <msg key="project_end_time_help">Time of the deadline of the project</msg>
   <msg key="Project_goal">Project goal</msg>
   <msg key="Project_goals">Project goals</msg>
   <msg key="Project_information">Project information</msg>
   <msg key="Project_is_ongoing">Project is ongoing?</msg>
   <msg key="Project_missing">Project missing</msg>
   <msg key="Project_name">Project name</msg>
+  <msg key="project_name_help">Name of the project</msg>
   <msg key="Project_ongoing">Project ongoing</msg>
   <msg key="Project_Search">Project Search:</msg>
   <msg key="Project_Search_term">Project Search term</msg>
+  <msg key="project_status_help">Status of the project</msg>
   <msg key="project_termnoquotes">%project_term;noquote%s</msg>
   <msg key="project_terms">%project_term%s</msg>
   <msg key="Projection">Projection</msg>
   <msg key="Projects">Projects</msg>
   <msg key="Projects_ongoing">Projects ongoing</msg>
-  <msg key="Projects_reports">Reports</msg>
+  <msg key="Projects_reports">Project reports</msg>
   <msg key="Quantity">Quantity:</msg>
   <msg key="Rate">Rate</msg>
   <msg key="rate">Rate</msg>
+  <msg key="Rate_Assignees">Rate Assignees</msg>
   <msg key="Rate_this_project">Rate this project</msg>
   <msg key="rate_this_project">Rate This Project</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>
