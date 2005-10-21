@@ -7,15 +7,15 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.1d10" url="http://openacs.org/repository/download/apm/project-manager-3.1d10.apm">
+    <version name="3.1d11" url="http://openacs.org/repository/download/apm/project-manager-3.1d11.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <summary>Project management tool for OpenACS</summary>
-        <release-date>2005-10-17</release-date>
+        <release-date>2005-10-20</release-date>
         <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
-        <provides url="project-manager" version="3.1d10"/>
+        <provides url="project-manager" version="3.1d11"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.2.0a4"/>
         <requires url="acs-templating" version="5.1.6d1"/>
@@ -30,9 +30,9 @@
 
         <callbacks>
             <callback type="after-install"  proc="pm::install::package_install"/>
-            <callback type="after-instantiate"  proc="pm::install::package_instantiate"/>
-            <callback type="after-upgrade"  proc="pm::install::after_upgrade"/>
             <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
+            <callback type="after-upgrade"  proc="pm::install::after_upgrade"/>
+            <callback type="after-instantiate"  proc="pm::install::package_instantiate"/>
         </callbacks>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="AssignGroupP"  default="0" description="Allows to assign a group instead of a user to projects and tasks. Set it to 1 if you want to allow this functionallity and to 0 if you don't. Default 0" section_name="project-manager"/>
