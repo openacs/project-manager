@@ -1,5 +1,5 @@
 <style tyle=text/css>
-   input.search_jobid {font-size: 8px;}
+   input.search_jobid {font-size: 10px;}
 </style>
 <formtemplate id="search_jobid">
     <formwidget id="keyword"></formwidget>
