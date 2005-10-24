@@ -11,13 +11,13 @@ ad_page_contract {
 }
 
 set page_title [_ project-manager.rate_this_project]
-set context [list [list "one?project_id=$project_id" "One Project"] $page_title]
 
 if {![exists_and_not_null project_id]} {
     set project_id [pm::project::get_project_id -project_item_id $project_item_id]
 }
 
 set user_id [ad_conn user_id]
+set context [list [list "one?project_id=$project_id" "One Project"] $page_title]
 set context_object_id $project_id
 
 # We create hidden items project_id and project_item_id
@@ -77,15 +77,17 @@ ad_form -extend -name rate_project -on_submit {
     foreach element $created_elements {
 	set element_info [split $element "."]
 	set rating [template::element::get_value rate_project $element]
-	set object_id [lindex $element_info 0]
-	set dimension_key [lindex $element_info 1]
-	set rating_id [ratings::rate -dimension_key $dimension_key \
-			   -object_id $object_id \
-			   -user_id $user_id \
-			   -rating $rating \
-			   -nomem_p "t"]
-	
-	db_dml update_context_id { }
+	if {![empty_string_p $rating]} {
+	    set object_id [lindex $element_info 0]
+	    set dimension_key [lindex $element_info 1]
+	    set rating_id [ratings::rate -dimension_key $dimension_key \
+			       -object_id $object_id \
+			       -user_id $user_id \
+			       -rating $rating \
+			       -nomem_p "t"]
+	    db_dml update_context_id { }
+	}
+
     }
 } -after_submit {
     ad_returnredirect "one?project_id=$project_id"
