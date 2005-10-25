@@ -1,9 +1,10 @@
 # Possible
 # party_id
 # role_id
+
 set required_param_list [list]
 set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url page_num page_size]
-set optional_unset_list [list party_id role_id project_item_id is_observer_p instance_id filter_package_id]
+set optional_unset_list [list party_id role_id project_item_id is_observer_p instance_id filter_package_id subproject_tasks]
 
 set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
 
@@ -143,6 +144,15 @@ if ![info exist filter_package_id] {
     set project_item_clause [pm::project::get_list_of_open -object_package_id $filter_package_id]
 }
 
+if { [exists_and_not_null subproject_tasks]} {
+    set subprojects_list [db_list get_subprojects { } ]
+    lappend subprojects_list $project_item_id
+    set project_item_where_clause "t.parent_id in ([template::util::tcl_to_sql_list $subprojects_list])"
+    
+} else {
+    set project_item_where_clause "t.parent_id = :project_item_id"
+}
+
 set filters [list \
 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
@@ -156,14 +166,14 @@ set filters [list \
 		 project_item_id [list \
 				      label "[_ project-manager.Project_1]" \
 				      values { $project_item_clause } \
-				      where_clause "t.parent_id = :project_item_id"
+				      where_clause "$project_item_where_clause"
 				 ] \
 		 instance_id [list \
                                  where_clause "ti.process_instance = :instance_id"
 			     ] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
-				    values { {True t} {False f} } \
+				    values { {"[_ project-manager.True]" t} { "[_ project-manager.False]" f} } \
 				    where_clause "r.is_observer_p = :is_observer_p"
 			       ] \
 		 party_id [list \
@@ -174,7 +184,16 @@ set filters [list \
 		 filter_package_id [list \
 				    where_clause "p.object_package_id = :filter_package_id"
 			       ] \
-	    ]
+		]
+
+if { [exists_and_not_null project_item_id] } {
+    lappend filters subproject_tasks [list \
+					  label "[_ project-manager.Subproject_tasks]" \
+					  values {{ "[_ project-manager.Show]" 1}} \
+					 ]
+			
+}
+
 # Setup the actions, so we can append the rest later on
 if {$actions_p == 1} {
     set actions [list "[_ project-manager.Add_task]" [export_vars \

@@ -143,6 +143,7 @@
   <msg key="Go_back">Go back</msg>
   <msg key="Goal">Goal</msg>
   <msg key="Goal_1">Goal:</msg>
+  <msg key="Hide">Hide</msg>
   <msg key="Hour_to_date">Hour to date</msg>
   <msg key="hours">hours</msg>
   <msg key="Hours_completed">Hours completed</msg>
@@ -541,6 +542,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="send_message_to">Send message to:</msg>
   <msg key="Set_permissions">Set permissions</msg>
   <msg key="Set_up">Set up</msg>
+  <msg key="Show">Show</msg>
   <msg key="Show_closed">Show closed</msg>
   <msg key="show_this_projects">Show this projects</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
@@ -560,6 +562,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Subject">Subject:</msg>
   <msg key="Subject_1">Subject</msg>
   <msg key="Subject_2">Subject\</msg>
+  <msg key="Subproject_tasks">Subproject Tasks</msg>
   <msg key="Subprojects">Subprojects</msg>
   <msg key="Subtotal">Subtotal</msg>
   <msg key="Subtotal_Average">Subtotal Average</msg>

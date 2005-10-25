@@ -137,7 +137,18 @@
                     and ppm.party_id = :user_id)
 	$done_clause
         [template::list::filter_where_clauses -and -name tasks]
-        [template::list::orderby_clause -name tasks -orderby]) t
+        [template::list::orderby_clause -name tasks -orderby]) t 
+    </querytext>
+</fullquery>
+
+<fullquery name="get_subprojects">
+    <querytext>
+    	 select 
+		distinct item_id 
+	from 
+		pm_projectsx 
+	where 
+		parent_id = :project_item_id
     </querytext>
 </fullquery>
 

@@ -33,6 +33,7 @@ ad_page_contract {
     {filter_package_id ""}
     {role_id ""}
     {base_url ""}
+    {subproject_tasks ""}
 } -properties {
     task_term:onevalue
    context:onevalue
