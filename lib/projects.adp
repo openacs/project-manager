@@ -6,10 +6,10 @@
           @hidden_vars;noquote@
           #project-manager.Start_date#:
           <input type=text name="start_range_f" value="@start_range_f@" id="sel1" size="10"/>
-          <input type='reset' value='...' onclick="return showCalendar('sel1', 'yy-m-d');">
+          <input type='reset' value='...' onclick="return showCalendar('sel1', 'y-m-d');">
 	  #project-manager.End_date#:
           <input type=text name="end_range_f" value="@end_range_f@" id="sel2" size="10"/>
-          <input type='reset' value='...' onclick="return showCalendar('sel2', 'yyyy-m-d');">
+          <input type='reset' value='...' onclick="return showCalendar('sel2', 'y-m-d');">
           <input type="submit" value="#project-manager.search#" />
           </div>
         </form>
