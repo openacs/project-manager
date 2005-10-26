@@ -149,7 +149,8 @@ ad_proc -private pm::install::after_upgrade {
         -from_version_name $from_version_name \
         -to_version_name $to_version_name \
         -spec {
-	    2.72a1 3.0d1 {
+	    3.0b4 3.1d12 {
+                ns_log notice "Running Post-Upgrade Routine"
 		db_transaction {
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {project_code} -datatype {string} -pretty_name {[_ project-manager.Project_code]} -pretty_plural {[_ project-manager.Project_codes]} -column_spec {varchar(255)}
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {goal} -datatype {string} -pretty_name {[_ project-manager.Project_goal]} -pretty_plural {[_ project-manager.Project_goals]} -column_spec {varchar(4000)}
@@ -167,21 +168,34 @@ ad_proc -private pm::install::after_upgrade {
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {logger_project} -datatype {integer} -pretty_name {[_ project-manager.lt_Linked_logger_project]} -pretty_plural {[_ project-manager.lt_Linked_logger_project_1]} -column_spec {integer}
 
 		    content::type::attribute::new -content_type {pm_task} -attribute_name {priority} -datatype {integer} -pretty_name {[_ project-manager.Priority_1]} -pretty_plural {[_ project-manager.Priorities]} -column_spec {integer}
-		}
-	    }
-
-	    3.0d1 3.0d2 {
-		rel_types::new "application_link" "Application Link" "Application Links" apm_package 0 "" apm_package 0 ""
-	    }
-	    3.0d2 3.0d3 {
-		rel_types::new "application_data_link" "Application Data Link" "Application Data Links" acs_object 0 "" acs_object 0 ""
-	    }
-	    3.0d3 3.0d4 {
-		content::type::attribute::delete -content_type {pm_project} -attribute_name {logger_project}
-	    }
-	    3.0d4 3.0d5 {
-		content::type::attribute::new -content_type {pm_project} -attribute_name {dform} -datatype {string} -pretty_name {[_ project-manager.Dynamic_Form]} -pretty_plural {[_ project-manager.Dynamic_Forms]} -column_spec {varchar(100)}
-		content::type::attribute::new -content_type {pm_task} -attribute_name {dform} -datatype {string} -pretty_name {[_ project-manager.Dynamic_Form]} -pretty_plural {[_ project-manager.Dynamic_Forms]} -column_spec {varchar(100)}
-	    }
-	}
+		
+                }
+            }
+        }
 }
+
+ad_proc -private pm::install::before_upgrade {
+    {-from_version_name:required}
+    {-to_version_name:required}
+} {
+    apm_upgrade_logic \
+        -from_version_name $from_version_name \
+        -to_version_name $to_version_name \
+        -spec {
+	    3.0b4 3.1d12 {
+                ns_log notice "Running Pre-Upgrade Routine"
+		db_transaction {
+                    rel_types::new "application_link" "Application Link" "Application Links" apm_package 0 "" apm_package 0 ""
+                    rel_types::new "application_data_link" "Application Data Link" "Application Data Links" acs_object 0 "" acs_object 0 ""
+                }
+            }
+        }
+}
+
+
+
+
+
+
+
+                
