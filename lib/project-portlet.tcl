@@ -15,7 +15,7 @@ set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/
 set return_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
 set vars { project_item_id return_url }
 set close_url "bulk-close?[export_vars $vars]"
-
+set contacts_installed_p [apm_package_installed_p contacts]
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
 # Check if contacts is installed

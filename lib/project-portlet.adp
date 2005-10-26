@@ -82,9 +82,11 @@
         <li>
 	  <a href="project-emails?project_item_id=@project_item_id@">#project-manager.View_project_emails#</a>
 	</li>
-        <li>
-	  <a href="/contacts/complaint-ae?project_id=@project_item_id@&supplier_id=-100">#project-manager.Add_complaint#</a>
-	</li>
+        <if @contacts_installed_p@>
+          <li>
+            <a href="/contacts/complaint-ae?project_id=@project_item_id@&supplier_id=-100">#project-manager.Add_complaint#</a>
+          </li>
+        </if>
       </ul>
     </td>
   </tr>
