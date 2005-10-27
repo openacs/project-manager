@@ -55,7 +55,7 @@ set extra_column ""
 set extra_join ""
 
 if {$status_id == "1"} {
-    set done_clause "and t.percent_complete < 100"
+    set done_clause "and tr.percent_complete < 100"
 } else {
     set done_clause ""
 }
@@ -187,7 +187,7 @@ set filters [list \
 				    where_clause "t.party_id = :party_id"
 			       ] \
 		 filter_package_id [list \
-				    where_clause "p.object_package_id = :filter_package_id"
+				    where_clause "o.package_id = :filter_package_id"
 			       ] \
 		]
 
@@ -296,6 +296,7 @@ template::list::create \
         }
 	title {
 	    label "[_ project-manager.Subject_1]"
+	    display_template {<if @tasks.is_observer_p@ eq "f"><font color="green">@tasks.title@</font></if><else>@tasks.title@</else>}
 	}
         parent_task_id {
             label "[_ project-manager.Dep]"
@@ -373,7 +374,7 @@ template::list::create \
 	    hide_p {[ad_decode [exists_and_not_null project_item_id] 1 1 0]}
 	}
 	log_url {
-	    display_template {<a href="@tasks.base_url@@tasks.log_url@">L</a>}
+	    display_template {<a href="@tasks.log_url@">L</a>}
 	}
 	edit_url {
 	    display_template {<a href="@tasks.base_url@@tasks.edit_url@">E</a>}
@@ -475,6 +476,7 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
 
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
+    set logger_project [db_string get_logger_project { } -default ""]
 
     set log_url [export_vars \
 		     -base "${logger_url}log" {{project_id $logger_project} {pm_task_id $task_item_id} {pm_project_id $project_item_id} {return_url $return_url}}]
