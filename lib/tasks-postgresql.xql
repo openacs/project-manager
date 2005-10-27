@@ -36,6 +36,7 @@
 	t.priority,
         p.customer_id,
         p.title as project_name,
+	t.description,
 	ar.object_id_two as logger_project
 	FROM
 	(select tr.item_id,
@@ -54,6 +55,7 @@
                 tr.actual_hours_worked,
                 tr.parent_id,
                 tr.revision_id,
+		tr.description,
 		tr.priority
          from pm_tasks_revisionsx tr
          LEFT JOIN
@@ -105,6 +107,7 @@
                 tr.latest_start,
                 tr.latest_finish,
                 tr.percent_complete,
+		tr.description,
                 tr.estimated_hours_work,
                 tr.estimated_hours_work_min,
                 tr.estimated_hours_work_max,
@@ -149,6 +152,17 @@
 		pm_projectsx 
 	where 
 		parent_id = :project_item_id
+    </querytext>
+</fullquery>
+
+<fullquery name="get_assignee_name">
+    <querytext>
+	select 
+		username 
+	from 
+		users 
+	where 
+		user_id = :party_id
     </querytext>
 </fullquery>
 

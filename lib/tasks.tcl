@@ -1,6 +1,7 @@
 # Possible
 # party_id
 # role_id
+# orderby_p   Set it to 1 if you want to show the order by menu.
 
 set required_param_list [list]
 set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url page_num page_size]
@@ -30,6 +31,10 @@ foreach optional_unset $optional_unset_list {
 
 if ![info exists page_size] {
     set page_size 25
+}
+
+if ![info exists orderby_p] {
+    set orderby_p 0
 }
 
 
@@ -234,6 +239,44 @@ if {$use_bulk_p == 1} {
 }
 
 
+if { $orderby_p } {
+    set order_by_list [list \
+			   default_value $default_orderby \
+			   title {
+			       label "[_ project-manager.Subject_1]"
+			       orderby_desc "t.title desc, task_item_id"
+			       orderby_asc "t.title asc, task_item_id"
+			       default_direction asc
+			   } \
+			   description {
+			       label "[_ project-manager.Description]"
+			       orderby_desc "t.description desc, task_item_id"
+			       orderby_asc "t.description, task_item_id"
+			       default_direction asc
+			   } \
+			   slack_time {
+			       label "[_ project-manager.Slack_1]"
+			       orderby_desc "(latest_start - earliest_start) desc, task_item_id"
+			       orderby_asc "(latest_start - earliest_start), task_item_id"
+			       default_direction asc
+			   } \
+			   status {
+			       label "[_ project-manager.Status_1]"
+			       orderby_desc "status desc, t.latest_finish desc, task_item_id"
+			       orderby_asc "status asc, t.latest_finish desc, task_item_id"
+			       default_direction asc
+			   } \
+			   end_date {
+			       orderby_asc "end_date, task_item_id asc"
+			       orderby_desc "end_date desc, task_item_id desc"
+			       default_direction asc
+			   } \
+			  ]
+} else {
+    set order_by_list [list]
+}
+
+
 template::list::create \
     -name tasks \
     -multirow tasks \
@@ -366,38 +409,7 @@ template::list::create \
 	narrow
     } \
     -filters $filters \
-    -orderby {
-	default_value $default_orderby
-	title {
-	    label "[_ project-manager.Subject_1]"
-	    orderby_desc "t.title desc, task_item_id"
-	    orderby_asc "t.title asc, task_item_id"
-	    default_direction asc
-	}
-	description {
-	    label "[_ project-manager.Description]"
-	    orderby_desc "t.description desc, task_item_id"
-	    orderby_asc "t.description, task_item_id"
-	    default_direction asc
-	}
-	slack_time {
-	    label "[_ project-manager.Slack_1]"
-	    orderby_desc "(latest_start - earliest_start) desc, task_item_id"
-	    orderby_asc "(latest_start - earliest_start), task_item_id"
-	    default_direction asc
-	}
-	status {
-	    label "[_ project-manager.Status_1]"
-	    orderby_desc "status desc, t.latest_finish desc, task_item_id"
-	    orderby_asc "status asc, t.latest_finish desc, task_item_id"
-	    default_direction asc
-	}
-	end_date {
-	    orderby_asc "end_date, task_item_id asc"
-	    orderby_desc "end_date desc, task_item_id desc"
-	    default_direction asc
-	}
-    } \
+    -orderby $order_by_list \
     -actions $actions \
     -checkbox_name multiselect \
     -bulk_actions $bulk_actions \
@@ -428,20 +440,36 @@ if { ![exists_and_not_null assign_group_p] } {
     set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
 }
 
+set user_instead_full_p [parameter::get -parameter "UsernameInsteadofFullnameP" -default "f"]
+
 db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name} tasks tasks " " {
     
     if { $assign_group_p } {
 	# We are going to show all asignees including groups
-	if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
-	    # person::name give us an error so its probably a group so we get
-	    # the title
-	    set assignee_name [group::title -group_id $party_id]
+	if { $user_instead_full_p } {
+	    set assignee_name [db_string get_assignee_name { } -default ""]
+	    if { [empty_string_p $assignee_name] } {
+		set assignee_name [group::title -group_id $party_id]		
+	    }
+	} else {
+	    if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
+		# person::name give us an error so its probably a group so we get
+		# the title
+		set assignee_name [group::title -group_id $party_id]
+	    }
 	}
     } else {
-	if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
-	    # person::name give us an error so its probably a group, here we don't want
-	    # to show any group so we just continue the multirow
-	    continue
+	if { $user_instead_full_p } {
+	    set assignee_name [db_string get_assignee_name {  } -default ""]
+	    if { [empty_string_p $assignee_name] } {
+		continue
+	    }
+	} else {
+	    if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
+		# person::name give us an error so its probably a group, here we don't want
+		# to show any group so we just continue the multirow
+		continue
+	    }
 	}
     }
 
