@@ -6,6 +6,12 @@
 # @author Viaro Networks www.viaro.net
 # @creation-date 2005-05-01
 
+foreach optional_param {page page_size show_filters_p elements} {
+    if {![info exists $optional_param]} {
+	set $optional_param {}
+    }
+}
+
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
 

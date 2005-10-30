@@ -21,7 +21,7 @@
 		and proj.item_id = pa.project_id
 		and pa.party_id in ([template::util::tcl_to_sql_list $group_members_list])
 		and proj.customer_id = :customer_id
-		and [template::list::page_where_clause -name "members"]
+		[template::list::page_where_clause -and -name "members"]
 		[template::list::orderby_clause -orderby -name "members"]
     </querytext>
 </fullquery>

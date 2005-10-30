@@ -25,7 +25,7 @@ if {[empty_string_p $project_item_id]} {
 }
 
 if {![exists_and_not_null fmt]} {
-    set fmt "%x"
+    set fmt "%X"
 }
 if {![exists_and_not_null row_list]} {
     set row_list {project_name {} planned_end_date {} actual_hours_completed {}}

@@ -122,7 +122,7 @@ if {![empty_string_p $searchterm]} {
 
     if {[regexp {([0-9]+)} $searchterm match query_digits]} {
         set search_term_where " (upper(t.title) like upper('%$searchterm%')
- or t.item_id = :query_digits) "
+ or t.task_item_id = :query_digits) "
     } else {
         set search_term_where " upper(t.title) like upper('%$searchterm%')"
     }
@@ -149,13 +149,26 @@ if ![info exist filter_package_id] {
     set project_item_clause [pm::project::get_list_of_open -object_package_id $filter_package_id]
 }
 
-if { [exists_and_not_null subproject_tasks]} {
+if { [exists_and_not_null subproject_tasks] && [exists_and_not_null project_item_id]} {
     set subprojects_list [db_list get_subprojects { } ]
     lappend subprojects_list $project_item_id
     set project_item_where_clause "t.parent_id in ([template::util::tcl_to_sql_list $subprojects_list])"
-    
 } else {
     set project_item_where_clause "t.parent_id = :project_item_id"
+}
+
+# Shall we display only items where we are an observer ?
+if {[exists_and_not_null is_observer_p]} {
+    switch $is_observer_p {
+	f {
+	    set observer_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
+	} 
+	t {
+	    set observer_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
+	}
+    }
+} else {
+    set observer_clause ""
 }
 
 set filters [list \
@@ -178,8 +191,7 @@ set filters [list \
 			     ] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
-				    values { {"[_ project-manager.True]" t} { "[_ project-manager.False]" f} } \
-				    where_clause "r.is_observer_p = :is_observer_p"
+				    values { {#project-manager.Player# f} {#project-manager.Watcher# t} } \
 			       ] \
 		 party_id [list \
 				    label "[_ project-manager.People]" \
@@ -296,7 +308,7 @@ template::list::create \
         }
 	title {
 	    label "[_ project-manager.Subject_1]"
-	    display_template {<if @tasks.is_observer_p@ eq "f"><font color="green">@tasks.title@</font></if><else>@tasks.title@</else>}
+	    display_template {<if @tasks.is_observer_p@ eq "f" and @tasks.party_id@ eq "$user_id"><font color="green">@tasks.title@</font></if><else>@tasks.title@</else>}
 	}
         parent_task_id {
             label "[_ project-manager.Dep]"
