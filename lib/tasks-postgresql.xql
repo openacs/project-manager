@@ -129,14 +129,14 @@
     </querytext>
 </fullquery>
 
-<fullquery name="get_assignee_name">
+<fullquery name="get_subprojects">
     <querytext>
 	select 
-		username 
+		item_id
 	from 
-		users 
+		pm_projectsx
 	where 
-		user_id = :party_id
+		parent_id = :project_item_id
     </querytext>
 </fullquery>
 

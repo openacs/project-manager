@@ -29,6 +29,7 @@ foreach optional_unset $optional_unset_list {
     }
 }
 
+
 if ![info exists page_size] {
     set page_size 25
 }
@@ -78,7 +79,6 @@ set hidden_vars [export_vars \
 
 set return_url [ad_return_url \
 		    -qualified]
-set logger_url [pm::util::logger_url]
 
 set contacts_url [util_memoize [list site_node::get_package_url \
 				    -package_key contacts]]
@@ -140,7 +140,7 @@ if {[exists_and_not_null orderby]} {
 # Get the rows to display
 
 if {![exists_and_not_null elements]} {
-    set elements [list task_item_id title slack_time role latest_start latest_finish status_type remaining worked project_item_id percent_complete log_url edit_url]
+    set elements [list task_item_id title slack_time role latest_start latest_finish status_type remaining worked project_item_id percent_complete edit_url]
 }
 
 if ![info exist filter_package_id] { 
@@ -385,9 +385,6 @@ template::list::create \
 	    display_template {<a href="@tasks.project_url@">@tasks.project_name@</a>}
 	    hide_p {[ad_decode [exists_and_not_null project_item_id] 1 1 0]}
 	}
-	log_url {
-	    display_template {<a href="@tasks.log_url@">L</a>}
-	}
 	edit_url {
 	    display_template {<a href="@tasks.base_url@@tasks.edit_url@">E</a>}
 	}
@@ -455,13 +452,12 @@ if { ![exists_and_not_null assign_group_p] } {
 
 set user_instead_full_p [parameter::get -parameter "UsernameInsteadofFullnameP" -default "f"]
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url log_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name} tasks tasks " " {
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name} tasks tasks " " {
     
     if { $assign_group_p } {
 	# We are going to show all asignees including groups
 	if { $user_instead_full_p } {
-	    set assignee_name [db_string get_assignee_name { } -default ""]
-	    if { [empty_string_p $assignee_name] } {
+	    if { [catch {set assignee_name [acs_user::get_element -user_id $party_id -element username]} err ] } {
 		set assignee_name [group::title -group_id $party_id]		
 	    }
 	} else {
@@ -473,8 +469,7 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
 	}
     } else {
 	if { $user_instead_full_p } {
-	    set assignee_name [db_string get_assignee_name {  } -default ""]
-	    if { [empty_string_p $assignee_name] } {
+	    if { [catch {set assignee_name [acs_user::get_element -user_id $party_id -element username]} err ] } {
 		continue
 	    }
 	} else {
@@ -488,11 +483,6 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
 
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
-    set logger_project [db_string get_logger_project { } -default ""]
-
-    set log_url [export_vars \
-		     -base "${logger_url}log" {{project_id $logger_project} {pm_task_id $task_item_id} {pm_project_id $project_item_id} {return_url $return_url}}]
-
     set edit_url [export_vars \
 		      -base "task-add-edit" {{task_id $task_item_id} project_item_id return_url}]
 
