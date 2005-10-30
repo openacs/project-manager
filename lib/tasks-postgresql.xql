@@ -132,12 +132,11 @@
 
 <fullquery name="get_subprojects">
     <querytext>
-	select 
-		item_id
-	from 
-		pm_projectsx
-	where 
-		parent_id = :project_item_id
+	select ci.item_id
+	from cr_items ci, pm_projects p, cr_items pi
+	where p.project_id = ci.latest_revision
+        and ci.tree_sortkey between tree_left(pi.tree_sortkey) and tree_right(pi.tree_sortkey)
+        and pi.item_id = :project_item_id
     </querytext>
 </fullquery>
 
