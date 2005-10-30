@@ -75,6 +75,7 @@
                     where ppm.object_id = ti.task_id
                     and ppm.privilege = 'read'
                     and ppm.party_id = :user_id)
+        [template::list::filter_where_clauses -and -name tasks]
         [template::list::orderby_clause -name tasks -orderby]
     </querytext>
 </fullquery>
