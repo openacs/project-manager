@@ -12,6 +12,8 @@
 		pm_projectsx
 	where
 		lower(object_title) like lower(:keyword)
+	order by
+		object_title asc
     </querytext>
 </fullquery>
 

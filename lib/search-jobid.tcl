@@ -1,17 +1,23 @@
 # /packages/project-manager/lib/search-jobid.tcl
 #
 # Include that searchs for the jobid of a project (project name)
-# and redirects to the found project
+# and redirects to the found project if it's just one and to the
+# first one if there are various.
 # 
 # @author Miguel Marin (miguelmarin@viaro.net)
 # @author Viaro Networks www.viaro.net
 #
 # Usage:
 # ADP File:
-# <include src="/packages/project-manager/lib/search-jobid">
+# <include src="/packages/project-manager/lib/search-jobid" keyword="@keyword@" return_url="@return_url@">
 #
 # Expects:
-# keyword
+# keyword     The keyword to search projects
+# return_url  The return_url to return if no project is found. It would be the same page if empty.
+
+if { ![exists_and_not_null return_url] } {
+    set return_url [ad_return_url]
+}
 
 set focus_message "if(this.value=='[_ project-manager.Search_jobid]')this.value='';"
 set blur_message "if(this.value=='')this.value='[_ project-manager.Search_jobid]';"
@@ -21,9 +27,14 @@ ad_form -name search_jobid -form {
 	{html {size 20 onfocus "$focus_message" onblur "$blur_message" class search_jobid}}
 	{value "[_ project-manager.Search_jobid]"}
     }
+    {return_url:text(hidden) {value $return_url}}
 } -on_submit {
     set match_projects [db_list_of_lists get_projects { }]
-    if { [string equal [llength $match_projects] 1] } {
+    set match_length [llength $match_projects]
+    if { [string equal $match_length 0] } {
+	# No Match just redirect
+	ad_returnredirect $return_url
+    } else {
 	set project_item_id [lindex [lindex $match_projects 0] 0]
 	set object_package_id [lindex [lindex $match_projects 0] 2]
 
