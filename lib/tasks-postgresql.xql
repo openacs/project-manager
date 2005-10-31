@@ -33,6 +33,7 @@
 	t.priority,
 	t.party_id,
 	t.parent_id,
+	d.parent_task_id,
 	o.title as project_name
 	FROM
 	(select tr.item_id,
@@ -53,7 +54,8 @@
                 tr.revision_id,
 		tr.description,
 		tr.priority
-	   from cr_items ci, pm_tasks_revisionsx tr
+	   from cr_items ci,
+	  pm_tasks_revisionsx tr
           LEFT JOIN
           pm_task_assignment ta ON tr.item_id = ta.task_id
 	  -- get only live revisions
@@ -61,7 +63,10 @@
 	  [template::list::page_where_clause -and -name "tasks" -key "tr.item_id"]) t
             LEFT JOIN
             pm_roles r
-            ON t.role_id = r.role_id,
+            ON t.role_id = r.role_id
+	    LEFT JOIN	
+	    pm_task_dependency d
+	    ON t.item_id = d.task_id,
         pm_tasks_active ti,
         pm_task_status s,
 	cr_items cp,
