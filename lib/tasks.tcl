@@ -187,7 +187,7 @@ set filters [list \
 				      where_clause "$project_item_where_clause"
 				 ] \
 		 instance_id [list \
-                                 where_clause "ti.process_instance = :instance_id"
+                                 where_clause "o.package_id = :instance_id"
 			     ] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
