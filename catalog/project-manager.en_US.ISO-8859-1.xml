@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d12" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d15" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -37,6 +37,8 @@
   <msg key="aggregate_projects">Aggregate projects from this time of past years and beyond.</msg>
   <msg key="All">All</msg>
   <msg key="Assign_from_categories">Assign from categories</msg>
+  <msg key="Assign_myself">Assign Myself</msg>
+  <msg key="Assign_myself_as_lead">Assign myself as lead</msg>
   <msg key="assign_removed">%assign% removed</msg>
   <msg key="assign_saved">%assign% saved</msg>
   <msg key="Assignee">Assignee</msg>
@@ -416,6 +418,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="move_help">Choose one project to move the task to.</msg>
   <msg key="Move_task">Move Task</msg>
   <msg key="Move_task_to">Move task to project:</msg>
+  <msg key="Myself">Myself</msg>
   <msg key="na">n/a</msg>
   <msg key="Name">Name</msg>
   <msg key="Name_1">Name:</msg>
@@ -446,6 +449,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Overdue_Tasks">Overdue Tasks</msg>
   <msg key="Overview_of_process">Overview of process:</msg>
   <msg key="Package">Package Instance</msg>
+  <msg key="Package_Instance">Package Instance</msg>
   <msg key="page">page)</msg>
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
@@ -516,6 +520,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Rate_Assignees">Rate Assignees</msg>
   <msg key="Rate_this_project">Rate this project</msg>
   <msg key="rate_this_project">Rate This Project</msg>
+  <msg key="Reassign">Reassign</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>
   <msg key="Remaining_work">Remaining Work</msg>
   <msg key="Remove">myself</msg>

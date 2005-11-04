@@ -268,7 +268,7 @@ set filters [list \
 		 user_space_p [list] \
 		 is_observer_p [list \
 				    label "[_ project-manager.Observer]" \
-				    values { {"[_ acs-kernel.common_True]" t } { "[_ acs-kernel.common_False]" f} } \
+				    values { {"[_ project-manager.True]" t } { "[_ project-manager.False]" f} } \
 				    where_clause { $user_space_clause }
 			       ] \
 		 previous_status_f [list \

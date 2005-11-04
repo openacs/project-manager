@@ -9,6 +9,7 @@ set optional_unset_list [list party_id role_id project_item_id is_observer_p ins
 
 set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
 
+
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
 	return -code error "$required_param is a required parameter."
@@ -240,10 +241,10 @@ foreach element $elements {
     append row_list "$element {}\n"
 }
 
-
 if {$use_bulk_p == 1} {
     set row_list "multiselect {}\n $row_list"
-    set bulk_actions [list "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]"]
+    set bulk_actions [list "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]" "[_ project-manager.Assign_myself]" "${base_url}assign-myself" "[_ project-manager.Assign_myself_as_lead]"]
+
     set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 } else {
     set bulk_actions [list]
