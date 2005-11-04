@@ -78,6 +78,8 @@ db_1row get_project_ids { }
 
 set context_bar [ad_context_bar "one?project_item_id=$project_item_id $project_term" "[_ project-manager.View]"]
 
+set project_title [pm::project::name -project_item_id $project_item_id]
+
 set comments [general_comments_get_comments -print_content_p 1 -print_attachments_p 1 $task_id "[ad_conn url]?task_id=$task_id"]
 
 set comments_link [general_comments_create_link -object_name pm_task -link_text "Add a comment" -context_id $package_id $task_id "[ad_conn url]?task_id=$task_id"]

@@ -12,7 +12,10 @@
 <table border="1" cellpadding="0" cellspacing="0" width="100%">
 
   <tr>
-    <th bgcolor="lavender" colspan="3">@task_term@ #@task_id@: @task_info.task_title@</th>
+    <th bgcolor="lavender" colspan="3">
+	@project_title@ <br>
+	@task_term@ #@task_id@: @task_info.task_title@
+    </th>
 
 <tr>
 <td colspan="3">

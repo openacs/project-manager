@@ -24,7 +24,10 @@ set task_term_lower [_ project-manager.task]
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
 set task_id $task_info(item_id)
-set print_link "task-print?&task_id=$task_info(item_id)&project_item_id=$task_info(project_item_id)"
+set project_item_id $task_info(project_item_id)
+set print_link "task-print?&task_id=$task_info(item_id)&project_item_id=$project_item_id"
+
+set project_title [pm::project::name -project_item_id $project_item_id]
 
 # Set the link to the permissions page
 set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/permissions/one?[export_vars {{object_id $task_id}}]"

@@ -16,7 +16,7 @@
         <else>
           <font>
         </else>
-        @task_term@ #@task_id@: @task_info.task_title@
+        @project_title@: @task_info.task_title@ (#@task_id@)
       </font>
       </td>
       <td align"right">
