@@ -309,7 +309,24 @@ template::list::create \
         }
 	title {
 	    label "[_ project-manager.Subject_1]"
-	    display_template {<if @tasks.is_observer_p@ eq "f" and @tasks.party_id@ eq "$user_id"><font color="green">@tasks.title@</font></if><else>@tasks.title@</else>}
+	    display_template {
+		<if @tasks.is_observer_p@ eq "f" and @tasks.party_id@ eq "$user_id">
+		    <if @tasks.red_title_p@>
+		       <font color="red">@tasks.title@</font>
+		    </if>
+		    <else>
+		       <font color="green">@tasks.title@</font>
+		    </else>
+		</if>
+		<else>
+		    <if @tasks.red_title_p@>
+		       <font color="red">@tasks.title@</font>
+		    </if>
+		    <else>
+		        @tasks.title@
+		    </else>
+		</else>
+	    }
 	}
         parent_task_id {
             label "[_ project-manager.Dep]"
@@ -453,7 +470,7 @@ if { ![exists_and_not_null assign_group_p] } {
 
 set user_instead_full_p [parameter::get -parameter "UsernameInsteadofFullnameP" -default "f"]
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name} tasks tasks " " {
+db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name red_title_p} tasks tasks " " {
     
     if { $assign_group_p } {
 	# We are going to show all asignees including groups
@@ -499,6 +516,19 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
     set latest_finish_pretty [lc_time_fmt $latest_finish $fmt]
     set end_date_pretty [lc_time_fmt $end_date $fmt]
 
+    set red_title_p 0
+    set sysdate [dt_sysdate -format "%Y-%m-%d %H:%M:%S"]
+    if { [exists_and_not_null latest_start]} {
+	if { $sysdate > $latest_start } {
+	    set red_title_p 1
+	}
+    } else {
+	if { $sysdate > $end_date } {
+	    set red_title_p 1
+	}
+    }
+
+    
     if {[exists_and_not_null earliest_start_j]} {
 	set slack_time [pm::task::slack_time \
 			    -earliest_start_j $earliest_start_j \
