@@ -14,7 +14,8 @@
         a.project_id,
         r.one_line as role_name,
         a.party_id,
-        r.is_lead_p
+        r.is_lead_p,
+	r.is_observer_p
         FROM 
         pm_project_assignment a,
         pm_roles r

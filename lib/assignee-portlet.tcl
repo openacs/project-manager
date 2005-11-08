@@ -52,8 +52,13 @@ if {$assigned_p} {
 set assignee_edit_url [export_vars -base project-assign-edit {project_item_id return_url}]
 
 set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+set hide_watchers_p [parameter::get -parameter "HideWatchresP" -default 0]
+
 
 db_multirow -extend {contact_url complaint_url name} people project_people_groups_query {} {
+    if { $hide_watchers_p && $is_observer_p } {
+	continue
+    }
     if { $assign_group_p } {
         # We are going to show all asignees including groups
         if { [catch {set name [person::name -person_id $party_id] } err] } {

@@ -73,10 +73,14 @@ template::list::create \
     }
 
 set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
+set hide_watchers_p [parameter::get -parameter "HideWatchresP" -default 0]
 
 set query_name "task_people_group_query"
 
 db_multirow -extend { assign_name } people $query_name { } {
+    if { $hide_watchers_p && $is_observer_p } {
+	continue
+    }
     if { $assign_group_p } {
         # We are going to show all asignees including groups
         if { [catch {set assign_name [person::name -person_id $party_id] } err] } {
