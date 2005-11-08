@@ -33,6 +33,7 @@ set context [list "[_ project-manager.Projects_reports]"]
 set package_id [ad_conn package_id]
 set user_id [ad_conn user_id]
 
+set base_url [ad_conn url]
 set return_url [ad_return_url]
 
 # For to choose how many last years we want to show
@@ -92,7 +93,12 @@ template::list::create \
 	    display_template {
 		@projects.title@
 		<if @projects.proj_num@ not eq 0>
-		(<a href="${return_url}&show_p=t" title="[_ project-manager.show_this_projects]">@projects.proj_num@</a>)
+		<if "$return_url" eq "$base_url">
+ 		   (<a href="${return_url}?show_p=t" title="[_ project-manager.show_this_projects]">@projects.proj_num@</a>)
+		</if>
+		<else>
+ 		   (<a href="${return_url}&show_p=t" title="[_ project-manager.show_this_projects]">@projects.proj_num@</a>)
+		</else>
 		</if>
 	    }
 	} 
