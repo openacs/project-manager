@@ -20,16 +20,16 @@ ad_page_contract {
 
 } {
     {orderby ""}
-    {party_id ""}
+    {filter_party_id ""}
     {searchterm ""}
     {status_id ""}
     {page ""}
     {page_size 25}
     {page_num ""}
     role_id:optional
-    {project_item_id ""}
+    {pid_filter ""}
     {instance_id ""}
-    {is_observer_p ""}
+    {is_observer_filter ""}
     {filter_package_id ""}
     {role_id ""}
     {base_url ""}
@@ -44,8 +44,8 @@ ad_page_contract {
 
 # --------------------------------------------------------------- #
 
-if {[exists_and_not_null project_item_id]} {
-    set passed_project_item_id $project_item_id
+if {[exists_and_not_null pid_filter]} {
+    set passed_project_item_id $pid_filter
 } else {
     set passed_project_item_id 0
 }
@@ -62,7 +62,13 @@ set user_id    [ad_maybe_redirect_for_registration]
 
 # If we are in .LRN, then filter by package_id. This is actually a crude hack...
 if {[expr [string match "/dotlrn/*" [ad_conn url]]]} {
-    set filter_package_id $package_id
+    set com_id [dotlrn_community::get_community_id]
+    if { [empty_string_p $com_id] } {
+	# We are inside dotlrn but not in a community
+	set filter_package_id ""
+    } else {
+	set filter_package_id $package_id
+    }
 }
 
 # permissions

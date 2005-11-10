@@ -12,13 +12,13 @@
 <tr valign=top>
 <td>
   <include src="/packages/project-manager/lib/tasks" 
-	project_item_id="@project_item_id@" 
+	pid_filter="@pid_filter@" 
 	status_id="@status_id@" 
-	party_id="@party_id@" 
+	filter_party_id="@filter_party_id@" 
 	actions_p="1" 
 	fmt="@fmt@"
 	instance_id="@instance_id@"
-	is_observer_p="@is_observer_p@" 
+	is_observer_filter="@is_observer_filter@" 
 	page_size="@page_size@" 
 	page="@page@"
 	page_num="@page_num@" 
