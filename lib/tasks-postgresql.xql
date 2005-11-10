@@ -75,6 +75,7 @@
         t.parent_id     = cp.item_id and
         t.item_id       = ti.task_id and
         ti.status       = s.status_id
+	$observer_clause
 	and cp.live_revision = o.object_id
         and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = ti.task_id
@@ -84,7 +85,6 @@
         [template::list::orderby_clause -name tasks -orderby]
     </querytext>
 </fullquery>
-
 
 <fullquery name="tasks_pagination">
     <querytext>
@@ -115,7 +115,6 @@
 	  where ci.live_revision = tr.revision_id
           and ta.role_id = r.role_id
 	  $observer_clause
-	  $done_clause
 	   and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = tr.item_id
                     and ppm.privilege = 'read'
@@ -135,13 +134,36 @@
     </querytext>
 </fullquery>
 
+<fullquery name="get_people">
+    <querytext>
+	select
+                distinct(first_names || ' ' || last_name) as fullname,
+        	u.person_id
+        from
+                persons u,
+                pm_task_assignment a,
+                pm_tasks_active ts
+        where
+                u.person_id = a.party_id 
+                and ts.task_id = a.task_id
+        order by
+                fullname
+    </querytext>
+</fullquery>
+
 <fullquery name="get_subprojects">
     <querytext>
-	select ci.item_id
-	from cr_items ci, pm_projects p, cr_items pi
-	where p.project_id = ci.latest_revision
-        and ci.tree_sortkey between tree_left(pi.tree_sortkey) and tree_right(pi.tree_sortkey)
-        and pi.item_id = :project_item_id
+	select 
+		ci.item_id
+	from 
+		cr_items ci, 
+		pm_projects p, 
+		cr_items pi
+	where 
+		p.project_id = ci.latest_revision
+        	and ci.tree_sortkey between tree_left(pi.tree_sortkey) 
+		and tree_right(pi.tree_sortkey)
+        	and pi.item_id = :pid_filter
     </querytext>
 </fullquery>
 
@@ -159,5 +181,19 @@
 		and rel.object_id_one = :parent_id
     </querytext>
 </fullquery>
+
+<fullquery name="get_status_values">
+    <querytext>
+	select 
+		description, 
+		status_id 
+	from 
+		pm_task_status 
+	order by 
+		status_type desc, 
+		description
+    </querytext>
+</fullquery>
+
 
 </queryset>

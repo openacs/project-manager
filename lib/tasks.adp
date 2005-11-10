@@ -1,6 +1,18 @@
 <if @display_mode@ eq "list">
   <listtemplate name="tasks">
   </listtemplate>
+    <if @more_p@ eq 1>
+        <br>
+        <if @instance_id@ not nil>
+            <center><a class="button" href="project-manager/tasks?instance_id=@instance_id@">#project-manager-portlet.More#</a></center>
+        </if>
+        <else>
+            <center>
+                 <a class="button" href="project-manager/tasks?is_observer_p=f">#project-manager-portlet.More#</a>
+            </center>
+        </else>
+       <br>
+    </if>
 </if>
 <if @display_mode@ eq "filter">
   <form method="post" name="search" action="tasks">

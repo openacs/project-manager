@@ -1,14 +1,38 @@
-# Possible
-# party_id
-# role_id
+# Possible Filters:
+# -----------------
+# filter_party_id    Show tasks where this party_id participates
+# pid_filter         Show tasks only for this project_item_id
+# is_observer_filter Show tasks where party_id is_observer_p "t" or "f"
+# filter_package_id  Show tasks for this package_id
+# instance_id        Show tasks for this instance_id
+# status_id          Show tasks with this status_id.
+# searchterm         Show tasks where the task title is like searchterm
+# subproject_tasks   Show or hide subproject_tasks, this filter is dynamically added
+#                    when pid_filter has a value.
+#
+# Pagination and orderby:
+# ---------------------- 
+# page        The page to show on the paginate.
+# page_size   The number of rows to display in the list
 # orderby_p   Set it to 1 if you want to show the order by menu.
+# orderby     To sort the list using this orderby value
+#
+# For Project Manager Task Portlet:
+# ---------------------------------
+# tasks_portlet_p   Value that indicates that this include is showing in the portlet of dotlrn
+# page_num          The number of the page inside dotlrn
+#
+# Other Variables:
+# ----------------
+# actions_p   Boolean to specify if you like to show list actions or not
+# base_url    Url to use in links
 
 set required_param_list [list]
-set optional_param_list [list orderby searchterm status_id page bulk_p actions_p base_url page_num page_size]
-set optional_unset_list [list party_id role_id project_item_id is_observer_p instance_id filter_package_id subproject_tasks]
-
-set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
-
+set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size]
+set optional_unset_list [list \
+			     filter_party_id pid_filter \
+			     is_observer_filter instance_id filter_package_id \
+			     subproject_tasks status_id tasks_portlet_p]
 
 foreach required_param $required_param_list {
     if {![info exists $required_param]} {
@@ -30,13 +54,21 @@ foreach optional_unset $optional_unset_list {
     }
 }
 
-
-if ![info exists page_size] {
+if ![exists_and_not_null page_size] {
     set page_size 25
 }
 
 if ![info exists orderby_p] {
     set orderby_p 0
+}
+
+if { ![exists_and_not_null tasks_portlet_p] } {
+    set tasks_portlet_p f
+} else {
+    # We are inside dotlrn so I will disable the 
+    # pagination by setting the page_size value to null
+    set show_rows $page_size
+    set page_size ""
 }
 
 
@@ -48,20 +80,10 @@ if ![info exists format] {
     set format "normal"
 }
 
+# the unique identifier for this package
 if ![info exists package_id] {
     set package_id [ad_conn package_id]
 }
-
-
-set extra_column ""
-set extra_join ""
-
-if {$status_id == "1"} {
-    set done_clause "and tr.percent_complete < 100"
-} else {
-    set done_clause ""
-}
-
 
 # Deal with the fact that we might work with days instead of hours
 
@@ -78,40 +100,29 @@ set hidden_vars [export_vars \
 
 # how to get back here
 
-set return_url [ad_return_url \
-		    -qualified]
+set return_url [ad_return_url -qualified]
 
 set contacts_url [util_memoize [list site_node::get_package_url \
 				    -package_key contacts]]
 
-
 # set up context bar
-
 set context [list "[_ project-manager.Tasks]"]
 
 
-set status_list [lang::util::localize_list_of_lists -list [db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]]
-
+set status_list [lang::util::localize_list_of_lists -list [db_list_of_lists get_status_values { }]]
 set status_list [linsert $status_list 0 [list "#acs-kernel.common_All#" "-1"]]
 
-# the unique identifier for this package
-
-set package_id [ad_conn package_id]
 set user_id [ad_maybe_redirect_for_registration]
 
 # status defaults to open
-
 if {![exists_and_not_null status_id] || $status_id == "-1"} {
     set status_where_clause ""
 } else {
-    set status_where_clause {ti.status = :status_id}
+    set status_where_clause "ti.status = :status_id"
 }
 
 # permissions
-
 permission::require_permission -party_id $user_id -object_id $package_id -privilege read
-
-# Tasks, using list-builder ---------------------------------
 
 if {![empty_string_p $searchterm]} {
 
@@ -138,10 +149,21 @@ if {[exists_and_not_null orderby]} {
         -set $orderby
 }
 
-# Get the rows to display
-
+# Get the elements to display in the list
 if {![exists_and_not_null elements]} {
-    set elements [list task_item_id title slack_time role latest_start latest_finish status_type remaining worked project_item_id percent_complete edit_url]
+    set elements [list \
+		      task_item_id \
+		      title \
+		      slack_time \
+		      role \
+		      latest_start \
+		      latest_finish \
+		      status_type \
+		      remaining \
+		      worked \
+		      project_item_id \
+		      percent_complete \
+		      edit_url]
 }
 
 if ![info exist filter_package_id] { 
@@ -150,61 +172,63 @@ if ![info exist filter_package_id] {
     set project_item_clause [pm::project::get_list_of_open -object_package_id $filter_package_id]
 }
 
-if { [exists_and_not_null subproject_tasks] && [exists_and_not_null project_item_id]} {
+if { [exists_and_not_null subproject_tasks] && [exists_and_not_null pid_filter]} {
     set subprojects_list [db_list get_subprojects { } ]
-    lappend subprojects_list $project_item_id
+    lappend subprojects_list $pid_filter
     set project_item_where_clause "t.parent_id in ([template::util::tcl_to_sql_list $subprojects_list])"
 } else {
-    set project_item_where_clause "t.parent_id = :project_item_id"
+    set project_item_where_clause "t.parent_id = :pid_filter"
 }
 
-# Shall we display only items where we are an observer ?
-if {[exists_and_not_null is_observer_p]} {
-    switch $is_observer_p {
-	f {
-	    set observer_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
-	} 
-	t {
-	    set observer_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
-	}
-    }
-} else {
-    set observer_clause ""
+# Shall we display only items where we are an observer?
+set observer_clause ""
+if { [exists_and_not_null is_observer_filter] } {
+    set observer_clause "and r.is_observer_p = '$is_observer_filter'" 
+}
+
+
+set assignee_values [list]
+if { [exists_and_not_null status_id] && $status_id != "-1" } {
+    set assignee_values [pm::task::assignee_filter_select -status_id $status_id]
+} 
+
+if { [llength $assignee_values] == 0 } {
+    set assignee_values [db_list_of_lists get_people " "]
 }
 
 set filters [list \
 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
-				 where_clause {$search_term_where}
+				 where_clause "$search_term_where"
 			    ] \
 		 status_id [list \
 				label "[_ project-manager.Status_1]" \
-				values {$status_list} \
+				values { $status_list } \
 				where_clause "$status_where_clause"
 			   ] \
-		 project_item_id [list \
-				      label "[_ project-manager.Project_1]" \
-				      values { $project_item_clause } \
-				      where_clause "$project_item_where_clause"
-				 ] \
+		 pid_filter [list \
+				 label "[_ project-manager.Project_1]" \
+				 values { $project_item_clause } \
+				 where_clause "$project_item_where_clause"
+			    ] \
 		 instance_id [list \
-                                 where_clause "o.package_id = :instance_id"
+				  where_clause "o.package_id = :instance_id"
 			     ] \
-		 is_observer_p [list \
-				    label "[_ project-manager.Observer]" \
-				    values { {#project-manager.Player# f} {#project-manager.Watcher# t} } \
-			       ] \
-		 party_id [list \
-				    label "[_ project-manager.People]" \
-				    values "[pm::task::assignee_filter_select -status_id $status_id]" \
-				    where_clause "t.party_id = :party_id"
-			       ] \
+		 is_observer_filter [list \
+					 label "[_ project-manager.Observer]" \
+					 values { {"[_ project-manager.Player]" t} { "[_ project-manager.Watcher]" f} } \
+					] \
+		 filter_party_id [list \
+				      label "[_ project-manager.People]" \
+				      values $assignee_values \
+				      where_clause "t.party_id = :filter_party_id"
+				 ] \
 		 filter_package_id [list \
-				    where_clause "o.package_id = :filter_package_id"
-			       ] \
+					where_clause "o.package_id = :filter_package_id"
+				   ] \
 		]
 
-if { [exists_and_not_null project_item_id] } {
+if { [exists_and_not_null pid_filter] } {
     lappend filters subproject_tasks [list \
 					  label "[_ project-manager.Subproject_tasks]" \
 					  values {{ "[_ project-manager.Show]" 1}} \
@@ -214,14 +238,16 @@ if { [exists_and_not_null project_item_id] } {
 
 # Setup the actions, so we can append the rest later on
 if {$actions_p == 1} {
-    set actions [list "[_ project-manager.Add_task]" [export_vars \
-							  -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
+    set actions [list \
+		     "[_ project-manager.Add_task]" \
+		     [export_vars -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
 } else {
     set actions [list]
 }
 
+# Append each element to row_list that is used on 
+# format section in template::list::create procedure
 foreach element $elements {
-
     # Special treatement for days / hours
 
     if {$element == "remaining"} {
@@ -236,14 +262,22 @@ foreach element $elements {
     # show all players.
 
     if {$element == "role"} {
-	    set element "party_id"
+	set element "party_id"
     }
     append row_list "$element {}\n"
 }
 
-if {$use_bulk_p == 1} {
+# Bulk actions to show in the list
+set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
+if { $use_bulk_p == 1 } {
     set row_list "multiselect {}\n $row_list"
-    set bulk_actions [list "[_ project-manager.Edit_tasks]" "${base_url}task-add-edit" "[_ project-manager.Edit_multiple_tasks]" "[_ project-manager.Assign_myself]" "${base_url}assign-myself" "[_ project-manager.Assign_myself_as_lead]"]
+    set bulk_actions [list \
+			  "[_ project-manager.Edit_tasks]" \
+			  "${base_url}task-add-edit" \
+			  "[_ project-manager.Edit_multiple_tasks]" \
+			  "[_ project-manager.Assign_myself]" \
+			  "${base_url}assign-myself" \
+			  "[_ project-manager.Assign_myself_as_lead]"]
 
     set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 } else {
@@ -251,7 +285,7 @@ if {$use_bulk_p == 1} {
     set bulk_action_export_vars [list]
 }
 
-
+# Orderby's to use in
 if { $orderby_p } {
     set order_by_list [list \
 			   default_value $default_orderby \
@@ -470,7 +504,40 @@ if { ![exists_and_not_null assign_group_p] } {
 
 set user_instead_full_p [parameter::get -parameter "UsernameInsteadofFullnameP" -default "f"]
 
-db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_date_pretty latest_start_pretty latest_finish_pretty slack_time edit_url hours_remaining days_remaining actual_days_worked my_user_id user_url base_url task_close_url project_url assignee_name red_title_p} tasks tasks " " {
+set row_count 0
+set more_p 0
+
+# Extend list of variables in the multirow
+set extend_list [list \
+		     item_url \
+		     earliest_start_pretty \
+		     earliest_finish_pretty \
+		     end_date_pretty \
+		     latest_start_pretty \
+		     latest_finish_pretty \
+		     slack_time \
+		     edit_url \
+		     hours_remaining \
+		     days_remaining \
+		     actual_days_worked \
+		     my_user_id \
+		     user_url \
+		     base_url \
+		     task_close_url \
+		     project_url \
+		     assignee_name \
+		     red_title_p]
+
+db_multirow -extend $extend_list tasks tasks " " {
+
+    if { $tasks_portlet_p && [string equal $row_count $show_rows] } {
+	# When showing in dotlrn we don't want to have the complete
+	# list of tasks in the portlet, so we count to the original
+	# specified page_size and break the multirow when it reaches
+	# that value and add a link to show all the tasks.
+	set more_p 1
+	break
+    }
     
     if { $assign_group_p } {
 	# We are going to show all asignees including groups
@@ -569,6 +636,7 @@ db_multirow -extend {item_url earliest_start_pretty earliest_finish_pretty end_d
     set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]
     set task_close_url [export_vars -base "${base_url}task-close" -url {task_item_id return_url}]
     set project_url [export_vars -base "${base_url}one" {project_item_id $tasks(project_item_id)}]
+    incr row_count
 }
 
 # ------------------------- END OF FILE -------------------------
