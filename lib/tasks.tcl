@@ -186,6 +186,22 @@ if { [exists_and_not_null is_observer_filter] } {
     set observer_clause "and r.is_observer_p = '$is_observer_filter'" 
 }
 
+# Shall we display only items where we are an observer ?
+if {[exists_and_not_null is_observer_p]} {
+    switch $is_observer_p {
+	f {
+	    set observer_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
+	} 
+	t {
+	    set observer_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
+	}
+	m {
+	    set observer_clause "and ta.party_id = :user_id"
+	}
+    }
+} else {
+    set observer_clause ""
+}
 
 set assignee_values [list]
 if { [exists_and_not_null status_id] && $status_id != "-1" } {
