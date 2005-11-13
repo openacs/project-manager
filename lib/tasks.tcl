@@ -159,7 +159,7 @@ if {![exists_and_not_null elements]} {
 		      slack_time \
 		      role \
 		      latest_start \
-		      latest_finish \
+		      end_date \
 		      status_type \
 		      remaining \
 		      worked \
@@ -607,12 +607,13 @@ db_multirow -extend $extend_list tasks tasks " " {
 	if { $sysdate > $latest_start } {
 	    set red_title_p 1
 	}
-    } else {
+    } elseif {[exists_and_not_null end_date]} {
 	if { $sysdate > $end_date } {
 	    set red_title_p 1
 	}
+    } else {
+	set red_title_p 0
     }
-
     
     if {[exists_and_not_null earliest_start_j]} {
 	set slack_time [pm::task::slack_time \
