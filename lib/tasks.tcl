@@ -26,6 +26,8 @@
 # ----------------
 # actions_p   Boolean to specify if you like to show list actions or not
 # base_url    Url to use in links
+# display_mode Could be "list", then only the list of tasks will be shown or could be "filter", 
+# then filters would be added as well.
 
 set required_param_list [list]
 set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size]
