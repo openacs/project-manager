@@ -95,7 +95,7 @@ if { [llength $assignee_list] > 1 } {
 	    {section "[_ project-manager.Email]" }
 	    {html {onclick check_uncheck_boxes(this.checked)}}
 	}
-        {to:text(checkbox)
+        {to:text(checkbox),optional
             {label "[_ project-manager.Send_email]"}
 	    {options $assignee_list}
 	    {html {checked 1}}
@@ -103,7 +103,7 @@ if { [llength $assignee_list] > 1 } {
     } 
 } else {
     ad_form -extend -name comment -form {
-	{to:text(checkbox)
+	{to:text(checkbox),optional
             {label "[_ project-manager.Send_email]"}
 	    {section "[_ project-manager.Email]" }
 	    {options $assignee_list}

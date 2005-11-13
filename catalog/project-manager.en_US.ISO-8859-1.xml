@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d15" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d17" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -550,6 +550,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Show">Show</msg>
   <msg key="Show_closed">Show closed</msg>
   <msg key="show_this_projects">Show this projects</msg>
+  <msg key="ShowSubprojects">Show Subprojects</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
   <msg key="Slack">Slack:</msg>
   <msg key="Slack_1">Slack</msg>

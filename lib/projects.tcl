@@ -5,10 +5,20 @@
 # @arch-tag: 2f586eec-4768-42ef-a09a-4950ac00ddaf
 # @cvs-id $Id$
 
-set required_param_list [list package_id]
-set optional_param_list [list orderby status_id searchterm bulk_p action_p \
+# Pagination and orderby:
+# ---------------------- 
+# page        The page to show on the paginate.
+# page_size   The number of rows to display in the list
+# orderby_p   Set it to 1 if you want to show the order by menu.
+# orderby     To sort the list using this orderby value
+#
+# package_id  The package_id which to limit the query to.
+# subprojects_p Should subprojects be displayed as well?
+
+set required_param_list "package_id"
+set optional_param_list [list orderby status_id searchterm bulk_p action_p page_num page_size\
 			     filter_p base_url end_date_f user_space_p hidden_vars]
-set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f current_package_f]
+set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f current_package_f subprojects_p]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
 
 set user_id [ad_conn user_id]
@@ -16,6 +26,10 @@ foreach required_param $required_param_list {
     if {![info exists $required_param]} {
 	return -code error "$required_param is a required parameter."
     }
+}
+
+if ![exists_and_not_null page_size] {
+    set page_size 25
 }
 
 set package_ids [join $package_id ","]
@@ -37,6 +51,9 @@ foreach optional_unset $optional_unset_list {
 if {![info exists format]} {
     set format "normal"
 }
+
+# initialize the pa_from_clause. It should be empty unless needed
+set pa_from_clause ""
 
 if [empty_string_p $user_space_p] {
     set user_space_p 0
@@ -67,22 +84,33 @@ if { ![exists_and_not_null status_id]} {
 
 set assignees_filter [linsert $assignees_filter 0 [list "All" "-1"]]
 
-# Set assigne
-set assignee_where_clause "pa.party_id = :assignee_id"
+# Set assignee
 if { ![exists_and_not_null assignee_id]} {
-    set assignee_id $user_id
-
+    set pa_from_clause ",pm_project_assignment pa"
+    set assignee_where_clause "pa.party_id = :user_id and p.item_id = pa.project_id"
 } elseif { [string equal $assignee_id "-1"] } {
-    set asg_ids [list]
-    foreach assignee $assignees_filter {
-	lappend asg_ids [lindex $assignee 1]
-    }
-    set asg_ids [join $asg_ids ","]
-    set assignee_where_clause "pa.party_id in ($asg_ids)"
+    # assignee_id of "-1" means all assignees
+    set assignee_where_clause ""
+} else {
+    set pa_from_clause ",pm_project_assignment pa"
+    set assignee_where_clause "pa.party_id = :assignee_id and p.item_id = pa.project_id"
 }
 
+# By default we show all subprojects as well
+set subprojects_from_clause ""
+set subprojects_where_clause ""
 
-    
+if {[exists_and_not_null subprojects_p]} {
+    if {[string eq "f" $subprojects_p]} {
+	set subprojects_from_clause ", acs_objects ao"
+	set subprojects_where_clause "ao.object_type = 'content_folder' and ao.object_id = p.parent_id"
+    } else {
+	unset subprojects_p
+    }
+} else {
+    unset subprojects_p
+}
+   
 # We want to set up a filter for each category tree.
 
 set export_vars [export_vars -form {status_id orderby}]
@@ -152,7 +180,7 @@ set contact_coloum "fff"
 
 
 
-set row_list "checkbox {}\npercent_complete {} \nproject_name {}\n" 
+set row_list "checkbox {}\nproject_name {}\n" 
 foreach element $elements {
         append row_list "$element {}\n"
 }
@@ -166,25 +194,22 @@ if {$bulk_p == 1} {
 
 if {$actions_p == 1} {
 	
-    if {[info exists portal_info_name]} {
-	
-	set actions [list "$portal_info_name" "$portal_info_url" "$portal_info_name" "[_ project-manager.Add_project]" "[export_vars -base "${base_url}add-edit" -url {customer_id}]" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" "[_ project-manager.Projects_reports]" "reports" "[_ project-manager.Projects_reports]"] 
-	
-    } else {
-	    
 	set actions [list  "[_ project-manager.Add_project]" "[export_vars -base "${base_url}add-edit" -url {customer_id}]" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" "[_ project-manager.Projects_reports]" "reports" "[_ project-manager.Projects_reports]"] 
 	
-    }
-    
 } else {
     set actions [list "Project: $community_name" "$base_url"]
 }
 
-if { $user_space_p } {
-    set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p"
+if {[exists_and_not_null is_observer_p]} {
+    set pa_from_clause ",pm_project_assignment pa, pm_roles pr"
+    if { $user_space_p } {
+	set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p and p.item_id = pa.project_id"
+    } else {
+	set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p 
+                           and p.object_package_id = :package_id and p.item_id = pa.project_id"
+    }
 } else {
-    set user_space_clause "pa.role_id = pr.role_id and pr.is_observer_p = :is_observer_p 
-                           and f.package_id = :package_id and i.parent_id = f.folder_id"
+    set user_space_clause ""
 }
 
 # If this filter is provided we can watch the projects in 
@@ -193,10 +218,10 @@ if { [exists_and_not_null current_package_f] } {
     if { [string equal $current_package_f 1] } {
 	set current_package_where_clause ""
     } else {
-	set current_package_where_clause "and f.package_id = :current_package_f and i.parent_id = f.folder_id"
+	set current_package_where_clause "and p.object_package_id = :current_package_f"
     }
 } else {
-    set current_package_where_clause "and f.package_id in ($package_ids) and i.parent_id = f.folder_id"
+    set current_package_where_clause "and p.object_package_id in ($package_ids)"
 }
 
 # We are going to create the available options for the possible pairs
@@ -266,9 +291,12 @@ set filters [list \
 				  where_clause {c.category_id = [join [value_if_exists category_id] ","]}
 			     ] \
 		 user_space_p [list] \
-		 is_observer_p [list \
-				    label "[_ project-manager.Observer]" \
+		 subprojects_p [list \
+				    label "[_ project-manager.ShowSubprojects]" \
 				    values { {"[_ project-manager.True]" t } { "[_ project-manager.False]" f} } \
+				    where_clause { $subprojects_where_clause }
+				] \
+		 is_observer_p [list \
 				    where_clause { $user_space_clause }
 			       ] \
 		 previous_status_f [list \
@@ -288,9 +316,6 @@ template::list::create \
     -selected_format $format \
     -key project_item_id \
     -elements {
-        percent_complete {
-            label "%"
-            display_template "<div style=\"margin:0;align:left;background-color:green;width:@projects.percent_complete@%;text-align:left;\">&nbsp;</div>@projects.percent_complete@%"                                                                                 }
         project_name {
 	    label "[_ project-manager.Project_name]"
 	    link_url_col item_url
@@ -342,11 +367,6 @@ template::list::create \
     -filters $filters \
     -orderby {
 	default_value $default_orderby
-        percent_complete {
-            label "[_ project-manager.percent]"
-            orderby_desc "percent_complete desc"
-            orderby_asc "percent_complete asc"
-        }
         project_name {
 	    label "[_ project-manager.Project_name]"
 	    orderby_desc "upper(p.title) desc"
@@ -402,6 +422,10 @@ template::list::create \
 	    default_direction asc
 	}
     } \
+    -page_size_variable_p 1 \
+    -page_size $page_size \
+    -page_flush_p 0 \
+    -page_query_name projects_pagination \
     -formats {
         normal {
             label "[_ project-manager.Table]"
@@ -431,16 +455,6 @@ db_multirow -extend { item_url customer_url category_select } projects project_f
     
     set item_url [export_vars -base "${base_url}one" {project_item_id}]
     
-    if {$dotlrn_installed_p} {
-        set community_id [dotlrn_community::get_community_id_from_url -url $base_url]
-    
-        if { ![empty_string_p $community_id] } {
-            set community_name [dotlrn_community::get_community_name  $community_id]
-            set portal_info_name "Project: $community_name" 
-            set portal_info_url  "$base_url" 
-	}
-    
-    }
     # root CR folder
     set root_folder [pm::util::get_root_folder -package_id $package_id]
     

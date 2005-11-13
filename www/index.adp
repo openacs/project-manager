@@ -22,5 +22,9 @@
 	hidden_vars="@hidden_vars;noquote@" 
 	previous_status_f="@previous_status_f@"
 	current_package_f="@current_package_f@"
+	page_size="@page_size@" 
+	page="@page@"
+	page_num="@page_num@" 
+	subprojects_p="@subprojects_p@"
 	/>
 

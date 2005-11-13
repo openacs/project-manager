@@ -25,9 +25,13 @@ ad_page_contract {
     {format "normal"}
     {assignee_id ""}
     {user_space_p "0"}
+    {subprojects_p "t"}
     {is_observer_p ""}
     {previous_status_f ""}
     {current_package_f ""}
+    {page ""}
+    {page_size 25}
+    {page_num ""}
     
 } -properties {
 
