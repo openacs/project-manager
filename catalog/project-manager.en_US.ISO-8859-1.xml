@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d17" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d18" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -58,7 +58,9 @@
   <msg key="Categories">Categories</msg>
   <msg key="check_uncheck">Check/Uncheck</msg>
   <msg key="Close">Close</msg>
+  <msg key="Close_multiple_tasks">Close multiple tasks</msg>
   <msg key="Close_project">Close project</msg>
+  <msg key="Close_tasks">Close tasks</msg>
   <msg key="Closed">Closed</msg>
   <msg key="Code">Code</msg>
   <msg key="Code_1">Code:</msg>

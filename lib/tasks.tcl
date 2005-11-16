@@ -25,12 +25,13 @@
 # Other Variables:
 # ----------------
 # actions_p      Boolean to specify if you like to show list actions or not
+# bulk_actions_p Boolean to specify if you like to show bulk actions or not
 # base_url       Url to use in links
 # display_mode   Could be "list", then only the list of tasks will be shown or could be "filter", 
 #                then filters would be added as well.
 
 set required_param_list [list]
-set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size]
+set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size bulk_actions_p]
 set optional_unset_list [list \
 			     filter_party_id pid_filter \
 			     is_observer_filter instance_id filter_package_id \
@@ -285,12 +286,15 @@ foreach element $elements {
 
 # Bulk actions to show in the list
 set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
-if { $use_bulk_p == 1 } {
+if { $use_bulk_p == 1 || $bulk_actions_p == 1} {
     set row_list "multiselect {}\n $row_list"
     set bulk_actions [list \
 			  "[_ project-manager.Edit_tasks]" \
 			  "${base_url}task-add-edit" \
 			  "[_ project-manager.Edit_multiple_tasks]" \
+			  "[_ project-manager.Close_tasks]" \
+			  "${base_url}task-bulk-close" \
+			  "[_ project-manager.Close_multiple_tasks]" \
 			  "[_ project-manager.Assign_myself]" \
 			  "${base_url}assign-myself" \
 			  "[_ project-manager.Assign_myself_as_lead]"]
