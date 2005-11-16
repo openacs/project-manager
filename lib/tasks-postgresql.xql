@@ -114,7 +114,7 @@
 	  -- get only live revisions
 	  where ci.live_revision = tr.revision_id
           and ta.role_id = r.role_id
-	  $observer_clause
+	  $observer_pagination_clause
 	   and exists (select 1 from acs_object_party_privilege_map ppm
                     where ppm.object_id = tr.item_id
                     and ppm.privilege = 'read'

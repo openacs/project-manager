@@ -24,10 +24,10 @@
 #
 # Other Variables:
 # ----------------
-# actions_p   Boolean to specify if you like to show list actions or not
-# base_url    Url to use in links
-# display_mode Could be "list", then only the list of tasks will be shown or could be "filter", 
-# then filters would be added as well.
+# actions_p      Boolean to specify if you like to show list actions or not
+# base_url       Url to use in links
+# display_mode   Could be "list", then only the list of tasks will be shown or could be "filter", 
+#                then filters would be added as well.
 
 set required_param_list [list]
 set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size]
@@ -182,26 +182,24 @@ if { [exists_and_not_null subproject_tasks] && [exists_and_not_null pid_filter]}
     set project_item_where_clause "t.parent_id = :pid_filter"
 }
 
-# Shall we display only items where we are an observer?
-set observer_clause ""
-if { [exists_and_not_null is_observer_filter] } {
-    set observer_clause "and r.is_observer_p = '$is_observer_filter'" 
-}
-
 # Shall we display only items where we are an observer ?
-if {[exists_and_not_null is_observer_p]} {
-    switch $is_observer_p {
+if {[exists_and_not_null is_observer_filter]} {
+    switch $is_observer_filter {
 	f {
-	    set observer_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
+	    set observer_pagination_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
+	    set observer_clause "and r.is_observer_p = 'f' and t.party_id = :user_id"
 	} 
 	t {
-	    set observer_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
+	    set observer_pagination_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
+	    set observer_clause "and r.is_observer_p = 't' and t.party_id = :user_id"
 	}
 	m {
-	    set observer_clause "and ta.party_id = :user_id"
+	    set observer_pagination_clause "and ta.party_id = :user_id"
+	    set observer_clause "and t.party_id = :user_id"
 	}
     }
 } else {
+    set observer_pagination_clause ""
     set observer_clause ""
 }
 
@@ -234,7 +232,7 @@ set filters [list \
 			     ] \
 		 is_observer_filter [list \
 					 label "[_ project-manager.Observer]" \
-					 values { {"[_ project-manager.Player]" t} { "[_ project-manager.Watcher]" f} } \
+					 values { {"[_ project-manager.Player]" f} { "[_ project-manager.Watcher]" t} } \
 					] \
 		 filter_party_id [list \
 				      label "[_ project-manager.People]" \
