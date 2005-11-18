@@ -20,6 +20,7 @@ set optional_param_list [list orderby status_id searchterm bulk_p action_p page_
 			     filter_p base_url end_date_f user_space_p hidden_vars]
 set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f current_package_f subprojects_p]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
+set invoice_installed_p [apm_package_installed_p dotlrn-invoices]
 
 set user_id [ad_conn user_id]
 foreach required_param $required_param_list {
@@ -194,7 +195,11 @@ if {$bulk_p == 1} {
 
 if {$actions_p == 1} {
 	
-	set actions [list  "[_ project-manager.Add_project]" "[export_vars -base "${base_url}add-edit" -url {customer_id}]" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]" "[_ project-manager.Projects_reports]" "reports" "[_ project-manager.Projects_reports]"] 
+    set actions [list  "[_ project-manager.Add_project]" "[export_vars -base "${base_url}add-edit" -url {customer_id}]" "[_ project-manager.Add_project]" "[_ project-manager.Customers]" "[site_node::get_package_url -package_key contacts]" "[_ project-manager.View_customers]"]
+    
+    if {$invoice_installed_p} {
+        lappend actions "[_ project-manager.Projects_reports]" "reports" "[_ project-manager.Projects_reports]"
+    }
 	
 } else {
     set actions [list "Project: $community_name" "$base_url"]
