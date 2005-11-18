@@ -34,6 +34,13 @@ if ![exists_and_not_null page_size] {
     set page_size 25
 }
 
+set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+
+set fmt "%x %r"
+if { $daily_p } {
+    set fmt "%x"
+} 
+
 set package_ids [join $package_id ","]
 
 foreach optional_param $optional_param_list {
@@ -346,9 +353,11 @@ template::list::create \
 	}
 	creation_date {
 	    label "[_ project-manager.Creation_date]"
+            display_template "@projects.creation_date_lc@"
 	}
 	start_date {
 	    label "[_ project-manager.Start_date]"
+            display_template "@projects.start_date_lc@"
 	}
 	earliest_finish_date {
             label "[_ project-manager.Earliest_finish]"
@@ -360,6 +369,7 @@ template::list::create \
         }
 	planned_end_date {
 	    label "[_ project-manager.End_date]"
+            display_template "@projects.planned_end_date_lc@"
 	}
 	actual_hours_completed {
             label "[_ project-manager.Hours_completed]"
@@ -458,10 +468,14 @@ template::list::create \
 	width 100%
     }
 
-db_multirow -extend { item_url customer_url category_select } projects project_folders " " {
+db_multirow -extend { item_url customer_url category_select earliest_finish_date latest_finish_date start_date_lc earliest_start_date creation_date_lc planned_end_date_lc} projects project_folders " " {
     set earliest_finish_date [lc_time_fmt $earliest_finish_date $fmt]
     set latest_finish_date [lc_time_fmt $latest_finish_date $fmt]
-    
+    set creation_date_lc [lc_time_fmt $creation_date $fmt]
+    set start_date_lc [lc_time_fmt $start_date $fmt]
+    set planned_end_date_lc [lc_time_fmt $planned_end_date $fmt]
+        
+
     set _base_url [site_node::get_url_from_object_id -object_id $package_id]
     if {![empty_string_p $_base_url]} {
 	set base_url $_base_url
