@@ -221,7 +221,7 @@ if { [exists_and_not_null current_package_f] } {
 	set current_package_where_clause "and p.object_package_id = :current_package_f"
     }
 } else {
-    set current_package_where_clause "and p.object_package_id in ($package_ids)"
+    set current_package_where_clause ""
 }
 
 # We are going to create the available options for the possible pairs
