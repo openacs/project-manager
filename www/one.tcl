@@ -24,9 +24,10 @@
     @param logger_days The number of days back to view logged entries
     @param instance_id The process instance ID to show for tasks
 } {
-
+    
     project_item_id:integer,optional
     project_id:integer,optional
+    {page:integer ""}
     {orderby_subproject ""}
     {orderby_tasks ""}
     {logger_variable_id:integer ""}

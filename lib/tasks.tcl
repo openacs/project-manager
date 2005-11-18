@@ -228,6 +228,11 @@ set filters [list \
 				 values { $project_item_clause } \
 				 where_clause "$project_item_where_clause"
 			    ] \
+                 project_item_id [list \
+				 label "[_ project-manager.Project_1]" \
+				 values { $project_item_clause } \
+				 where_clause "$project_item_where_clause"
+			    ] \
 		 instance_id [list \
 				  where_clause "o.package_id = :instance_id"
 			     ] \

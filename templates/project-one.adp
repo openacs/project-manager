@@ -47,7 +47,8 @@
       project_item_id="@project_item_id@"
       return_url="@return_url@"
       instance_id="@instance_id@" 
-      fmt=@fmt@ 
+      fmt="@fmt@" 
+      page="@page@"
 	/>
     <p />
   <if @use_fs_p@>
