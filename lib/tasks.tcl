@@ -427,7 +427,7 @@ template::list::create \
             display_template "<if @tasks.days_to_latest_finish@ gt 1 or @tasks.status_type@ ne o>@tasks.latest_finish_pretty@</if><else><font color=\"red\">@tasks.latest_finish_pretty@</font></else>"
         }
 	end_date {
-	    label "[_ project-manager.Deadline]"
+	    label "[_ project-manager.Deadline_1]"
             display_template "<if @tasks.days_to_end_date@ gt 1 or @tasks.status_type@ ne o>@tasks.end_date_pretty@</if><else><font color=\"red\">@tasks.end_date_pretty@</font></else>"
 	}
 	status {

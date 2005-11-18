@@ -12,7 +12,7 @@
 </if>
 <table border="0" width="100%">
 <tr>
-<td valign="top">
+<td valign="top" width="30%">
 <include
   src="/packages/project-manager/lib/project-portlet"
   project_id="@project_id@"
