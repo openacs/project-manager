@@ -467,7 +467,7 @@ begin
 
         -- create the task_number
         if p_task_id is null then
-           select
+           select acs_object_id_seq.nextval into v_id from dual;
         else
            v_id := p_task_id;
         end if;
