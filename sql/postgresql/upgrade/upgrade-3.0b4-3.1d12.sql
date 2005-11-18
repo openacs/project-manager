@@ -29,6 +29,42 @@ select content_type__create_attribute (
     'varchar(100)' -- column_spec
 );
 
+select acs_rel_type__create_type (
+      'application_link',
+      '#Application_Link#',
+      '#Application_Links#',
+      'relationship',
+      'apm_package',
+      'package_id',
+      'application_link_rel',
+      'acs_object',
+      'user',
+      1,
+      1,
+      'acs_object',
+      'user',
+      1,
+      1
+);
+
+select acs_rel_type__create_type (
+      'application_data_link',
+      '#Application_Data_Link#',
+      '#Application_Data_Links#',
+      'relationship',
+      'apm_package_rel',
+      'package_id',
+      'application_data_link_rel',
+      'acs_object',
+      'user',
+      1,
+      1,
+      'acs_object',
+      'user',
+      1,
+      1
+);
+
 create function inline_0 ()
 returns integer as '
 DECLARE
@@ -36,8 +72,9 @@ DECLARE
 BEGIN
         FOR lp IN
            SELECT distinct(item_id), logger_project
-           FROM pm_projectsx
+           FROM pm_projectsx where logger_project IS NOT NULL 
         LOOP
+        raise NOTICE ''item_id (%) | logger_project (%)'', lp.item_id, lp.logger_project;
         perform acs_rel__new (
                          null,
                          ''application_data_link'',
@@ -486,3 +523,5 @@ begin
 
         return v_revision_id;
 end;' language 'plpgsql';
+
+select content_type__refresh_view('pm_project');

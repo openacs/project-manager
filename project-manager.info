@@ -26,7 +26,7 @@
         <requires url="logger" version="1.1b2"/>
         <requires url="notifications" version="5.0.0a5"/>
         <requires url="organizations" version="0.3d"/>
-        <requires url="ratings" version="0.1d1"/>
+        <requires url="ratings" version="0.1d"/>
 
         <callbacks>
             <callback type="after-install"  proc="pm::install::package_install"/>

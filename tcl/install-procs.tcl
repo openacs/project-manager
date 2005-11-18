@@ -184,10 +184,7 @@ ad_proc -private pm::install::before_upgrade {
         -spec {
 	    3.0b4 3.1d12 {
                 ns_log notice "Running Pre-Upgrade Routine"
-		db_transaction {
-                    rel_types::new "application_link" "Application Link" "Application Links" apm_package 0 "" apm_package 0 ""
-                    rel_types::new "application_data_link" "Application Data Link" "Application Data Links" acs_object 0 "" acs_object 0 ""
-                }
+		
             }
         }
 }
