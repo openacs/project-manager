@@ -617,7 +617,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="View_only_Observer">View only tasks where you are an observer</msg>
   <msg key="View_options">View options</msg>
   <msg key="View_project_changes">View project changes</msg>
-  <msg key="View_project_emails">View Project Emails</msg>
+  <msg key="View_project_emails">View project emails</msg>
   <msg key="View_Revisions">View Revisions</msg>
   <msg key="View_task_changes">View task changes</msg>
   <msg key="View_this_revision">View this revision</msg>
