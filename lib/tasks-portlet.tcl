@@ -12,7 +12,7 @@ foreach required_param {project_id project_item_id instance_id} {
 	return -code error "$required_param is a required parameter."
     }
 }
-foreach optional_param {} {
+foreach optional_param { page } {
     if {![info exists $optional_param]} {
 	set $optional_param {}
     }
