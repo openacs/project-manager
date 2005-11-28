@@ -12,7 +12,6 @@ ad_library {
 
 namespace eval pm::project {}
 
-
 ad_proc -public pm::project::get_project_id {
     -project_item_id:required
 } {
@@ -3241,4 +3240,75 @@ ad_proc -public pm::project::year_month_day_filter {
     
     append html "</td></tr></table></center>"
     return $html
+}
+
+ad_proc -public pm::project::get_all_subprojects {
+    -project_item_id:required
+} {
+    @author Miguel Marin (miguelmarin@viaro.net)
+    @author Viaro Networks www.viaro.net
+    @creation-date 2005-11-28
+
+    Returns a list of all subprojects (including subprojects of the subprojects and
+    so on...) for the specific project_item_id					
+    
+    @param project_item_id  The project_item_id to get all the subprojects
+    @returns list of all the subprojects
+} {
+    
+    # First we are going to get all subprojects
+    set parent $project_item_id
+    set subprojects [db_list get_subprojects { }]
+
+    set i 0
+    set continue_p 0
+    
+    while { [string equal $continue_p 0] } {
+	set parent [lindex $subprojects $i]
+	
+	# Now we get the sub_projects of the sub_projects if there is any
+	set sub_projects [db_list get_subprojects { }]
+	foreach sp $sub_projects {
+	    lappend subprojects $sp
+	}
+	# We reach the end of the list so we just end the while
+	if { [empty_string_p [lindex $subprojects [expr $i + 1]]] } {
+	    set continue_p 1
+	} 
+	# We increment the variable i so we can get 
+	# the subprojects of the next project in the list
+	incr i
+    }
+    
+    return $subprojects
+}
+
+ad_proc -public pm::project::check_projects_status {
+    -projects:required
+    -status_id:required
+} {
+    @author Miguel Marin (miguelmarin@viaro.net)
+    @author Viaro Networks www.viaro.net
+    @creation-date 2005-11-28
+
+    Returns 1 if all the projects provided in the @projects@ 
+    have status @status_id@, 0 otherwise
+    
+    @param projects  The list of projects to get check the status
+    @param status_id The status_id that all project must have
+    @returns 1 or 0
+} {
+    
+    set projects [template::util::tcl_to_sql_list $projects]
+    set projects_status [db_list get_projects_status " "]
+
+    if { [llength $projects_status] > 1 } {
+	return 0
+    } else {
+	if { [lindex $projects_status 0] == $status_id } {
+	    return 1
+	} else {
+	    return 0
+	}
+    }
 }

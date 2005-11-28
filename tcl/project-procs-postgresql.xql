@@ -388,4 +388,30 @@
     </querytext>
   </fullquery>
 
+<fullquery name="pm::project::get_all_subprojects.get_subprojects">
+    <querytext>
+	select 
+		distinct 
+	    	p.item_id 
+	from 
+		pm_projectsx p, 
+	    	pm_projectsx p2 
+	where 
+	    	p.parent_id = p2.item_id 
+	    	and p.parent_id = :parent
+    </querytext>
+</fullquery>
+
+<fullquery name="pm::project::check_projects_status.get_projects_status">
+    <querytext>
+	select
+		distinct
+		status_id
+	from
+		pm_projectsx
+	where
+		item_id in ($projects)
+    </querytext>
+</fullquery>
+
 </queryset>
