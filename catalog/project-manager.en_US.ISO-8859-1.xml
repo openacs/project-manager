@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d18" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d19" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -9,6 +9,7 @@
   <msg key="_Hours">completed</msg>
   <msg key="_View">this subproject</msg>
   <msg key="Action">Action</msg>
+  <msg key="Action_to_take">Action to take?</msg>
   <msg key="Actions">Actions</msg>
   <msg key="Active_tasks">Active tasks</msg>
   <msg key="Actual_end_date">Actual end date</msg>
@@ -37,8 +38,6 @@
   <msg key="aggregate_projects">Aggregate projects from this time of past years and beyond.</msg>
   <msg key="All">All</msg>
   <msg key="Assign_from_categories">Assign from categories</msg>
-  <msg key="Assign_myself">Assign Myself</msg>
-  <msg key="Assign_myself_as_lead">Assign myself as lead</msg>
   <msg key="assign_removed">%assign% removed</msg>
   <msg key="assign_saved">%assign% saved</msg>
   <msg key="Assignee">Assignee</msg>
@@ -52,15 +51,15 @@
   <msg key="Average">Average</msg>
   <msg key="back_one_week">Back one week</msg>
   <msg key="back_to_admin_page">back to admin page</msg>
+  <msg key="bulk_close_projects">Close Projects</msg>
   <msg key="By_deadline">By deadline</msg>
   <msg key="Cancel">Cancel</msg>
   <msg key="Cancel_do_not_delete">Cancel, do not delete</msg>
   <msg key="Categories">Categories</msg>
   <msg key="check_uncheck">Check/Uncheck</msg>
   <msg key="Close">Close</msg>
-  <msg key="Close_multiple_tasks">Close multiple tasks</msg>
   <msg key="Close_project">Close project</msg>
-  <msg key="Close_tasks">Close tasks</msg>
+  <msg key="close_warning">&lt;b&gt;&lt;font color=&quot;red&quot;&gt;Warning:&lt;/font&gt; The following projects have unclosed subprojects.&lt;/b&gt;</msg>
   <msg key="Closed">Closed</msg>
   <msg key="Code">Code</msg>
   <msg key="Code_1">Code:</msg>
@@ -420,7 +419,6 @@ allows the system to automatically compute schedules. However, you can
   <msg key="move_help">Choose one project to move the task to.</msg>
   <msg key="Move_task">Move Task</msg>
   <msg key="Move_task_to">Move task to project:</msg>
-  <msg key="Myself">Myself</msg>
   <msg key="na">n/a</msg>
   <msg key="Name">Name</msg>
   <msg key="Name_1">Name:</msg>
@@ -451,7 +449,6 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Overdue_Tasks">Overdue Tasks</msg>
   <msg key="Overview_of_process">Overview of process:</msg>
   <msg key="Package">Package Instance</msg>
-  <msg key="Package_Instance">Package Instance</msg>
   <msg key="page">page)</msg>
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
@@ -473,6 +470,8 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Priorities">Priorities</msg>
   <msg key="Priority">Priority:</msg>
   <msg key="Priority_1">Priority</msg>
+  <msg key="Proceed">Proceed</msg>
+  <msg key="Proceed_with_closing">Proceed with closing subprojects as well</msg>
   <msg key="Process">Process</msg>
   <msg key="Process_deleted">Process deleted</msg>
   <msg key="Process_Instances">Process Instances</msg>
@@ -522,7 +521,6 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Rate_Assignees">Rate Assignees</msg>
   <msg key="Rate_this_project">Rate this project</msg>
   <msg key="rate_this_project">Rate This Project</msg>
-  <msg key="Reassign">Reassign</msg>
   <msg key="Related_task_terms">Related %task_term%s</msg>
   <msg key="Remaining_work">Remaining Work</msg>
   <msg key="Remove">myself</msg>
@@ -552,7 +550,6 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Show">Show</msg>
   <msg key="Show_closed">Show closed</msg>
   <msg key="show_this_projects">Show this projects</msg>
-  <msg key="ShowSubprojects">Show Subprojects</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
   <msg key="Slack">Slack:</msg>
   <msg key="Slack_1">Slack</msg>
@@ -617,7 +614,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="View_only_Observer">View only tasks where you are an observer</msg>
   <msg key="View_options">View options</msg>
   <msg key="View_project_changes">View project changes</msg>
-  <msg key="View_project_emails">View project emails</msg>
+  <msg key="View_project_emails">View Project Emails</msg>
   <msg key="View_Revisions">View Revisions</msg>
   <msg key="View_task_changes">View task changes</msg>
   <msg key="View_this_revision">View this revision</msg>
@@ -630,6 +627,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Work_required">Work required:</msg>
   <msg key="Workgroup_ID">Workgroup ID</msg>
   <msg key="Workgroups">Workgroups</msg>
+  <msg key="Working_project_tasks">Working Project Tasks</msg>
   <msg key="Yes">Yes</msg>
   <msg key="You_may_now_add">You may now add</msg>
   <msg key="Your_role">Your role:</msg>
