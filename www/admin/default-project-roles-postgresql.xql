@@ -2,13 +2,10 @@
 <queryset>
 <rdbms><type>postgresql</type><version>7.2</version></rdbms>
 
-<fullquery name="default_project_roles_query">
+  <fullquery name="get_root">
     <querytext>
-        SELECT
-        role_id,
-        party_id
-        FROM 
-        pm_default_roles
+        select pm_project.get_root_foldey (:packae_id, 'f')
+        from dual
     </querytext>
 </fullquery>
 

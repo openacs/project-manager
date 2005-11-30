@@ -24,17 +24,7 @@ set current_assignees [pm::project::assign_remove_everyone \
 
 # get all task assignments for this project
 
-set assignments_lol [db_list_of_lists get_people {
-    SELECT
-    a.party_id,
-    a.role_id
-    FROM
-    pm_task_assignment a,
-    cr_items i
-    WHERE 
-    i.parent_id = :project_item_id and
-    i.item_id = a.task_id
-}]
+set assignments_lol [db_list_of_lists get_people {}]
 
 set parties [list]
 

@@ -80,7 +80,7 @@ if {[exists_and_not_null process_id]} {
 # default, and then give you the option of selecting all projects
 # as an option.
 
-set root_folder [db_string get_root "select pm_project__get_root_folder (:package_id, 'f')"]
+set root_folder [db_string get_root {}]
 
 template::list::create \
     -name projects \

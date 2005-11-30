@@ -27,14 +27,7 @@ namespace eval pm::calendar {
     } {
         set user_id [ad_conn user_id]
 
-        set user_list [db_list get_users {
-            SELECT
-            viewed_user
-            FROM
-            pm_users_viewed
-            WHERE
-            viewing_user = :user_id
-        }]
+        set user_list [db_list get_users {}]
 
         if {[empty_string_p $user_list]} {
             return $user_id

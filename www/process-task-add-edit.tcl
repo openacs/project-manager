@@ -146,17 +146,7 @@ for {set i 1} {$i <= $number} {incr i} {
         set process_task_id_tmp [lindex $process_task_id [expr $i-1]]
 
         # remember all the assignees for this task
-        db_foreach assignee_query { 
-            SELECT
-            a.party_id,
-            a.role_id
-            FROM
-            pm_process_task_assignment a
-            WHERE
-            a.process_task_id = :process_task_id_tmp
-            ORDER BY
-            a.role_id
-        } {
+        db_foreach assignee_query {} {
             set assigned($process_task_id_tmp-$party_id-$role_id) 1
         }
 

@@ -22,7 +22,7 @@ set package_id [ad_conn package_id]
 
 if {[string is false $confirm_p]} {
 
-    db_1row get_name "select one_line, description from pm_process where process_id = :process_id"
+    db_1row get_name {}
 
     set title "Delete process: $one_line"
     set context [list "Delete: $one_line"]

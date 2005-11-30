@@ -49,19 +49,9 @@ ad_proc -public pm::process::remove_assignees {
 } {
 
     if {[llength $process_task_id] > 1} {
-        db_dml delete_assignments "
-            DELETE FROM
-            pm_process_task_assignment
-            WHERE
-            process_task_id in ([join $process_task_id ", "])
-        "
+        db_dml delete_assignments {}
     } else {
-        db_dml delete_assignments { 
-            DELETE FROM
-            pm_process_task_assignment
-            WHERE
-            process_task_id = :process_task_id
-        }
+        db_dml delete_assignment {}
     }
 
     return
@@ -89,17 +79,7 @@ ad_proc -public pm::process::assign {
     @error 
 } {
 
-    db_dml add_assignment {
-        INSERT INTO
-        pm_process_task_assignment
-        (process_task_id,
-         role_id,
-         party_id) 
-        VALUES
-        (:process_task_id,
-         :role_id,
-         :party_id)
-    }
+    db_dml add_assignment {}
 
     return
 }
@@ -122,15 +102,9 @@ ad_proc -public pm::process::remove_dependency {
 } {
 
     if {[llength $process_task_id] > 1} {
-        db_dml delete_dependency "
-            DELETE FROM pm_process_task_dependency
-            WHERE process_task_id in ([join $process_task_id ", "])
-        "
+        db_dml delete_dependencies {}
     } else {
-        db_dml delete_dependency { 
-            DELETE FROM pm_process_task_dependency
-            WHERE process_task_id = :process_task_id
-        }    
+        db_dml delete_dependency {}    
     }
 
     return
@@ -159,12 +133,7 @@ ad_proc -public pm::process::add_dependency {
 } {
     set dependency_id [db_nextval pm_task_dependency_seq]
 
-    db_dml add_dependency {
-        INSERT INTO pm_process_task_dependency
-        (dependency_id, process_task_id, parent_task_id, dependency_type) 
-        VALUES
-        (:dependency_id, :process_task_id, :parent_task_id, :dependency_type_id)
-    }
+    db_dml add_dependency {}
 
     return
 }

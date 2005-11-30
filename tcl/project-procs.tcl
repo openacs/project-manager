@@ -326,28 +326,7 @@ ad_proc -public pm::project::edit {
         -project_lead $creation_user \
         -active_p $active_p
 
-    set returnval [db_exec_plsql update_project "
-	select pm_project__new_project_revision (
-		:project_item_id,
-		:project_name,
-		:project_code,
-                :parent_id,
-		:goal,
-		:description,
-		to_timestamp(:planned_start_date,'YYYY MM DD HH24 MI SS'),
-		to_timestamp(:planned_end_date,'YYYY MM DD HH24 MI SS'),
-		null,
-		null,
-                :logger_project,
-		:ongoing_p,
-                :status_id,
-                :organization_id,
-		now(),
-		:creation_user,
-		:creation_ip,
-		:package_id
-	);
-     "]
+    set returnval [db_exec_plsql update_project ""]
 
     return $returnval
 }
@@ -1436,8 +1415,6 @@ ad_proc -public pm::project::compute_status {project_item_id} {
             }
         }
 
-        set max_earliest_finish "J[expr floor([set max_earliest_finish])]"
-        set min_latest_start    "J[expr floor([set min_latest_start])]"
     }
 
     
@@ -1452,25 +1429,25 @@ ad_proc -public pm::project::compute_status {project_item_id} {
     foreach task_item $task_list {
 
         if {[exists_and_not_null earliest_start($task_item)]} {
-            set es "J[expr ceil( [set earliest_start($task_item)])]"
+            set es [set earliest_start($task_item)]
         } else {
             set es ""
         }
 
         if {[exists_and_not_null earliest_finish($task_item)]} {
-            set ef "J[expr ceil( [set earliest_finish($task_item)])]"
+            set ef [set earliest_finish($task_item)]
         } else {
             set ef ""
         }
 
         if {[exists_and_not_null latest_start($task_item)]} {
-            set ls "J[expr floor([set latest_start($task_item)])]"
+            set ls [set latest_start($task_item)]
         } else {
             set ls ""
         }
 
         if {[exists_and_not_null latest_finish($task_item)]} {
-            set lf "J[expr floor($latest_finish($task_item))]"
+            set lf $latest_finish($task_item)
         } else {
             set lf ""
         }
@@ -1552,15 +1529,7 @@ ad_proc -public pm::project::get_logger_project {
     
     @error returns no_project if no such project_item_id exists
 } {
-    return [db_string get_logger_project "
-        SELECT
-        logger_project 
-        FROM
-        pm_projects
-        WHERE
-        project_id =
-          (select live_revision from cr_items where item_id = :project_item_id)
-    " -default "no_project"]
+    return [db_string get_logger_project "" -default "no_project"]
 }
 
 
@@ -1578,14 +1547,7 @@ ad_proc -public pm::project::get_project {
     
     @error 
 } {
-    return [db_string get_logger_project "
-        SELECT
-        i.item_id
-        FROM
-        pm_projectsx p, cr_items i
-        WHERE
-        i.live_revision = p.revision_id and logger_project = :logger_project
-    " -default "no_project"]
+    return [db_string get_logger_project "" -default "no_project"]
     
 }
 
@@ -1669,14 +1631,7 @@ ad_proc -public pm::project::close {
 
     set closed_id [pm::status::default_closed]
     
-    db_dml update_status {
-        UPDATE
-        pm_projects
-        SET 
-        status_id = :closed_id
-        WHERE
-        project_id in (select live_revision from cr_items where item_id = :project_item_id)
-    }
+    db_dml update_status {}
 
 }
 
@@ -1695,19 +1650,7 @@ ad_proc -public pm::project::open_p {
     
     @error 
 } {
-    set return_val [db_string get_open_or_closed {
-        SELECT
-        case when status_type = 'c' then 0 else 1 end
-        FROM
-        pm_projectsx p,
-        cr_items i,
-        pm_project_status s
-        WHERE
-        i.item_id = p.item_id and
-        i.live_revision = p.revision_id and
-        p.status_id = s.status_id and
-        p.item_id = :project_item_id
-    } -default "0"]
+    set return_val [db_string get_open_or_closed {} -default "0"]
 
     return $return_val
 }
@@ -1735,12 +1678,7 @@ ad_proc -public pm::project::assign {
     @error 
 } {
 
-    db_dml insert_assignment {
-        insert into pm_project_assignment
-        (project_id, role_id, party_id)
-        VALUES
-        (:project_item_id, :role_id, :party_id)
-        }
+    db_dml insert_assignment {}
         
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     util_memoize_flush [list pm::role::project_select_list_filter_not_cached -project_item_id $project_item_id -party_id $party_id]
@@ -1792,13 +1730,7 @@ ad_proc -public pm::project::unassign {
     @error 
 } {
 
-    db_dml remove_assignment {
-        DELETE FROM
-        pm_project_assignment 
-        WHERE
-        project_id = :project_item_id and
-        party_id   = :party_id
-    }
+    db_dml remove_assignment {}
 
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     if {[ad_conn user_id == $party_id]} {
@@ -1824,21 +1756,9 @@ ad_proc -public pm::project::assign_remove_everyone {
     @error 
 } {
 
-    set current_assignees [db_list get_assignees {
-        SELECT
-        party_id
-        FROM
-        pm_project_assignment
-        WHERE
-        project_id = :project_item_id
-    }]
+    set current_assignees [db_list get_assignees {}]
 
-    db_dml remove_assignment {
-        DELETE FROM
-        pm_project_assignment 
-        WHERE
-        project_id = :project_item_id
-    }
+    db_dml remove_assignment {}
 
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     util_memoize_flush [list pm::role::project_select_list_filter_not_cached -project_item_id $project_item_id -party_id [ad_conn user_id]]
@@ -1882,23 +1802,7 @@ ad_proc -private pm::project::assignee_filter_select_helper {
     
     @error 
 } {
-    return [db_list_of_lists get_people {
-SELECT
-        distinct(first_names || ' ' || last_name) as fullname, 
-        u.person_id 
-        FROM
-        persons u, 
-        pm_project_assignment a,
-        pm_projects p, 
-        cr_items i
-        WHERE 
-        u.person_id = a.party_id and
-        i.item_id = a.project_id and
-        p.status_id = :status_id and 
-        i.live_revision = p.project_id
-        ORDER BY
-        fullname
-    }]
+    return [db_list_of_lists get_people {}]
 }
 
 
@@ -1917,16 +1821,7 @@ ad_proc -public pm::project::assignee_email_list {
     @error 
 } {
 
-    return [db_list get_addresses {
-        SELECT
-        p.email
-        FROM 
-        parties p,
-        pm_project_assignment a
-        WHERE
-        a.project_id = :project_item_id and
-        a.party_id = p.party_id
-    }]
+    return [db_list get_addresses {}]
 
 }
 
@@ -1949,16 +1844,7 @@ ad_proc -public pm::project::assigned_p {
     @error 
 } {
 
-    return [db_0or1row assigned_p {
-        SELECT
-        party_id
-        FROM
-        pm_project_assignment
-        WHERE
-        project_id = :project_item_id and
-        party_id = :party_id
-        LIMIT 1
-    }]
+    return [db_0or1row assigned_p {}]
 
 }
 
@@ -1977,16 +1863,7 @@ ad_proc -public pm::project::name {
     
     @error 
 } {
-    return [db_string get_name {
-        SELECT
-        title
-        FROM
-        cr_revisions p,
-        cr_items i
-        WHERE
-        i.live_revision = p.revision_id
-        and i.item_id = :project_item_id
-    } -default ""]
+    return [db_string get_name {} -default ""]
 }
 
 

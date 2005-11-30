@@ -392,17 +392,19 @@ as
         p_project_id               in integer , 
         p_title                    in varchar2,
         p_description              in varchar2,
-        p_mime_type                in varchar2, 
+        p_mime_type                in varchar2,
         p_end_date                 in date,
         p_percent_complete         in numeric, 
         p_estimated_hours_work   in numeric, 
         p_estimated_hours_work_min in numeric,
         p_estimated_hours_work_max in numeric, 
         p_status_id                in integer,
+        p_process_instance_id      in integer,
         p_creation_date            in date default sysdate,
         p_creation_user            in integer,
         p_creation_ip              in varchar2,
-        p_package_id               in integer
+        p_package_id               in integer,
+        p_priority                 in integer
     ) return integer;
 
     function new_task_revision (
@@ -421,7 +423,8 @@ as
         p_creation_date            in date default sysdate,
         p_creation_user            in integer,
         p_creation_ip              in varchar2,
-        p_package_id               in integer
+        p_package_id               in integer,
+        p_priority                 in integer
     ) return integer;
 
     procedure delete_task_item (p_task_id in integer); 
@@ -456,10 +459,12 @@ as
         p_estimated_hours_work_min in numeric,
         p_estimated_hours_work_max in numeric, 
         p_status_id                in integer,
+        p_process_instance_id      in integer,
         p_creation_date            in date default sysdate,
         p_creation_user            in integer,
         p_creation_ip              in varchar2,
-        p_package_id               in integer
+        p_package_id               in integer,
+        p_priority                 in integer
     ) return integer
     is
         v_item_id               cr_items.item_id%TYPE;
@@ -507,14 +512,14 @@ as
         content_item.set_live_revision (v_revision_id);
 
         insert into pm_tasks (
-                task_id, task_number, status)
+                task_id, task_number, status, process_instance)
         values (
-                v_item_id, v_task_number, p_status_id);
+                v_item_id, v_task_number, p_status_id, p_process_instance_id);
 
         insert into pm_tasks_revisions (
-                task_revision_id, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, actual_hours_worked)
+                task_revision_id, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, actual_hours_worked, priority)
         values (
-                v_revision_id, p_end_date, p_percent_complete, p_estimated_hours_work, p_estimated_hours_work_min, p_estimated_hours_work_max, '0');
+                v_revision_id, p_end_date, p_percent_complete, p_estimated_hours_work, p_estimated_hours_work_min, p_estimated_hours_work_max, '0', p_priority);
 
         acs_permission.grant_permission(
                 v_revision_id,
@@ -542,7 +547,8 @@ as
         p_creation_date            in date default sysdate,
         p_creation_user            in integer,
         p_creation_ip              in varchar2,
-        p_package_id               in integer
+        p_package_id               in integer,
+        p_priority                 in integer
     ) return integer
     is 
         v_revision_id           cr_revisions.revision_id%TYPE;
@@ -572,9 +578,9 @@ as
         content_item.set_live_revision (v_revision_id);
 
         insert into pm_tasks_revisions (
-                task_revision_id, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, actual_hours_worked)
+                task_revision_id, end_date, percent_complete, estimated_hours_work, estimated_hours_work_min, estimated_hours_work_max, actual_hours_worked, priority)
         values (
-                v_revision_id, p_end_date, p_percent_complete, p_estimated_hours_work, p_estimated_hours_work_min, p_estimated_hours_work_max, p_actual_hours_worked);
+                v_revision_id, p_end_date, p_percent_complete, p_estimated_hours_work, p_estimated_hours_work_min, p_estimated_hours_work_max, p_actual_hours_worked, p_priority);
 
         update pm_tasks 
         set status = p_status_id 

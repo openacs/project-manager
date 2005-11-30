@@ -13,10 +13,11 @@ begin
     impl_id := acs_sc_impl.new (
            impl_contract_name  => 'NotificationType',
            impl_name           => 'pm_task_notif_type',
-           impl_owner_name          => 'project-manager'
+           impl_pretty_name    => 'pm_task_notif_type',
+           impl_owner_name     => 'project-manager'
     );
 
-    v_foo := acs_sc_impl_alias.new (
+    v_foo := acs_sc_impl.new_alias (
           impl_contract_name   => 'NotificationType',
           impl_name            => 'pm_task_notif_type',
           impl_operation_name  => 'GetURL',
@@ -24,7 +25,7 @@ begin
           impl_pl              => 'TCL'
     );
 
-    v_foo := acs_sc_impl_alias.new (
+    v_foo := acs_sc_impl.new_alias (
           impl_contract_name   => 'NotificationType',
           impl_name            => 'pm_task_notif_type',
           impl_operation_name  => 'ProcessReply',
@@ -38,15 +39,13 @@ begin
     );
 
     v_foo:= notification_type.new (
-        type_id        => NULL,
         sc_impl_id     => impl_id,
         short_name     => 'pm_task_notif',
         pretty_name    => 'Task Notification',
         description    => 'Notifications of task changes',
         creation_date  => sysdate ,
         creation_user  => null,
-        creation_ip    => null,
-        context_id     => NULL
+        creation_ip    => null
     );
 
     -- enable the various intervals and delivery methods

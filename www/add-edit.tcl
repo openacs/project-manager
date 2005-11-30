@@ -109,7 +109,7 @@ ad_form -name add_edit \
         
         {customer_id:text(select),optional
             {label "Customer"}
-            {options {{"--- TBD ---" ""} [db_list_of_lists get_customer "select o.name, o.organization_id from organizations o order by o.name"]}}
+            {options {{"--- TBD ---" ""} [db_list_of_lists get_customer {}]}}
         }
 
         {planned_start_date:text(text)

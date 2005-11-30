@@ -98,7 +98,10 @@ create table pm_roles (
         sort_order              integer,
         is_observer_p           char(1) default 'f'
                                 constraint pm_role_is_observer_ck
-                                check (is_observer_p in ('t','f'))
+                                check (is_observer_p in ('t','f')),
+        is_lead_p               char(1) default 'f'
+                                constraint pm_role_is_lead_ck
+                                check (is_lead_p in ('t','f'))
 );
 
 
@@ -156,6 +159,166 @@ comment on table pm_project_assignment is '
 ';
 
 
+-- PROCESSES
+
+create sequence pm_process_seq;
+
+create table pm_process (
+        process_id                      integer
+                                        constraint pm_process_id_pk
+                                        primary key,
+        one_line                        varchar(200)
+                                        constraint pm_process_one_line_nn
+                                        not null,
+        description                     varchar(1000),
+        party_id                        integer
+                                        constraint pm_process_party_fk
+                                        references parties
+                                        constraint pm_process_party_nn
+                                        not null,
+        creation_date                   date,
+        deleted_p                       char(1) default 'f'
+                                        constraint pm_process_deleted_p_ck
+                                        check (deleted_p in ('t','f'))
+);
+
+comment on table pm_process is '
+ Processes are a set of templates for tasks, so that people can 
+ create sets of tasks quickly. Their structure needs to match that of
+ tasks. The process holds the meta information, and is also an identifier
+ that is used by the user to select which process they''d like to copy or
+ use 
+';
+
+create or replace view
+pm_process_active as
+  SELECT *  FROM pm_process where deleted_p = 'f';
+
+-- each time a process is used, it creates an instance of that process
+-- we use this to allow a user to see overviews of process status, etc..
+
+create sequence pm_process_instance_seq start with 1;
+
+create table pm_process_instance (
+        instance_id                     integer
+                                        constraint pm_process_instance_id_pk
+                                        primary key,
+        name                            varchar(200),
+        process_id                      integer
+                                        constraint pm_process_instance_process_fk
+                                        references pm_process on delete cascade,
+        project_item_id                 integer
+                                        constraint pm_process_project_fk
+                                        references cr_items
+);
+
+
+create sequence pm_process_task_seq;
+
+create table pm_process_task (
+        process_task_id                 integer
+                                        constraint pm_process_task_id_pk
+                                        primary key,
+        process_id                      integer
+                                        constraint pm_process_process_id_fk
+                                        references
+                                        pm_process
+                                        constraint pm_process_process_id_nn
+                                        not null,
+        one_line                        varchar(200)
+                                        constraint pm_process_task_one_line_nn
+                                        not null,
+        description                     varchar(4000),
+        mime_type                       varchar(200) default 'text/plain'
+                                        constraint pm_process_task_mime_type_fk
+                                        references cr_mime_types(mime_type),
+        -- dates are optional, because it may be computed in reference
+        -- to all other items, or simply not have a deadline
+        -- percent complete is always 0
+        estimated_hours_work            numeric,
+        -- PERT charts require minimum and maximum estimates
+        -- these are optionally used
+        estimated_hours_work_min        numeric,
+        estimated_hours_work_max        numeric,
+        ordering                        integer
+);
+
+comment on table pm_process_task is '
+  A template for the tasks that will be created by the process
+';
+
+
+-- DEPENDENCIES
+
+-- dependency types
+-- such as:
+-- cannot start until Task X finishes
+-- cannot start until Task X begins
+-- cannot finish until Task X finishes
+-- cannot finish until Task X begins
+
+create table pm_task_dependency_types (
+        short_name                      varchar(100)
+                                        constraint pm_task_const_sn_pk
+                                        primary key,
+        description                     varchar(1000)
+);
+
+insert into pm_task_dependency_types (short_name, description) values ('start_before_start','Starts before this starts');
+insert into pm_task_dependency_types (short_name, description) values ('start_before_finish','Starts before this finishes');
+insert into pm_task_dependency_types (short_name, description) values ('finish_before_start','Finishes before this starts');
+insert into pm_task_dependency_types (short_name, description) values ('finish_before_finish','Finishes before this finishes');
+
+create sequence pm_process_task_dependency_seq;
+
+create table pm_process_task_dependency (
+        dependency_id                   integer
+                                        constraint pm_proc_task_dependcy_pk
+                                        primary key,
+        process_task_id                 integer
+                                        constraint pm_proc_task_proc_task_fk
+                                        references pm_process_task
+                                        on delete cascade,
+        parent_task_id                  integer
+                                        constraint pm_proc_task_parent_id_fk
+                                        references pm_process_task
+                                        on delete cascade,
+        dependency_type                 varchar(100)
+                                        constraint pm_process_task_dep_type
+                                        references pm_task_dependency_types,
+        constraint pm_proc_task_depend_uq
+        unique (process_task_id, parent_task_id)
+);
+
+comment on table pm_process_task_dependency is '
+  Keeps track of dependencies. Used to create the dependencies in the
+  new tasks.
+';
+
+create table pm_process_task_assignment (
+        process_task_id         integer
+                                constraint pm_proc_task_assign_task_fk
+                                references pm_process_task(process_task_id)
+                                on delete cascade,
+        role_id                 integer
+                                constraint pm_proc_task_assign_role_fk
+                                references pm_roles,
+        party_id                integer
+                                constraint pm_proc_task_assign_party_fk 
+                                references parties(party_id)
+                                on delete cascade,
+        constraint pm_proc_task_assgn_uq
+        unique (process_task_id, role_id, party_id)
+);
+
+
+comment on table pm_process_task_assignment is '
+  Maps who is assigned to process tasks. These will be the default people
+  assigned to the new tasks
+';
+
+
+
 -- TASKS
 
 -- we create two tables to store task information
@@ -196,12 +359,16 @@ create table pm_tasks (
                                         references pm_task_status,
         deleted_p                       char(1) default 'f'
                                         constraint pm_tasks_deleted_p_ck
-                                        check (deleted_p in ('t','f'))
+                                        check (deleted_p in ('t','f')),
+        process_instance                integer
+                                        constraint pm_tasks_process_instance_fk
+                                        references
+                                        pm_process_instance
 );
 
 CREATE OR REPLACE view 
 pm_tasks_active as 
-  SELECT task_id, task_number, status FROM pm_tasks where deleted_p = 'f';
+  SELECT task_id, task_number, status, process_instance FROM pm_tasks where deleted_p = 'f';
 
 
 create table pm_tasks_revisions (
@@ -234,7 +401,9 @@ create table pm_tasks_revisions (
         earliest_start                  date,
         earliest_finish                 date,
         latest_start                    date,
-        latest_finish                   date
+        latest_finish                   date,
+        -- How important is this task
+        priority                        integer default 0
 );
 
 -- create the content type
@@ -389,28 +558,6 @@ create table pm_task_logger_proj_map (
 );
 
 
--- DEPENDENCIES
-
--- dependency types
--- such as:
--- cannot start until Task X finishes
--- cannot start until Task X begins
--- cannot finish until Task X finishes
--- cannot finish until Task X begins
-
-create table pm_task_dependency_types (
-        short_name                      varchar(100)
-                                        constraint pm_task_const_sn_pk
-                                        primary key,
-        description                     varchar(1000)
-);
-
-insert into pm_task_dependency_types (short_name, description) values ('start_before_start','Starts before this starts');
-insert into pm_task_dependency_types (short_name, description) values ('start_before_finish','Starts before this finishes');
-insert into pm_task_dependency_types (short_name, description) values ('finish_before_start','Finishes before this starts');
-insert into pm_task_dependency_types (short_name, description) values ('finish_before_finish','Finishes before this finishes');
-
-
 create sequence pm_task_dependency_seq;
 
 create table pm_task_dependency (
@@ -438,7 +585,8 @@ create table pm_task_dependency (
 );
 
 
--- WORKGROUPS
+
+-- WORKGROUPS: currently not used
 
 create sequence pm_workgroup_seq;
 
@@ -493,6 +641,8 @@ comment on table pm_task_assignment is '
   Maps who is a part of what task, and in what capacity
 ';
 
+-- TASK CROSS REFERENCES
+
 create table pm_task_xref (
         task_id_1               integer
                                 constraint pm_task_xref_task1_nn
@@ -513,113 +663,6 @@ comment on table pm_task_xref is '
   Maps related tasks.
 ';
 
-
--- PROCESSES
-
-create sequence pm_process_seq;
-
-create table pm_process (
-        process_id                      integer
-                                        constraint pm_process_id_pk
-                                        primary key,
-        one_line                        varchar(200)
-                                        constraint pm_process_one_line_nn
-                                        not null,
-        description                     varchar(1000),
-        party_id                        integer
-                                        constraint pm_process_party_fk
-                                        references parties
-                                        constraint pm_process_party_nn
-                                        not null,
-        creation_date                   date 
-);
-
-comment on table pm_process is '
- Processes are a set of templates for tasks, so that people can 
- create sets of tasks quickly. Their structure needs to match that of
- tasks. The process holds the meta information, and is also an identifier
- that is used by the user to select which process they''d like to copy or
- use 
-';
-
-create sequence pm_process_task_seq;
-
-create table pm_process_task (
-        process_task_id                 integer
-                                        constraint pm_process_task_id_pk
-                                        primary key,
-        process_id                      integer
-                                        constraint pm_process_process_id_fk
-                                        references
-                                        pm_process
-                                        constraint pm_process_process_id_nn
-                                        not null,
-        one_line                        varchar(200)
-                                        constraint pm_process_task_one_line_nn
-                                        not null,
-        description                     varchar(4000),
-        -- dates are optional, because it may be computed in reference
-        -- to all other items, or simply not have a deadline
-        -- percent complete is always 0
-        estimated_hours_work            numeric,
-        -- PERT charts require minimum and maximum estimates
-        -- these are optionally used
-        estimated_hours_work_min        numeric,
-        estimated_hours_work_max        numeric,
-        ordering                        integer
-);
-
-comment on table pm_process_task is '
-  A template for the tasks that will be created by the process
-';
-
-create sequence pm_process_task_dependency_seq;
-
-create table pm_process_task_dependency (
-        dependency_id                   integer
-                                        constraint pm_proc_task_dependcy_pk
-                                        primary key,
-        process_task_id                 integer
-                                        constraint pm_proc_task_proc_task_fk
-                                        references pm_process_task
-                                        on delete cascade,
-        parent_task_id                  integer
-                                        constraint pm_proc_task_parent_id_fk
-                                        references pm_process_task
-                                        on delete cascade,
-        dependency_type                 varchar(100)
-                                        constraint pm_process_task_dep_type
-                                        references pm_task_dependency_types,
-        constraint pm_proc_task_depend_uq
-        unique (process_task_id, parent_task_id)
-);
-
-comment on table pm_process_task_dependency is '
-  Keeps track of dependencies. Used to create the dependencies in the
-  new tasks.
-';
-
-create table pm_process_task_assignment (
-        process_task_id         integer
-                                constraint pm_proc_task_assign_task_fk
-                                references pm_process_task(process_task_id)
-                                on delete cascade,
-        role_id                 integer
-                                constraint pm_proc_task_assign_role_fk
-                                references pm_roles,
-        party_id                integer
-                                constraint pm_proc_task_assign_party_fk 
-                                references parties(party_id)
-                                on delete cascade,
-        constraint pm_proc_task_assgn_uq
-        unique (process_task_id, role_id, party_id)
-);
-
-
-comment on table pm_process_task_assignment is '
-  Maps who is assigned to process tasks. These will be the default people
-  assigned to the new tasks
-';
 
 create table pm_users_viewed (
         viewing_user    integer constraint

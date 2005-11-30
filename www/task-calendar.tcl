@@ -85,13 +85,7 @@ if {[string is true $hide_closed_p]} {
 # make a key of list of roles and abbreviations
 # ---------------------------------------------
 
-db_multirow roles roles_and_abbrevs {
-    SELECT
-    one_line as role,
-    substring(one_line from 1 for 1) as abbreviation
-    FROM
-    pm_roles
-}
+db_multirow roles roles_and_abbrevs {}
 
 
 # -------------------------------------
@@ -106,22 +100,7 @@ set user_group_id [application_group::group_id_from_package_id \
                        -package_id $subsite_id]
 
 
-db_multirow -extend {checked_p} users users_list {
-      select
-        p.first_names || ' ' || p.last_name as name,
-        p.person_id as party_id
-        FROM
-        persons p,
-        acs_rels r,
-        membership_rels mr
-        WHERE
-        r.object_id_one = :user_group_id and
-        mr.rel_id = r.rel_id and
-        p.person_id = r.object_id_two and
-        member_state = 'approved'
-        ORDER BY
-        p.first_names, p.last_name
-} {
+db_multirow -extend {checked_p} users users_list {} {
     if {[lsearch $users_to_view $party_id] == -1} {
         set checked_p f
     } else {

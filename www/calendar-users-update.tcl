@@ -22,20 +22,10 @@ if {[empty_string_p party_id]} {
 }
 
 db_transaction {
-    db_dml delete_old_user_list {
-        DELETE FROM
-        pm_users_viewed
-        WHERE
-        viewing_user = :user_id
-    }
+    db_dml delete_old_user_list {}
 
     foreach party $party_id {
-        db_dml add_user_to_view {
-            INSERT INTO 
-            pm_users_viewed
-            (viewing_user, viewed_user) values
-            (:user_id, :party)
-        }
+        db_dml add_user_to_view {}
     }
 }
 

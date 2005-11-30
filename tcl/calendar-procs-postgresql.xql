@@ -1,12 +1,8 @@
 <?xml version="1.0"?>
-<!--  -->
-<!-- @author Jade Rubick (jader@bread.com) -->
-<!-- @creation-date 2004-08-04 -->
-<!-- @arch-tag: 201543cc-5c43-4eae-b07a-1999b8752fff -->
-<!-- @cvs-id $Id$ -->
 
 <queryset>
-   <rdbms><type>postgresql</type><version>7.3</version></rdbms>
+
+<rdbms><type>postgresql</type><version>7.3</version></rdbms>
 
 <fullquery name="pm::calendar::one_month_display.select_monthly_tasks">
 <querytext>
@@ -67,6 +63,5 @@
       t.latest_start, ts.task_id, r.role_id, p.first_names, p.last_name
 </querytext>
 </fullquery>
-
 
 </queryset>

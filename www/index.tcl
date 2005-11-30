@@ -62,7 +62,7 @@ set create_p [permission::permission_p -object_id $package_id -privilege create]
 set admin_p [permission::permission_p -object_id $package_id -privilege admin]
 
 # root CR folder
-set root_folder [db_string get_root "select pm_project__get_root_folder (:package_id, 'f')"]
+set root_folder [db_string get_root {}]
 
 # Projects, using list-builder ---------------------------------
 

@@ -25,7 +25,7 @@ ad_proc -public pm::role::default {
     
     @error -1 if there is an error.
 } {
-    set returnval [db_string get_default "select role_id from pm_roles limit 1" -default "-1"]
+    set returnval [db_string get_default {} -default "-1"]
     return $returnval
 }
 
@@ -54,14 +54,7 @@ ad_proc -private pm::role::select_list_filter_not_cached {} {
 
     @error
 } {
-    return [db_list_of_lists get_roles "
-                SELECT
-                one_line || ' (' || substring(one_line from 1 for 1) || ')' as one_line,
-                role_id
-                FROM
-                pm_roles
-                ORDER BY
-                role_id"]
+    return [db_list_of_lists get_roles ""]
 }
 
 
@@ -131,22 +124,7 @@ ad_proc -private pm::role::project_select_list_filter_not_cached {
 
     @error
 } {
-    return [db_list_of_lists get_roles "
-                SELECT
-                one_line || ' (' || substring(one_line from 1 for 1) || ')' as one_line,
-                role_id
-                FROM
-                pm_roles as r
-                WHERE NOT EXISTS
-                    (SELECT 1
-                     FROM
-                     pm_project_assignment as pa
-                     WHERE
-                     r.role_id = pa.role_id and
-                     pa.project_id = :project_item_id and
-                     pa.party_id = :party_id)
-                ORDER BY
-                role_id"]
+    return [db_list_of_lists get_roles ""]
 }
 
 
@@ -218,22 +196,7 @@ ad_proc -private pm::role::task_select_list_filter_not_cached {
 
     @error
 } {
-    return [db_list_of_lists get_roles "
-                SELECT
-                one_line || ' (' || substring(one_line from 1 for 1) || ')' as one_line,
-                role_id
-                FROM
-                pm_roles as r
-                WHERE NOT EXISTS
-                    (SELECT 1
-                     FROM
-                     pm_task_assignment as ta
-                     WHERE
-                     r.role_id = ta.role_id and
-                     ta.task_id = :task_item_id and
-                     ta.party_id = :party_id)
-                ORDER BY
-                role_id"]
+    return [db_list_of_lists get_roles ""]
 }
 
 
@@ -299,12 +262,5 @@ ad_proc -public pm::role::name_not_cached {
 
     @error 
 } {
-    return [db_string get_one_line {
-        SELECT
-        one_line
-        FROM
-        pm_roles
-        WHERE
-        role_id = :role_id
-    } -default "error"]
+    return [db_string get_one_line {} -default "error"]
 }

@@ -2,15 +2,10 @@
 <queryset>
 <rdbms><type>postgresql</type><version>7.2</version></rdbms>
 
-<fullquery name="wg_query">
+  <fullquery name="get_root">
     <querytext>
-        SELECT
-        workgroup_id,
-        one_line,
-        description,
-        sort_order
-        FROM 
-        pm_workgroup
+        select pm_project__get_root_folder (:package_id, 'f')
+        from dual
     </querytext>
 </fullquery>
 

@@ -37,42 +37,11 @@ set project_task_assignee_url [export_vars -base project-assign-task-assignees {
 
 set roles_list_of_lists [pm::role::select_list_filter]
 
-db_foreach assignee_query {
-    SELECT
-    a.party_id,
-    r.role_id
-    FROM
-    pm_project_assignment a,
-    pm_roles r,
-    persons p
-    WHERE
-    a.role_id = r.role_id and
-    a.party_id = p.person_id and
-    a.project_id = :project_item_id
-    ORDER BY
-    r.role_id,
-    p.first_names,
-    p.last_name
-
-} {
+db_foreach assignee_query {} {
     set assigned($party_id-$role_id) 1
 }
 
-set assignee_list_of_lists [db_list_of_lists get_assignees {
-    select distinct
-    p.first_names || ' ' || p.last_name as name,
-    p.person_id
-    FROM
-    persons p,
-    acs_rels r,
-    membership_rels mr
-    WHERE
-    r.object_id_one = :user_group_id and
-    mr.rel_id = r.rel_id and
-    p.person_id = r.object_id_two and
-    member_state = 'approved'
-    ORDER BY name
-}]
+set assignee_list_of_lists [db_list_of_lists get_assignees {}]
 
 
 set html "<form action=\"project-assign-edit-2\" method=\"post\"><table border=0 width=\"100\%\"><tr>"

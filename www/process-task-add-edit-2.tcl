@@ -117,8 +117,8 @@ if {[string is false $edit_p]} {
         set task_id  [lindex $process_task_id $index]
         
         set one_line $task_title($array_index)
-        set desc     $description($array_index)
-        set order    $ordering($array_index)
+        set descr     $description($array_index)
+        set sort_order    $ordering($array_index)
 
         if {[string is true $use_days_p]} {
             if {[string is true $use_uncertain_completion_times_p]} {
@@ -166,8 +166,8 @@ if {[string is false $edit_p]} {
         set task_id  [lindex $process_task_id $index]
         
         set one_line $task_title($array_index)
-        set desc     $description($array_index)
-        set order    $ordering($array_index)
+        set descr     $description($array_index)
+        set sort_order    $ordering($array_index)
         
         if {[string is true $use_days_p]} {
             if {[string is true $use_uncertain_completion_times_p]} {

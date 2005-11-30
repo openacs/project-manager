@@ -68,7 +68,7 @@ set logger_url [pm::util::logger_url]
 set context [list "Tasks"]
 
 # Get the currently available Status
-set status_list [db_list_of_lists get_status_values "select description, status_id from pm_task_status order by status_type desc, description"]
+set status_list [db_list_of_lists get_status_values {}]
 
 # the unique identifier for this package
 set package_id [ad_conn package_id]
@@ -194,25 +194,25 @@ if {$status_id != 2} {
 
 }
 
-if {[string is true $use_days_p]} {
-    append elements {
-        actual_days_worked {
-            label "Days worked"
-            html {
-                align right
-            }
-        } 
-    }
-} else {
-    append elements {
-        actual_hours_worked {
-            label "Hours worked"
-            html {
-                align right
-            }
-        } 
-    }
-}
+# if {[string is true $use_days_p]} {
+#     append elements {
+#         actual_days_worked {
+#             label "Days worked"
+#             html {
+#                 align right
+#             }
+#         } 
+#     }
+# } else {
+#     append elements {
+#         actual_hours_worked {
+#             label "Hours worked"
+#             html {
+#                 align right
+#             }
+#         } 
+#     }
+# }
 
 append elements {
     project_item_id {
@@ -374,7 +374,7 @@ db_multirow -extend { item_url latest_start_pretty latest_finish_pretty slack_ti
              -estimated_hours_work_max $estimated_hours_work_max \
              -percent_complete $percent_complete]
 
-    set actual_days_worked [expr $actual_hours_worked / 24]
+#     set actual_days_worked [expr $actual_hours_worked / 24]
 
 }
 

@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 
 <queryset>
-  <rdbms><type>oracle</type><version>8.0</version></rdbms>
+
+<rdbms><type>oracle</type><version>9.2</version></rdbms>
 
   <fullquery name="pm::role::default.get_default">
     <querytext>
@@ -12,7 +13,7 @@
   </fullquery>
 
 
-  <fullquery name="pm::role::select_list_filter_helper.get_roles">
+  <fullquery name="pm::role::select_list_filter_not_cached.get_roles">
     <querytext>
         SELECT one_line || ' (' || substr(one_line,1,1) || ')' as one_line,
                role_id
@@ -20,4 +21,45 @@
         ORDER BY role_id
     </querytext>
   </fullquery>
+
+  <fullquery name="pm::role::project_select_list_filter_not_cached.get_roles">
+    <querytext>
+                SELECT
+                one_line || ' (' || substr(one_line, 1, 1) || ')' as one_line,
+                role_id
+                FROM
+                pm_roles r
+                WHERE NOT EXISTS
+                    (SELECT 1
+                     FROM
+                     pm_project_assignment pa
+                     WHERE
+                     r.role_id = pa.role_id and
+                     pa.project_id = :project_item_id and
+                     pa.party_id = :party_id)
+                ORDER BY
+                role_id
+    </querytext>
+  </fullquery>
+
+  <fullquery name="pm::role::task_select_list_filter_not_cached.get_roles">
+    <querytext>
+                SELECT
+                one_line || ' (' || substr(one_line, 1, 1) || ')' as one_line,
+                role_id
+                FROM
+                pm_roles r
+                WHERE NOT EXISTS
+                    (SELECT 1
+                     FROM
+                     pm_task_assignment ta
+                     WHERE
+                     r.role_id = ta.role_id and
+                     ta.task_id = :task_item_id and
+                     ta.party_id = :party_id)
+                ORDER BY
+                role_id
+    </querytext>
+  </fullquery>
+
 </queryset>

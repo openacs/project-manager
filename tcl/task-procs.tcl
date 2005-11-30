@@ -769,7 +769,7 @@ ad_proc -public pm::task::delete {
     
     @error No error thrown if there is no such task.
 } {
-    db_dml mark_delete "update pm_tasks set deleted_p = 't' where task_id = :task_item_id"
+    db_dml mark_delete {}
 
     pm::project::compute_status [pm::task::project_item_id -task_item_id $task_item_id]
 
@@ -791,7 +791,7 @@ ad_proc -public pm::task::project_item_id {
     
     @error 
 } {
-    return [db_string get_project_id "select parent_id from cr_items where item_id = :task_item_id" -default -1]
+    return [db_string get_project_id "" -default -1]
 }
 
 
@@ -800,7 +800,7 @@ ad_proc -public pm::task::get_url {
     object_id
 } {
     
-    set package_id [db_string pm_package_id "select package_id from cr_folders cf, cr_items ci1, cr_items ci2 where cf.folder_id = ci1.parent_id and ci1.item_id = ci2.parent_id and ci2.item_id = :object_id"]
+    set package_id [db_string pm_package_id ""]
 
     set url "[ad_url]"
     append url [site_node::get_url_from_object_id -object_id $package_id]
@@ -909,20 +909,11 @@ ad_proc -private pm::task::update_hours {
     }
 
 
-    set total_logged_hours [db_string total_hours "
-        select sum(le.value) from logger_entries le where entry_id in (select logger_entry from pm_task_logger_proj_map where task_item_id = :task_item_id) and le.variable_id = '[logger::variable::get_default_variable_id]'
-    " -default "0"]
+    set total_logged_hours [db_string total_hours "" -default "0"]
 
     if {[string is true $update_tasks_p]} {
 
-        db_dml update_current_task {
-        UPDATE
-        pm_tasks_revisions
-        SET 
-        actual_hours_worked = :total_logged_hours
-        WHERE 
-        task_revision_id = :task_revision_id
-        }
+        db_dml update_current_task {}
     }
 
     return $total_logged_hours
@@ -952,19 +943,9 @@ ad_proc -public pm::task::link {
         # do nothing
         ns_log Notice "Project-manager: Cannot link a task to itself!"
     } elseif {$task_item_id_1 < $task_item_id_2} {
-        db_dml link_tasks "
-        INSERT INTO 
-        pm_task_xref 
-        (task_id_1, task_id_2)
-        VALUES
-        (:task_item_id_1, :task_item_id_2)"
+        db_dml link_tasks1 {}
     } else {
-        db_dml link_tasks "
-        INSERT INTO 
-        pm_task_xref 
-        (task_id_1, task_id_2)
-        VALUES
-        (:task_item_id_2, :task_item_id_1)"
+        db_dml link_tasks2 {}
     }
     
 }
@@ -1045,24 +1026,9 @@ ad_proc -public pm::task::assign {
     db_transaction {
         # make sure we avoid case when that assignment has already
         # been made.
-        db_dml delete_assignment {
-           delete from
-           pm_task_assignment
-           where
-           task_id  = :task_item_id and
-           party_id = :party_id
-        }
+        db_dml delete_assignment {}
 
-        db_dml add_assignment {
-           insert into pm_task_assignment
-           (task_id,
-            role_id,
-            party_id) 
-           values
-           (:task_item_id,
-            :role_id,
-            :party_id)
-         }
+        db_dml add_assignment {}
     }
 
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
@@ -1145,7 +1111,7 @@ ad_proc -public pm::task::email_status {} {
 
     # also don't send reminders on weekends.
 
-    set today_j [db_string get_today "select to_char(current_timestamp,'J')"]
+    set today_j [db_string get_today {}]
     if {![pm::project::is_workday_p $today_j]} {
         return
     }
@@ -1155,49 +1121,7 @@ ad_proc -public pm::task::email_status {} {
     # what if the person assigned is no longer a part of the subsite?
     # right now, we still email them.
 
-    db_foreach get_all_open_tasks {
-        SELECT
-        ts.task_id,
-        ts.task_id as item_id,
-        ts.task_number,
-        t.task_revision_id,
-        t.title,
-        to_char(t.earliest_start,'J') as earliest_start_j,
-        to_char(current_timestamp,'J') as today_j,
-        to_char(t.latest_start,'J') as latest_start_j,
-        to_char(t.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
-        to_char(t.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
-        t.percent_complete,
-        t.estimated_hours_work,
-        t.estimated_hours_work_min,
-        t.estimated_hours_work_max,
-        case when t.actual_hours_worked is null then 0
-                else t.actual_hours_worked end as actual_hours_worked,
-        to_char(t.earliest_start,'YYYY-MM-DD HH24:MI') as earliest_start,
-        to_char(t.earliest_finish,'YYYY-MM-DD HH24:MI') as earliest_finish,
-        to_char(t.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
-        to_char(t.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
-        p.first_names || ' ' || p.last_name as full_name,
-        p.party_id,
-        (select one_line from pm_roles r where ta.role_id = r.role_id) as role
-        FROM
-        pm_tasks_active ts, 
-        pm_tasks_revisionsx t, 
-        pm_task_assignment ta,
-        acs_users_all p,
-        cr_items i,
-        pm_task_status s
-        WHERE
-        ts.task_id    = t.item_id and
-        i.item_id     = t.item_id and
-        t.task_revision_id = i.live_revision and
-        ts.status     = s.status_id and
-        s.status_type = 'o' and
-        t.item_id     = ta.task_id and
-        ta.party_id   = p.party_id
-        ORDER BY
-        t.latest_start asc
-    } {
+    db_foreach get_all_open_tasks {} {
         set earliest_start_pretty [lc_time_fmt $earliest_start "%x"]
         set earliest_finish_pretty [lc_time_fmt $earliest_finish "%x"]
         set latest_start_pretty [lc_time_fmt $latest_start "%x"]
@@ -1238,7 +1162,7 @@ ad_proc -public pm::task::email_status {} {
     foreach party $parties {
 
         set subject "Daily Task status report"
-        set address [db_string get_email "select email from parties where party_id = :party" -default "jade-errors@bread.com"]
+        set address [db_string get_email "" -default "nobody@nowhere.com"]
 
         set overdue [list]
         set pressing [list]
@@ -1560,19 +1484,7 @@ ad_proc -public pm::task::update_percent {
     @error 
 } {
 
-    db_dml update_percent {
-        UPDATE
-        pm_tasks_revisions
-        SET
-        percent_complete = :percent_complete
-        WHERE
-        task_revision_id = (select 
-                            live_revision 
-                            from 
-                            cr_items
-                            where
-                            item_id = :task_item_id)
-    }
+    db_dml update_percent {}
 
     if {$percent_complete >= 100} {
         
@@ -1794,16 +1706,7 @@ ad_proc -public pm::task::assignee_email_list {
     @error 
 } {
     
-    return [db_list get_addresses {
-        SELECT
-        p.email
-        FROM 
-        parties p,
-        pm_task_assignment a
-        WHERE
-        a.task_id = :task_item_id and
-        a.party_id = p.party_id
-    }]
+    return [db_list get_addresses {}]
     
 }
 
@@ -1844,20 +1747,7 @@ ad_proc -private pm::task::assignee_filter_select_helper {
     
     @error 
 } {
-    return [db_list_of_lists get_people "
-                SELECT
-                distinct(first_names || ' ' || last_name) as fullname, 
-                u.person_id 
-                FROM
-                persons u, 
-                pm_task_assignment a,
-                pm_tasks_active ts
-                WHERE 
-                u.person_id = a.party_id and
-                ts.task_id = a.task_id and
-                ts.status = :status_id
-                ORDER BY
-                fullname"]
+    return [db_list_of_lists get_people ""]
 }
 
 

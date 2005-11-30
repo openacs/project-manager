@@ -2,16 +2,10 @@
 <queryset>
 <rdbms><type>postgresql</type><version>7.2</version></rdbms>
 
-<fullquery name="roles_query">
+  <fullquery name="get_root">
     <querytext>
-        SELECT
-        role_id,
-        one_line,
-        description,
-        is_observer_p,
-        sort_order
-        FROM 
-        pm_roles
+        select pm_project__get_root_folder (:package_id, 'f')
+        from dual
     </querytext>
 </fullquery>
 

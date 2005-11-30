@@ -197,7 +197,7 @@ if {[string is true $edit_p]} {
                                 -project_item_id $this_project]
         set logger_variable_id [logger::project::get_primary_variable \
                                     -project_id $logger_project]
-	set today_date [db_string today "select to_date(sysdate,'YYYY-MM-DD')  from dual"]
+	set today_date [db_string today {}]
         set today_html$task "<br><input type=\"text\" name=\"log_date\" value=\"$today_date\" id=\"sel2$task\" /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel2$task', 'y-m-d');\"> <b>y-m-d </b>"
 
        #set end_date_html [pm::task::date_html \
@@ -316,7 +316,8 @@ if {[string is true $edit_p]} {
 #    set end_date_html [pm::task::date_html]
 
 
-     set end_date_html "<br><input type=\"text\" name=\"date\" value=\"$task_end_date_year($task)-$task_end_date_month($task)-$task_end_date_day($task)\" id=sel1$task_item_id /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$task_item_id', 'y-m-d');\"> <b>y-m-d </b>"
+#     set end_date_html "<br><input type=\"text\" name=\"date\" value=\"$task_end_date_year($task)-$task_end_date_month($task)-$task_end_date_day($task)\" id=sel1$task_item_id /> <input type='reset' value=' ... ' onclick=\"return showCalendar('sel1$task_item_id', 'y-m-d');\"> <b>y-m-d </b>"
+set end_date_html ""
    
 
     set number 1
@@ -382,7 +383,7 @@ if {[string is true $edit_p]} {
     # NEW
     # ---
 
-set today_date [db_string today "select to_date(sysdate,'YYYY-MM-DD') from dual"]
+set today_date [db_string today {}]
  #  set end_date_html [pm::task::date_html]
 
     for {set i 1} {$i <= $new_tasks} {incr i} {

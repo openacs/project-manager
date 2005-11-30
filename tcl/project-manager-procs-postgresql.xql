@@ -1,57 +1,43 @@
 <?xml version="1.0"?>
-<!--  -->
-<!-- @author Jade Rubick (jader@bread.com) -->
-<!-- @creation-date 2004-06-11 -->
-<!-- @arch-tag: 9a0aca80-2974-4b08-a211-25482d8419b5 -->
-<!-- @cvs-id $Id$ -->
 
 <queryset>
-  
-  <rdbms>
-    <type>postgresql</type>
-    <version>7.3</version>
-  </rdbms>
-  
-  <fullquery name="pm::util::category_selects_not_cached.get_categories">
+  <rdbms><type>postgresql</type><version>7.3</version></rdbms>
+
+  <fullquery name="pm::util::general_comment_add.get_revision">
     <querytext>
-    SELECT 
-    t.name as cat_name, 
-    t.category_id as cat_id, 
-    tm.tree_id,
-    tt.name as tree_name
-    FROM
-    category_tree_map tm, 
-    categories c, 
-    category_translations t,
-    category_tree_translations tt 
-    WHERE 
-    c.tree_id      = tm.tree_id and 
-    c.category_id  = t.category_id and 
-    tm.object_id   = :package_id and
-    tm.tree_id = tt.tree_id and
-    c.deprecated_p = 'f'
-    ORDER BY 
-    tt.name,
-    t.name
+      select content_item__get_latest_revision(:comment_id) as revision_id
     </querytext>
   </fullquery>
 
-  <fullquery name="pm::util::subsite_assignees_list_of_lists_not_cached.get_assignees">
+  <fullquery name="pm::util::general_comment_add.set_content">
     <querytext>
-      SELECT DISTINCT
-      p.first_names || ' ' || p.last_name as name,
-      p.person_id
-      FROM
-      persons p,
-      acs_rels r,
-      membership_rels mr
-      WHERE
-      r.object_id_one = :user_group_id and
-      mr.rel_id = r.rel_id and
-      p.person_id = r.object_id_two and
-      member_state = 'approved'
-      ORDER BY name
+      update cr_revisions
+      set content = :comment
+      where revision_id = :revision_id
     </querytext>
   </fullquery>
-  
+
+  <fullquery name="pm::util::general_comment_add.insert_comment">
+    <querytext>
+            select acs_message__new (
+                                     :comment_id,           -- 1  p_message_id
+                                     NULL,                  -- 2  p_reply_to
+                                     current_timestamp,     -- 3  p_sent_date
+                                     NULL,                  -- 4  p_sender
+                                     NULL,                  -- 5  p_rfc822_id
+                                     :title,                -- 6  p_title
+                                     NULL,                  -- 7  p_description
+                                     :mime_type,            -- 8  p_mime_type
+                                     NULL,                  -- 9  p_text
+                                     NULL, -- empty_blob()  -- 10 p_data
+                                     0,                     -- 11 p_parent_id
+                                     :object_id,            -- 12 p_context_id
+                                     :user_id,              -- 13 p_creation_user
+                                     :peeraddr,             -- 14 p_creation_ip
+                                     'acs_message',         -- 15 p_object_type
+                                     :is_live               -- 16 p_is_live
+                                     )
+    </querytext>
+  </fullquery>
+
 </queryset>

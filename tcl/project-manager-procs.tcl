@@ -377,47 +377,13 @@ ad_proc -public pm::util::general_comment_add {
     set comment_id [db_nextval acs_object_id_seq]
 
     db_transaction {
-        db_exec_plsql insert_comment { 
-            select acs_message__new (
-                                     :comment_id,           -- 1  p_message_id
-                                     NULL,                  -- 2  p_reply_to
-                                     current_timestamp,     -- 3  p_sent_date
-                                     NULL,                  -- 4  p_sender
-                                     NULL,                  -- 5  p_rfc822_id
-                                     :title,                -- 6  p_title
-                                     NULL,                  -- 7  p_description
-                                     :mime_type,            -- 8  p_mime_type
-                                     NULL,                  -- 9  p_text
-                                     NULL, -- empty_blob()  -- 10 p_data
-                                     0,                     -- 11 p_parent_id
-                                     :object_id,            -- 12 p_context_id
-                                     :user_id,              -- 13 p_creation_user
-                                     :peeraddr,             -- 14 p_creation_ip
-                                     'acs_message',         -- 15 p_object_type
-                                     :is_live               -- 16 p_is_live
-                                     )
-        }
+        db_exec_plsql insert_comment {}
         
-        db_dml add_entry { 
-            insert into general_comments
-            (comment_id,
-             object_id,
-             category)
-            values
-            (:comment_id,
-             :object_id,
-             null)
-        }
+        db_dml add_entry {}
         
-        db_1row get_revision { 
-            select content_item__get_latest_revision(:comment_id) as revision_id
-        }
-        
-        db_dml set_content { 
-            update cr_revisions
-            set content = :comment
-            where revision_id = :revision_id
-        }
+        db_1row get_revision {}
+       
+        db_dml set_content {} -blobs [list $comment]
         
         if {![empty_string_p $user_id]} {
             permission::grant \
@@ -447,7 +413,7 @@ ad_proc -public pm::util::general_comment_add {
 
                 set to_address $assignees
 
-                set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
+                set from_address [db_string get_from_email {}]
                 
                 set task_url [pm::task::get_url $object_id]
                 
@@ -479,7 +445,7 @@ ad_proc -public pm::util::general_comment_add {
 
                 set to_address $assignees
 
-                set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
+                set from_address [db_string get_from_email {}]
                 
                 set project_url [pm::project::url \
                                      -project_item_id $object_id]
@@ -675,15 +641,7 @@ ad_proc -public pm::util::package_id {
     
     @error 
 } {
-    return [db_string get_package_id {
-        SELECT 
-        package_id 
-        FROM
-        cr_folders
-        WHERE
-        description = 'Project Repository'
-        LIMIT 1
-    }]
+    return [db_string get_package_id {}]
 }
 
 

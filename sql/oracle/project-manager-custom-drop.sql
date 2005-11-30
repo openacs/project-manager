@@ -8,5 +8,9 @@
 
 -- drop any custom tables here.
 
-select content_type__drop_attribute ('pm_project', 'customer_id', 't');
+begin
+content_type.drop_attribute ('pm_project', 'customer_id', 't');
+end;
+/
+show errors
 

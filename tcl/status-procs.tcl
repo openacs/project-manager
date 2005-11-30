@@ -27,14 +27,7 @@ ad_proc -public pm::status::open_p {
     @error 
 } {
     
-    set return_val [db_string get_open_p {
-        SELECT
-        case when status_type = 'c' then 'f' else 't' end
-        FROM
-        pm_task_status
-        WHERE
-        status_id = :task_status_id
-    }]
+    set return_val [db_string get_open_p {}]
 
     return $return_val
 }
@@ -53,15 +46,7 @@ ad_proc -public pm::status::default_closed { } {
     @error 
 } {
     
-    set return_val [db_string get_closed_status {
-        SELECT
-        status_id
-        FROM
-        pm_project_status
-        WHERE
-        status_type = 'c'
-        LIMIT 1
-    }]
+    set return_val [db_string get_closed_status {}]
 
     return $return_val
 }
@@ -80,15 +65,7 @@ ad_proc -public pm::status::default_open { } {
     @error 
 } {
     
-    set return_val [db_string get_open_status {
-        SELECT
-        status_id
-        FROM
-        pm_project_status
-        WHERE
-        status_type = 'o'
-        LIMIT 1
-    }]
+    set return_val [db_string get_open_status {}]
 
     return $return_val
 }
@@ -120,5 +97,5 @@ ad_proc -private pm::status::project_status_select_helper {
     
     @error 
 } {
-    return [db_list_of_lists get_status "select description, status_id from pm_project_status order by status_type desc, description"]
+    return [db_list_of_lists get_status {}]
 }
