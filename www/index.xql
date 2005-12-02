@@ -24,7 +24,9 @@
         to_char(p.latest_finish_date, 'MM/DD/YY') as latest_finish_date,
         case when o.name is null then '--no customer--' else o.name
                 end as customer_name,
-        o.organization_id as customer_id
+        o.organization_id as customer_id,
+        '' as indent,
+        '' as tasks
         FROM pm_projectsx p 
              LEFT JOIN pm_project_assignment pa 
                 ON p.item_id = pa.project_id
@@ -56,5 +58,14 @@
         [template::list::orderby_clause -orderby -name projects]
     </querytext>
 </fullquery>
+
+  <fullquery name="project_tasks">
+    <querytext>
+      SELECT title as task_title
+      FROM pm_tasks_revisionsx
+      WHERE parent_id = :project_item_id
+      ORDER BY earliest_start
+    </querytext>
+  </fullquery>
 
 </queryset>

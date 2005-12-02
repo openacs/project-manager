@@ -172,6 +172,10 @@ set comments [general_comments_get_comments -print_content_p 1 -print_attachment
 
 set comments_link "<a href=\"[export_vars -base "comments/add" {{ object_id $project_item_id} {title "$project(project_name)"} {return_url [ad_return_url]} {type project} }]\">Add comment</a>"
 
+if {$use_subprojects_p} {
+  set add_subproject_link "<a href\=\"[export_vars -base "add-edit" {{ parent_id $project_item_id} }]\">Add subproject</a>"
+}
+
 
 # we can also get the link to the logger instance.
 set logger_url [pm::util::logger_url]
@@ -215,10 +219,10 @@ set then_ansi [clock format [clock scan "-$logger_days days"] -format "%Y-%m-%d"
 set day_widget "Last <input type=\"text\" name=\"logger_days\" value=\"$logger_days\" size=\"5\" /> Days"
 
 
-set my_title "$project_term \#$project_item_id: $project(project_name)"
+set my_title "$project(project_name)"
 
 
-set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
+set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_id project_item_id]"
 
 # set up context bar, needs parent_id
 if {[string equal $project(parent_id) $project_root]} {
@@ -416,8 +420,7 @@ if {$use_subprojects_p} {
         -elements {
             project_name {
                 label "Subject"
-                link_url_col item_url
-                link_html { title "View this subproject" }
+                display_template { <a href=\"@subproject.item_url@\">@subproject.project_name@</a> }
             }
             actual_hours_completed {
                 label "Hours completed"
@@ -431,11 +434,6 @@ if {$use_subprojects_p} {
             orderby_tasks {}
             orderby_people {}
         } \
-        -orderby {
-            project_name {orderby project_name}
-            default_value project_name,desc
-        } \
-        -orderby_name orderby_subproject \
         -html {
             width 100%
         }
@@ -444,7 +442,7 @@ if {$use_subprojects_p} {
     
     db_multirow -extend { item_url } subproject project_subproject_query {
     } {
-        set item_url [export_vars -base "one" -override {{project_item_id $item_id}} {project_item_id}]
+        set item_url [export_vars -base "one" {project_item_id $item_id}]
     }
 }
 
@@ -487,7 +485,7 @@ template::list::create \
     }
 
 
-db_multirow -extend { item_url } subproject project_people_query {
+db_multirow -extend { item_url } people project_people_query {
 } {
 
 }
@@ -503,6 +501,7 @@ db_1row custom_query { } -column_array custom
 set customer_link "[site_node::get_package_url -package_key organizations]one?organization_id=$custom(customer_id)"
 
 # end of customizations
+
 
 ad_return_template
 # ------------------------- END OF FILE ------------------------- #

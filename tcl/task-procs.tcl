@@ -800,7 +800,7 @@ ad_proc -public pm::task::get_url {
     object_id
 } {
     
-    set package_id [db_string pm_package_id ""]
+    set package_id [db_string pm_package_id "" -default 0]
 
     set url "[ad_url]"
     append url [site_node::get_url_from_object_id -object_id $package_id]

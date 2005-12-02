@@ -1,6 +1,6 @@
 <master src="lib/master">
   
-  <property name="title">@task_term@ #@task_id@:
+  <property name="title">
     @task_info.task_title;noquote@ @closed_message@</property>
   <property name="context">@context;noquote@</property>
   <property name="project_item_id">@project_item_id@</property>

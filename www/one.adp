@@ -16,7 +16,7 @@
   <table border="0" cellpadding="3" cellspacing="0" width="100%">
   <tr>
     <td valign="top">
-      
+
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="list">
         <tr>
           <th align="left" valign="top" width="10" class="project">
@@ -229,25 +229,23 @@
       <p />
 
       <if @use_subprojects_p@>
-        <table class="list" cellpadding="3" cellspacing="1" width="100%" border="0">
+        <table class="list" cellpadding="0" cellspacing="0" width="100%" border="0">
           <tr>
           <th align="left" valign="top" width="10" class="project">
             <img src="resources/tl-9999cc" align="top" />
           </th>
-            <th colspan="2">Subprojects</th>
+          <th class="project" colspan="2">Subprojects</th>
           <th align="right" valign="top" width="10" class="project">
             <img src="resources/tr-9999cc" align="top" />
           </th>
           </tr>
           
           <tr class="list-button-bar">
-            <td><span class="list-button-header" colspan="3"><a
-                  href="add-edit?parent_id=@project_item_id@" class="list-button"
-                  title="Add a subproject to this project">Add subproject</a></span>
-              
+            <td colspan="3" class="fill-list-bottom">
+              @add_subproject_link;noquote@
               <listtemplate name="subproject"></listtemplate>
-              
             </td>
+            <td class="fill-list-right">&nbsp;</td>
           </tr>
         </table>
 

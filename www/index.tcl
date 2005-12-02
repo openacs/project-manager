@@ -42,6 +42,21 @@ set task_term       [parameter::get -parameter "TaskName" -default "Task"]
 set task_term_lower [parameter::get -parameter "taskname" -default "task"]
 set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
 set project_term_lower [parameter::get -parameter "projectname" -default "project"]
+set use_subprojects_p  [parameter::get -parameter "UseSubprojectsP" -default "0"]
+set show_tasks_p  [parameter::get -parameter "ShowTasksP" -default "0"]
+if { $show_tasks_p } {
+  set tasks_hide_p 0
+} else {
+  set tasks_hide_p 1
+}
+
+if { $use_subprojects_p } {
+  set indent_char  [parameter::get -parameter "IndentCharacter" -default ""]
+  set indent_count  [parameter::get -parameter "IndentCount" -default "0"]
+} else {
+  set indent_char ""
+  set indent_count 0
+}
 
 set exporting_vars { status_id category_id assignee_id orderby_project format }
 set hidden_vars [export_vars -form $exporting_vars]
@@ -127,8 +142,14 @@ template::list::create \
     -elements {
         project_name {
             label "Project name"
-            link_url_col item_url
-            link_html { title "View this project version" }
+            display_template "
+@projects.indent;noquote@<a title=\"View this project version\" href=\"one?project_item_id=@projects.project_item_id@&project_id=@projects.project_id@\">@projects.project_name@</a>
+ "
+        }
+        tasks {
+            label "Tasks"
+            hide_p $tasks_hide_p
+            display_template "@projects.tasks@"
         }
         customer_name {
             label "Customer"
@@ -150,6 +171,7 @@ template::list::create \
         }
         category_id {
             display_template "<group column=\"project_item_id\"></group>"
+            hide_p 1
         }
     } \
     -actions [list "Add project" "add-edit" "Add project" "Customers" "[site_node::get_package_url -package_key organizations]" "View customers"] \
@@ -184,6 +206,9 @@ template::list::create \
             orderby_desc "upper(p.title) desc"
             orderby_asc "upper(p.title) asc"
             default_direction asc
+        }
+        tasks {
+            label "Tasks"
         }
         customer_name {
             label "Customer Name"
@@ -222,6 +247,7 @@ template::list::create \
             layout table
             row {
                 project_name {}
+                tasks {}
                 customer_name {}
                 category_id {}
                 earliest_finish_date {}
@@ -251,11 +277,21 @@ template::list::create \
 # Note: On oracle it you get "ORA-03113: end-of-file on communication channel"
 #       please drop the index cat_object_map_i.  Unique indexes are not allowed in organization index tables
 
-db_multirow -extend { item_url } projects project_folders {
-} {
-    set item_url [export_vars -base "one" {project_item_id}]
-}
+if { $use_subprojects_p } {
 
+  multirow create projects project_item_id project_id folder_id content_type project_name project_code planned_start_date planned_end_date ongoing_p category_id category_name days_to_earliest_finish days_to_latest_finish actual_hours_completed estimated_hours_total estimated_finish_date earliest_finish_date latest_finish_date customer_name customer_id indent tasks
+
+  pm::project::sort_subprojects \
+      -root_folder    $root_folder \
+      -level          0 \
+      -multirow       projects
+
+} else {
+  db_multirow -extend { item_url } projects project_folders {
+  } {
+      set item_url [export_vars -base "one" {project_item_id}]
+  }
+}
 
 
 list::write_output -name projects

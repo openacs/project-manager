@@ -30,6 +30,9 @@
             <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
         </callbacks>
         <parameters>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="IndentCharacter"  default="&amp;nbsp;" description="Character to use to indent subprojects in project list.  Only used if UseSubprojectsP is on." section_name="projects"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="IndentCount"  default="0" description="Number of repetitions of IndentCharacter to use when indenting subprojects in project list.  Only used if UseSubprojectsP is on." section_name="projects"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowTasksP"  default="0" description="Controls whether there is a tasks column in the projects list or not." section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="LoggerPrimaryURL"  description="This is the primary logger instance that is linked in to this project-manager instance. Links to this instance are added to 

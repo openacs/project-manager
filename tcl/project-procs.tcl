@@ -1956,3 +1956,86 @@ ad_proc -public pm::project::index_default_orderby {
     }
 }
 
+ad_proc -public pm::project::sort_subprojects {
+    -root_folder:required
+    {-level "0"}
+    -multirow:required
+} {
+    @param root_folder    The project to process
+    @param level          The depth level of this project
+    @param multirow       The name of a multirow data structure to fill.
+                          Note that this param is passed by reference and
+                          upvared in the caller scope.
+} {
+    upvar 1 $multirow projects
+    upvar 1 indent_char indent_char
+    upvar 1 indent_count indent_count
+    upvar 1 status_id status_id
+    upvar 1 show_tasks_p show_tasks_p
+    upvar 1 assignee_id assignee_id
+    incr level
+
+    if {$level > 100} {
+        ad_return_complaint 1 "The proc to show subprojects has looped 100 times.  This probably indicates an error in the code."
+        return 0
+    }
+
+    # to avoid excessive use of db handles we release the handle
+    # immediately after use and store the results in a list of lists
+    # using then a foreach instead of db_foreach to loop
+    set proj_list [db_list_of_lists project_folders {}]
+
+    db_release_unused_handles
+
+    foreach proj $proj_list {
+
+        # decode the list
+        set project_item_id [lindex $proj 0]
+        set project_id [lindex $proj 1]
+        set folder_id [lindex $proj 2]
+        set content_type [lindex $proj 3]
+        set project_name [lindex $proj 4] 
+        set project_code [lindex $proj 5]
+        set planned_start_date [lindex $proj 6]
+        set planned_end_date [lindex $proj 7]
+        set ongoing_p [lindex $proj 8]
+        set category_id [lindex $proj 9]
+        set category_name [lindex $proj 10]
+        set days_to_earliest_finish [lindex $proj 11]
+        set days_to_latest_finish [lindex $proj 12]
+        set actual_hours_completed [lindex $proj 13]
+        set estimated_hours_total [lindex $proj 14]
+        set estimated_finish_date [lindex $proj 15]
+        set earliest_finish_date [lindex $proj 16]
+        set latest_finish_date [lindex $proj 17]
+        set customer_name [lindex $proj 18]
+        set customer_id [lindex $proj 19]
+        set indent [string repeat $indent_char [expr $indent_count * [expr $level - 1]]]
+
+
+# at this time this code is intended to be temporary;  Alex and I are both
+# pretty sure we will need some other solution.  So I'm not bothering to create
+# a package parameter for the colon used as a task separator (janine, 12-2-05)
+if { $show_tasks_p } {
+  set tasks ""
+  db_foreach get_tasks {} {
+    if { [string length $tasks] == 0 } {
+      set tasks $task_title
+    } else {
+      set tasks "$tasks : $task_title"
+    }
+  }
+} else {
+  set tasks " "
+}
+
+        template::multirow append projects $project_item_id $project_id $folder_id $content_type $project_name $project_code $planned_start_date $planned_end_date $ongoing_p $category_id $category_name $days_to_earliest_finish $days_to_latest_finish $actual_hours_completed $estimated_hours_total $estimated_finish_date $earliest_finish_date $latest_finish_date $customer_name $customer_id $indent $tasks  
+    
+        # call recursively
+        sort_subprojects \
+            -root_folder   $project_item_id \
+            -level         $level \
+            -multirow      multirow
+    }
+} 
+
