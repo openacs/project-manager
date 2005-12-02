@@ -345,7 +345,7 @@
         s.status_id           = p.status_id
         and p.parent_id = :root_folder 
         [template::list::filter_where_clauses -and -name projects]
-        [template::list::orderby_clause -orderby -name projects]"
+        [template::list::orderby_clause -orderby -name projects]
     </querytext>
   </fullquery>
 
