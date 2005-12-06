@@ -70,20 +70,6 @@ ad_proc -public -callback pm::install::after_instantiate {
 } {
 }
 
-ad_proc -public -callback forum::message_new -impl project_manager {
-    {-package_id:required}
-    {-message_id:required}
-} {
-    create a new task for each new forum message
-} {
-
-    # make sure this is not a reply message
-
-    forum::message::get -message_id $message_id -array message
-    if {$message_id == $message(root_message_id)} {
-	pm::link_new_tasks -object_id $message_id -linked_id $message(forum_id) -role "Watcher" -title $message(subject)
-    }
-}
 
 ad_proc -public -callback fs::file_revision_new -impl project_manager {
     {-package_id:required}
