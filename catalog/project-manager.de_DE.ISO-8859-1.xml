@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d18" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d19" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -9,6 +9,7 @@
   <msg key="_Hours">fertig</msg>
   <msg key="_View">dieses Unterprojekt</msg>
   <msg key="Action">Aktion</msg>
+  <msg key="Action_to_take">Was soll gemacht werden?</msg>
   <msg key="Actions">Aktionen</msg>
   <msg key="Active_tasks">Aktive Aufgaben</msg>
   <msg key="Actual_end_date">Tatsächliches Enddatum</msg>
@@ -37,8 +38,6 @@
   <msg key="aggregate_projects">Aggregiere die Projekte von diesem Zeitpunkt der letzten Jahre und davor</msg>
   <msg key="All">Alle</msg>
   <msg key="Assign_from_categories">Von den Kategorien aus zuteilen</msg>
-  <msg key="Assign_myself">Selbst zuweisen</msg>
-  <msg key="Assign_myself_as_lead">Mich selbst als Verantwortlichen zuweisen</msg>
   <msg key="assign_removed">%assign% entfernt</msg>
   <msg key="assign_saved">%assign% gespeichert</msg>
   <msg key="Assignee">Beauftragter</msg>
@@ -52,15 +51,15 @@
   <msg key="Average">Durchschnitt</msg>
   <msg key="back_one_week">Zurück eine Woche</msg>
   <msg key="back_to_admin_page">zurück zur Admin Seite</msg>
+  <msg key="bulk_close_projects">Projekte schliessen</msg>
   <msg key="By_deadline">Nach Abgabedatum</msg>
   <msg key="Cancel">Abbrechen</msg>
   <msg key="Cancel_do_not_delete">Abbrechen, nicht löschen</msg>
   <msg key="Categories">Kategorien</msg>
   <msg key="check_uncheck">Alle/Keine auswählen</msg>
   <msg key="Close">Schließen</msg>
-  <msg key="Close_multiple_tasks">Mehrer Aufgaben schliessen</msg>
   <msg key="Close_project">Projekt schließen</msg>
-  <msg key="Close_tasks">Aufgaben schliessen</msg>
+  <msg key="close_warning">&lt;b&gt;&lt;font color=&quot;red&quot;&gt;Achtung:&lt;/font&gt;Die folgenden Projekte haben noch offene Subprojekte.&lt;/b&gt;</msg>
   <msg key="Closed">Abgeschlossen</msg>
   <msg key="Code">Kennziffer</msg>
   <msg key="Code_1">Jobnummer:</msg>
@@ -350,7 +349,6 @@
   <msg key="move_help">Wählen Sie ein Projekt aus, zu dem die Aufgabe verschoben werden soll</msg>
   <msg key="Move_task">Aufgabe verschieben</msg>
   <msg key="Move_task_to">Verschiebe Aufgabe zu Projekt</msg>
-  <msg key="Myself">Mich selbst</msg>
   <msg key="na">n/a</msg>
   <msg key="Name">Name</msg>
   <msg key="Name_1">Job ID:</msg>
@@ -381,7 +379,6 @@
   <msg key="Overdue_Tasks">Überfällige Aufgaben</msg>
   <msg key="Overview_of_process">Überblick über den Prozess:</msg>
   <msg key="Package">Paketinstanz</msg>
-  <msg key="Package_Instance">Paketinstanz</msg>
   <msg key="page">Seite)</msg>
   <msg key="Parameters">Parameter</msg>
   <msg key="Party_ID">Party ID</msg>
@@ -403,6 +400,8 @@
   <msg key="Priorities">Prioritäten</msg>
   <msg key="Priority">Priorität:</msg>
   <msg key="Priority_1">Priorität</msg>
+  <msg key="Proceed">Weiter (Projekt schliessen)</msg>
+  <msg key="Proceed_with_closing">Subprojekte ebenfalls schliessen</msg>
   <msg key="Process">Prozess</msg>
   <msg key="Process_deleted">Prozess gelöscht</msg>
   <msg key="Process_Instances">Prozess Instanzen</msg>
@@ -451,7 +450,6 @@
   <msg key="Rate_Assignees">Beteiligte bewerten</msg>
   <msg key="Rate_this_project">Bewertung der Mitarbeiter des Projektes</msg>
   <msg key="rate_this_project">Bewerte dieses Projekt</msg>
-  <msg key="Reassign">Neu zuweisen</msg>
   <msg key="Related_task_terms">Zugehörige %task_term%n</msg>
   <msg key="Remaining_work">Verbleibende Arbeit</msg>
   <msg key="Remove">ich selbst</msg>
@@ -481,7 +479,6 @@
   <msg key="Show">Anzeigen</msg>
   <msg key="Show_closed">Auch Abgeschlossene anzeigen</msg>
   <msg key="show_this_projects">Dieses Projekt anzeigen</msg>
-  <msg key="ShowSubprojects">Subproject anzeigen</msg>
   <msg key="Skip_this_task">Diese Aufgabe auslassen?</msg>
   <msg key="Slack">Pufferzeit:</msg>
   <msg key="Slack_1">Puffer-&lt;br&gt;zeit</msg>
