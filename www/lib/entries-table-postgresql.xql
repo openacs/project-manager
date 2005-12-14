@@ -20,9 +20,8 @@
         FROM
         logger_entries le
         LEFT JOIN (select r.title, ar.object_id_two
-                   from cr_items i, cr_revisions r, acs_rels ar
+                   from cr_items i, cr_revisions r, acs_data_links ar
                    where r.item_id = ar.object_id_one
-		   and ar.rel_type = 'application_data_link'
                    and i.live_revision = r.revision_id) task 
                 ON le.entry_id = task.object_id_two,
         logger_projects lp,

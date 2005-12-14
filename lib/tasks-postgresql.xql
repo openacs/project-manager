@@ -172,10 +172,9 @@
 	select 
 		rel.object_id_two 
 	from 
-		acs_rels rel, 
+		acs_data_links rel, 
 		acs_objects o 
 	where
-		rel_type  ='application_data_link' 
 		and object_id_two = o.object_id 
 		and o.object_type = 'logger_project'
 		and rel.object_id_one = :parent_id

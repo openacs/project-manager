@@ -45,7 +45,7 @@
         cr_items proj,
 	cr_folders f,
         pm_projectsx proj_rev,
-	acs_rels ar,
+	acs_data_links ar,
 	acs_objects o
         WHERE
         ts.task_id  = t.item_id and
@@ -57,7 +57,6 @@
 	and proj.parent_id = f.folder_id
         and f.package_id = :package_id
 	and ar.object_id_one = t.parent_id
-	and ar.rel_type = 'application_data_link'
 	and o.object_id = ar.object_id_two
 	and o.object_type = 'logger_project'
 	[template::list::page_where_clause -and -name "tasks" -key "ts.task_id"]

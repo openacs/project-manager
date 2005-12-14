@@ -934,9 +934,8 @@ ad_proc -private pm::task::update_hours {
         select sum(le.value)
 	from logger_entries le
 	where entry_id in (select object_id_two
-			   from acs_rels
-			   where object_id_one = :task_item_id
-			   and rel_type = 'application_data_link')
+			   from acs_data_links
+			   where object_id_one = :task_item_id)
 	and le.variable_id = :variable_id
     " -default "0"]
 

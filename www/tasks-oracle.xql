@@ -37,7 +37,7 @@
               pm_roles r ,
               cr_items proj,
               pm_projectsx proj_rev,
-	      acs_rels ar,
+	      acs_data_links ar,
 	      acs_objects o
         WHERE t.item_id = ta.task_id (+) and
               ta.party_id = p.person_id (+) and
@@ -48,7 +48,6 @@
               t.parent_id = proj.item_id and
               proj.live_revision = proj_rev.revision_id and
 	      ar.object_id_one = t.parent_id and
-	      ar.rel_type = 'application_data_link' and
 	      o.object_id = ar.object_id_two and
 	      o.object_type = 'logger_project'
               [template::list::filter_where_clauses -and -name tasks]

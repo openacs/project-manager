@@ -18,9 +18,8 @@
                submitter.first_names || ' ' || submitter.last_name as user_name
         FROM logger_entries le ,
              (SELECT r.title, ar.object_id_two
-              FROM cr_items i, cr_revisions r, acs_rels ar
+              FROM cr_items i, cr_revisions r, acs_data_links ar
               WHERE r.item_id = ar.object_id_one
-              and ar.rel_type = 'application_data_link'
 	      and i.live_revision = r.revision_id) task,
               logger_projects lp,
               acs_objects ao,
