@@ -65,7 +65,7 @@ if { $show_alert_p } {
 	    {value $show_alert_p}
 	}
 	{action:text(radio)
-	    {label "[_ project_manager.Action_to_take]"}
+	    {label "[_ project-manager.Action_to_take]"}
 	    {options { {"[_ project-manager.Proceed]" 1}  {"[_ project-manager.Proceed_with_closing]" 2} {"[_ project-manager.Cancel]" 3}}}
 	    {value 2}
 	}
