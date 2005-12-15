@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d19" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d20" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -38,6 +38,8 @@
   <msg key="aggregate_projects">Aggregate projects from this time of past years and beyond.</msg>
   <msg key="All">All</msg>
   <msg key="Assign_from_categories">Assign from categories</msg>
+  <msg key="Assign_myself">Assign myself</msg>
+  <msg key="Assign_myself_as_lead">Assign myself as lead</msg>
   <msg key="assign_removed">%assign% removed</msg>
   <msg key="assign_saved">%assign% saved</msg>
   <msg key="Assignee">Assignee</msg>
@@ -58,7 +60,9 @@
   <msg key="Categories">Categories</msg>
   <msg key="check_uncheck">Check/Uncheck</msg>
   <msg key="Close">Close</msg>
+  <msg key="Close_multiple_tasks">Aufgaben schliessen</msg>
   <msg key="Close_project">Close project</msg>
+  <msg key="Close_tasks">Close tasks</msg>
   <msg key="close_warning">&lt;b&gt;&lt;font color=&quot;red&quot;&gt;Warning:&lt;/font&gt; The following projects have unclosed subprojects.&lt;/b&gt;</msg>
   <msg key="Closed">Closed</msg>
   <msg key="Code">Code</msg>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d19" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d20" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -38,6 +38,8 @@
   <msg key="aggregate_projects">Aggregiere die Projekte von diesem Zeitpunkt der letzten Jahre und davor</msg>
   <msg key="All">Alle</msg>
   <msg key="Assign_from_categories">Von den Kategorien aus zuteilen</msg>
+  <msg key="Assign_myself">Selbst zuweisen</msg>
+  <msg key="Assign_myself_as_lead">Mich selbst als Verantwortlichen eintragen</msg>
   <msg key="assign_removed">%assign% entfernt</msg>
   <msg key="assign_saved">%assign% gespeichert</msg>
   <msg key="Assignee">Beauftragter</msg>
@@ -58,7 +60,9 @@
   <msg key="Categories">Kategorien</msg>
   <msg key="check_uncheck">Alle/Keine auswählen</msg>
   <msg key="Close">Schließen</msg>
+  <msg key="Close_multiple_tasks">Aufgaben schliessen</msg>
   <msg key="Close_project">Projekt schließen</msg>
+  <msg key="Close_tasks">Aufgaben schließen</msg>
   <msg key="close_warning">&lt;b&gt;&lt;font color=&quot;red&quot;&gt;Achtung:&lt;/font&gt;Die folgenden Projekte haben noch offene Subprojekte.&lt;/b&gt;</msg>
   <msg key="Closed">Abgeschlossen</msg>
   <msg key="Code">Kennziffer</msg>
@@ -556,6 +560,7 @@
   <msg key="Work_required">Benötigte Arbeit:</msg>
   <msg key="Workgroup_ID">Arbeitsgruppe ID</msg>
   <msg key="Workgroups">Arbeitsgruppen</msg>
+  <msg key="Working_project_tasks">Zur Zeit bearbeitete Aufgaben</msg>
   <msg key="Yes">Ja</msg>
   <msg key="You_may_now_add">Sie können nun hinzufügen</msg>
   <msg key="Your_role">Ihre Rolle:</msg>

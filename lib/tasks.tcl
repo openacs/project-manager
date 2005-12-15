@@ -457,6 +457,12 @@ template::list::create \
 		align right
 	    }
 	}
+	estimated_hours_work_max {
+	    label "[_ project-manager.Estimated_Hours_Max]"
+	    html {
+		align right
+	    }
+	}
 	project_item_id {
 	    label "[_ project-manager.Project_1]"
 	    display_template {<a href="@tasks.project_url@">@tasks.project_name@</a>}
