@@ -22,7 +22,7 @@ ad_page_contract {
     {orderby ""}
     {filter_party_id ""}
     {searchterm ""}
-    {status_id ""}
+    {status_id "1"}
     {page ""}
     {page_size 25}
     {page_num ""}
