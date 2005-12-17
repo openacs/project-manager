@@ -433,6 +433,9 @@ template::list::create \
 	status {
 	    label "[_ project-manager.Status_1]"
 	}
+	project_status {
+	    label "[_ project-manager.Status_1]"
+	}
 	days_remaining {
 	    label "[_ project-manager.Days_work]"
 	    html {
@@ -534,6 +537,11 @@ if { ![exists_and_not_null assign_group_p] } {
 }
 
 set user_instead_full_p [parameter::get -parameter "UsernameInsteadofFullnameP" -default "f"]
+if {[lsearch -exact $row_list project_status] == -1} {
+    set project_status_p 0
+} else {
+    set project_status_p 1
+}
 
 set row_count 0
 set more_p 0
@@ -556,6 +564,7 @@ set extend_list [list \
 		     base_url \
 		     task_close_url \
 		     project_url \
+		     project_status \
 		     assignee_name \
 		     red_title_p]
 
@@ -613,6 +622,11 @@ db_multirow -extend $extend_list tasks tasks " " {
     set latest_start_pretty [lc_time_fmt $latest_start $fmt]
     set latest_finish_pretty [lc_time_fmt $latest_finish $fmt]
     set end_date_pretty [lc_time_fmt $end_date $fmt]
+    set project_status [pm::project::get_status_description -project_item_id $project_item_id]
+
+    if {!$project_status_p} {
+	set project_name "[string index [lang::util::localize $project_status] 0]-$project_name"
+    }
 
     set red_title_p 0
     set sysdate [dt_sysdate -format "%Y-%m-%d %H:%M:%S"]

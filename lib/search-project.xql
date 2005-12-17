@@ -12,6 +12,7 @@
 		pm_projectsx
 	where
 		lower(object_title) like lower(:keyword)
+		or lower(project_code) like lower(:keyword)
 	order by
 		object_title asc
     </querytext>
