@@ -11,8 +11,8 @@
 	from
 		pm_projectsx
 	where
-		lower(object_title) like lower(:keyword)
-		or lower(project_code) like lower(:keyword)
+		lower(object_title) = lower(:keyword)
+		or lower(project_code) like '%$keyword%'
 	order by
 		object_title asc
     </querytext>

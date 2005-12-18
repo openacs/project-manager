@@ -33,6 +33,7 @@ ad_form -name search_project -form {
     set match_length [llength $match_projects]
     if { [string equal $match_length 0] } {
 	# No Match just redirect
+	ad_return_error "otto"
 	ad_returnredirect $return_url
     } else {
 	set project_item_id [lindex [lindex $match_projects 0] 0]

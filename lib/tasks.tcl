@@ -107,7 +107,6 @@ set return_url [ad_return_url -qualified]
 
 set contacts_url [util_memoize [list site_node::get_package_url \
 				    -package_key contacts]]
-
 # set up context bar
 set context [list "[_ project-manager.Tasks]"]
 
@@ -404,7 +403,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.party_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.base_url@@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_lead_p@></i></if> <if @tasks.party_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template {<group column="task_item_id"> <if @tasks.party_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_lead_p@></i></if> <if @tasks.party_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
             }
 	}
 	role {
@@ -675,8 +674,14 @@ db_multirow -extend $extend_list tasks tasks " " {
 	set actual_days_worked ""
     }
     set my_user_id $user_id
-    set user_url [export_vars \
-		      -base "${contacts_url}contact" {{party_id $party_id}}]
+    
+    # if contacts is installed, link to it, otherwise link to pvt home
+    if {[string eq "" $contacts_url]} {
+	set user_url [export_vars -base "/shared/community-member" {{user_id $party_id}}]
+    } else {
+	set user_url [export_vars \
+			  -base "${contacts_url}contact" {{party_id $party_id}}]
+    }
 
     acs_object::get -object_id $task_item_id -array task_array
     set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]
