@@ -9,6 +9,7 @@
 	<td>
 	    <include src="/packages/mail-tracking/lib/messages" 
 		object_id=@project_item_id@
+		page_size=100
 		page=@page@
 		show_filter_p="f"
 	    >
