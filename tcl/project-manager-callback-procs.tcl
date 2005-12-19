@@ -71,6 +71,22 @@ ad_proc -public -callback pm::install::after_instantiate {
 }
 
 
+ad_proc -public -callback dotlrn_project_manager::new_community -impl project_manager {
+    {-community_id:required}
+    {-package_id:required}
+} {
+    instantiate and mount the logger package for a new project-manager instance
+} {
+    set logger_package_id [dotlrn::instantiate_and_mount \
+                               -mount_point "logger" \
+                               $community_id \
+                               "logger" \
+			       ]
+
+    # (appl.)link the pm to the logger,
+    application_link::new -this_package_id $package_id -target_package_id $logger_package_id
+}
+
 ad_proc -public -callback fs::file_revision_new -impl project_manager {
     {-package_id:required}
     {-file_id:required}

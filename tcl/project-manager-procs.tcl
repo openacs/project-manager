@@ -852,3 +852,32 @@ ad_proc -public pm::util::closed_p {
 
     return [db_0or1row project_closed_p "select 1 from pm_projectsx where project_id = :project_id and status_id in (select status_id from pm_task_status where status_type ='c')"]
 }
+
+ad_proc -public pm::util::reply_address {
+    {-party_id:required}
+    {-project_id ""}
+} {
+    Return the reply_to address for this object
+} {
+    
+    set prefix [parameter::get -parameter "EnvelopePrefix"]
+    
+    if {[string eq "" $prefix] || [string eq "" $project_id] } {
+	return [party::email -party_id $party_id]
+    } else {
+	return "${prefix}-${project_id}@[parameter::get_from_package_key -package_key acs-mail-lite -parameter BounceDomain]"
+    }
+}
+
+ad_proc -public pm::util::parse_reply_address {
+    {-reply_address:required}
+} {
+    set prefix [parameter::get -parameter "EnvelopePrefix"]
+    set prefix "p"
+    set regexp_str "^${prefix}-(\[0-9\]+)\@"
+    if {![regexp $regexp_str $reply_address all project_id]} {
+	    ns_log Notice "MYPACKAGE: invalid reply_address"
+            return ""
+    }
+    return $project_id
+}

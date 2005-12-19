@@ -1712,9 +1712,27 @@ ad_proc -public pm::project::open_p {
 ad_proc -public pm::project::get_status_description {
     {-project_item_id:required}
 } {
-    get the project status description
+    get the project status description. cached.
+} {
+    return [util_memoize [list ::pm::project::get_status_description_not_cached -project_item_id $project_item_id]]
+}
+
+
+ad_proc -private pm::project::get_status_description_not_cached {
+    {-project_item_id:required}
+} {
+    get the project status description. not cached.
 } {
     return [db_string project_status {} -default ""]
+}
+
+
+ad_proc -private pm::project::flush {
+    {-project_item_id:required}
+} {
+    Flush memorized status information
+} {
+    util_memoize_flush "::pm::project::get_status_description_not_cached -project_item_id $project_item_id"
 }
 
 

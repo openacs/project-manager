@@ -221,7 +221,7 @@
     </querytext>
   </fullquery>
 
-   <fullquery name="pm::project::get_status_description.project_status">
+   <fullquery name="pm::project::get_status_description_not_cached.project_status">
          <querytext>
 
 	select s.description
