@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d20" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d21" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -541,6 +541,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Search_1">Search</msg>
   <msg key="search_help">Enter a keyword to search for projects.</msg>
   <msg key="Search_jobid">Search Jobid</msg>
+  <msg key="search_project">Search project</msg>
   <msg key="search_user">Search Users</msg>
   <msg key="Section">Section</msg>
   <msg key="select_assignee_in_this">Select Assigne in this project to send a message</msg>

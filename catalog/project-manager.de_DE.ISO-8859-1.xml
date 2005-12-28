@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d20" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d21" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -104,7 +104,7 @@
   <msg key="Dependency_1">Abhängigkeit</msg>
   <msg key="Dependency_types">Abhängigkeitstypen</msg>
   <msg key="Description">Interne Projekt-Beschreibung</msg>
-  <msg key="Description_1">Beschreibung:</msg>
+  <msg key="Description_1">Interne Projekt-Beschreibung:</msg>
   <msg key="Description_2">Beschreibung</msg>
   <msg key="Description_changed">Beschreibung geändert</msg>
   <msg key="Done">Erledigt.</msg>
@@ -367,7 +367,7 @@
   <msg key="not_set_up">nicht eingerichtet</msg>
   <msg key="Nothing">Nichts</msg>
   <msg key="Now">Jetzt</msg>
-  <msg key="number">Nr.</msg>
+  <msg key="number">AufgabenNr.</msg>
   <msg key="Number_of_new_tasks">Anzahl an neuen Aufgaben</msg>
   <msg key="Observer">Beobachter?</msg>
   <msg key="OK">OK</msg>
@@ -420,7 +420,7 @@
   <msg key="project">Projekt</msg>
   <msg key="project-manager.lt_add_new_tasks">Füge &lt;input type=&quot;hidden&quot; name=&quot;process_id&quot; value=&quot;%process_id%&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;number&quot; size=&quot;3&quot; value=&quot;1&quot; /&gt; neue Aufgabe(n) zu diesem Prozess hinzu</msg>
   <msg key="project-manager.lt_not_current_select_live">(nicht aktuell, wählen Sie die live Version von &lt;a href=&quot;task-revisions?task_id=%task_info.item_id%&quot;&gt;Aufgabenänderung&lt;/a&gt; page)</msg>
-  <msg key="Project_1">Projekt</msg>
+  <msg key="Project_1">JobID</msg>
   <msg key="Project_categories">Projektkategorien</msg>
   <msg key="Project_Changes">Änderungen am Projekt</msg>
   <msg key="Project_code">Jobnummer</msg>
@@ -470,6 +470,7 @@
   <msg key="Search_1">Suche</msg>
   <msg key="search_help">Geben Sie ein Schlüsselwort ein, um nach Projekten zu suchen.</msg>
   <msg key="Search_jobid">JobID suchen</msg>
+  <msg key="search_project">Project suchen</msg>
   <msg key="search_user">User oder Gruppen suchen</msg>
   <msg key="Section">Sektion</msg>
   <msg key="select_assignee_in_this">Wählen Sie aus dem Projekt einen Beauftragten aus um eine Nachricht zu versenden </msg>

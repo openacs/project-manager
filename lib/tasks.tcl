@@ -227,7 +227,7 @@ set filters [list \
 				 values { $project_item_clause } \
 				 where_clause "$project_item_where_clause"
 			    ] \
-                 project_item_id [list \
+		 project_item_id [list \
 				 label "[_ project-manager.Project_1]" \
 				 values { $project_item_clause } \
 				 where_clause "$project_item_where_clause"
@@ -511,7 +511,7 @@ template::list::create \
     -bulk_action_export_vars $bulk_action_export_vars \
     -page_size_variable_p 1 \
     -page_size $page_size \
-    -page_flush_p 0 \
+    -page_flush_p 1 \
     -page_query_name tasks_pagination \
     -orderby_name orderby \
     -html {

@@ -307,6 +307,8 @@ ad_form -extend -name add_edit \
 
     } -after_submit {
 
+	pm::project::flush -project_item_id $project_item_id
+
 	ad_returnredirect -message "[_ project-manager.lt_Changes_to_project_sa]" "one?[export_url_vars project_id]"
 	# to add back in subproject support, should use
 	# compute_parent_status
