@@ -26,7 +26,7 @@ if { [ad_conn user_id] != 0} {
     if { [empty_string_p $project_item_id] } {
 	lappend link_list [list "${package_url}tasks"]
     } else { 
-	lappend link_list [list [export_vars -base "${package_url}tasks" {{project_item_id}}]]
+	lappend link_list [list [export_vars -base "${package_url}tasks" {{pid_filter $project_item_id}}]]
     }
 		       
     lappend link_list {}
