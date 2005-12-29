@@ -594,7 +594,8 @@ db_multirow -extend $extend_list tasks tasks " " {
     } else {
 	if { $user_instead_full_p } {
 	    if { [catch {set assignee_name [acs_user::get_element -user_id $party_id -element username]} err ] } {
-		continue
+		# Apparently we did not get the assignee_name, probably because it is not a user.
+		set assignee_name "[person::name -person_id $party_id](no_user!!)"
 	    }
 	} else {
 	    if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
