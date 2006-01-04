@@ -1674,6 +1674,8 @@ ad_proc -public pm::project::close {
     if {!$no_callback_p} {
 	callback pm::project_close -package_id [ad_conn package_id] -project_id $project_item_id
     }
+    # Flush the project cache
+    pm::project::flush -project_item_id $project_item_id
 }
 
 
