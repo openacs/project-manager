@@ -58,6 +58,10 @@ ad_proc -public pm::util::days_work {
     
     @error 
 } {
+    if {$hours_work eq ""} {
+	set hours_work 0
+    }
+
     set hours_day [pm::util::hours_day]
 
     if {![string equal $hours_day 0]} {

@@ -655,6 +655,10 @@ db_multirow -extend $extend_list tasks tasks " " {
 	set percent_complete 0
     }
 
+    if {$hours_remaining eq ""} {
+	set hours_remaining 0
+    }
+
     set hours_remaining \
 	[pm::task::hours_remaining \
 	     -estimated_hours_work $estimated_hours_work \

@@ -36,7 +36,7 @@ set variable_widget [logger::ui::variable_select_widget \
 
 set variable_exports [export_vars -form -entire_form -exclude {logger_variable_id logger_days }]
 
-set log_url "${logger_url}log?project_id=$logger_project&pm_project_id=$project_item_id&return_url=$return_url&variable_id=$logger_variable_id"
+set log_url [export_vars -base "${logger_url}log" {{project_id $logger_project} {pm_project_id $project_item_id} return_url {pm_task_id $task_info(item_id)} {variable_id $logger_variable_id}}]
 
 
 set today_ansi [clock format [clock scan today] -format "%Y-%m-%d"]
