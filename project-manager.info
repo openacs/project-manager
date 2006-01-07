@@ -9,9 +9,11 @@
     
     <version name="3.1d21" url="http://openacs.org/repository/download/apm/project-manager-3.1d21.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
+        <owner url="mailto:malte.sussdorff@cognovis.de">Malte Sussdorff</owner>
         <summary>Project management tool for OpenACS</summary>
         <release-date>2005-11-29</release-date>
         <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
+        <vendor url="http://www.cognovis.de">cognovis</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
