@@ -2,7 +2,7 @@
 ad_page_contract { 
     Assign all the recieved tasks to the recieved role, default to lead.
     @author Miguel Marin (miguelmarin@viaro.net)
-    @author Viaro Networks www.viaro.net
+    @author Malte Sussdorff (malte.sussdorff@cognovis.de) (fixing the page)
 } {
     task_item_id:multiple
     {role_id "1"}
@@ -23,6 +23,9 @@ set show_tasks [list]
 foreach task $task_item_id {
     lappend show_tasks "\#$task"
 }
+
+set roles_list [pm::role::select_list_filter]
+
 set show_tasks [join $show_tasks ", "]
 
 ad_form -name "reassign" -form {
@@ -37,18 +40,19 @@ ad_form -name "reassign" -form {
         {value  $show_tasks}
         {mode display}
     }
-    {reassign_party:text(inform)
-        {label "[_ project-manager.Reassign]:"}
-	{value "[_ project-manager.Myself]"}
+    {role_id:text(select)
+        {label "[_ project-manager.Role]:"}
+	{options $roles_list}
     }
 } -on_submit {
     
     # We are going to reassign all the checked tasks to the user_id
     foreach task $task_item_id {
-        # We need to check if the user_id is not assigned to the task_id as role_id first
-	if { ![db_string check_assign { } -default "0"] } {
-	    db_dml assign_tasks { }
-	}
+	# We remove the current assignment
+	pm::task::unassign -task_item_id $task -party_id $user_id
+
+	# Assign the new role
+	pm::task::assign -task_item_id $task -party_id $user_id -role_id $role_id
     }
 
 } -after_submit {
