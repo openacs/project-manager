@@ -40,7 +40,7 @@ ad_proc -public pm::role::select_list_filter {} {
 
     @error 
 } {
-    return [util_memoize [list pm::role::select_list_filter_not_cached] 300]
+    return [lang::util::localize_list_of_lists -list [util_memoize [list pm::role::select_list_filter_not_cached] 300]]
 }
 
 
@@ -56,7 +56,7 @@ ad_proc -private pm::role::select_list_filter_not_cached {} {
 } {
     return [db_list_of_lists get_roles "
                 SELECT
-                one_line || ' (' || substring(one_line from 1 for 1) || ')' as one_line,
+                one_line,
                 role_id
                 FROM
                 pm_roles
