@@ -101,3 +101,8 @@ if {[exists_and_not_null orderby]} {
     pm::project::index_default_orderby \
         -set $orderby
 }
+
+# Only display the current package unless mentioned otherwise
+if {$current_package_f ne 1} {
+    set current_package_f $package_id
+}
