@@ -58,7 +58,7 @@ foreach optional_unset $optional_unset_list {
 }
 
 if ![exists_and_not_null page_size] {
-    set page_size 25
+    set page_size 10000
 }
 
 if ![info exists orderby_p] {
@@ -403,7 +403,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.party_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><i></if> <a href="@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_lead_p@></i></if> <if @tasks.party_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
+            display_template {<group column="task_item_id"> <if @tasks.party_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><div class="pm_lead"></if> <a href="@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_lead_p@></div></if><if @tasks.is_player_p@><div class="pm_player"></if> <a href="@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_player_p@></div></if> <if @tasks.party_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
             }
 	}
 	role {
@@ -483,19 +483,10 @@ template::list::create \
 		    <if @tasks.party_id@ eq @tasks.my_user_id@> 
                         <span class="selected"> 
 		    </if> 
-		    <if @tasks.is_lead_p@>
-                        <i>
-                    </if>
-		    <if @tasks.assignee_name@ not eq "">
-		    @tasks.assignee_name@
-		    </if>
-                    <if @tasks.is_lead_p@>
-                        </i>
-                    </if> 
+		    <span class="pm_@tasks.role_type@"><if @tasks.assignee_name@ not eq ""> @tasks.assignee_name@</if></span>
                     <if @tasks.party_id@ eq @tasks.my_user_id@> 
                         </span> 
                     </if> 
-                    <br> 
 		</group>
             }
 	}
@@ -565,7 +556,8 @@ set extend_list [list \
 		     project_url \
 		     project_status \
 		     assignee_name \
-		     red_title_p]
+		     red_title_p \
+		    role_type]
 
 db_multirow -extend $extend_list tasks tasks " " {
 
@@ -578,6 +570,15 @@ db_multirow -extend $extend_list tasks tasks " " {
 	break
     }
     
+    # Set the role_type, distinguishing leader,players and watchers
+    if {$is_lead_p} {
+	set role_type "lead"
+    } elseif {$is_observer_p} {
+	set role_type "observer"
+    } else {
+	set role_type "player"
+    }
+
     if { $assign_group_p } {
 	# We are going to show all asignees including groups
 	if { $user_instead_full_p } {
@@ -611,10 +612,10 @@ db_multirow -extend $extend_list tasks tasks " " {
     set edit_url [export_vars \
 		      -base "task-add-edit" {{task_id $task_item_id} project_item_id return_url}]
 
-    if {[parameter::get -parameter "UseDayInsteadOfHour"] == "f"} {
-	set fmt "%x %X"
-    } else {
+    if {[parameter::get -parameter "UseDayInsteadOfHour"] == "t"} {
 	set fmt "%x"
+    } else {
+	set fmt "%x %X"
     }
 
     set earliest_start_pretty [lc_time_fmt $earliest_start $fmt]
