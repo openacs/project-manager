@@ -68,10 +68,15 @@ if ![info exists orderby_p] {
 if { ![exists_and_not_null tasks_portlet_p] } {
     set tasks_portlet_p f
 } else {
+    set show_rows $page_size
+
     # We are inside dotlrn so I will disable the 
     # pagination by setting the page_size value to null
-    set show_rows $page_size
-    set page_size ""
+    #
+    # This sadly inteferes with certain other functionalities so it is taken out again
+    # if you want a larger page_size, change it in project-manager-tasks-portlet.tcl in 
+    # project-manager-portlet package.
+#    set page_size ""
 }
 
 
@@ -187,15 +192,15 @@ if {[exists_and_not_null is_observer_filter]} {
     switch $is_observer_filter {
 	f {
 	    set observer_pagination_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
-	    set observer_clause "and r.is_observer_p = 'f' and t.party_id = :user_id"
+	    set observer_clause "and r.is_observer_p = 'f'"
 	} 
 	t {
 	    set observer_pagination_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
-	    set observer_clause "and r.is_observer_p = 't' and t.party_id = :user_id"
+	    set observer_clause "and r.is_observer_p = 't'"
 	}
 	m {
 	    set observer_pagination_clause "and ta.party_id = :user_id"
-	    set observer_clause "and t.party_id = :user_id"
+	    set observer_clause ""
 	}
     }
 } else {
@@ -239,11 +244,6 @@ set filters [list \
 					 label "[_ project-manager.Observer]" \
 					 values { {"[_ project-manager.Player]" f} { "[_ project-manager.Watcher]" t} } \
 					] \
-		 filter_party_id [list \
-				      label "[_ project-manager.People]" \
-				      values $assignee_values \
-				      where_clause "t.party_id = :filter_party_id"
-				 ] \
 		 filter_package_id [list \
 					where_clause "o.package_id = :filter_package_id"
 				   ] \
@@ -283,7 +283,7 @@ foreach element $elements {
     # show all players.
 
     if {$element == "role"} {
-	set element "party_id"
+	set element "last_name"
     }
     append row_list "$element {}\n"
 }

@@ -12,7 +12,7 @@ foreach required_param {project_id project_item_id instance_id} {
 	return -code error "$required_param is a required parameter."
     }
 }
-foreach optional_param { page } {
+foreach optional_param { page page_size } {
     if {![info exists $optional_param]} {
 	set $optional_param {}
     }
@@ -58,3 +58,6 @@ set process_reminder_url [export_vars -base process-reminder {instance_id projec
 # claus when instance_id is set.
 
 set processes_html [pm::process::select_html]
+if {$page_size eq ""} {
+    set page_size 25
+}

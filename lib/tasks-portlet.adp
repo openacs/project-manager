@@ -16,7 +16,7 @@
   </if>
 <tr>
   <td colspan="2" class="fill-list-middle">
-    <include src=/packages/project-manager/lib/tasks project_id="@project_id@" pid_filter="@project_item_id@" return_url="@return_url@" elements="@elements@" display_mode="list" fmt=@fmt@ instance_id="@instance_id@" status_id="1" page="@page@">
+    <include src=/packages/project-manager/lib/tasks project_id="@project_id@" pid_filter="@project_item_id@" return_url="@return_url@" elements="@elements@" display_mode="list" fmt=@fmt@ instance_id="@instance_id@" status_id="1" page="@page@" page_size="@page_size@">
   </td>
 </tr>
 <tr class="list-button-bar">
