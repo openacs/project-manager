@@ -482,8 +482,10 @@ template::list::create \
 		<group column="task_item_id"> 
 		    <if @tasks.party_id@ eq @tasks.my_user_id@> 
                         <span class="selected"> 
-		    </if> 
+		    </if>
+		    <if @tasks.role_type@ ne "observer">
 		    <span class="pm_@tasks.role_type@"><if @tasks.assignee_name@ not eq ""> @tasks.assignee_name@</if></span>
+		    </if>
                     <if @tasks.party_id@ eq @tasks.my_user_id@> 
                         </span> 
                     </if> 
