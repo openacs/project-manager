@@ -7,7 +7,7 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.1d21" url="http://openacs.org/repository/download/apm/project-manager-3.1d21.apm">
+    <version name="3.1d23" url="http://openacs.org/repository/download/apm/project-manager-3.1d23.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <owner url="mailto:malte.sussdorff@cognovis.de">Malte Sussdorff</owner>
         <summary>Project management tool for OpenACS</summary>
@@ -17,7 +17,7 @@
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
-        <provides url="project-manager" version="3.1d21"/>
+        <provides url="project-manager" version="3.1d23"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.2.0a4"/>
         <requires url="acs-templating" version="5.1.6d1"/>
@@ -41,6 +41,7 @@
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ExcludeObserversFromEMailP"  default="f" description="Boolean that if this is set to true, exclude all assignees who are only observers from the list of users to choose from to send an email when adding a comment. Default to f" section_name="email"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="EnvelopePrefix"  default="1" description="Default prefix for outgoing email. If left empty, system will use the causing user's email." section_name="email"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="SendAssignEmailsP"  default="1" description="If set to 1, emails will be send for task and project assignments. Can be overwritten by specifiying send_mail_p as a parameter to the procedures" section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideWatchersP"  default="0" description="Set if to 1 if you want to hide watchers in the assignee list or to 0 if you don't. Default 0" section_name="Layout"/>
@@ -62,6 +63,7 @@
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintContentP"  default="1" description="If set to 1 the comment portlet will show full content of the comment. Otherwise it will only show title. Default 1." section_name="Comments"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintAttachmentsP"  default="1" description="If set to 1 the comment portlet will show full information and link to the attachements. Default 1." section_name="Comments"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintUserInfoP"  default="1" description="If set to 1 the comment portlet will show the user information associated with the comment. Default 1." section_name="Comments"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CreateForumP"  default="0" description="If set to 1 a forum will be created for each project. Default 0." section_name="Comments"/>
         </parameters>
 
     </version>

@@ -1742,7 +1742,7 @@ ad_proc -public pm::project::assign {
     {-project_item_id:required}
     {-role_id:required}
     {-party_id:required}
-    {-send_email_p "t"}
+    {-send_email_p "f"}
 } {
     Assigns a user to a project
     
@@ -1785,7 +1785,7 @@ ad_proc -public pm::project::assign {
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     util_memoize_flush [list pm::role::project_select_list_filter_not_cached -project_item_id $project_item_id -party_id $party_id]
 
-    if {[string is true $send_email_p]} {
+    if {[string is true $send_email_p] || [string is true [parameter::get -parameter "SendAssignEmailsP"]]} {
 
         set project_name [pm::project::name \
                               -project_item_id $project_item_id]
