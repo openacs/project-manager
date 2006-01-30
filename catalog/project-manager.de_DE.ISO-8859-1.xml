@@ -355,7 +355,7 @@
   <msg key="Move_task_to">Verschiebe Aufgabe zu Projekt</msg>
   <msg key="na">n/a</msg>
   <msg key="Name">Name</msg>
-  <msg key="Name_1">Job ID:</msg>
+  <msg key="Name_1">Projekt ID:</msg>
   <msg key="nbspnbspproject_term">&amp;nbsp;&amp;nbsp;%project_term%</msg>
   <msg key="New_Process">Neuer Prozess</msg>
   <msg key="New_project_term">Neues %project_term%</msg>
@@ -383,6 +383,7 @@
   <msg key="Overdue_Tasks">Überfällige Aufgaben</msg>
   <msg key="Overview_of_process">Überblick über den Prozess:</msg>
   <msg key="Package">Paketinstanz</msg>
+  <msg key="Package_Instance">Projekt Instanzen</msg>
   <msg key="page">Seite)</msg>
   <msg key="Parameters">Parameter</msg>
   <msg key="Party_ID">Party ID</msg>
@@ -416,7 +417,7 @@
   <msg key="Process_tasks">Prozessaufgaben:</msg>
   <msg key="process_tasks">Prozess Aufgaben</msg>
   <msg key="Processes">Prozesse</msg>
-  <msg key="Project">Job</msg>
+  <msg key="Project">Projekt</msg>
   <msg key="project">Projekt</msg>
   <msg key="project-manager.lt_add_new_tasks">Füge &lt;input type=&quot;hidden&quot; name=&quot;process_id&quot; value=&quot;%process_id%&quot;&gt;&lt;input type=&quot;text&quot; name=&quot;number&quot; size=&quot;3&quot; value=&quot;1&quot; /&gt; neue Aufgabe(n) zu diesem Prozess hinzu</msg>
   <msg key="project-manager.lt_not_current_select_live">(nicht aktuell, wählen Sie die live Version von &lt;a href=&quot;task-revisions?task_id=%task_info.item_id%&quot;&gt;Aufgabenänderung&lt;/a&gt; page)</msg>
@@ -470,7 +471,7 @@
   <msg key="Search_1">Suche</msg>
   <msg key="search_help">Geben Sie ein Schlüsselwort ein, um nach Projekten zu suchen.</msg>
   <msg key="Search_jobid">JobID suchen</msg>
-  <msg key="search_project">Project suchen</msg>
+  <msg key="search_project">Projekt suchen</msg>
   <msg key="search_user">User oder Gruppen suchen</msg>
   <msg key="Section">Sektion</msg>
   <msg key="select_assignee_in_this">Wählen Sie aus dem Projekt einen Beauftragten aus um eine Nachricht zu versenden </msg>
@@ -484,6 +485,7 @@
   <msg key="Show">Anzeigen</msg>
   <msg key="Show_closed">Auch Abgeschlossene anzeigen</msg>
   <msg key="show_this_projects">Dieses Projekt anzeigen</msg>
+  <msg key="ShowSubprojects">Subprojekte anzeigen?</msg>
   <msg key="Skip_this_task">Diese Aufgabe auslassen?</msg>
   <msg key="Slack">Pufferzeit:</msg>
   <msg key="Slack_1">Puffer-&lt;br&gt;zeit</msg>

@@ -436,22 +436,16 @@ ad_proc -public pm::util::general_comment_add {
     }
 
     # now send out email
-    
+
     if {[string equal $send_email_p t]} {
         
         # task
 
         if {[string equal $type task]} {
 	    
-	    if { [exists_and_not_null $to]} {
-		set assignees $to
-	    } else {
-		set assignees [pm::task::assignee_email_list -task_item_id $object_id]
-	    }
+	    set assignees $to
 
             if {[llength $assignees] > 0} {
-
-                set to_address $assignees
 
                 set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
                 
@@ -467,13 +461,17 @@ ad_proc -public pm::util::general_comment_add {
 
 		set project_item_id [pm::task::project_item_id -task_item_id $object_id]
 
-                pm::util::email \
-                    -to_addr  $to_address \
-                    -from_addr $from_address \
-                    -subject $subject \
-                    -body $content \
-                    -mime_type "text/html" \
-		    -object_id "$project_item_id"
+		foreach to_address $assignees {
+		    acs_mail_lite::complex_send \
+			-send_immediately \
+			-to_addr  "$to_address" \
+			-from_addr "$from_address" \
+			-subject "$subject" \
+			-body $content \
+			-mime_type "text/html" \
+			-object_id "$project_item_id" \
+			-no_callback_p
+		}
             }
 
         }
@@ -482,15 +480,9 @@ ad_proc -public pm::util::general_comment_add {
 
         if {[string equal $type project]} {
 
-	    if { [exists_and_not_null $to]} {
-		set assignees $to
-	    } else {
-		set assignees [pm::project::assignee_email_list -project_item_id $object_id]
-	    }
+	    set assignees $to
 
             if {[llength $assignees] > 0} {
-
-                set to_address $assignees
 
                 set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
                 
@@ -505,14 +497,19 @@ ad_proc -public pm::util::general_comment_add {
 
                 set content "<a href=\"$project_url\">$title</a> <p />$comment_html"
 
-                
-                pm::util::email \
-                    -to_addr  $to_address \
-                    -from_addr $from_address \
-                    -subject $subject \
-                    -body $content \
-                    -mime_type "text/html" \
-		    -object_id "$object_id"
+
+		foreach to_address $assignees {
+		    acs_mail_lite::complex_send \
+			-send_immediately \
+			-to_addr  "$to_address" \
+			-from_addr "$from_address" \
+			-subject "$subject" \
+			-body $content \
+			-mime_type "text/html" \
+			-object_id "$object_id" \
+			-no_callback_p
+		}
+		
             }
 
         }

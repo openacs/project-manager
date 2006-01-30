@@ -20,6 +20,7 @@ ad_page_contract {
 } -errors {
 }
 
+set title [lang::util::localize $title]
 set display_title "[_ project-manager.lt_Add_a_comment_to_titl]"
 set context [list "$display_title"]
 
@@ -95,7 +96,7 @@ if { [llength $assignee_list] > 1 } {
 	    {section "[_ project-manager.Email]" }
 	    {html {onclick check_uncheck_boxes(this.checked)}}
 	}
-        {to:text(checkbox),optional
+        {to:text(checkbox),optional,multiple
             {label "[_ project-manager.Send_email]"}
 	    {options $assignee_list}
 	    {html {checked 1}}

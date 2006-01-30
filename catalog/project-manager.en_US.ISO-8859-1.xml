@@ -453,6 +453,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Overdue_Tasks">Overdue Tasks</msg>
   <msg key="Overview_of_process">Overview of process:</msg>
   <msg key="Package">Package Instance</msg>
+  <msg key="Package_Instance">Package Instance</msg>
   <msg key="page">page)</msg>
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
@@ -555,6 +556,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Show">Show</msg>
   <msg key="Show_closed">Show closed</msg>
   <msg key="show_this_projects">Show this projects</msg>
+  <msg key="ShowSubprojects">Show Subprojects</msg>
   <msg key="Skip_this_task">Skip this task?</msg>
   <msg key="Slack">Slack:</msg>
   <msg key="Slack_1">Slack</msg>
