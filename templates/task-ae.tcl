@@ -370,6 +370,11 @@ if {[string is true $using_process_p]} {
 
 set assign_group_p [parameter::get -parameter "AssignGroupP" -default 0]
 
+# if the task assignee list is empty, use the assignee_role_list
+if {![string eq $task_assignee_list ""]} {
+    set assignee_role_list $task_assignee_list
+}
+
 foreach one_assignee $assignee_role_list {
     set person_id [lindex $one_assignee 0]
 
