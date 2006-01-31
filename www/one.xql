@@ -165,4 +165,12 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="get_photo">
+    <querytext>
+        select album_id, image_id 
+        from pm_projectsx 
+        where project_id = :original_project_id
+    </querytext>
+  </fullquery>
+
 </queryset>

@@ -502,6 +502,19 @@ set customer_link "[site_node::get_package_url -package_key organizations]one?or
 
 # end of customizations
 
+db_1row get_photo ""
+set photo_album_url [parameter::get -parameter "PhotoAlbumURL" -default ""]
+if { [string length $photo_album_url] > 0 && [string length $album_id] > 0 && [string length $image_id] > 0 } {
+    set use_image_p "t"
+    photo_album::photo::get -photo_id $image_id -array photo_info
+    set thumb_path $photo_info(thumb_image_id)
+    set thumb_height $photo_info(thumb_height)
+    set thumb_width $photo_info(thumb_width)
+    set thumb_image_url $photo_album_url/images/$photo_info(thumb_image_id)
+    set viewer_image_url $photo_album_url/images/$photo_info(viewer_image_id)
+} else {
+    set use_image_p "f"
+}
 
 ad_return_template
 # ------------------------- END OF FILE ------------------------- #

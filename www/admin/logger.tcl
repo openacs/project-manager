@@ -40,9 +40,13 @@ foreach url $possible_URLs {
         set value ""
     }
 
+    # having forward slashes in the item name terminally confuses
+    # the form builder.
+    regsub -all {/} $url "" cleaned_url
+
     append logger_definition "
             
-            {package_url_$url:text(checkbox),optional
+            {package_url_$cleaned_url:text(checkbox),optional
                 {label \"$url\"} 
                 {options {{\"\" \"t\"}}}
                 {value $value}
@@ -65,7 +69,11 @@ ad_form -extend -name logger \
         set urls_list [list]
         foreach url $possible_URLs {
 
-            set this_value "[set package_url_[set url]]"
+             # having forward slashes in the item name terminally confuses
+             # the form builder.
+             regsub -all {/} $url "" cleaned_url
+
+            set this_value "[set package_url_[set cleaned_url]]"
             if {[string equal t $this_value]} {
                 lappend urls_list $url
             }

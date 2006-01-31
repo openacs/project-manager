@@ -62,7 +62,14 @@ create table pm_projects (
                                 constraint pm_projects_logger_pj_nn
                                 not null
                                 constraint pm_projects_logger_pj_fk
-                                references logger_projects
+                                references logger_projects,
+       -- added for integration with photo album
+       album_id                 integer
+                                constraint pm_projects_album_fk
+                                references cr_items,
+       image_id                 integer
+                                constraint pm_projects_image_fk
+                                references cr_items
 );
 
 -- create type

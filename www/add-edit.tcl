@@ -43,6 +43,11 @@ set project_term    [parameter::get -parameter "ProjectName" -default "Project"]
 set project_term_lower  [parameter::get -parameter "projectname" -default "project"]
 set use_goal_p  [parameter::get -parameter "UseGoalP" -default "1"]
 set use_project_code_p  [parameter::get -parameter "UseUserProjectCodesP" -default "1"]
+if { [string length [parameter::get -parameter "PhotoAlbumURL" -default ""]] > 0} {
+  set can_use_image_p 1
+} else {
+  set can_use_image_p 0
+}
 
 set use_project_customizations_p [parameter::get -parameter "UseProjectCustomizationsP" -default "0"]
 
@@ -187,16 +192,32 @@ if {$use_project_code_p} {
         } 
 }
 
-
-
+if {$can_use_image_p} {
+    ad_form -extend -name add_edit \
+        -form {
+            {use_image_p:text(checkbox),optional
+                {label "Choose an Image?"}
+                {options {{"" "t"}}}
+            }
+        } 
+} else {
+    ad_form -extend -name add_edit \
+        -form {
+            {use_image_p:text(hidden)
+                {value "f"}
+            }
+        } 
+}
 
 ad_form -extend -name add_edit \
     -select_query_name project_query \
     -on_submit {
-        
         set user_id [ad_conn user_id]
         set peeraddr [ad_conn peeraddr]
-
+        # do this to avoid having to have both a yes and a no checkbox
+        if { [string length $use_image_p] == 0 } {
+          set use_image_p "n"
+        }
     } \
     -new_request {
         
@@ -254,6 +275,13 @@ ad_form -extend -name add_edit \
                 -variable_id [logger::variable::get_default_variable_id]
         }
 
+        # if we are choosing an image, go off and do that and then optionally
+        # go to the custom code afterwards
+        if {$use_image_p} {
+            ad_returnredirect "add-edit-album?[export_url_vars project_item_id project_id use_project_customizations_p]"
+            ad_script_abort
+        }
+
         if {$use_project_customizations_p} {
             # warn of current bug so users can work around it
             ad_returnredirect -message "You must submit changes on this page or you will lose any data on this page" "add-edit-2?[export_url_vars project_item_id project_id]"
@@ -306,6 +334,14 @@ ad_form -extend -name add_edit \
         if {[exists_and_not_null category_ids]} {
             category::map_object -remove_old -object_id $project_item_id $category_ids
         }
+
+        # if we are choosing an image, go off and do that and then optionally
+        # go to the custom code afterwards
+        if {$use_image_p} {
+            ad_returnredirect "add-edit-album?[export_url_vars project_item_id project_id use_project_customizations_p]"
+            ad_script_abort
+        }
+
     } -after_submit {
 
         if {$use_project_customizations_p} {

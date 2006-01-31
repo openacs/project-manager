@@ -17,6 +17,28 @@
   <tr>
     <td valign="top">
 
+      <if @use_image_p@ eq "t">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" class="list">       
+          <tr>
+            <th align="left" valign="top" width="10" class="project">
+              <img src="resources/tl-9999cc" align="top" />
+            </th>
+            <th class="project">Image</th> 
+            <th align="right" valign="top" width="10" class="project">
+              <img src="resources/tr-9999cc" align="top" />
+            </th>
+          </tr>
+          
+          <tr>
+            <td align="center" colspan="2" class="fill-list-bottom">              <a href="@viewer_image_url@"><img src="@thumb_image_url@images/@thumb_path@" border="0" width="@thumb_width@" height="@thumb_height@"></a>
+            </td>
+            <td class="fill-list-right">
+          </tr>
+        </table>
+
+        <p />
+      </if>
+
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="list">
         <tr>
           <th align="left" valign="top" width="10" class="project">

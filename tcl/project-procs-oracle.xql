@@ -43,7 +43,8 @@
 
   <fullquery name="pm::project::edit.update_project">
     <querytext>
-        select pm_project.new_project_revision (
+        begin
+          :1 :=  pm_project.new_project_revision (
                 :project_item_id,
                 :project_name,
                 :project_code,
@@ -58,11 +59,12 @@
                 :ongoing_p,
                 :status_id,
                 :organization_id,
-                now(),
+                sysdate,
                 :creation_user,
                 :creation_ip,
                 :package_id
-        ) from dual
+          );
+        end;
     </querytext>
   </fullquery>
 
