@@ -416,8 +416,8 @@ create table pm_tasks_revisions (
 select content_type__create_type (
    'pm_task',                   -- content_type
    'content_revision',          -- supertype    
-   'Task',                      -- pretty_name 
-   'Tasks',                     -- pretty_plural
+   'PM Task',                      -- pretty_name 
+   'PM Tasks',                     -- pretty_plural
    'pm_tasks_revisions',        -- table_name (should this be pm_task?)
    'task_revision_id',          -- id_column 
    'pm_task__name'              -- name_method

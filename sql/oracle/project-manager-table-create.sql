@@ -418,8 +418,8 @@ begin
     content_type.create_type (
                      content_type  => 'pm_task',                  
                      supertype     => 'content_revision',          
-                     pretty_name   => 'Task',        
-                     pretty_plural => 'Tasks', 
+                     pretty_name   => 'PM Task',        
+                     pretty_plural => 'PM Tasks', 
                      table_name    => 'pm_tasks_revisions',       
                      id_column     => 'task_revision_id',          
                      name_method   => 'pm_task__name'   
