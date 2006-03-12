@@ -1761,12 +1761,14 @@ ad_proc -public pm::project::assign {
     @error 
 } {
 
-    db_dml insert_assignment {
-        insert into pm_project_assignment
-        (project_id, role_id, party_id)
-        VALUES
-        (:project_item_id, :role_id, :party_id)
+    if {![db_string role_exists "select 1 from pm_project_assignment where project_id = :project_item_id and role_id = :role_id and party_id = :party_id" -default 0]} {
+	db_dml insert_assignment {
+	    insert into pm_project_assignment
+	    (project_id, role_id, party_id)
+	    VALUES
+	    (:project_item_id, :role_id, :party_id)
         }
+    }
 
     # We need to give the user permission. Leads will get "Admin". Players "Write" 
     # and watchers get "read".
