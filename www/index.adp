@@ -10,8 +10,10 @@
 	status_id="@status_id@" 
 	searchterm="@searchterm@" 
 	assignee_id="@assignee_id@" 
+	contact_id="@contact_id@" 
+	etat_id="@etat_id@" 
 	category_id="@pass_cat@" 
-	elements="project_code customer_name category_id creation_date start_date planned_end_date actual_hours_completed status_id" 
+	elements="project_code customer_name contact_id etat_id category_id start_date planned_end_date status_id" 
 	package_id=@package_id@ 
 	actions_p="1" 
 	bulk_p="1" 

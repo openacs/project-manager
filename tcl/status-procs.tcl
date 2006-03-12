@@ -13,14 +13,14 @@ ad_library {
 namespace eval pm::status {}
 
 ad_proc -public pm::status::open_p {
-    -task_status_id:required
+    -project_status_id:required
 } {
-    Returns t if the task status code is open, f otherwise
+    Returns t if the project status code is open, f otherwise
     
     @author Jade Rubick (jader@bread.com)
     @creation-date 2004-05-21
     
-    @param task_status_id
+    @param project_status_id
 
     @return 
     
@@ -31,9 +31,9 @@ ad_proc -public pm::status::open_p {
         SELECT
         case when status_type = 'c' then 'f' else 't' end
         FROM
-        pm_task_status
+        pm_project_status
         WHERE
-        status_id = :task_status_id
+        status_id = :project_status_id
     }]
 
     return $return_val

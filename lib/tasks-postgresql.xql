@@ -88,7 +88,7 @@
 
 <fullquery name="tasks_pagination">
     <querytext>
-	SELECT        t.item_id as task_item_id
+	SELECT t.item_id as task_item_id
 	FROM
 	(select tr.item_id,
                 ta.party_id,
@@ -130,6 +130,7 @@
         ti.status       = s.status_id
 	and cp.live_revision = o.object_id
         [template::list::filter_where_clauses -and -name tasks]
+        group by t.item_id, t.title, t.description, status, t.end_date, t.latest_finish, t.latest_start, t.earliest_start
         [template::list::orderby_clause -name tasks -orderby]
     </querytext>
 </fullquery>

@@ -18,7 +18,7 @@
 set required_param_list "package_id"
 set optional_param_list [list orderby status_id searchterm bulk_p action_p page_num page_size\
 			     filter_p base_url end_date_f user_space_p hidden_vars]
-set optional_unset_list [list assignee_id date_range is_observer_p previous_status_f current_package_f subprojects_p]
+set optional_unset_list [list assignee_id etat_id contact_id date_range is_observer_p previous_status_f current_package_f subprojects_p]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
 set invoice_installed_p [apm_package_installed_p dotlrn-invoices]
 set contacts_installed_p [apm_package_installed_p contacts]
@@ -36,7 +36,7 @@ if ![exists_and_not_null page_size] {
 
 set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
 
-set fmt "%x %r"
+set fmt "%x %X"
 if { $daily_p } {
     set fmt "%x"
 } 
@@ -170,6 +170,7 @@ if {![empty_string_p $searchterm]} {
 ##############################################
 
 set default_orderby [pm::project::index_default_orderby]
+set default_orderby "project_name,desc"
 
 if {[exists_and_not_null orderby]} {
     pm::project::index_default_orderby \
@@ -181,7 +182,7 @@ set contacts_url [util_memoize [list site_node::get_package_url -package_key con
 if {[empty_string_p $contacts_url]} {
 	set contact_column "@projects.customer_name@"
 } else {
-    set contact_column "<a href=\"${contacts_url}contact?party_id=@projects.customer_id@\">@projects.customer_name@</a>"
+    set contact_column "<a href=\"${contacts_url}@projects.customer_id@\">@projects.customer_name@</a>"
 }
 
 # Store project names and all other project individuel data
@@ -231,6 +232,23 @@ if {[exists_and_not_null is_observer_p]} {
     }
 } else {
     set user_space_clause ""
+}
+
+# If this filter is provided we can see all projects for a given contact
+set organization_id [lindex [application_data_link::get_linked -from_object_id [dotlrn_community::get_community_id] -to_object_type "organization"] 0]
+set contact_filter [lrange [wieners::get_contacts -customer_id $organization_id] 1 end]
+if { [exists_and_not_null contact_id] } {
+    set contact_where_clause "p.contact_id = :contact_id"
+} else {
+    set contact_where_clause ""
+}
+
+# If this filter is provided we can see all projects for a given etat
+set etat_filter [lrange [wieners::get_etats -customer_id $organization_id] 1 end]
+if { [exists_and_not_null etat_id] } {
+    set etat_where_clause "p.etat_id = :etat_id"
+} else {
+    set etat_where_clause ""
 }
 
 # If this filter is provided we can watch the projects in 
@@ -301,6 +319,16 @@ set filters [list \
 				values { {All "-1"} [pm::status::project_status_select]} \
 				where_clause { $status_where_clause } \
 			       ] \
+		 contact_id [list \
+				  label "[_ acs-translations.pm_project_contact_id]" \
+				  values { $contact_filter } \
+				  where_clause {$contact_where_clause} 
+			     ] \
+		 etat_id [list \
+				  label "[_ acs-translations.pm_project_etat_id]" \
+				  values { $etat_filter } \
+				  where_clause {$etat_where_clause} 
+			     ] \
 		 assignee_id [list \
 				  label "[_ project-manager.Assignee]" \
 				  default_value $user_id \
@@ -351,6 +379,14 @@ template::list::create \
 <if @projects.customer_id@ not nil>$contact_column</if><else>@projects.customer_name@</else>
 "
 	}
+	contact_id {
+	    label "[_ acs-translations.pm_project_contact_id]"
+	    display_template {<if @projects.contact_id@ not nil><a href="@projects.contact_url@">@projects.contact_name@</a></if><else>&nbsp;</else>}
+	}
+	etat_id {
+	    label "[_ acs-translations.pm_project_etat_id]"
+	    display_template {<if @projects.etat_id@ not nil><a href="@projects.etat_url@">@projects.etat_name@</a></if><else>&nbsp;</else>}
+	}
 	creation_date {
 	    label "[_ project-manager.Creation_date]"
             display_template "@projects.creation_date_lc@"
@@ -380,7 +416,7 @@ template::list::create \
 	}
 	status_id {
 	    label "[_ project-manager.Status_1]"
-	    display_template "<if @projects.status_id@ eq 2>#project-manager.Closed#</if><else>#project-manager.Open#</else>"
+	    display_template {@projects.pretty_status@}
 	}
     } \
     -actions $actions \
@@ -468,14 +504,17 @@ template::list::create \
 	width 100%
     }
 
-db_multirow -extend { item_url customer_url category_select earliest_finish_date latest_finish_date start_date_lc earliest_start_date creation_date_lc planned_end_date_lc} projects project_folders " " {
+db_multirow -extend { item_url customer_url category_select earliest_finish_date latest_finish_date start_date_lc earliest_start_date creation_date_lc planned_end_date_lc etat_name etat_url contact_name contact_url} projects project_folders " " {
     set earliest_finish_date [lc_time_fmt $earliest_finish_date $fmt]
     set latest_finish_date [lc_time_fmt $latest_finish_date $fmt]
     set creation_date_lc [lc_time_fmt $creation_date $fmt]
-    set start_date_lc [lc_time_fmt $start_date $fmt]
+    set start_date_lc [lc_time_fmt $start_date "%x"]
     set planned_end_date_lc [lc_time_fmt $planned_end_date $fmt]
+    set etat_name [contact::name -party_id $etat_id]
+    set etat_url "/contacts/$etat_id"
+    set contact_name [contact::name -party_id $contact_id -reverse_order]
+    set contact_url "/contacts/$contact_id"
         
-
     set _base_url [site_node::get_url_from_object_id -object_id $package_id]
     if {![empty_string_p $_base_url]} {
 	set base_url $_base_url

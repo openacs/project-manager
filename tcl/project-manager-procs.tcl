@@ -444,7 +444,6 @@ ad_proc -public pm::util::general_comment_add {
         if {[string equal $type task]} {
 	    
 	    set assignees $to
-
             if {[llength $assignees] > 0} {
 
                 set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
@@ -470,7 +469,8 @@ ad_proc -public pm::util::general_comment_add {
 			-body $content \
 			-mime_type "text/html" \
 			-object_id "$project_item_id" \
-			-no_callback_p
+			-use_sender \
+			-no_callback
 		}
             }
 
@@ -481,7 +481,6 @@ ad_proc -public pm::util::general_comment_add {
         if {[string equal $type project]} {
 
 	    set assignees $to
-
             if {[llength $assignees] > 0} {
 
                 set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
@@ -507,7 +506,8 @@ ad_proc -public pm::util::general_comment_add {
 			-body $content \
 			-mime_type "text/html" \
 			-object_id "$object_id" \
-			-no_callback_p
+			-no_callback \
+			-use_sender
 		}
 		
             }
@@ -578,12 +578,14 @@ ad_proc -public pm::util::email {
     foreach to $to_addr {
 	if { ![empty_string_p $to] } {
 	    acs_mail_lite::complex_send \
-		-send_immediately \
 		-to_addr  "$to" \
 		-from_addr "$from_addr" \
 		-subject "$subject" \
-		-body $content \
-		-object_id $object_id
+		-body $body \
+		-object_id $object_id \
+		-mime_type $mime_type \
+		-no_callback \
+		-use_sender
 	}
     }
 }

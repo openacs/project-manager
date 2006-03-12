@@ -32,4 +32,10 @@ foreach user $users_list {
     }
 }
 
+set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
+foreach employee_id $employee_list {
+    if {[lsearch -exact $party_ids $employee_id] == -1} {
+	lappend party_ids $employee_id
+    }
+}
 

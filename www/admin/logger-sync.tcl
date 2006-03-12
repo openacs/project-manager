@@ -51,7 +51,7 @@ if {[string equal $confirmed_p n]} {
         set organization_id [lindex $project 5]
         set logger_project  [lindex $project 6]
 
-        set active_p [pm::status::open_p -task_status_id $status_id]
+        set active_p [pm::status::open_p -project_status_id $status_id]
         set customer_name [organizations::name -organization_id "$organization_id"]
         if {![empty_string_p $customer_name]} {
             append customer_name " - "

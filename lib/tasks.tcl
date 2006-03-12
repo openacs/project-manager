@@ -1,6 +1,7 @@
 # Possible Filters:
 # -----------------
 # filter_party_id    Show tasks where this party_id participates
+# filter_group_id    Show tasks where members of this group participate
 # pid_filter         Show tasks only for this project_item_id
 # is_observer_filter Show tasks where party_id is_observer_p "t" or "f"
 # filter_package_id  Show tasks for this package_id
@@ -33,7 +34,7 @@
 set required_param_list [list]
 set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size bulk_actions_p]
 set optional_unset_list [list \
-			     filter_party_id pid_filter \
+			     filter_party_id filter_group_id pid_filter \
 			     is_observer_filter instance_id filter_package_id \
 			     subproject_tasks status_id tasks_portlet_p]
 
@@ -173,12 +174,6 @@ if {![exists_and_not_null elements]} {
 		      edit_url]
 }
 
-if ![info exist filter_package_id] { 
-    set project_item_clause [pm::project::get_list_of_open]
-} else {
-    set project_item_clause [pm::project::get_list_of_open -object_package_id $filter_package_id]
-}
-
 if { [exists_and_not_null subproject_tasks] && [exists_and_not_null pid_filter]} {
     set subprojects_list [db_list get_subprojects { } ]
     lappend subprojects_list $pid_filter
@@ -229,12 +224,10 @@ set filters [list \
 			   ] \
 		 pid_filter [list \
 				 label "[_ project-manager.Project_1]" \
-				 values { $project_item_clause } \
 				 where_clause "$project_item_where_clause"
 			    ] \
 		 project_item_id [list \
 				 label "[_ project-manager.Project_1]" \
-				 values { $project_item_clause } \
 				 where_clause "$project_item_where_clause"
 			    ] \
 		 instance_id [list \
@@ -246,6 +239,12 @@ set filters [list \
 					] \
 		 filter_package_id [list \
 					where_clause "o.package_id = :filter_package_id"
+				   ] \
+		 filter_party_id [list \
+					where_clause "t.party_id = :filter_party_id"
+				   ] \
+		 filter_group_id [list \
+					where_clause "t.party_id in (select member_id from group_member_map where group_id = :filter_group_id)"
 				   ] \
 		]
 
@@ -644,6 +643,7 @@ db_multirow -extend $extend_list tasks tasks " " {
     } else {
 	set red_title_p 0
     }
+    set red_title_p 0
     
     if {[exists_and_not_null earliest_start_j]} {
 	set slack_time [pm::task::slack_time \

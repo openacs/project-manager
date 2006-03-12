@@ -8,6 +8,7 @@
         p.item_id as project_item_id,
         p.project_id,
 	p.status_id,
+	s.description as pretty_status,
         p.parent_id as folder_id,
         p.object_type as content_type,
         p.title as project_name,
@@ -15,6 +16,8 @@
         to_char(p.planned_start_date, 'YYYY-MM-DD HH24:MI:SS') as planned_start_date,
         to_char(p.planned_end_date, 'YYYY-MM-DD HH24:MI:SS') as planned_end_date,
         p.ongoing_p,
+	p.etat_id,
+	p.contact_id,
         c.category_id,
         c.category_name,
         p.earliest_finish_date - current_date as days_to_earliest_finish,
@@ -30,7 +33,7 @@
 	p.object_package_id as package_id,
 	to_char(p.creation_date, 'YYYY-MM-DD HH24:MI:SS') as creation_date,
 	to_char(p.planned_start_date, 'YYYY-MM-DD HH24:MI:SS') as start_date
-        FROM pm_projectsx p 
+        FROM pm_project_status s, pm_projectsx p 
              LEFT JOIN organizations o ON p.customer_id =
                 o.organization_id 
              LEFT JOIN (
@@ -51,6 +54,7 @@
                     where ppm.object_id = p.project_id
                     and ppm.privilege = 'read'
                     and ppm.party_id = :user_id)
+	and s.status_id = p.status_id
         [template::list::filter_where_clauses -and -name projects]
 	[template::list::page_where_clause -and -name "projects" -key "p.project_id"]
         [template::list::orderby_clause -orderby -name projects]

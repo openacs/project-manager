@@ -1743,6 +1743,7 @@ ad_proc -public pm::project::assign {
     {-role_id:required}
     {-party_id:required}
     {-send_email_p "f"}
+    -no_callback:boolean
 } {
     Assigns a user to a project
     
@@ -1785,7 +1786,7 @@ ad_proc -public pm::project::assign {
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     util_memoize_flush [list pm::role::project_select_list_filter_not_cached -project_item_id $project_item_id -party_id $party_id]
 
-    if {[string is true $send_email_p] || [string is true [parameter::get -parameter "SendAssignEmailsP"]]} {
+    if {0 && ([string is true $send_email_p] || [string is true [parameter::get -parameter "SendAssignEmailsP"]])} {
 
         set project_name [pm::project::name \
                               -project_item_id $project_item_id]
@@ -1808,6 +1809,10 @@ ad_proc -public pm::project::assign {
             -subject [lang::util::localize $subject] \
             -body [lang::util::localize $content] \
             -mime_type "text/html"
+    }
+
+    if {!$no_callback_p} {
+	callback pm::project_assign -project_id $project_item_id -role_id $role_id -party_id $party_id
     }
 
     return
@@ -1943,7 +1948,7 @@ ad_proc -private pm::project::assignee_filter_select_helper {
 } {
 
     if {[exists_and_not_null status_id]} {
-	set status_clause "p.status_id = :status_id and"
+	set status_clause "p.status_id in ([join $status_id ,]) and"
     } else {
 	set status_clause ""
     }
@@ -2046,7 +2051,7 @@ ad_proc -public pm::project::name {
 } {
 
     if {[exists_and_not_null project_item_id]} {
-        return [db_string get_name {
+        return [db_string get_item_name {
             SELECT
             title
             FROM
@@ -2084,7 +2089,7 @@ ad_proc -public pm::project::url {
     @error 
 } {
     set package_id [db_string package_id "select distinct object_package_id from pm_projectsx where item_id = :project_item_id"]
-    return "[apm_package_url_from_id $package_id]one?project_item_id=$project_item_id"
+    return "[ad_url]/[apm_package_url_from_id $package_id]one?project_item_id=$project_item_id"
     
 }
 
@@ -2251,6 +2256,10 @@ ad_proc -public pm::project::compute_status_mins {
 	    
 	    set latest_finish($my_iid) $task_deadline
 	    set hours_to_complete $activity_time($my_iid) 
+
+	    if {[string eq $hours_to_complete ""]} {
+		set hours_to_complete 0
+	    }
 	    
 	    set date [lindex [split $task_deadline " "] 0]
 	    set hours [lindex [split [lindex [split $task_deadline " "] 1] :] 0]

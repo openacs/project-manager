@@ -38,6 +38,8 @@ if { [string equal $type "task"] } {
     set assignees [pm::task::assignee_role_list -task_item_id $object_id]
 }
 
+set show_role_p 1
+
 set assignee_list [list]
 if { $exclude_observers_p } {
     foreach assignee $assignees {
@@ -47,7 +49,13 @@ if { $exclude_observers_p } {
 	    # Not an observer. Added to the list
 	    set name [contact::name -party_id [lindex $assignee 0]]
 	    set email [party::email -party_id [lindex $assignee 0]]
-	    lappend assignee_list [list "$name ($email)" $email]
+
+	    if {$show_role_p} {
+		# display assigned role
+		lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $email]
+	    } else {
+		lappend assignee_list [list "$name ($email)" $email]
+	    }
 	}
     }
 } else {
@@ -55,7 +63,29 @@ if { $exclude_observers_p } {
     foreach assignee $assignees {
 	set name [contact::name -party_id [lindex $assignee 0]]
 	set email [party::email -party_id [lindex $assignee 0]]
+
+	if {$show_role_p} {
+	    # display assigned role
+	    lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $email]
+	} else {
+	    lappend assignee_list [list "$name ($email)" $email]
+	}
+    }
+}
+
+set listed_emails {}
+foreach assignee $assignee_list {
+    lappend listed_emails [lindex $assignee 1]
+}
+
+set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
+foreach employee_id $employee_list {
+    set name [contact::name -party_id $employee_id]
+    set email [party::email -party_id $employee_id]
+
+    if {[lsearch -exact $listed_emails $email] == -1} {
 	lappend assignee_list [list "$name ($email)" $email]
+	lappend listed_emails $email
     }
 }
 
@@ -87,30 +117,57 @@ ad_form -name comment \
 
 # We will add a check/uncheck element to call the javascript function,
 # this works only when the elements in the list is greather than one
-if { [llength $assignee_list] > 1 } {
-    ad_form -extend -name comment -form {
-	{check_uncheck:text(checkbox),multiple,optional
-	    {label "[_ project-manager.check_uncheck]"}
-	    {options {{"" 1}}}
-	    {value 1}
-	    {section "[_ project-manager.Email]" }
-	    {html {onclick check_uncheck_boxes(this.checked)}}
-	}
-        {to:text(checkbox),optional,multiple
-            {label "[_ project-manager.Send_email]"}
-	    {options $assignee_list}
-	    {html {checked 1}}
-	}
-    } 
+set default_checked_p 0
+
+if {$default_checked_p} {
+    if { [llength $assignee_list] > 1 } {
+	ad_form -extend -name comment -form {
+	    {check_uncheck:text(checkbox),multiple,optional
+		{label "[_ project-manager.check_uncheck]"}
+		{options {{"" 1}}}
+		{value 1}
+		{section "[_ project-manager.Email]" }
+		{html {onclick check_uncheck_boxes(this.checked)}}
+	    }
+	    {to:text(checkbox),optional,multiple
+		{label "[_ project-manager.Send_email]"}
+		{options $assignee_list}
+		{html {checked 1}}
+	    }
+	} 
+    } else {
+	ad_form -extend -name comment -form {
+	    {to:text(checkbox),optional
+		{label "[_ project-manager.Send_email]"}
+		{section "[_ project-manager.Email]" }
+		{options $assignee_list}
+		{html {checked 1}}
+	    }
+	} 
+    }
 } else {
-    ad_form -extend -name comment -form {
-	{to:text(checkbox),optional
-            {label "[_ project-manager.Send_email]"}
-	    {section "[_ project-manager.Email]" }
-	    {options $assignee_list}
-	    {html {checked 1}}
-	}
-    } 
+    if { [llength $assignee_list] > 1 } {
+	ad_form -extend -name comment -form {
+	    {check_uncheck:text(checkbox),multiple,optional
+		{label "[_ project-manager.check_uncheck]"}
+		{options {{"" 1}}}
+		{section "[_ project-manager.Email]" }
+		{html {onclick check_uncheck_boxes(this.checked)}}
+	    }
+	    {to:text(checkbox),optional,multiple
+		{label "[_ project-manager.Send_email]"}
+		{options $assignee_list}
+	    }
+	} 
+    } else {
+	ad_form -extend -name comment -form {
+	    {to:text(checkbox),optional
+		{label "[_ project-manager.Send_email]"}
+		{section "[_ project-manager.Email]" }
+		{options $assignee_list}
+	    }
+	} 
+    }
 }
  
 ad_form -extend -name comment -form {
@@ -124,7 +181,7 @@ ad_form -extend -name comment -form {
     set description [template::util::richtext::create "" {}]
     
 } -on_submit {
-    
+
     # insert the comment into the database
     set description_body [template::util::richtext::get_property contents $description]
     set description_format [template::util::richtext::get_property format $description]

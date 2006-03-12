@@ -24,6 +24,8 @@ ad_page_contract {
     category_id:multiple,optional
     {format "normal"}
     {assignee_id ""}
+    {contact_id ""}
+    {etat_id ""}
     {user_space_p "0"}
     {subprojects_p "t"}
     {is_observer_p ""}

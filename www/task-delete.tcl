@@ -72,7 +72,7 @@ if {[string equal $action delete]} {
 
             db_1row task_query { }
 
-            set description [list $description $mime_type]
+            set description [list [lang::util::localize $description] $mime_type]
 
         } \
         -mode display \

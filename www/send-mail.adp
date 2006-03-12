@@ -13,6 +13,6 @@
 
  -->
 
-<include src="/packages/acs-mail-lite/lib/email" party_ids=@party_ids@ export_vars=@export_vars@ return_url=@return_url;noquote@ object_id=@project_item_id@ no_callback_p="f">
+<include src="/packages/acs-mail-lite/lib/email" party_ids=@party_ids@ export_vars=@export_vars@ return_url=@return_url;noquote@ object_id=@project_item_id@ no_callback_p="f" checked_p="f">
 
 

@@ -2493,7 +2493,7 @@ ad_proc -public pm::task::what_changed {
 
         # project
 
-        if {![string equal $old_project_item_id $project_item_id_array($tid)]} {
+        if {![string equal $old_project_item_id $project_item_id_array($tid)] && ![empty_string_p $old_project_item_id]} {
 
             set old [pm::project::name -project_item_id $old_project_item_id]
 
