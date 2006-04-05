@@ -16,9 +16,9 @@
 # subprojects_p Should subprojects be displayed as well?
 
 set required_param_list "package_id"
-set optional_param_list [list orderby status_id searchterm bulk_p action_p page_num page_size\
+set optional_param_list [list orderby pm_status_id searchterm bulk_p action_p page_num page_size\
 			     filter_p base_url end_date_f user_space_p hidden_vars]
-set optional_unset_list [list assignee_id etat_id contact_id date_range is_observer_p previous_status_f current_package_f subprojects_p]
+set optional_unset_list [list assignee_id pm_etat_id pm_contact_id date_range is_observer_p previous_status_f current_package_f subprojects_p]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
 set invoice_installed_p [apm_package_installed_p dotlrn-invoices]
 set contacts_installed_p [apm_package_installed_p contacts]
@@ -78,13 +78,13 @@ if [empty_string_p $user_space_p] {
 # to show the projects.
 
 
-set assignees_filter [pm::project::assignee_filter_select -status_id $status_id]
+set assignees_filter [pm::project::assignee_filter_select -status_id $pm_status_id]
 
 # Set status
-set status_where_clause "p.status_id = :status_id"
-if { ![exists_and_not_null status_id]} {
-    set status_id [pm::project::default_status_open]
-} elseif { [string equal $status_id "-1"] } {
+set status_where_clause "p.status_id = :pm_status_id"
+if { ![exists_and_not_null pm_status_id]} {
+    set pm_status_id [pm::project::default_status_open]
+} elseif { [string equal $pm_status_id "-1"] } {
     set assignees_filter [pm::project::assignee_filter_select]
     set all_status [db_list_of_lists get_all_status { select status_id from pm_project_status }]
     set all_status [join $all_status ","]
@@ -122,7 +122,7 @@ if {[exists_and_not_null subprojects_p]} {
    
 # We want to set up a filter for each category tree.
 
-set export_vars [export_vars -form {status_id orderby}]
+set export_vars [export_vars -form {pm_status_id orderby}]
 
 if {[exists_and_not_null category_id]} {
     set temp_category_id $category_id
@@ -180,7 +180,7 @@ if {[exists_and_not_null orderby]} {
 # Get url of the contacts package if it has been mounted for the links on the index page.
 set contacts_url [util_memoize [list site_node::get_package_url -package_key contacts]]
 if {[empty_string_p $contacts_url]} {
-	set contact_column "@projects.customer_name@"
+    set contact_column "@projects.customer_name@"
 } else {
     set contact_column "<a href=\"${contacts_url}@projects.customer_id@\">@projects.customer_name@</a>"
 }
@@ -237,16 +237,16 @@ if {[exists_and_not_null is_observer_p]} {
 # If this filter is provided we can see all projects for a given contact
 set organization_id [lindex [application_data_link::get_linked -from_object_id [dotlrn_community::get_community_id] -to_object_type "organization"] 0]
 set contact_filter [lrange [wieners::get_contacts -customer_id $organization_id] 1 end]
-if { [exists_and_not_null contact_id] } {
-    set contact_where_clause "p.contact_id = :contact_id"
+if { [exists_and_not_null pm_contact_id] } {
+    set contact_where_clause "p.contact_id = :pm_contact_id"
 } else {
     set contact_where_clause ""
 }
 
 # If this filter is provided we can see all projects for a given etat
 set etat_filter [lrange [wieners::get_etats -customer_id $organization_id] 1 end]
-if { [exists_and_not_null etat_id] } {
-    set etat_where_clause "p.etat_id = :etat_id"
+if { [exists_and_not_null pm_etat_id] } {
+    set etat_where_clause "p.etat_id = :pm_etat_id"
 } else {
     set etat_where_clause ""
 }
@@ -313,18 +313,18 @@ set filters [list \
 				 label "[_ project-manager.Planned_end_date]" \
 				 where_clause {$p_range_where}
 				] \
-		 status_id [list \
+		 pm_status_id [list \
 				label "[_ project-manager.Status_1]"  \
 				default_value [pm::project::default_status_open] \
 				values { {All "-1"} [pm::status::project_status_select]} \
 				where_clause { $status_where_clause } \
 			       ] \
-		 contact_id [list \
+		 pm_contact_id [list \
 				  label "[_ acs-translations.pm_project_contact_id]" \
 				  values { $contact_filter } \
 				  where_clause {$contact_where_clause} 
 			     ] \
-		 etat_id [list \
+		 pm_etat_id [list \
 				  label "[_ acs-translations.pm_project_etat_id]" \
 				  values { $etat_filter } \
 				  where_clause {$etat_where_clause} 

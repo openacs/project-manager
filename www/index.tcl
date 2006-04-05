@@ -17,15 +17,15 @@ ad_page_contract {
 
 } {
     {orderby ""} 
-    {status_id:integer,optional}
+    {pm_status_id:integer,optional}
     {searchterm ""}
     {end_range_f ""}
     {start_range_f ""}
     category_id:multiple,optional
     {format "normal"}
     {assignee_id ""}
-    {contact_id ""}
-    {etat_id ""}
+    {pm_contact_id ""}
+    {pm_etat_id ""}
     {user_space_p "0"}
     {subprojects_p "t"}
     {is_observer_p ""}
@@ -84,8 +84,8 @@ if { $daily_p } {
 set root_folder [pm::util::get_root_folder -package_id $package_id]
 
 # Set status
-if {![exists_and_not_null status_id]} {
-    set status_id ""
+if {![exists_and_not_null pm_status_id]} {
+    set pm_status_id ""
 }
 
 # We want to set up a filter for each category tree.
