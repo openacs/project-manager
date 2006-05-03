@@ -12,12 +12,14 @@
 <fullquery name="get_assignees">
     <querytext>	
 	select	
-	        party_id,
+	        distinct(party_id),
 	        role_id
         from
-        	pm_project_assignment a
+        	pm_project_assignment a, group_member_map g
 	where
         	project_id = :project_item_id
+		and g.group_id = :filter_group_id
+		and g.member_id = party_id
 		and party_id is not null
     </querytext>
 </fullquery>

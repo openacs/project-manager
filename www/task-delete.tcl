@@ -72,6 +72,7 @@ if {[string equal $action delete]} {
 
             db_1row task_query { }
 
+            set task_title [lang::util::localize $task_title]
             set description [list [lang::util::localize $description] $mime_type]
 
         } \

@@ -30,6 +30,10 @@ ad_form -name rate_project -form {
     }
 }
 
+# Only rate Freelancers
+set group_name "[parameter::get -parameter "RatedGroup"]"
+set filter_group_id [group::get_id -group_name $group_name]
+
 # We are going to create an element for each dimension-user pair to evaluate this project    
 # First we get all users assigned to this project
 #set users_list [pm::project::assignee_role_list -project_item_id $project_item_id]
