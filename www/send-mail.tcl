@@ -2,9 +2,13 @@
 
 ad_page_contract {
     Use acs-mail-lite/lib/email chunk to send out going mail messages.
+    
+    party_ids: List of party_ids which will be appended to the assignee list
+    party_id: A single party_id which will be used instead of anything else. Useful for sending the mail to only one person.
 } {
     project_id:integer,notnull
     {party_ids:multiple ""}
+    {party_id ""}
 }
 
 # Get the project_item_id and the project_name
@@ -24,18 +28,24 @@ set users_list [pm::project::assignee_role_list -project_item_id $project_item_i
 
 set options [list]
 
-set party_ids [list]
-foreach user $users_list {
-    set user [lindex $user 0]
-    if { ![empty_string_p [party::email -party_id $user]] } {
-	lappend party_ids $user
-    }
-}
 
-set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
-foreach employee_id $employee_list {
-    if {[lsearch -exact $party_ids $employee_id] == -1} {
-	lappend party_ids $employee_id
+if {[string eq "" $party_id]} {
+    foreach user $users_list {
+	set user [lindex $user 0]
+	if { ![empty_string_p [party::email -party_id $user]] } {
+	    lappend party_ids $user
+	}
     }
+    
+    set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
+    foreach employee_id $employee_list {
+	if {[lsearch -exact $party_ids $employee_id] == -1} {
+	    lappend party_ids $employee_id
+	}
+    }
+
+} else {
+    # We are sending an e-mail to only one person, therefore overwrite
+    set party_ids $party_id
 }
 
