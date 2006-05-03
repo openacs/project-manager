@@ -388,7 +388,7 @@
     </querytext>
   </fullquery>
 
-<fullquery name="pm::project::get_all_subprojects.get_subprojects">
+<fullquery name="pm::project::get_all_subprojects_not_cached.get_subprojects">
     <querytext>
 	select 
 		distinct 

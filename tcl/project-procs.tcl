@@ -1824,6 +1824,7 @@ ad_proc -public pm::project::assign {
 ad_proc -public pm::project::unassign {
     {-project_item_id:required}
     {-party_id:required}
+    -no_callback:boolean
 } {
     Removes a user from a project
     
@@ -1850,6 +1851,10 @@ ad_proc -public pm::project::unassign {
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
     if {[ad_conn user_id == $party_id]} {
         util_memoize_flush [list pm::role::project_select_list_filter_not_cached -project_item_id $project_item_id -party_id $party_id]
+    }
+
+    if {!$no_callback_p} {
+	callback pm::project_unassign -project_id $project_item_id -party_id $party_id
     }
 
     return
@@ -3274,6 +3279,17 @@ ad_proc -public pm::project::year_month_day_filter {
 }
 
 ad_proc -public pm::project::get_all_subprojects {
+    {-project_item_id:required}
+} {
+    get all subprojects. cached.
+    
+    @author Malte Sussdorff (malte.sussdorff@cognovis.de)
+} {
+    return [util_memoize [list ::pm::project::get_all_subprojects_not_cached -project_item_id $project_item_id]]
+}
+
+
+ad_proc -public pm::project::get_all_subprojects_not_cached {
     -project_item_id:required
 } {
     @author Miguel Marin (miguelmarin@viaro.net)

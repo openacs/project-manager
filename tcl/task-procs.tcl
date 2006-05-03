@@ -2271,6 +2271,27 @@ ad_proc -public pm::task::assignee_role_list {
 }
 
 
+ad_proc -public pm::task::assignee_role_list_ext {
+    {-task_item_id:required}
+} {
+    Returns a list of lists, with all assignees to a particular 
+    task. {{party_id role_id} {party_id role_id}}
+
+    Todo: dependency changes, deadline changes
+    
+    @author Jade Rubick (jader@bread.com)
+    @creation-date 2004-10-18
+    
+    @param task_item_id
+
+    @return 
+    
+    @error 
+} {
+
+    return [db_list_of_lists get_assignees { }]
+}
+
 ad_proc -public pm::task::what_changed {
     {-comments_array:required}
     {-comments_mime_type_array:required}

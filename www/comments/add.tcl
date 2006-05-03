@@ -41,6 +41,7 @@ if { [string equal $type "task"] } {
 set show_role_p 1
 
 set assignee_list [list]
+
 if { $exclude_observers_p } {
     foreach assignee $assignees {
 	# Compare the role_id to the one get on observer_role_id
@@ -56,6 +57,7 @@ if { $exclude_observers_p } {
 	    } else {
 		lappend assignee_list [list "$name ($email)" $email]
 	    }
+
 	}
     }
 } else {
@@ -77,6 +79,24 @@ set listed_emails {}
 foreach assignee $assignee_list {
     lappend listed_emails [lindex $assignee 1]
 }
+
+    
+# Include subprojects
+foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object_id] {
+    set sub_assignees [pm::project::assignee_role_list -project_item_id $subproject_id]
+    foreach assignee $sub_assignees {
+	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"] || $exclude_observers_p != 1 } {
+	    set name [contact::name -party_id [lindex $assignee 0]]
+	    set email [party::email -party_id [lindex $assignee 0]]
+	    
+	    if {[lsearch -exact $listed_emails $email] == -1} {
+		lappend assignee_list [list "$name ($email)" $email]
+		lappend listed_emails $email
+	    }
+	}
+    }
+}
+	
 
 set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
 foreach employee_id $employee_list {

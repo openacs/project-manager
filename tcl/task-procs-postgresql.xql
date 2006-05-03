@@ -334,6 +334,21 @@
   </fullquery>
 
 
+  <fullquery name="pm::task::assignee_role_list_ext.get_assignees">
+    <querytext>
+      SELECT
+      party_id,
+      pta.role_id,
+      is_lead_p,
+      is_observer_p
+      FROM
+      pm_task_assignment pta, pm_roles r
+      WHERE
+      task_id = :task_item_id
+      and pta.role_id = r.role_id
+    </querytext>
+  </fullquery>
+
   <fullquery name="pm::task::open.update_status">
     <querytext>
       UPDATE

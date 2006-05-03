@@ -43,6 +43,12 @@ ad_proc -public -callback pm::project_assign {
 } {
 }
 
+ad_proc -public -callback pm::project_unassign {
+    {-project_id:required}
+    {-party_id:required}
+} {
+}
+
 ad_proc -public -callback pm::project_links {
     {-project_id:required}
 } {
