@@ -871,3 +871,17 @@ ad_proc -public pm::util::reply_address {
 	return "${prefix}-${project_id}@[parameter::get_from_package_key -package_key acs-mail-lite -parameter BounceDomain]"
     }
 }
+
+
+ad_proc -public pm::util::assigned_projects {
+    {-party_id:required}
+    {-status_id "1,3"}
+    {-role_id "1,2"}
+} {
+    Return a list of assigned projects
+    @param party_id User for this this query is executed
+    @param status_id Status of the project. Might be a sql list
+    @param role_id Role the user can have in the project. Might also be a SQL list.
+} {
+    return [db_list list_of_assigned_projects "select distinct i.item_id from pm_projects p, cr_items i, pm_project_assignment pa where p.project_id = i.latest_revision and p.status_id in ($status_id) and pa.project_id = i.item_id and pa.party_id = :party_id and pa.role_id in ($role_id)"]
+}
