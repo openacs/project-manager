@@ -212,6 +212,8 @@ if { [llength $assignee_values] == 0 } {
     set assignee_values [db_list_of_lists get_people " "]
 }
 
+# Seperate some of the filters for searching
+
 set filters [list \
 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \

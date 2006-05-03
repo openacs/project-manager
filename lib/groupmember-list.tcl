@@ -10,7 +10,7 @@
 # customer_filter The filter for the customer of the project
 
 set required_param_list [list group_name]
-set optional_param_list [list]
+set optional_param_list [list community_id]
 set optional_unset_list [list orderby customer_filter package_id]
 
 # Checking required parameters
@@ -43,7 +43,10 @@ foreach optional_unset $optional_unset_list {
 }
 
 # We get the package_id of the project_manager instance
-set community_id [dotlrn_community::get_community_id]
+if {![exists_and_not_null community_id]} {
+    set community_id [dotlrn_community::get_community_id]
+}
+
 if { ![empty_string_p $community_id] } {
     set package_id [dotlrn_community::get_package_id_from_package_key \
 			-package_key project-manager \
