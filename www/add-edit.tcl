@@ -18,7 +18,7 @@ ad_page_contract {
     {project_code ""}
     {parent_id ""}
     {goal ""}
-    {description ""}
+    {description:html ""}
     {customer_id ""}
     {planned_start_date ""}
     {planned_end_date ""}

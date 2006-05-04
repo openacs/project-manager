@@ -10,6 +10,7 @@
         p.project_code,
  	p.goal,
  	p.description,
+	p.mime_type,
         p.customer_id,
         p.status_id,
  	to_char(p.planned_start_date,'YYYY-MM-DD') as planned_start_date,

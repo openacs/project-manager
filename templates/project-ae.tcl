@@ -92,7 +92,7 @@ if {$use_project_code_p} {
 
 ad_form -extend -name add_edit \
     -form {
-        {description:text(textarea),optional
+        {description:richtext(richtext),optional
             {label "[_ project-manager.Description]"}
             {value $description}
             {html { rows 5 cols 40 wrap soft}}}
@@ -198,10 +198,12 @@ ad_form -extend -name add_edit \
 	
 	set planned_end_date [dt_sysdate]
 	set planned_start_date [dt_sysdate]
-
+	set description [template::util::richtext::create "" {}]
     } -edit_request {
 
 	db_1row project_query {}
+	set description [template::util::richtext::create $description $mime_type]
+
 	set planned_end_time [template::util::date::from_ansi $planned_end_date [lc_get frombuilder_time_format]]
 	set planned_end_date [lindex $planned_end_date 0]
 
