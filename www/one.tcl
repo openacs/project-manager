@@ -23,10 +23,12 @@
     @param use_uncertain_completion_times_p Specifies whether or not to use PERT style uncertainty times 1 = yes
     @param logger_days The number of days back to view logged entries
     @param instance_id The process instance ID to show for tasks
+     @param pid_filter
 } {
     
     project_item_id:integer,optional
     project_id:integer,optional
+    pid_filter:integer,optional
     {page:integer ""}
     {orderby_subproject ""}
     {orderby_tasks ""}
@@ -60,7 +62,7 @@
 } -validate {
     project_exists {
         if {![exists_and_not_null project_item_id] && \
-                ![exists_and_not_null project_id]} {
+                ![exists_and_not_null project_id] && ![exists_and_not_null pid_filter]} {
 
             ad_complain "[_ project-manager.No_project_passed_in]"
 
@@ -78,6 +80,13 @@
                                 -project_item_id $project_item_id]
         }
     }
+    pid_filter_exists {
+	if {[exists_and_not_null pid_filter]} {
+	    set project_item_id $pid_filter
+            set project_id [pm::project::get_project_id \
+                                -project_item_id $project_item_id]
+	}
+    }	    
     logger_days_positive {
         if {$logger_days < 1} {
             set logger_days 1

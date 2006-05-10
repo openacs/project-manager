@@ -16,7 +16,7 @@
 # page        The page to show on the paginate.
 # page_size   The number of rows to display in the list
 # orderby_p   Set it to 1 if you want to show the order by menu.
-# orderby     To sort the list using this orderby value
+# orderby_tasks     To sort the list using this orderby value
 #
 # For Project Manager Task Portlet:
 # ---------------------------------
@@ -63,7 +63,7 @@ if ![exists_and_not_null page_size] {
 }
 
 if ![info exists orderby_p] {
-    set orderby_p 0
+    set orderby_p 1
 }
 
 if { ![exists_and_not_null tasks_portlet_p] } {
@@ -229,8 +229,8 @@ set filters [list \
 				 where_clause "$project_item_where_clause"
 			    ] \
 		 project_item_id [list \
-				 label "[_ project-manager.Project_1]" \
-				 where_clause "$project_item_where_clause"
+				      label "[_ project-manager.Project_1]" \
+				      where_clause "$project_item_where_clause"
 			    ] \
 		 instance_id [list \
 				  where_clause "o.package_id = :instance_id"
@@ -304,12 +304,12 @@ if { $use_bulk_p == 1 || $bulk_actions_p == 1} {
 			  "${base_url}assign-myself" \
 			  "[_ project-manager.Assign_myself_as_lead]"]
 
-    set bulk_action_export_vars [list [list return_url] [list project_item_id]]
+
 } else {
     set bulk_actions [list]
-    set bulk_action_export_vars [list]
 }
 
+set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 # Orderby's to use in
 if { $orderby_p } {
     set order_by_list [list \
@@ -337,6 +337,11 @@ if { $orderby_p } {
 			       orderby_desc "status desc, t.latest_finish desc, task_item_id"
 			       orderby_asc "status asc, t.latest_finish desc, task_item_id"
 			       default_direction asc
+			   } \
+			   priority {
+			       orderby_asc "priority, earliest_start, task_item_id asc"
+			       orderby_desc "priority desc, earliest_start desc, task_item_id desc"
+			       default_direction desc
 			   } \
 			   end_date {
 			       orderby_asc "end_date, task_item_id asc"
@@ -507,7 +512,7 @@ template::list::create \
     -page_size $page_size \
     -page_flush_p 1 \
     -page_query_name tasks_pagination \
-    -orderby_name orderby \
+    -orderby_name orderby_tasks \
     -html {
 	width 100%
     } \

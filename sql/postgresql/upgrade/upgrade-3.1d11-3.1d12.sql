@@ -103,6 +103,42 @@ END;
 select inline_0 ();
 drop function inline_0 ();
 
+-- Create logger task links
+create function inline_0 ()
+returns integer as '
+declare
+    ct RECORD;
+begin
+  for ct in select task_item_id, logger_entry
+	from pm_task_logger_proj_map
+  loop
+        perform acs_rel__new (
+                         null,
+                         ''application_data_link'',
+                         lp.task_item_id,
+                         lp.logger_entry,
+                         lp.task_item_id,
+                         null,
+                         null
+        );
+
+        perform acs_rel__new (
+                         null,
+                         ''application_data_link'',
+                         lp.logger_entry,
+                         lp.task_item_id,
+                         lp.task_item_id,
+                         null,
+                         null
+        );
+  end loop;
+
+  return null;
+end;' language 'plpgsql';
+
+select inline_0();
+drop function inline_0();
+
 drop table pm_task_logger_proj_map;
 
 alter table pm_projects drop column logger_project cascade;
@@ -525,3 +561,10 @@ begin
 end;' language 'plpgsql';
 
 select content_type__refresh_view('pm_project');
+
+-- Make sure the upgrade to acs_data_links got through
+
+insert into acs_data_links
+(select - rel_id as rel_id, object_id_one, object_id_two
+ from acs_rels
+ where rel_type = 'application_data_link');
