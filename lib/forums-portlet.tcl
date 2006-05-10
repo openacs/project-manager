@@ -36,3 +36,5 @@ foreach optional_param {} {
 	set $optional_param {}
     }
 }
+
+set page_size 5

@@ -16,8 +16,6 @@
         to_char(p.planned_start_date, 'YYYY-MM-DD HH24:MI:SS') as planned_start_date,
         to_char(p.planned_end_date, 'YYYY-MM-DD HH24:MI:SS') as planned_end_date,
         p.ongoing_p,
-	p.etat_id,
-	p.contact_id,
         c.category_id,
         c.category_name,
         p.earliest_finish_date - current_date as days_to_earliest_finish,

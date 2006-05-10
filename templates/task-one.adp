@@ -23,16 +23,6 @@
         
         <P />
         
-<include src="/packages/project-manager/lib/task-logger-portlet"
-	  project_item_id="@project_item_id@"
-	  master="@portlet_master@"
-	  logger_project="@logger_project@"
-	  logger_days="@logger_days@"
-	  return_url="@return_url;noquote@"
-	  pm_url="@package_url;noquote@"
-	  &task_info=task_info
-	  use_days_p="@use_days_p@"
-	  pm_task_id="@task_id@" />
 
   <include
     src="/packages/project-manager/lib/categories-portlet"
@@ -50,13 +40,11 @@
       </td>
       <td width="20%" valign="top">
        
-      <if 0 eq 1>
-      <include src="/packages/project-manager/lib/task-date-portlet"
+      <include src="/packages/project-manager/lib/task-dates-portlet"
 	  &task_info=task_info
 	  />
 
         <p />
-       </if>
 	<include
 	  src="/packages/project-manager/lib/task-assignee-portlet"
 	  task_id="@task_id@"
@@ -64,6 +52,16 @@
 
         <p />
 
+<include src="/packages/project-manager/lib/task-logger-portlet"
+	  project_item_id="@project_item_id@"
+	  master="@portlet_master@"
+	  logger_project="@logger_project@"
+	  logger_days="@logger_days@"
+	  return_url="@return_url;noquote@"
+	  pm_url="@package_url;noquote@"
+	  &task_info=task_info
+	  use_days_p="@use_days_p@"
+	  pm_task_id="@task_id@" />
         
       </td>
     </tr>

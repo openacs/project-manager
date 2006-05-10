@@ -48,7 +48,7 @@ if { $exclude_observers_p } {
 	# to see if it is an observer.
 	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"]} {
 	    # Not an observer. Added to the list
-	    set name [contact::name -party_id [lindex $assignee 0]]
+	    set name [person::name -person_id [lindex $assignee 0]]
 	    set email [party::email -party_id [lindex $assignee 0]]
 
 	    if {$show_role_p} {
@@ -63,7 +63,7 @@ if { $exclude_observers_p } {
 } else {
     # We want every assignee so we just get the assignees name
     foreach assignee $assignees {
-	set name [contact::name -party_id [lindex $assignee 0]]
+	set name [person::name -person_id [lindex $assignee 0]]
 	set email [party::email -party_id [lindex $assignee 0]]
 
 	if {$show_role_p} {
@@ -86,7 +86,7 @@ foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object
     set sub_assignees [pm::project::assignee_role_list -project_item_id $subproject_id]
     foreach assignee $sub_assignees {
 	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"] || $exclude_observers_p != 1 } {
-	    set name [contact::name -party_id [lindex $assignee 0]]
+	    set name [person::name -person_id [lindex $assignee 0]]
 	    set email [party::email -party_id [lindex $assignee 0]]
 	    
 	    if {[lsearch -exact $listed_emails $email] == -1} {
@@ -100,7 +100,7 @@ foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object
 
 set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
 foreach employee_id $employee_list {
-    set name [contact::name -party_id $employee_id]
+    set name [person::name -person_id $employee_id]
     set email [party::email -party_id $employee_id]
 
     if {[lsearch -exact $listed_emails $email] == -1} {

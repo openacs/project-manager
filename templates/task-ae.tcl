@@ -484,13 +484,12 @@ ad_form -extend -name task_add_edit -new_request {
         }
     }
 
-    if {$estimated_hours_work_min > $estimated_hours_work_max} {
-        set temp $estimated_hours_work_max
-        set estimated_hours_work_max $estimated_hours_work_min
-        set estimated_hours_work_min $temp
-    }
-
     if {[string is true $use_uncertain_completion_times_p]} {
+	if {$estimated_hours_work_min > $estimated_hours_work_max} {
+	    set temp $estimated_hours_work_max
+	    set estimated_hours_work_max $estimated_hours_work_min
+	    set estimated_hours_work_min $temp
+	}
 	set estimated_hours_work [expr .5 * ($estimated_hours_work_max - $estimated_hours_work_min) + $estimated_hours_work_min]
     } else {
 	set estimated_hours_work_min $estimated_hours_work

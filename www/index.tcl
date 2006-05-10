@@ -27,7 +27,7 @@ ad_page_contract {
     {pm_contact_id ""}
     {pm_etat_id ""}
     {user_space_p "0"}
-    {subprojects_p "t"}
+    {subprojects_p "f"}
     {is_observer_p ""}
     {previous_status_f ""}
     {current_package_f ""}

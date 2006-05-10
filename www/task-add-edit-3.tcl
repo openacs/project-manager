@@ -97,7 +97,7 @@ foreach num $number {
 	if {[parameter::get -parameter "UseDayInsteadOfHour" -default "f" -package_id $package_id]} {
 	    pm::project::compute_status $project_item_id($num) 
 	} else {
-	    pm::project::compute_status_mins $project_item_id($num) 
+#	    pm::project::compute_status_mins $project_item_id($num) 
 	}
         lappend computed_projects $project_item_id($num)
     }

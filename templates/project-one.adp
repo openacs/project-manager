@@ -51,7 +51,7 @@
       page="@page@"
 	/>
     <p />
-  <if @use_fs_p@>
+  <if @folder_id@ ge 0>
   <include
     src="/packages/project-manager/lib/fs-portlet"
     folder_id="@folder_id@" />
