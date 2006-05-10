@@ -115,9 +115,9 @@ begin
         perform acs_rel__new (
                          null,
                          ''application_data_link'',
-                         lp.task_item_id,
-                         lp.logger_entry,
-                         lp.task_item_id,
+                         ct.task_item_id,
+                         ct.logger_entry,
+                         ct.task_item_id,
                          null,
                          null
         );
@@ -125,9 +125,9 @@ begin
         perform acs_rel__new (
                          null,
                          ''application_data_link'',
-                         lp.logger_entry,
-                         lp.task_item_id,
-                         lp.task_item_id,
+                         ct.logger_entry,
+                         ct.task_item_id,
+                         ct.task_item_id,
                          null,
                          null
         );
