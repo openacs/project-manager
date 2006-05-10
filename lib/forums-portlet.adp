@@ -15,4 +15,3 @@
 </tr>
 </table>
   <!-- Forums Portlet Stop -->
-@base_url@
