@@ -49,7 +49,7 @@ if { $exclude_observers_p } {
 	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"]} {
 	    # Not an observer. Added to the list
 	    set party_id [lindex $assignee 0]
-	    set name [person::name -party_id $party_id]
+	    set name [person::name -person_id $party_id]
 	    set email [party::email -party_id $party_id]
 
 	    if {$show_role_p} {
@@ -65,7 +65,7 @@ if { $exclude_observers_p } {
     # We want every assignee so we just get the assignees name
     foreach assignee $assignees {
 	set party_id [lindex $assignee 0]
-	set name [person::name -party_id $party_id]
+	set name [person::name -person_id $party_id]
 	set email [party::email -party_id $party_id]
 
 	if {$show_role_p} {
