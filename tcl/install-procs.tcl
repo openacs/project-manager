@@ -149,7 +149,7 @@ ad_proc -private pm::install::after_upgrade {
         -from_version_name $from_version_name \
         -to_version_name $to_version_name \
         -spec {
-	    3.0b4 3.1d12 {
+	    3.1d11 3.1d12 {
                 ns_log notice "Running Post-Upgrade Routine"
 		db_transaction {
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {project_code} -datatype {string} -pretty_name {[_ project-manager.Project_code]} -pretty_plural {[_ project-manager.Project_codes]} -column_spec {varchar(255)}
@@ -166,7 +166,6 @@ ad_proc -private pm::install::after_upgrade {
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {actual_hours_completed} -datatype {number} -pretty_name {[_ project-manager.lt_Actual_hours_complete]} -pretty_plural {[_ project-manager.lt_Actual_hours_complete]} -column_spec {numeric}
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {estimated_hours_total} -datatype {number} -pretty_name {[_ project-manager.lt_Estimated_hours_total]} -pretty_plural {[_ project-manager.lt_Estimated_hours_total]} -column_spec {numeric}
 		    content::type::attribute::new -content_type {pm_project} -attribute_name {logger_project} -datatype {integer} -pretty_name {[_ project-manager.lt_Linked_logger_project]} -pretty_plural {[_ project-manager.lt_Linked_logger_project_1]} -column_spec {integer}
-
 		    content::type::attribute::new -content_type {pm_task} -attribute_name {priority} -datatype {integer} -pretty_name {[_ project-manager.Priority_1]} -pretty_plural {[_ project-manager.Priorities]} -column_spec {integer}
 		
                 }

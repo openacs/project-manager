@@ -161,13 +161,12 @@ if {[exists_and_not_null orderby]} {
 if {![exists_and_not_null elements]} {
     set elements [list \
 		      task_item_id \
+		      priority \
 		      title \
-		      slack_time \
 		      role \
-		      latest_start \
 		      end_date \
 		      status_type \
-		      remaining \
+		      estimated_hours_work_max \
 		      worked \
 		      project_item_id \
 		      percent_complete \
@@ -340,7 +339,7 @@ if { $orderby_p } {
 			   } \
 			   priority {
 			       orderby_asc "priority, earliest_start, task_item_id asc"
-			       orderby_desc "priority desc, earliest_start desc, task_item_id desc"
+			       orderby_desc "priority desc, task_item_id desc,  earliest_start desc"
 			       default_direction desc
 			   } \
 			   end_date {

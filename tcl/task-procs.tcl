@@ -2669,7 +2669,7 @@ ad_proc -public pm::task::default_orderby {
 } {
     if {[empty_string_p $set]} {
         
-        set default_orderby "end_date,asc"
+        set default_orderby "priority,desc"
         
         set return_val [ad_get_client_property \
                             -default $default_orderby \
