@@ -48,14 +48,15 @@ if { $exclude_observers_p } {
 	# to see if it is an observer.
 	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"]} {
 	    # Not an observer. Added to the list
-	    set name [person::name -person_id [lindex $assignee 0]]
-	    set email [party::email -party_id [lindex $assignee 0]]
+	    set party_id [lindex $assignee 0]
+	    set name [person::name -party_id $party_id]
+	    set email [party::email -party_id $party_id]
 
 	    if {$show_role_p} {
 		# display assigned role
-		lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $email]
+		lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $party_id]
 	    } else {
-		lappend assignee_list [list "$name ($email)" $email]
+		lappend assignee_list [list "$name ($email)" $party_id]
 	    }
 
 	}
@@ -63,21 +64,22 @@ if { $exclude_observers_p } {
 } else {
     # We want every assignee so we just get the assignees name
     foreach assignee $assignees {
-	set name [person::name -person_id [lindex $assignee 0]]
-	set email [party::email -party_id [lindex $assignee 0]]
+	set party_id [lindex $assignee 0]
+	set name [person::name -party_id $party_id]
+	set email [party::email -party_id $party_id]
 
 	if {$show_role_p} {
 	    # display assigned role
-	    lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $email]
+	    lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $party_id]
 	} else {
-	    lappend assignee_list [list "$name ($email)" $email]
+	    lappend assignee_list [list "$name ($email)" $party_id]
 	}
     }
 }
 
-set listed_emails {}
+set listed_party_ids {}
 foreach assignee $assignee_list {
-    lappend listed_emails [lindex $assignee 1]
+    lappend listed_party_ids [lindex $assignee 1]
 }
 
     
@@ -89,23 +91,11 @@ foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object
 	    set name [person::name -person_id [lindex $assignee 0]]
 	    set email [party::email -party_id [lindex $assignee 0]]
 	    
-	    if {[lsearch -exact $listed_emails $email] == -1} {
+	    if {[lsearch -exact $listed_party_ids $email] == -1} {
 		lappend assignee_list [list "$name ($email)" $email]
-		lappend listed_emails $email
+		lappend listed_party_ids $email
 	    }
 	}
-    }
-}
-	
-
-set employee_list [group::get_members -group_id [group::get_id -group_name "Employees"]]
-foreach employee_id $employee_list {
-    set name [person::name -person_id $employee_id]
-    set email [party::email -party_id $employee_id]
-
-    if {[lsearch -exact $listed_emails $email] == -1} {
-	lappend assignee_list [list "$name ($email)" $email]
-	lappend listed_emails $email
     }
 }
 
@@ -135,61 +125,45 @@ ad_form -name comment \
             {html { rows 9 cols 40 wrap soft}}}
     }
 
-# We will add a check/uncheck element to call the javascript function,
-# this works only when the elements in the list is greather than one
-set default_checked_p 0
-
-if {$default_checked_p} {
-    if { [llength $assignee_list] > 1 } {
-	ad_form -extend -name comment -form {
-	    {check_uncheck:text(checkbox),multiple,optional
-		{label "[_ project-manager.check_uncheck]"}
-		{options {{"" 1}}}
-		{value 1}
-		{section "[_ project-manager.Email]" }
-		{html {onclick check_uncheck_boxes(this.checked)}}
-	    }
-	    {to:text(checkbox),optional,multiple
-		{label "[_ project-manager.Send_email]"}
-		{options $assignee_list}
-		{html {checked 1}}
-	    }
-	} 
-    } else {
-	ad_form -extend -name comment -form {
-	    {to:text(checkbox),optional
-		{label "[_ project-manager.Send_email]"}
-		{section "[_ project-manager.Email]" }
-		{options $assignee_list}
-		{html {checked 1}}
-	    }
-	} 
+ad_form -extend -name comment -form {
+    {assignee:text(checkbox),multiple,optional
+	{label "[_ project-manager.Send_email]"}
+	{section "[_ project-manager.Assignees]" }
+	{options $assignee_list}
     }
-} else {
-    if { [llength $assignee_list] > 1 } {
-	ad_form -extend -name comment -form {
-	    {check_uncheck:text(checkbox),multiple,optional
-		{label "[_ project-manager.check_uncheck]"}
-		{options {{"" 1}}}
-		{section "[_ project-manager.Email]" }
-		{html {onclick check_uncheck_boxes(this.checked)}}
+}
+	
+
+foreach group [split [parameter::get -parameter "CommentGroups"] ";"] {
+    set group_id [group::get_id -group_name "$group"]
+    set group_title [group::title -group_name $group]
+    if {![string eq $group_id ""]} {
+	
+	set member_list [group::get_members -group_id $group_id]
+	set assignee_list [list [list $group_title $group_id]]
+
+	foreach member_id $member_list {
+	    set name [contact::name -party_id $member_id]
+	    set email [party::email -party_id $member_id]
+	    
+	    if {[lsearch -exact $listed_party_ids $member_id] == -1} {
+		lappend assignee_list [list "$name ($email)" $member_id]
+		lappend listed_party_ids $member_id
 	    }
-	    {to:text(checkbox),optional,multiple
-		{label "[_ project-manager.Send_email]"}
-		{options $assignee_list}
-	    }
-	} 
-    } else {
-	ad_form -extend -name comment -form {
-	    {to:text(checkbox),optional
-		{label "[_ project-manager.Send_email]"}
-		{section "[_ project-manager.Email]" }
-		{options $assignee_list}
+	}
+
+	if {[llength $assignee_list] > 0} {
+	    ad_form -extend -name comment -form {
+		{${group_id}:text(checkbox),multiple,optional
+		    {label "[_ project-manager.Send_email]"}
+		    {section "$group_title" }
+		    {options $assignee_list}
+		}
 	    }
 	} 
     }
 }
- 
+
 ad_form -extend -name comment -form {
     {attach_p:text(select),optional
 	{label "[_ project-manager.Attach_a_file]"}
@@ -205,6 +179,14 @@ ad_form -extend -name comment -form {
     # insert the comment into the database
     set description_body [template::util::richtext::get_property contents $description]
     set description_format [template::util::richtext::get_property format $description]
+
+    set to_party_ids $assignee
+    foreach group [split [parameter::get -parameter "CommentGroups"] ";"] {
+	set group_id [group::get_id -group_name "$group"]
+	foreach assignee_id [set $group_id] {
+	    lappend to_party_ids "$assignee_id"
+	}
+    }
     
     set comment_id [pm::util::general_comment_add \
 			-object_id $object_id \
@@ -212,7 +194,7 @@ ad_form -extend -name comment -form {
 			-comment "$description_body" \
 			-mime_type "$description_format" \
 			-send_email_p "t" \
-			-to "$to" \
+			-to_party_ids "$to_party_ids" \
 			-type $type]
     
     # does not seem to be working for some reason

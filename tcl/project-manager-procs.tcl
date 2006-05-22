@@ -329,6 +329,7 @@ ad_proc -public pm::util::general_comment_add {
     {-peeraddr ""}
     {-type "task"}
     {-to ""}
+    {-to_party_ids ""}
     {-send_email_p "f"}
 } {
     Adds a general comment to a task or project
@@ -353,6 +354,8 @@ ad_proc -public pm::util::general_comment_add {
     @param type Either task or project. 
     
     @param to Emails of users to send the message.
+
+    @param to_party_ids List of party_ids to whom to send the email
 
     @param send_email_p Whether or not to send out an email
     notification t or f
@@ -443,75 +446,64 @@ ad_proc -public pm::util::general_comment_add {
 
         if {[string equal $type task]} {
 	    
-	    set assignees $to
-            if {[llength $assignees] > 0} {
-
-                set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
-                
-                set task_url [pm::task::get_url $object_id]
-                
-                set subject "Task comment: $title"
-                
-                # convert to HTML
-                set richtext_list [list $comment $mime_type]
-                set comment_html [template::util::richtext::get_property html_value $richtext_list]
-
-                set content "<a href=\"$task_url\">$title</a> <p />$comment_html"
-
-		set project_item_id [pm::task::project_item_id -task_item_id $object_id]
-
-		foreach to_address $assignees {
-		    acs_mail_lite::complex_send \
-			-send_immediately \
-			-to_addr  "$to_address" \
-			-from_addr "$from_address" \
-			-subject "$subject" \
-			-body $content \
-			-mime_type "text/html" \
-			-object_id "$project_item_id" \
-			-use_sender \
-			-no_callback
-		}
-            }
-
-        }
+	    set from_address [party::email -party_id $user_id]
+	    
+	    set task_url [pm::task::get_url $object_id]
+	    
+	    set subject "Task comment: $title"
+	    
+	    # convert to HTML
+	    set richtext_list [list $comment $mime_type]
+	    set comment_html [template::util::richtext::get_property html_value $richtext_list]
+	    
+	    set content "<a href=\"$task_url\">$title</a> <p />$comment_html"
+	    
+	    set project_item_id [pm::task::project_item_id -task_item_id $object_id]
+	    
+	    acs_mail_lite::complex_send \
+		-send_immediately \
+		-to_addr  "$to" \
+		-to_party_ids "$to_party_ids" \
+		-from_addr "$from_address" \
+		-subject "$subject" \
+		-body $content \
+		-mime_type "text/html" \
+		-object_id "$project_item_id" \
+		-use_sender \
+		-no_callback \
+		-single_email
+	}
 
         # project
 
         if {[string equal $type project]} {
 
-	    set assignees $to
-            if {[llength $assignees] > 0} {
-
-                set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
-                
-                set project_url [pm::project::url \
-                                     -project_item_id $object_id]
-                
-                set subject "[_ project-manager.lt_Project_comment_title]"
-
-                # convert to HTML
-                set richtext_list [list $comment $mime_type]
-                set comment_html [template::util::richtext::get_property html_value $richtext_list]
-
-                set content "<a href=\"$project_url\">$title</a> <p />$comment_html"
-
-
-		foreach to_address $assignees {
-		    acs_mail_lite::complex_send \
-			-send_immediately \
-			-to_addr  "$to_address" \
-			-from_addr "$from_address" \
-			-subject "$subject" \
-			-body $content \
-			-mime_type "text/html" \
-			-object_id "$object_id" \
-			-no_callback \
-			-use_sender
-		}
-		
-            }
-
+	    set from_address [db_string get_from_email "select email from parties where party_id = :user_id" -default "nobody@nowhere.com"]
+	    
+	    set project_url [pm::project::url \
+				 -project_item_id $object_id]
+	    
+	    set subject "[_ project-manager.lt_Project_comment_title]"
+	    
+	    # convert to HTML
+	    set richtext_list [list $comment $mime_type]
+	    set comment_html [template::util::richtext::get_property html_value $richtext_list]
+	    
+	    set content "<a href=\"$project_url\">$title</a> <p />$comment_html"
+	    
+	    
+	    acs_mail_lite::complex_send \
+		-send_immediately \
+		-to_addr  "$to" \
+		-to_party_ids "$to_party_ids" \
+		-from_addr "$from_address" \
+		-subject "$subject" \
+		-body $content \
+		-mime_type "text/html" \
+		-object_id "$object_id" \
+		-no_callback \
+		-single_email \
+		-use_sender
         }
     }
 
