@@ -9,6 +9,8 @@ ad_page_contract {
     project_id:integer,notnull
     {party_ids:multiple ""}
     {party_id ""}
+    {cc ""}
+    {bcc ""}
 }
 
 # Get the project_item_id and the project_name
