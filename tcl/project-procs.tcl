@@ -1515,9 +1515,43 @@ ad_proc -public pm::project::compute_status {project_item_id} {
     return $task_list
 
 }
+    
+    
+ad_proc -public pm::project::parent_project_id {
+    {-project_id:required}
+    {-respect_subproject:boolean}
+} {
+    get the project_id of the parent project
+} {
+    if {![db_0or1row project_parent {}] || ($respect_subproject_p && $subproject_p == "t")} {
+	return ""
+    } else {
+	return $parent_id
+    }
+}
 
+ad_proc -public pm::project::root_project {
 
+    {-project_item_id:required}
+    {-package_id ""}
+} {
+    
+    Return the root project of a given subproject.
+    
+    @param project_item_id Project who's root we are looking for
+    
+    @return project_item_id of the root project
+} {
 
+    # get main project_id
+    set next_parent_id $project_item_id
+    while {![empty_string_p $next_parent_id]} {
+	set project_parent_id $next_parent_id
+	set next_parent_id [pm::project::parent_project_id -project_id $project_parent_id]
+    }
+
+    return $project_parent_id
+}
 
 ad_proc -public pm::project::compute_parent_status {project_item_id} {
 
@@ -1545,7 +1579,7 @@ ad_proc -public pm::project::compute_parent_status {project_item_id} {
         set my_item_id $parent_id
     }
 
-    # ns_log Notice "root: $root_folder , last_item_id $last_item_id"
+    ns_log Debug "root: $root_folder , last_item_id $last_item_id"
 
     set return_code [pm::project::compute_status $last_item_id]
 
@@ -2270,7 +2304,13 @@ ad_proc -public pm::project::compute_status_mins {
 	    
 	    set date [lindex [split $task_deadline " "] 0]
 	    set hours [lindex [split [lindex [split $task_deadline " "] 1] :] 0]
+	    if {[string length $hours] > 1} {
+		set hours [string trimleft $hours]
+	    }
 	    set mins  [lindex [split [lindex [split $task_deadline " "] 1] :] 1]
+	    if {[string length $mins] > 1} {
+		set mins [string trimleft $mins]
+	    }
 	    set mins [expr ($hours*60) + $mins]
 	    
 	    set date_j [dt_ansi_to_julian_single_arg $date]
@@ -2374,7 +2414,13 @@ ad_proc -public pm::project::compute_status_mins {
 	    
 	    set date [lindex [split $earliest_start($task_item) " "] 0]
 	    set hours [lindex [split [lindex [split $earliest_start($task_item) " "] 1] :] 0]
+	    if {[string length $hours] > 1} {
+		set hours [string trimleft $hours]
+	    }
 	    set mins  [lindex [split [lindex [split $earliest_start($task_item) " "] 1] :] 1]
+	    if {[string length $mins] > 1} {
+		set mins [string trimleft $mins]
+	    }
 	    set mins [expr ($hours*60) + $mins]
 	    
 	    set date_j [dt_ansi_to_julian_single_arg $date]
@@ -2650,7 +2696,13 @@ ad_proc -public pm::project::compute_status_mins {
 		
 		set date [lindex [split $latest_finish($task_item) " "] 0]
 		set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
+		if {[string length $hours] > 1} {
+		    set hours [string trimleft $hours]
+		}
 		set mins  [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 1]
+		if {[string length $mins] > 1} {
+		    set mins [string trimleft $mins]
+		}
 		set mins [expr ($hours*60) + $mins]
 		
 		set date_j [dt_ansi_to_julian_single_arg $date]
@@ -2706,8 +2758,14 @@ ad_proc -public pm::project::compute_status_mins {
                     
                     set date [lindex [split $latest_finish($task_item) " "] 0]
                     set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
+		    if {[string length $hours] > 1} {
+			set hours [string trimleft $hours]
+		    }
                     set hours [lc_parse_number $hours en_US]
                     set mins  [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 1]
+		    if {[string length $mins] > 1} {
+			set mins [string trimleft $mins]
+		    }
                     set mins [expr ($hours*60) + $mins]
                     set date_j [dt_ansi_to_julian_single_arg $date]
                     set today_j $date_j

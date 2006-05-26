@@ -169,6 +169,20 @@
     </querytext>
   </fullquery>
 
+
+   <fullquery name="pm::project::parent_project_id.project_parent">
+         <querytext>
+
+	select i.parent_id
+	from cr_items i, cr_items ip, pm_projects p, pm_projects pp
+	where i.item_id = :project_id
+	and ip.item_id = i.parent_id
+	and p.project_id = i.latest_revision
+	and pp.project_id = ip.latest_revision
+
+         </querytext>
+   </fullquery>
+
   <fullquery name="pm::project::compute_parent_status.get_parent_id">
     <querytext>
         select
