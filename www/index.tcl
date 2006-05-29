@@ -52,7 +52,7 @@ ad_page_contract {
 # Sending only one value to the include
 set date_range "${start_range_f}/$end_range_f"
 
-set exporting_vars { status_id category_id assignee_id orderby format }
+set exporting_vars { status_id category_id assignee_id orderby format pm_status_id pm_contact_id pm_etat_id previous_status_f current_package_f subprojects_p }
 set hidden_vars [export_vars -form $exporting_vars]
 
 # set up context bar
@@ -108,3 +108,6 @@ if {[exists_and_not_null orderby]} {
 if {$current_package_f ne 1} {
     set current_package_f $package_id
 }
+
+# Retrieving the name of the template to call
+set template_src [parameter::get -parameter "ProjectList"]

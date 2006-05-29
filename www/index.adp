@@ -5,7 +5,7 @@
 <property name="title">#project-manager.Projects#</property>
 <property name="context">@context;noquote@</property>
 
-<include src="/packages/project-manager/lib/projects" 
+<include src="@template_src@" 
 	orderby="@orderby;noquote@" 
 	pm_status_id="@pm_status_id@" 
 	searchterm="@searchterm@" 
@@ -26,5 +26,7 @@
 	page="@page@"
 	page_num="@page_num@" 
 	subprojects_p="@subprojects_p@"
+	pm_etat_id="@pm_etat_id@"
+	pm_contact_id="@pm_contact_id@"
 	/>
 

@@ -152,13 +152,12 @@ if {![empty_string_p $searchterm]} {
 	set start_range_f [lindex [split $date_range "/"] 0]
 	set end_range_f [lindex [split $date_range "/"] 1]
 	if {![empty_string_p $start_range_f] && ![empty_string_p $end_range_f]} {
-	    set p_range_where "to_char(p.planned_end_date,'YYYY-MM-DD') >= :start_range_f and
-                       to_char(p.planned_end_date,'YYYY-MM-DD') <= :end_range_f"
+	    set p_range_where "p.planned_start_date > to_timestamp(:start_range_f, 'YYYY-MM-DD') and p.planned_start_date < to_timestamp(:end_range_f, 'YYYY-MM-DD') + interval '1 day'"
 	} else {
 	    if {![empty_string_p $start_range_f] } {
-		set p_range_where "to_char(p.planned_end_date,'YYYY-MM-DD') >= :start_range_f"
+		set p_range_where "p.planned_start_date > to_timestamp(:start_range_f, 'YYYY-MM-DD')"
 	    } elseif { ![empty_string_p $end_range_f] } {
-		set p_range_where "to_char(p.planned_end_date,'YYYY-MM-DD') <= :end_range_f"
+		set p_range_where "p.planned_start_date < to_timestamp(:end_range_f, 'YYYY-MM-DD') + interval '1 day'"
 	    } else {
 		set p_range_where ""
 	    }
@@ -320,6 +319,8 @@ set filters [list \
 				  where_clause {c.category_id = [join [value_if_exists category_id] ","]}
 			     ] \
 		 user_space_p [list] \
+		 start_range_f [list] \
+		 end_range_f [list] \
 		 subprojects_p [list \
 				    label "[_ project-manager.ShowSubprojects]" \
 				    values { {"[_ project-manager.True]" t } { "[_ project-manager.False]" f} } \
