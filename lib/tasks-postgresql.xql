@@ -131,7 +131,7 @@
 	and cp.live_revision = o.object_id
         [template::list::filter_where_clauses -and -name tasks]
         group by t.item_id, t.title, t.description, status, t.end_date,
-    t.latest_finish, t.latest_start, t.earliest_start, t.priority
+    t.latest_finish, t.latest_start, t.earliest_start, t.priority, t.estimated_hours_work_max
         [template::list::orderby_clause -name tasks -orderby]
     </querytext>
 </fullquery>

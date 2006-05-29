@@ -227,6 +227,10 @@ set filters [list \
 				 label "[_ project-manager.Project_1]" \
 				 where_clause "$project_item_where_clause"
 			    ] \
+		 page_size [list \
+				label "[_ project-manager.Page_Size]" \
+				values {10 20 30 50 100 500}
+			    ] \
 		 project_item_id [list \
 				      label "[_ project-manager.Project_1]" \
 				      where_clause "$project_item_where_clause"
@@ -346,6 +350,11 @@ if { $orderby_p } {
 			       orderby_asc "end_date, task_item_id asc"
 			       orderby_desc "end_date desc, task_item_id desc"
 			       default_direction asc
+			   } \
+			   estimated_hours_work_max {
+			       orderby_asc "estimated_hours_work_max, task_item_id asc"
+			       orderby_desc "estimated_hours_work_max desc, task_item_id desc"
+			       default_direction desc
 			   } \
 			  ]
 } else {

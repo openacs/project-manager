@@ -24,7 +24,7 @@
 	page_num="@page_num@" 
 	base_url="@base_url@" 
 	searchterm="@searchterm@" 
-	orderby="@orderby@" 
+	orderby_tasks="@orderby_tasks@" 
 	role_id="@role_id@" 
 	filter_package_id="@filter_package_id@" 
 	subproject_tasks="@subproject_tasks@"
