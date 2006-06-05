@@ -3336,6 +3336,25 @@ ad_proc -public pm::project::year_month_day_filter {
     return $html
 }
 
+ad_proc -public pm::project::subprojects {
+    {-project_item_id:required}
+} {
+    get the project_item_ids of the current project and all subprojects
+} {
+    set project_list $project_item_id
+    set count 0
+    while {$count < [llength $project_list]} {
+	set count [llength $project_list]
+	db_foreach subprojects {} {
+	    if {[lsearch -exact $project_list $project_item_id] == -1} {
+		lappend project_list $project_item_id
+	    }
+	}
+    }
+
+    return $project_list
+}
+
 ad_proc -public pm::project::get_all_subprojects {
     {-project_item_id:required}
 } {

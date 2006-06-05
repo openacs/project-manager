@@ -540,21 +540,6 @@ ad_proc -public pm::util::email {
     @error 
 } {
 
-    # HTML portions of this copied from notification::email::send
-
-    if {[string equal $mime_type "text/plain"]} {
-        set body_text $body
-        set body_html [ad_html_text_convert -from $mime_type -to "text/html" -- $body]
-    } elseif {[string equal $mime_type "text/html"]} {
-        set body_text [ad_html_text_convert -from $mime_type -to "text/plain" -- $body]
-        set body_html $body
-
-    } else {
-        set body_text [ad_html_text_convert -from $mime_type -to "text/plain" -- $body]
-        set body_html [ad_html_text_convert -from $mime_type -to "text/html" -- $body]
-
-    }
-
     # Use this to build up extra mail headers
     set extra_headers [ns_set new]
 

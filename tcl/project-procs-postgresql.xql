@@ -402,6 +402,17 @@
     </querytext>
   </fullquery>
 
+   <fullquery name="pm::project::subprojects.subprojects">
+         <querytext>
+
+	    select i.item_id as project_item_id
+	    from cr_items i, pm_projects p
+	    where p.project_id = i.latest_revision
+	    and i.parent_id in ([join $project_list ,])
+
+         </querytext>
+   </fullquery>
+
 <fullquery name="pm::project::get_all_subprojects_not_cached.get_subprojects">
     <querytext>
 	select 
