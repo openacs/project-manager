@@ -88,12 +88,13 @@ foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object
     set sub_assignees [pm::project::assignee_role_list -project_item_id $subproject_id]
     foreach assignee $sub_assignees {
 	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"] || $exclude_observers_p != 1 } {
-	    set name [person::name -person_id [lindex $assignee 0]]
-	    set email [party::email -party_id [lindex $assignee 0]]
+	    set party_id [lindex $assignee 0]
+	    set name [person::name -person_id $party_id]
+	    set email [party::email -party_id $party_id]
 	    
-	    if {[lsearch -exact $listed_party_ids $email] == -1} {
-		lappend assignee_list [list "$name ($email)" $email]
-		lappend listed_party_ids $email
+	    if {[lsearch -exact $listed_party_ids $party_id] == -1} {
+		lappend assignee_list [list "$name ($email)" $party_id]
+		lappend listed_party_ids $party_id
 	    }
 	}
     }
