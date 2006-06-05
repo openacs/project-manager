@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d21" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d27" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -72,6 +72,7 @@
   <msg key="Comments">Kommentare</msg>
   <msg key="Complete">Fertig:</msg>
   <msg key="Contact">Ansprechpartner</msg>
+  <msg key="Create_Offer_help">Soll automatisch eine Projektaufstellung angelegt werden?</msg>
   <msg key="create_project">Projekt erzeugen</msg>
   <msg key="Created">Erstellt</msg>
   <msg key="Creation_date">Erstellt am</msg>
@@ -137,8 +138,8 @@
   <msg key="Enhanced_Text">Erweiterter Text</msg>
   <msg key="Error">Fehler</msg>
   <msg key="ES">ES</msg>
-  <msg key="Estimated_Hours">Geschätzte Stunden</msg>
-  <msg key="Estimated_Hours_Max">Geschätzte Stunden (max.)</msg>
+  <msg key="Estimated_Hours">Geschätzte Stunden / Zeilen</msg>
+  <msg key="Estimated_Hours_Max">Geschätzte Stunden / Zeilen</msg>
   <msg key="Estimated_Hours_Min">Geschätzte Stunden (min.)</msg>
   <msg key="Estimated_hours_work">Geschätzte Stunden an Arbeit</msg>
   <msg key="False">Falsch</msg>
@@ -389,7 +390,7 @@
   <msg key="Party_ID">Party ID</msg>
   <msg key="People">Personen</msg>
   <msg key="percent">Prozent fertig</msg>
-  <msg key="Percent_Complete">Prozent fertig\</msg>
+  <msg key="Percent_Complete">Prozent fertig</msg>
   <msg key="Percent_complete">% komplett</msg>
   <msg key="Percents_complete">Prozent fertig</msg>
   <msg key="Plain_Text">Nur Text</msg>
@@ -425,7 +426,7 @@
   <msg key="Project_categories">Projektkategorien</msg>
   <msg key="Project_Changes">Änderungen am Projekt</msg>
   <msg key="Project_code">Jobnummer</msg>
-  <msg key="project_code_help">Projekt Code der z.b. vom Kunden verwendet wird</msg>
+  <msg key="project_code_help">Jobnummer die z.b. vom Kunden verwendet wird</msg>
   <msg key="Project_codes">Projektkennziffern</msg>
   <msg key="project_customer_help">Kunde für den dieses Projekt durchgeführt wird</msg>
   <msg key="project_description_help">Beschreibung um was es bei dem Projekt geht</msg>
@@ -515,6 +516,7 @@
   <msg key="Task_calendar">Aufgaben Kalender</msg>
   <msg key="Task_categories">Aufgabenkategorien:</msg>
   <msg key="task_change">Aufgabenveränderungen</msg>
+  <msg key="task_Description_1">Inhalt der Aufgabe</msg>
   <msg key="Task_hours_completed">Abgeschlossen Aufgabenstunden</msg>
   <msg key="Task_name">Name der Aufgabe:</msg>
   <msg key="Task_overview">Aufgabenüberblick</msg>

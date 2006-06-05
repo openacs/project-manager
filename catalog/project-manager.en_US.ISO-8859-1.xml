@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d21" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.1d27" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -72,6 +72,8 @@
   <msg key="Comments">Comments</msg>
   <msg key="Complete">Complete:</msg>
   <msg key="Contact">Contact</msg>
+  <msg key="Create_Offer">Create Offer</msg>
+  <msg key="Create_Offer_help">Automatically create a new offer made up of offer items for each of the combinations given above?</msg>
   <msg key="create_project">Create project</msg>
   <msg key="Created">Created</msg>
   <msg key="Creation_date">Creation date</msg>
@@ -86,6 +88,7 @@
   <msg key="Date_1">Date:</msg>
   <msg key="Dates">Dates</msg>
   <msg key="Dates_1">Dates:</msg>
+  <msg key="Days">Days</msg>
   <msg key="days">days</msg>
   <msg key="Days_work">Days work</msg>
   <msg key="Days_worked">Days worked</msg>
@@ -162,6 +165,7 @@
   <msg key="Jobid">Jobid</msg>
   <msg key="Jobid_help">Insert a keyword to search for a Jobid (project name).</msg>
   <msg key="Key">Key</msg>
+  <msg key="Last">Last</msg>
   <msg key="last_years">Last Years</msg>
   <msg key="Latest_Finish">Latest Finish</msg>
   <msg key="Latest_finish">Latest finish</msg>
@@ -586,6 +590,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Task_calendar">Task calendar</msg>
   <msg key="Task_categories">Task categories</msg>
   <msg key="task_change">task change</msg>
+  <msg key="task_Description_1">Task Description</msg>
   <msg key="Task_hours_completed">Task hours completed</msg>
   <msg key="Task_name">Task Name:</msg>
   <msg key="Task_overview">Task overview</msg>
