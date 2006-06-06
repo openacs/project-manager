@@ -17,6 +17,10 @@ ad_page_contract {
 set project_item_id [pm::project::get_project_item_id -project_id $project_id]
 set project_name [pm::project::name -project_item_id $project_item_id]
 
+if {![exists_and_not_null subject]} {
+    set subject $project_name
+}
+
 set title [_ project-manager.send_message_to]
 set context [list [list "one?project_id=$project_id" $project_name] $title]
 
