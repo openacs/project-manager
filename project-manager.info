@@ -67,7 +67,7 @@
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintUserInfoP"  default="1" description="If set to 1 the comment portlet will show the user information associated with the comment. Default 1." section_name="Comments"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CreateForumP"  default="0" description="If set to 1 a forum will be created for each project. Default 0." section_name="Comments"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CommentGroups"  default="" description="Semikolon seperated list of group names to be used in comments. If you are sending comments the members of each of the groups will be presented as possible recipients of the comment in addition to the assignees." section_name="Comments"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="RatedGroup"  default="Freelancer" description="Groupname of the group, whose members are being rated" section_name="Ratings"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="RatedGroup"  default="" description="Groupname of the group, whose members are being rated" section_name="Ratings"/>
         </parameters>
 
     </version>

@@ -457,9 +457,13 @@ ad_form -extend -name task_add_edit -new_request {
 
     set task_end_date_list [split $end_date(date) "-"]
     append task_end_date_list " [lrange $task_end_time 3 5]"
-
-    set end_date(date) $task_end_date_list 
-    set end_date_sql [pm::util::datenvl -value $end_date(date) -value_if_null "null" -value_if_not_null "to_timestamp('$end_date(date)','YYYY MM DD HH24 MI SS')"]
+    
+    if {$task_end_date_list eq ""} {
+	set end_date_sql "NULL"
+    } else {
+	set end_date(date) $task_end_date_list 
+	set end_date_sql [pm::util::datenvl -value $end_date(date) -value_if_null "null" -value_if_not_null "to_timestamp('$end_date(date)','YYYY MM DD HH24 MI SS')"]
+    }
 
     if {[info exists log_date]} {
 	set log_date_split [split $log_date "-"]

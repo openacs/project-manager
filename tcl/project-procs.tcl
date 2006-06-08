@@ -2694,6 +2694,10 @@ ad_proc -public pm::project::compute_status_mins {
 		
 		set hours_to_complete $activity_time($task_item) 
 		
+		if {[string eq $hours_to_complete ""]} {
+		    set hours_to_complete 0
+		}
+
 		set date [lindex [split $latest_finish($task_item) " "] 0]
 		set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
 		if {[string length $hours] > 1} {
@@ -2769,6 +2773,11 @@ ad_proc -public pm::project::compute_status_mins {
                     set mins [expr ($hours*60) + $mins]
                     set date_j [dt_ansi_to_julian_single_arg $date]
                     set today_j $date_j
+
+		    if {[string eq $hours_to_complete ""]} {
+			set hours_to_complete 0
+		    }
+
                     set mins_to_complete [expr $hours_to_complete * 60]
                     set t_total_mins $mins_to_complete 
 		
