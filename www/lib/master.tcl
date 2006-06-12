@@ -46,6 +46,6 @@ if { $admin_p } {
 }
 
 set navbar_list ""
-foreach {url title} $link_list {
-    lappend navbar_list [list "$url" "$title"]
+foreach {navbar_url navbar_title} $link_list {
+    lappend navbar_list [list "$navbar_url" "$navbar_title"]
 }
