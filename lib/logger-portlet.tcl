@@ -7,7 +7,7 @@
 # @arch-tag: 568fcb7a-e58c-4c1a-901d-a51c9d2ffe44
 # @cvs-id $Id$
 
-foreach required_param {logger_project logger_days project_item_id pm_url return_url} {
+foreach required_param {project_item_id pm_url return_url} {
     if {![info exists $required_param]} {
 	return -code error "$required_param is a required parameter."
     }
@@ -19,6 +19,15 @@ foreach optional_param {master} {
 }
 
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
+
+# Get the current logger project
+set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
+
+# And get the subprojects as well.
+set logger_projects [list $logger_project]
+foreach subproject_id [pm::project::get_all_subprojects -project_item_id $project_item_id] {
+    lappend logger_projects [lindex [application_data_link::get_linked -from_object_id $subproject_id -to_object_type logger_project] 0]
+}
 
 # we can also get the link to the logger instance.
 set logger_url [pm::util::logger_url]

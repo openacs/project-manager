@@ -16,7 +16,7 @@
   <td colspan="2" class="fill-list-bottom">
     <include
       src="/packages/logger/lib/entries"
-      project_id="@logger_project;noquote@"
+      project_ids="@logger_projects@"
       variable_id="@logger_variable_id;noquote@"
       filters_p="f"
       show_tasks_p="1"
