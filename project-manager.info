@@ -7,7 +7,7 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.1d28" url="http://openacs.org/repository/download/apm/project-manager-3.1d28.apm">
+    <version name="3.1d29" url="http://openacs.org/repository/download/apm/project-manager-3.1d29.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <owner url="mailto:malte.sussdorff@cognovis.de">Malte Sussdorff</owner>
         <summary>Project management tool for OpenACS</summary>
@@ -17,11 +17,11 @@
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
-        <provides url="project-manager" version="3.1d28"/>
+        <provides url="project-manager" version="3.1d29"/>
         <requires url="acs-datetime" version="4.0"/>
         <requires url="acs-subsite" version="5.2.0a4"/>
         <requires url="acs-templating" version="5.1.6d1"/>
-        <requires url="acs-mail-lite" version="1.3b1"/>
+        <requires url="acs-mail-lite" version="1.3b2"/>
         <requires url="calendar" version="2.0.1"/>
         <requires url="categories" version="1.0d5"/>
         <requires url="dynamic-types" version="0.1"/>
@@ -49,7 +49,7 @@
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectAdd"  default="/packages/project-manager/templates/project-ae" description="The template for adding/editing of an individual project" section_name="Templates"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packages/project-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectList"  default="/packages/lib/projects" description="The template for display of the list of projects" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectList"  default="/packages/project-manager/lib/projects" description="The template for display of the list of projects" section_name="Templates"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="SendDailyEmail"  default="0" description="Whether or not to send a daily email reminder to all people who are assigned tasks. A 1 indicates yes, and a 0 indicates no." section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>

@@ -457,7 +457,7 @@ template::list::create \
     } \
     -page_size_variable_p 1 \
     -page_size $page_size \
-    -page_flush_p 0 \
+    -page_flush_p 1 \
     -page_query_name projects_pagination \
     -formats {
         normal {

@@ -38,6 +38,6 @@ set task_info(days_remaining) \
 #set task_info(earliest_start)  [lc_time_fmt $task_info(earliest_start) "%x"]
 #set task_info(earliest_finish) [lc_time_fmt $task_info(earliest_finish) "%x"]
 #set task_info(latest_start)    [lc_time_fmt $task_info(latest_start) "%x"]
-set task_info(latest_finish)   [lc_time_fmt $task_info(latest_finish) "%x %H:%M"]
-set task_info(end_date)        [lc_time_fmt $task_info(end_date) "%x %H:%M"]
+#set task_info(latest_finish)   [lc_time_fmt $task_info(latest_finish) "%x %H:%M"]
+#set task_info(end_date)        [lc_time_fmt $task_info(end_date) "%x %H:%M"]
 
