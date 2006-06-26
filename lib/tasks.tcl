@@ -16,7 +16,7 @@
 # page        The page to show on the paginate.
 # page_size   The number of rows to display in the list
 # orderby_p   Set it to 1 if you want to show the order by menu.
-# orderby_tasks     To sort the list using this orderby value
+# orderby     To sort the list using this orderby value
 #
 # For Project Manager Task Portlet:
 # ---------------------------------
@@ -63,7 +63,7 @@ if ![exists_and_not_null page_size] {
 }
 
 if ![info exists orderby_p] {
-    set orderby_p 1
+    set orderby_p 0
 }
 
 if { ![exists_and_not_null tasks_portlet_p] } {
@@ -161,12 +161,13 @@ if {[exists_and_not_null orderby]} {
 if {![exists_and_not_null elements]} {
     set elements [list \
 		      task_item_id \
-		      priority \
 		      title \
+		      slack_time \
 		      role \
+		      latest_start \
 		      end_date \
 		      status_type \
-		      estimated_hours_work_max \
+		      remaining \
 		      worked \
 		      project_item_id \
 		      percent_complete \
@@ -182,36 +183,35 @@ if { [exists_and_not_null subproject_tasks] && [exists_and_not_null pid_filter]}
 }
 
 # Shall we display only items where we are an observer ?
+set observer_from_clause ""
+
 if {[exists_and_not_null is_observer_filter]} {
+    set observer_from_clause " pm_task_assignment ta,  pm_roles r,"
     switch $is_observer_filter {
 	f {
-	    set observer_pagination_clause "and r.is_observer_p = 'f' and ta.party_id = :user_id"
-	    set observer_clause "and r.is_observer_p = 'f'"
+	    set observer_pagination_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and r.is_observer_p = 'f' and ta.party_id = :user_id"
 	} 
 	t {
-	    set observer_pagination_clause "and r.is_observer_p = 't' and ta.party_id = :user_id"
-	    set observer_clause "and r.is_observer_p = 't'"
+	    set observer_pagination_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and r.is_observer_p = 't' and ta.party_id = :user_id"
 	}
 	m {
-	    set observer_pagination_clause "and ta.party_id = :user_id"
-	    set observer_clause ""
+	    set observer_pagination_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and ta.party_id = :user_id"
 	}
     }
 } else {
     set observer_pagination_clause ""
-    set observer_clause ""
 }
 
-set assignee_values [list]
-if { [exists_and_not_null status_id] && $status_id != "-1" } {
-    set assignee_values [pm::task::assignee_filter_select -status_id $status_id]
-} 
-
-if { [llength $assignee_values] == 0 } {
-    set assignee_values [db_list_of_lists get_people " "]
+set party_id_clause ""
+if {[exists_and_not_null filter_party_id]} {
+    set observer_from_clause " pm_task_assignment ta,  pm_roles r,"
+    set party_id_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and ta.party_id = :filter_party_id"
 }
 
-# Seperate some of the filters for searching
+if {[exists_and_not_null filter_group_id]} {
+    set observer_from_clause " pm_task_assignment ta,  pm_roles r,"
+    set party_id_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and ta.party_id in (select member_id from group_member_map where group_id = :filter_group_id)"
+}
 
 set filters [list \
 		 searchterm [list \
@@ -232,24 +232,18 @@ set filters [list \
 				values {10 20 30 50 100 500}
 			    ] \
 		 project_item_id [list \
-				      label "[_ project-manager.Project_1]" \
-				      where_clause "$project_item_where_clause"
+				 label "[_ project-manager.Project_1]" \
+				 where_clause "$project_item_where_clause"
 			    ] \
 		 instance_id [list \
-				  where_clause "o.package_id = :instance_id"
+				  where_clause "op.package_id = :instance_id"
 			     ] \
 		 is_observer_filter [list \
 					 label "[_ project-manager.Observer]" \
 					 values { {"[_ project-manager.Player]" f} { "[_ project-manager.Watcher]" t} } \
 					] \
 		 filter_package_id [list \
-					where_clause "o.package_id = :filter_package_id"
-				   ] \
-		 filter_party_id [list \
-					where_clause "t.party_id = :filter_party_id"
-				   ] \
-		 filter_group_id [list \
-					where_clause "t.party_id in (select member_id from group_member_map where group_id = :filter_group_id)"
+					where_clause "op.package_id = :filter_package_id"
 				   ] \
 		]
 
@@ -297,9 +291,6 @@ set use_bulk_p  [parameter::get -parameter "UseBulkP" -default "0"]
 if { $use_bulk_p == 1 || $bulk_actions_p == 1} {
     set row_list "multiselect {}\n $row_list"
     set bulk_actions [list \
-			  "[_ project-manager.Edit_tasks]" \
-			  "${base_url}task-add-edit" \
-			  "[_ project-manager.Edit_multiple_tasks]" \
 			  "[_ project-manager.Close_tasks]" \
 			  "${base_url}task-bulk-close" \
 			  "[_ project-manager.Close_multiple_tasks]" \
@@ -307,28 +298,16 @@ if { $use_bulk_p == 1 || $bulk_actions_p == 1} {
 			  "${base_url}assign-myself" \
 			  "[_ project-manager.Assign_myself_as_lead]"]
 
-
+    set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 } else {
     set bulk_actions [list]
+    set bulk_action_export_vars [list]
 }
 
-set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 # Orderby's to use in
 if { $orderby_p } {
     set order_by_list [list \
 			   default_value $default_orderby \
-			   title {
-			       label "[_ project-manager.Subject_1]"
-			       orderby_desc "t.title desc, task_item_id"
-			       orderby_asc "t.title asc, task_item_id"
-			       default_direction asc
-			   } \
-			   description {
-			       label "[_ project-manager.Description]"
-			       orderby_desc "t.description desc, task_item_id"
-			       orderby_asc "t.description, task_item_id"
-			       default_direction asc
-			   } \
 			   slack_time {
 			       label "[_ project-manager.Slack_1]"
 			       orderby_desc "(latest_start - earliest_start) desc, task_item_id"
@@ -337,18 +316,23 @@ if { $orderby_p } {
 			   } \
 			   status {
 			       label "[_ project-manager.Status_1]"
-			       orderby_desc "status desc, t.latest_finish desc, task_item_id"
-			       orderby_asc "status asc, t.latest_finish desc, task_item_id"
+			       orderby_desc "status desc, t.end_date desc, task_item_id"
+			       orderby_asc "status asc, t.end_date desc, task_item_id"
+			       default_direction asc
+			   } \
+			   project_item_id {
+			       orderby_asc "op.title asc, priority desc, end_date, task_item_id asc"
+			       orderby_desc "op.title desc, priority desc, end_date desc, task_item_id desc"
 			       default_direction asc
 			   } \
 			   priority {
-			       orderby_asc "priority, earliest_start, task_item_id asc"
-			       orderby_desc "priority desc, task_item_id desc,  earliest_start desc"
+			       orderby_asc "priority, end_date, task_item_id asc"
+			       orderby_desc "priority desc, end_date desc,  earliest_start desc"
 			       default_direction desc
 			   } \
 			   end_date {
-			       orderby_asc "end_date, task_item_id asc"
-			       orderby_desc "end_date desc, task_item_id desc"
+			       orderby_asc "priority desc, end_date, task_item_id asc"
+			       orderby_desc "priority desc, end_date desc, task_item_id desc"
 			       default_direction asc
 			   } \
 			   estimated_hours_work_max {
@@ -382,22 +366,8 @@ template::list::create \
 	title {
 	    label "[_ project-manager.Subject_1]"
 	    display_template {
-		<if @tasks.is_observer_p@ eq "f" and @tasks.party_id@ eq "$user_id">
-		    <if @tasks.red_title_p@>
-		       <font color="red">@tasks.title@</font>
-		    </if>
-		    <else>
-		       <font color="green">@tasks.title@</font>
-		    </else>
-		</if>
-		<else>
-		    <if @tasks.red_title_p@>
-		       <font color="red">@tasks.title@</font>
-		    </if>
-		    <else>
-		        @tasks.title@
-		    </else>
-		</else>
+		<font color="@tasks.title_color@">@tasks.title@</font>
+		<if @tasks.next_assignee_id@ not nil>#wieners.task_list_next_assignee#</if>
 	    }
 	}
         parent_task_id {
@@ -417,8 +387,7 @@ template::list::create \
 	}
         party_id {
             label "[_ project-manager.Who]"
-            display_template {<group column="task_item_id"> <if @tasks.party_id@ eq @tasks.my_user_id@> <span class="selected"> </if> <if @tasks.is_lead_p@><div class="pm_lead"></if> <a href="@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_lead_p@></div></if><if @tasks.is_player_p@><div class="pm_player"></if> <a href="@tasks.user_url@">@tasks.assignee_name@ </a> <if @tasks.is_player_p@></div></if> <if @tasks.party_id@ eq @tasks.my_user_id@> </span> </if> <br> </group>
-            }
+            display_template {@user_html;noquote@}
 	}
 	role {
 	    label "[_ project-manager.Role]"
@@ -492,18 +461,7 @@ template::list::create \
 	}
         last_name {
             label "[_ project-manager.Who]"
-            display_template { 
-		<group column="task_item_id"> 
-		    <if @tasks.party_id@ eq @tasks.my_user_id@> 
-                        <span class="selected"> 
-		    </if>
-		    <if @tasks.role_type@ ne "observer">
-		    <span class="pm_@tasks.role_type@"><if @tasks.assignee_name@ not eq ""> @tasks.assignee_name@</if></span>
-		    </if>
-                    <if @tasks.party_id@ eq @tasks.my_user_id@> 
-                        </span> 
-                    </if> 
-		</group>
+            display_template { @tasks.user_html;noquote@
             }
 	}
     } \
@@ -520,7 +478,7 @@ template::list::create \
     -page_size $page_size \
     -page_flush_p 1 \
     -page_query_name tasks_pagination \
-    -orderby_name orderby_tasks \
+    -orderby_name orderby \
     -html {
 	width 100%
     } \
@@ -573,6 +531,8 @@ set extend_list [list \
 		     project_status \
 		     assignee_name \
 		     red_title_p \
+		     title_color \
+		     user_html \
 		    role_type]
 
 db_multirow -extend $extend_list tasks tasks " " {
@@ -585,44 +545,88 @@ db_multirow -extend $extend_list tasks tasks " " {
 	set more_p 1
 	break
     }
+
+    set assignee_role_list [pm::task::assignee_role_list_ext -task_item_id $task_item_id]
     
-    # Set the role_type, distinguishing leader,players and watchers
-    if {$is_lead_p} {
-	set role_type "lead"
-    } elseif {$is_observer_p} {
-	set role_type "observer"
-    } else {
-	set role_type "player"
-    }
+    set user_html ""
+    set user_is_lead_p 0
+    foreach assignee $assignee_role_list {
+	
+	set assignee_id [lindex $assignee 0]
+	set role_id [lindex $assignee 1]
+	set is_lead_p [lindex $assignee 2]
+	set is_observer_p [lindex $assignee 3]
+	# Set the role_type, distinguishing leader,players and watchers
+	if {$is_lead_p} {
+	    set role_type "lead"
+	} elseif {$is_observer_p} {
+	    set role_type "observer"
+	} else {
+	    set role_type "player"
+	}
 
-    if { $assign_group_p } {
-	# We are going to show all asignees including groups
-	if { $user_instead_full_p } {
-	    if { [catch {set assignee_name [acs_user::get_element -user_id $party_id -element username]} err ] } {
-		set assignee_name [group::title -group_id $party_id]		
+	# if contacts is installed, link to it, otherwise link to pvt home
+	if {[string eq "" $contacts_url]} {
+	    set user_url [export_vars -base "/shared/community-member" {{user_id $assignee_id}}]
+	} else {
+	    set user_url [export_vars \
+			      -base "${contacts_url}contact" {{party_id $assignee_id}}]
+	}
+
+	if { $assign_group_p } {
+	    # We are going to show all asignees including groups
+	    if { $user_instead_full_p } {
+		if { [catch {set assignee_name [acs_user::get_element -user_id $assignee_id -element username]} err ] } {
+		    set assignee_name [group::title -group_id $assignee_id]		
+		}
+	    } else {
+		if { [catch {set assignee_name [person::name -person_id $assignee_id] } err] } {
+		    # person::name give us an error so its probably a group so we get
+		    # the title
+		    set assignee_name [group::title -group_id $assignee_id]
+		}
 	    }
 	} else {
-	    if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
-		# person::name give us an error so its probably a group so we get
-		# the title
-		set assignee_name [group::title -group_id $party_id]
-	    }
-	}
-    } else {
-	if { $user_instead_full_p } {
-	    if { [catch {set assignee_name [acs_user::get_element -user_id $party_id -element username]} err ] } {
+	    if { $user_instead_full_p } {
+		if { [catch {set assignee_name [acs_user::get_element -user_id $assignee_id -element username]} err ] } {
 		# Apparently we did not get the assignee_name, probably because it is not a user.
-		set assignee_name "[person::name -person_id $party_id](no_user!!)"
-	    }
-	} else {
-	    if { [catch {set assignee_name [person::name -person_id $party_id] } err] } {
-		# person::name give us an error so its probably a group, here we don't want
-		# to show any group so we just continue the multirow
-		continue
+		    set assignee_name "[person::name -person_id $assignee_id](no_user!!)"
+		}
+	    } else {
+		if { [catch {set assignee_name [person::name -person_id $assignee_id] } err] } {
+		    # person::name give us an error so its probably a group, here we don't want
+		    # to show any group so we just continue the multirow
+		    continue
+		}
 	    }
 	}
-    }
+        
+	# Display the user differently if the user is the one using the system
+	if {[string eq $assignee_id $user_id]} {
+	    if {[string eq $role_type "lead"]} {
+		set user_is_lead_p 1
+	    }
+	    append user_html "<span class=\"selected\">"
+	} else {
+	    append user_html ""
+	}
 
+	if {[string eq $role_type "lead"]} {
+	    append user_html "<div class=\"pm_lead\">"
+	} elseif {[string eq $role_type "player"]} {
+	    append user_html "<div class=\"pm_player\">"
+	} 	    
+
+	# We dont want to show watchers
+ 	if {![string eq $role_type "observer"]} {
+	    append user_html "<a href=\"$user_url\">$assignee_name</a>"
+	    append user_html "</div></br>"
+	}
+	if {[string eq $assignee_id $user_id]} {
+	    append user_html "</span>"
+	}
+    }
+    
     set item_url [export_vars \
 		      -base "task-one" {{task_id $task_item_id}}]
     set edit_url [export_vars \
@@ -645,19 +649,26 @@ db_multirow -extend $extend_list tasks tasks " " {
 	set project_name "[string index [lang::util::localize $project_status] 0]-$project_name"
     }
 
-    set red_title_p 0
-    set sysdate [dt_sysdate -format "%Y-%m-%d %H:%M:%S"]
-    if { [exists_and_not_null latest_start]} {
-	if { $sysdate > $latest_start } {
-	    set red_title_p 1
-	}
-    } elseif {[exists_and_not_null end_date]} {
-	if { $sysdate > $end_date } {
-	    set red_title_p 1
-	}
-    } else {
-	set red_title_p 0
+    # Default color is black
+    set title_color "black"
+    
+    # If you are not an observer, make the color green
+    if {$user_is_lead_p} {
+	set title_color "green"
     }
+
+    # Color the task red if the task is overdue
+    #set sysdate [dt_sysdate -format "%Y-%m-%d %H:%M:%S"]
+#    if { [exists_and_not_null latest_start]} {
+#	if { $sysdate > $latest_start } {
+#	    set title_color "red"
+#	}
+#    } elseif {[exists_and_not_null end_date]} {
+#	if { $sysdate > $end_date } {
+#	    set title_color "red"
+#	}
+#    }
+
     set red_title_p 0
     
     if {[exists_and_not_null earliest_start_j]} {
@@ -698,13 +709,6 @@ db_multirow -extend $extend_list tasks tasks " " {
     }
     set my_user_id $user_id
     
-    # if contacts is installed, link to it, otherwise link to pvt home
-    if {[string eq "" $contacts_url]} {
-	set user_url [export_vars -base "/shared/community-member" {{user_id $party_id}}]
-    } else {
-	set user_url [export_vars \
-			  -base "${contacts_url}contact" {{party_id $party_id}}]
-    }
 
     acs_object::get -object_id $task_item_id -array task_array
     set base_url [lindex [site_node::get_url_from_object_id -object_id $task_array(package_id)] 0]
