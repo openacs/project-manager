@@ -62,4 +62,4 @@ ad_form -extend -name logger \
     -new_data {
     } \
     -edit_data {
-    } \
+    }
