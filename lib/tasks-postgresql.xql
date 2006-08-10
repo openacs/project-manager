@@ -29,7 +29,6 @@
         s.status_type,
         s.description as status_description,
  	t.priority,
- 	t.next_assignee_id,
 	t.parent_id,
 	op.title as project_name
 	FROM

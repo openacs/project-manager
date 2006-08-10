@@ -32,7 +32,7 @@
 #                then filters would be added as well.
 
 set required_param_list [list]
-set optional_param_list [list orderby searchterm page actions_p base_url page_num page_size bulk_actions_p]
+set optional_param_list [list tasks_orderby searchterm page actions_p base_url page_num page_size bulk_actions_p]
 set optional_unset_list [list \
 			     filter_party_id filter_group_id pid_filter \
 			     is_observer_filter instance_id filter_package_id \
@@ -103,7 +103,7 @@ if {[parameter::get \
     set days_string "hours"
 }
 
-set exporting_vars {status_id party_id orderby page_num}
+set exporting_vars {status_id party_id tasks_orderby page_num}
 set hidden_vars [export_vars \
 		     -no_empty -form $exporting_vars]
 
@@ -367,7 +367,6 @@ template::list::create \
 	    label "[_ project-manager.Subject_1]"
 	    display_template {
 		<font color="@tasks.title_color@">@tasks.title@</font>
-		<if @tasks.next_assignee_id@ not nil>#wieners.task_list_next_assignee#</if>
 	    }
 	}
         parent_task_id {
@@ -478,7 +477,7 @@ template::list::create \
     -page_size $page_size \
     -page_flush_p 1 \
     -page_query_name tasks_pagination \
-    -orderby_name orderby \
+    -orderby_name tasks_orderby \
     -html {
 	width 100%
     } \

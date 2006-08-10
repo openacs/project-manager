@@ -19,8 +19,8 @@
     <include src=/packages/project-manager/lib/tasks project_id="@project_id@"
     pid_filter="@project_item_id@" return_url="@return_url@"
     elements="@elements@" display_mode="list" fmt=@fmt@
-    instance_id="@instance_id@" status_id="1" page="@page@"
-    page_size="@page_size@" orderby_tasks="@orderby_tasks@">
+    instance_id="@instance_id@" status_id="1" page="@page@" orderby_p="@orderby_p@"
+    page_size="@page_size@" tasks_orderby="@tasks_orderby@">
   </td>
 </tr>
 <tr class="list-button-bar">
