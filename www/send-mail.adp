@@ -12,5 +12,4 @@
        file_ids    = revision_id of files you wan't to include in your message
 
  -->
-
 <include src="/packages/acs-mail-lite/lib/email" party_ids=@party_ids@ export_vars=@export_vars@ return_url=@return_url;noquote@ object_id=@project_item_id@ no_callback_p="f" checked_p="f" use_sender_p="f" cc="@cc@" bcc="@bcc@" mime_type="@mime_type@" subject="@subject@">
