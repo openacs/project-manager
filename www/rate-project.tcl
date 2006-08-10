@@ -64,36 +64,39 @@ db_multirow dimensions get_dimensions_list { } {
 set created_elements [list]
 
 # We generate the form
-foreach dimension $dimensions_list {
-    foreach user $users_list {
-	set assignee_id [lindex $user 0]
-	set label [lindex $user 1]
-	ad_form -extend -name rate_project -form [ratings::dimension_ad_form_element -object_id $assignee_id \
-						      -dimension_key [lindex $dimension 0] \
-						      -section  "[lindex $dimension 1]:" \
-						      -label "{$label}" \
-						      -show_stars_p "f"]
-	lappend created_elements "${assignee_id}.[lindex $dimension 0]"
-    }
-}
-
-ad_form -extend -name rate_project -on_submit {
-    foreach element $created_elements {
-	set element_info [split $element "."]
-	set rating [template::element::get_value rate_project $element]
-	if {![empty_string_p $rating]} {
-	    set object_id [lindex $element_info 0]
-	    set dimension_key [lindex $element_info 1]
-	    set rating_id [ratings::rate -dimension_key $dimension_key \
-			       -object_id $object_id \
-			       -user_id $user_id \
-			       -rating $rating \
-			       -nomem_p "t"]
-	    db_dml update_context_id { }
+if {[llength $users_list]>0} {
+    foreach dimension $dimensions_list {
+	foreach user $users_list {
+	    set assignee_id [lindex $user 0]
+	    set label [lindex $user 1]
+	    ad_form -extend -name rate_project -form [ratings::dimension_ad_form_element -object_id $assignee_id \
+							  -dimension_key [lindex $dimension 0] \
+							  -section  "[lindex $dimension 1]:" \
+							  -label "{$label}" \
+							  -show_stars_p "f"]
+	    lappend created_elements "${assignee_id}.[lindex $dimension 0]"
 	}
-
     }
-} -after_submit {
+    
+    ad_form -extend -name rate_project -on_submit {
+	foreach element $created_elements {
+	    set element_info [split $element "."]
+	    set rating [template::element::get_value rate_project $element]
+	    if {![empty_string_p $rating]} {
+		set object_id [lindex $element_info 0]
+		set dimension_key [lindex $element_info 1]
+		set rating_id [ratings::rate -dimension_key $dimension_key \
+				   -object_id $object_id \
+				   -user_id $user_id \
+				   -rating $rating \
+				   -nomem_p "t"]
+		db_dml update_context_id { }
+	    }
+	    
+	}
+    } -after_submit {
+	ad_returnredirect "one?project_id=$project_id"
+    }
+} else {
     ad_returnredirect "one?project_id=$project_id"
 }
-
