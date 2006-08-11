@@ -2774,7 +2774,7 @@ ad_proc -public pm::project::compute_status_mins {
                     set date_j [dt_ansi_to_julian_single_arg $date]
                     set today_j $date_j
 
-		    if {[string eq $hours_to_complete ""]} {
+		    if {![exists_and_not_null hours_to_complete]} {
 			set hours_to_complete 0
 		    }
 
