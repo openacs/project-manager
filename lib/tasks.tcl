@@ -58,11 +58,11 @@ foreach optional_unset $optional_unset_list {
     }
 }
 
-if ![exists_and_not_null page_size] {
+if {![exists_and_not_null page_size]} {
     set page_size 10000
 }
 
-if ![info exists orderby_p] {
+if {![info exists orderby_p]} {
     set orderby_p 0
 }
 
@@ -81,16 +81,16 @@ if { ![exists_and_not_null tasks_portlet_p] } {
 }
 
 
-if ![info exists display_mode] {
+if {![info exists display_mode]} {
     set display_mode "all"
 }
 
-if ![info exists format] {
+if {![info exists format]} {
     set format "normal"
 }
 
 # the unique identifier for this package
-if ![info exists package_id] {
+if {![info exists package_id]} {
     set package_id [ad_conn package_id]
 }
 

@@ -18,6 +18,10 @@ foreach optional_param { page page_size tasks_orderby } {
     }
 }
 
+if {![info exists orderby_p]} {
+    set orderby_p 0
+}
+
 # Set default format to table view
 if {![info exists format]} {
     set format "normal"

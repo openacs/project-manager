@@ -39,6 +39,7 @@
  [template::list::page_where_clause -and -name "tasks" -key "ci.item_id"]) t,
 	pm_tasks_active ti,
         pm_task_status s,
+        $observer_from_clause
         cr_items cp,
         acs_objects op
          where t.parent_id     = cp.item_id and
