@@ -196,8 +196,8 @@ ad_form -extend -name add_edit \
             set ongoing_p t
         }
 	
-	set planned_end_date [dt_sysdate]
-	set planned_start_date [dt_sysdate]
+	set planned_end_date [template::util::date::now]
+	set planned_start_date [template::util::date::now]
 	set description [template::util::richtext::create "" {}]
     } -edit_request {
 

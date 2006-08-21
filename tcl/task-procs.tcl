@@ -1052,6 +1052,7 @@ ad_proc -public pm::task::assign {
     -task_item_id:required
     -party_id:required
     {-role_id ""}
+    -no_update:boolean
 } {
     Assigns party_id to task_item_id
     
@@ -1063,6 +1064,8 @@ ad_proc -public pm::task::assign {
     @param party_id
 
     @param role_id the role under which the person is assigned
+    
+    @param no_update Do not update an existing record with the new role
 
     @return
     
@@ -1073,26 +1076,30 @@ ad_proc -public pm::task::assign {
     }
 
     db_transaction {
-        # make sure we avoid case when that assignment has already
-        # been made.
-        db_dml delete_assignment {
-           delete from
-           pm_task_assignment
-           where
-           task_id  = :task_item_id and
-           party_id = :party_id
-        }
 
-        db_dml add_assignment {
-           insert into pm_task_assignment
-           (task_id,
-            role_id,
-            party_id) 
-           values
-           (:task_item_id,
-            :role_id,
-            :party_id)
-         }
+	if {$no_update_p} {
+	    if {[pm::task::assigned_p -task_item_id $task_item_id -party_id $party_id]} {
+		set add_p 0
+	    } else {
+		set add_p 1
+	    }
+	} else {
+	    pm::task::unassign -task_item_id $task_item_id -party_id $party_id
+	    set add_p 1
+	}
+
+	if {$add_p} {
+	    db_dml add_assignment {
+		insert into pm_task_assignment
+		(task_id,
+		 role_id,
+		 party_id) 
+		values
+		(:task_item_id,
+		 :role_id,
+		 :party_id)
+	    }
+	}
     }
 
     # Flush the cache that remembers which roles to offer the current user in the 'assign role to myself' listbox
