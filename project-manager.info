@@ -7,49 +7,54 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="3.1d29" url="http://openacs.org/repository/download/apm/project-manager-3.1d29.apm">
+    <version name="3.2a1" url="http://openacs.org/repository/download/apm/project-manager-3.2a1.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <owner url="mailto:malte.sussdorff@cognovis.de">Malte Sussdorff</owner>
         <summary>Project management tool for OpenACS</summary>
         <release-date>2005-11-29</release-date>
         <vendor url="mailto:jader@bread.com">Integrated Bakery Resources</vendor>
-        <vendor url="http://www.cognovis.de">cognovis</vendor>
         <description format="text/plain">Track tasks, estimates and actual progress for a project.  See the &lt;a href=&quot;http://openacs.org/projects/dotwrk/project_management/&quot;&gt;project page&lt;/a&gt; for more information.</description>
         <maturity>0</maturity>
 
-        <provides url="project-manager" version="3.1d29"/>
+        <provides url="project-manager" version="3.2a1"/>
         <requires url="acs-datetime" version="4.0"/>
-        <requires url="acs-subsite" version="5.2.0a4"/>
-        <requires url="acs-templating" version="5.1.6d1"/>
         <requires url="acs-mail-lite" version="1.3b2"/>
+        <requires url="acs-subsite" version="5.2.2"/>
+        <requires url="acs-templating" version="5.2.2"/>
         <requires url="calendar" version="2.0.1"/>
         <requires url="categories" version="1.0d5"/>
         <requires url="dynamic-types" version="0.1"/>
         <requires url="general-comments" version="4.0"/>
-        <requires url="logger" version="1.1b2"/>
+        <requires url="logger" version="2.3d1"/>
         <requires url="notifications" version="5.0.0a5"/>
         <requires url="organizations" version="0.3d"/>
         <requires url="ratings" version="0.1d1"/>
 
         <callbacks>
             <callback type="after-install"  proc="pm::install::package_install"/>
-            <callback type="after-instantiate"  proc="pm::install::package_instantiate"/>
-            <callback type="after-upgrade"  proc="pm::install::after_upgrade"/>
             <callback type="before-uninstantiate"  proc="pm::install::package_uninstantiate"/>
+            <callback type="after-upgrade"  proc="pm::install::after_upgrade"/>
+            <callback type="after-instantiate"  proc="pm::install::package_instantiate"/>
         </callbacks>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="AssignGroupP"  default="0" description="Allows to assign a group instead of a user to projects and tasks. Set it to 1 if you want to allow this functionallity and to 0 if you don't. Default 0" section_name="project-manager"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CommentGroups"  default="DPM;FPM;Account Manager;Entrance;Management;German Proof;Foreign Proof" description="Semikolon seperated list of group names to be used in comments. If you are sending comments the members of each of the groups will be presented as possible recipients of the comment in addition to the assignees." section_name="Comments"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CreateForumP"  default="0" description="If set to 1 a forum will be created for each project. Default 0." section_name="Comments"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ExcludeObserversFromEMailP"  default="f" description="Boolean that if this is set to true, exclude all assignees who are only observers from the list of users to choose from to send an email when adding a comment. Default to f" section_name="email"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="EnvelopePrefix"  default="1" description="Default prefix for outgoing email. If left empty, system will use the causing user's email." section_name="email"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="SendAssignEmailsP"  default="1" description="If set to 1, emails will be send for task and project assignments. Can be overwritten by specifiying send_mail_p as a parameter to the procedures" section_name="email"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ExcludeObserversFromEMailP"  default="f" description="Boolean that if this is set to true, exclude all assignees who are only observers from the list of users to choose from to send an email when adding a comment. Default to f" section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideDoneTaskP"  default="1" description="If set to 1, tasks
             that are done will be hidden" section_name="projects"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="HideWatchersP"  default="0" description="Set if to 1 if you want to hide watchers in the assignee list or to 0 if you don't. Default 0" section_name="Layout"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="OngoingByDefaultP"  default="f" description="If set to t, then projects are by default ongoing (no deadline), unless the user selects otherwise. If set to f, then projects by default have a deadline." section_name="projects"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintAttachmentsP"  default="1" description="If set to 1 the comment portlet will show full information and link to the attachements. Default 1." section_name="Comments"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintContentP"  default="1" description="If set to 1 the comment portlet will show full content of the comment. Otherwise it will only show title. Default 1." section_name="Comments"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintUserInfoP"  default="1" description="If set to 1 the comment portlet will show the user information associated with the comment. Default 1." section_name="Comments"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectAdd"  default="/packages/project-manager/templates/project-ae" description="The template for adding/editing of an individual project" section_name="Templates"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packages/project-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectList"  default="/packages/project-manager/lib/projects" description="The template for display of the list of projects" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packages/project-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="RatedGroup"  description="Groupname of the group, whose members are being rated" section_name="Ratings"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="SendAssignEmailsP"  default="1" description="If set to 1, emails will be send for task and project assignments. Can be overwritten by specifiying send_mail_p as a parameter to the procedures" section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="SendDailyEmail"  default="0" description="Whether or not to send a daily email reminder to all people who are assigned tasks. A 1 indicates yes, and a 0 indicates no." section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>
@@ -62,12 +67,6 @@
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseUncertainCompletionTimesP"  default="1" description="Uses PERT-style completion times, which factors in uncertainty into calculations and allows for probability estimates for on-time project completion. Set to 1 to use." section_name="PERT"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="UseUserProjectCodesP"  default="1" description="If set to 1, then the user can set user-specified project codes. Otherwise, not shown" section_name="projects"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="UsernameInsteadofFullnameP"  default="t" description="If set to &quot;t&quot; then it will show the username instead of the fullname of the user. Default &quot;t&quot;." section_name="Layout"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintContentP"  default="1" description="If set to 1 the comment portlet will show full content of the comment. Otherwise it will only show title. Default 1." section_name="Comments"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintAttachmentsP"  default="1" description="If set to 1 the comment portlet will show full information and link to the attachements. Default 1." section_name="Comments"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="PrintUserInfoP"  default="1" description="If set to 1 the comment portlet will show the user information associated with the comment. Default 1." section_name="Comments"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CreateForumP"  default="0" description="If set to 1 a forum will be created for each project. Default 0." section_name="Comments"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CommentGroups"  default="" description="Semikolon seperated list of group names to be used in comments. If you are sending comments the members of each of the groups will be presented as possible recipients of the comment in addition to the assignees." section_name="Comments"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="RatedGroup"  default="" description="Groupname of the group, whose members are being rated" section_name="Ratings"/>
         </parameters>
 
     </version>
