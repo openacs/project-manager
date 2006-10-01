@@ -353,6 +353,7 @@ if {[string is true $edit_p]} {
 
 set roles_list [pm::role::select_list_filter]
 set assignee_role_list [pm::project::assignee_role_list -project_item_id $project_item_id]
+set project_assignee_role_list $assignee_role_list
 
 # Get assignments for when using processes
 if {[string is true $using_process_p]} {
@@ -392,6 +393,14 @@ foreach one_assignee $assignee_role_list {
         }
     }
     lappend assignee_options [list $assignee_name $person_id]
+    lappend assignee_ids $person_id
+}
+
+foreach assignee_one $project_assignee_role_list {
+    set person_id [lindex $assignee_one 0]
+    if {[lsearch $assignee_ids $person_id]<0} {
+	lappend assignee_options [list [person::name -person_id $person_id] $person_id]
+    }
 }
 
 foreach role_list $roles_list {
@@ -554,7 +563,7 @@ ad_form -extend -name task_add_edit -new_request {
 		    # We do not want to update the assignment
 		    # This allows the trick that a LEAD assignement will not be 
 		    # overwritten by a player / watcher one, as the role is lower
-		    pm::task::assign \ 
+		    pm::task::assign \
 			-task_item_id $task_item_id \
 			-party_id     $person_id \
 			-role_id      $role \
@@ -562,7 +571,7 @@ ad_form -extend -name task_add_edit -new_request {
 		}
 	    }
 	}
-
+	
 	# -------------------
 	# add in dependencies
 	# -------------------
