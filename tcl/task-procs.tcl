@@ -2343,127 +2343,74 @@ ad_proc -public pm::task::what_changed {
         lappend tasks_item_id $task_item_id($num)
     }
 
-    pm::task::get \
-        -tasks_item_id                  $tasks_item_id \
-        -one_line_array                  one_line_array \
-        -description_array               description_array \
-        -description_mime_type_array     description_mime_type_array \
-        -estimated_hours_work_array      estimated_hours_work_array \
-        -estimated_hours_work_min_array  estimated_hours_work_min_array \
-        -estimated_hours_work_max_array  estimated_hours_work_max_array \
-        -dependency_array                dependency_array \
-        -percent_complete_array          percent_complete_array \
-        -end_date_day_array              end_date_day_array \
-        -end_date_month_array            end_date_month_array \
-        -end_date_year_array             end_date_year_array \
-        -project_item_id_array           project_item_id_array \
-	-priority_array                  priority_array
+    foreach tid $tasks_item_id {
+	set task_rev_id [content::item::get_best_revision -item_id $tid]
+	array unset task
+	array unset old_task
+	dtype::get_object -object_id $task_rev_id -object_type pm_task -array task
+	db_1row get_new_title_and_desc "select title as new_title,description as new_description from cr_revisions where revision_id = $task_rev_id"
 
-    
-    foreach num $number {
+	# Figure out what the previous revision was.
+	# For the time being, cheat and use the previous version to the one we are using.
+	set prev_rev_id [db_string get_prev_rev_id "select max(revision_id) from pm_tasks_revisionsi where item_id = :tid and revision_id < :task_rev_id" -default $task_rev_id]
+	dtype::get_object -object_id $prev_rev_id -object_type pm_task -array old_task
+	db_1row get_new_title_and_desc "select title as old_title,description as old_description from cr_revisions where revision_id = $prev_rev_id"
 
         set changes [list]
-
-        set tid  $task_item_id($num)
-
-        set old [ad_get_client_property -- project-manager old_percent_complete($tid)]
-
-        set new $percent_complete_array($tid)
+	set manual_change_list [list]
+	# Get changes for percent_complete
+        set old $old_task(percent_complete)
+        set new $task(percent_complete)
 
         if {![string equal $old $new]} {
-
             if {$new >= 100 && $old < 100} {
-
                 lappend changes "<b>Closing task</b>"
-
             } elseif {$new < 100 && $old >= 100} {
-
                 lappend changes "<b>Reopening task</b>"
-
             } else {
                 lappend changes "Percent complete changed <i>from</i> $old%<i>to</i> $new%"
             }
-
         }
-        
+	lappend manual_change_list "percent_complete"
 
-        set old_end_date_day [ad_get_client_property -- project-manager old_end_date_day($tid)]
-        set old_end_date_month [ad_get_client_property -- project-manager old_end_date_month($tid)]
-        set old_end_date_year [ad_get_client_property -- project-manager old_end_date_year($tid)]
+        set date_old $old_task(end_date)
+        set date_new $task(end_date)
 
-        # end date
-        if { \
-                 ![string equal $old_end_date_day $end_date_day_array($tid)] || \
-                 ![string equal $old_end_date_month $end_date_month_array($tid)] || \
-                 ![string equal $old_end_date_year $end_date_year_array($tid)]} {
+        if {![string equal $old $new]} {
+            lappend changes "[_ project-manager.lt_Hard_deadline_changed]"        
+	}
+	lappend manual_change_list "end_date"
 
-            # internationalize the dates
-            set iso_date_old "$old_end_date_year-$old_end_date_month-$old_end_date_day 00:00:00"
-            set iso_date_new "$end_date_year_array($tid)-$end_date_month_array($tid)-$end_date_day_array($tid) 00:00:00"
+	# Subject
+	if {![string equal $new_title $old_title]} {
+	    lappend changes "[_ project-manager.Subject_changed]"
+	}
 
-            if {[string equal $iso_date_old "-- 00:00:00"]} {
-                set date_old "[_ project-manager.no_hard_deadline]"
-            } else {
-                set date_old [lc_time_fmt $iso_date_old "%x"]
-            }
-
-            if {[string equal $iso_date_new "-- 00:00:00"]} {
-                set date_new "[_ project-manager.no_hard_deadline]"
-            } else {
-                set date_new [lc_time_fmt $iso_date_new "%x"]
-            }
-
-            lappend changes "[_ project-manager.lt_Hard_deadline_changed]"
-        }
-
-        set old_one_line [ad_get_client_property -- project-manager old_one_line($tid)]
-
-        # one_line
-        if {![string equal $old_one_line $one_line_array($tid)]} {
-            lappend changes "Subject changed <i>from</i> $old_one_line  <i>to</i> $one_line_array($tid)"
-        }
-
-        set old_description [ad_get_client_property -- project-manager old_description($tid)]
-        set old_description_mime_type [ad_get_client_property -- project-manager old_description_mime_type($tid)]
-
-        # description
-        if { \
-                 ![string equal $old_description $description_array($tid)] || \
-                 ![string equal $old_description_mime_type $description_mime_type_array($tid)]} {
-
-            set richtext_list [list $old_description $old_description_mime_type]
-            set old_description_html [template::util::richtext::get_property html_value $richtext_list]
-            set richtext_list [list $description_array($tid) $description_mime_type_array($tid)]
-            set new_description_html [template::util::richtext::get_property html_value $richtext_list]
-
+	if {![string eq $new_description $old_description]} {
             lappend changes "[_ project-manager.Description_changed]"
         }
-
-        set old_estimated_hours_work [ad_get_client_property -- project-manager old_estimated_hours_work($tid)]
-        set old_estimated_hours_work_min [ad_get_client_property -- project-manager old_estimated_hours_work_min($tid)]
-        set old_estimated_hours_work_max [ad_get_client_property -- project-manager old_estimated_hours_work_max($tid)]
 
         # estimated_hours_work or days work
         if {[string is true $use_days_p]} {
             if {[string is true $use_uncertain_completion_times_p]} {
                 
-                set old [pm::util::days_work -hours_work $old_estimated_hours_work_min]
-                set new [pm::util::days_work -hours_work $estimated_hours_work_min_array($tid)]
+                set old [pm::util::days_work -hours_work $old_task(estimated_hours_work_min)]
+                set new [pm::util::days_work -hours_work $task(estimated_hours_work_min)]
 
                 if {![string equal $old $new]} {
                     lappend changes "[_ project-manager.lt_Work_estimate_min_cha]"
                 }
                 
-                set old [pm::util::days_work -hours_work $old_estimated_hours_work_max]
-                set new [pm::util::days_work -hours_work $estimated_hours_work_max_array($tid)]
+                set old [pm::util::days_work -hours_work $old_task(estimated_hours_work_max)]
+                set new [pm::util::days_work -hours_work $task(estimated_hours_work_max)]
                 if {![string equal $old $new]} {
                     lappend changes "[_ project-manager.lt_Work_estimate_max_cha]"
                 }
 
             } else {
 
-                set old [pm::util::days_work -hours_work $old_estimated_hours_work]
-                set new [pm::util::days_work -hours_work $estimated_hours_work_array($tid)]
+                set old [pm::util::days_work -hours_work $old_task(estimated_hours_work)]
+                set new [pm::util::days_work -hours_work $task(estimated_hours_work)]
 
                 if {![string equal $old $new]} {
                     lappend changes "[_ project-manager.lt_Work_estimate_changed]"
@@ -2476,57 +2423,46 @@ ad_proc -public pm::task::what_changed {
             # estimated_hours_work - hours
             if {[string is true $use_uncertain_completion_times_p]} {
                 
-                if {![string equal $old_estimated_hours_work_min $estimated_hours_work_min_array($tid)]} {
-		    set new_estimated_hours_work_min $estimated_hours_work_min_array($tid)
+                if {![string equal $old_task(estimated_hours_work_min) $task(estimated_hours_work_min)]} {
+		    set new_estimated_hours_work_min $task(estimated_hours_work_min)
+		    set old_estimated_hours_work_min $old_task(estimated_hours_work_min)
                     lappend changes "[_ project-manager.lt_Work_estimate_min_cha_1]"
                 }
                 
-                if {![string equal $old_estimated_hours_work_max $estimated_hours_work_max_array($tid)]} {
-		    set new_estimated_hours_work_max $estimated_hours_work_max_array($tid)
+                if {![string equal $old_task(estimated_hours_work_max) $task(estimated_hours_work_max)]} {
+		    set new_estimated_hours_work_max $task(estimated_hours_work_max)
+		    set old_estimated_hours_work_max $old_task(estimated_hours_work_max)
                     lappend changes "[_ project-manager.lt_Work_estimate_max_cha_1]"
                 }
             } else {
                 
-                if {![string equal $old_estimated_hours_work $estimated_hours_work_array($tid)]} {
-		    set new_estimated_hours_work $estimated_hours_work_array($tid)
+                if {![string equal $old_task(estimated_hours_work) $task(estimated_hours_work)]} {
+		    set new_estimated_hours_work $task(estimated_hours_work)
+		    set old_estimated_hours_work $old_task(estimated_hours_work)
                     lappend changes "[_ project-manager.lt_Work_estimate_changed_1]"
                 }
                 
             }
         }
 
-        set old_assignees [ad_get_client_property -- \
-                               project-manager \
-                               old_assignees($tid)]
+	lappend manual_change_list "estimated_hours_work"
+	lappend manual_change_list "estimated_hours_work_min"
+	lappend manual_change_list "estimated_hours_work_max"
 
-        set new_assignees [pm::task::get_assignee_names \
-                               -task_item_id $task_item_id($num)]
+	# priority
+	set old_prio $old_task(priority)
+	set new_prio $task(priority)
+	if {![string eq $old_prio $new_prio]} {
+	    lappend changes "[_ project-manager.Priority_changed]"
+	}
 
-        # check for assignees that have been added
-
-        foreach new $new_assignees {
-            if { [lsearch $old_assignees $new] == -1} {
-                lappend changes "[_ project-manager.Added_new]"
-            }
-        }
-
-        # check for assignees that have been removed
-        foreach old $old_assignees {
-            if { [lsearch $new_assignees $old] == -1} {
-                lappend changes "[_ project-manager.Removed_old]"
-            }
-        }
-
-        set old_project_item_id [ad_get_client_property -- project-manager old_project_item_id($tid)]
-
+	if {0} {
         # project
 
+        set old_project_item_id [ad_get_client_property -- project-manager old_project_item_id($tid)]
         if {![string equal $old_project_item_id $project_item_id_array($tid)] && ![empty_string_p $old_project_item_id]} {
-
             set old [pm::project::name -project_item_id $old_project_item_id]
-
             lappend changes "[_ project-manager.lt_Project_changed_ifrom]"
-
         }
 
         set old_dependency [ad_get_client_property -- project-manager old_dependency($tid)]
@@ -2551,6 +2487,47 @@ ad_proc -public pm::task::what_changed {
             lappend changes "[_ project-manager.lt_Dependency_changed_if]"
         }
 
+    }
+
+	# Now deal with the dynamic types
+	foreach element [array names task] {
+	    if {[lsearch $manual_change_list $element]<0} {
+		# The element has not been dealt with so far.
+		# Not the change
+		if {![string eq $task($element) $old_task($element)]} {
+		    # Element values are different
+		    if {[lang::message::message_exists_p en_US acs-translations.$element]} {
+			set pretty_element [lang::util::localize "#acs-translations.$element#"]
+		    } else {
+			set pretty_element $element
+		    } 
+		    lappend changes "$pretty_element changed <i>from</i> $old_task($element)  <i>to</i> $task($element)"
+		}
+	    }
+	}
+
+	# Change of assignees
+        set old_assignees [ad_get_client_property -- \
+                               project-manager \
+                               old_assignees($tid)]
+
+        set new_assignees [pm::task::get_assignee_names \
+                               -task_item_id $task_item_id($num)]
+
+        # check for assignees that have been added
+
+        foreach new $new_assignees {
+            if { [lsearch $old_assignees $new] == -1} {
+                lappend changes "[_ project-manager.Added_new]"
+            }
+        }
+
+        # check for assignees that have been removed
+        foreach old $old_assignees {
+            if { [lsearch $new_assignees $old] == -1} {
+                lappend changes "[_ project-manager.Removed_old]"
+            }
+        }
 
         # convert comments to richtext
         set richtext_list [list $comments_arr($num) $comments_mime_type_arr($num)]

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d27" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.2a1" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -459,6 +459,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Package">Package Instance</msg>
   <msg key="Package_Instance">Package Instance</msg>
   <msg key="page">page)</msg>
+  <msg key="Page_Size">Page Size</msg>
   <msg key="Parameters">Parameters</msg>
   <msg key="Party_ID">Party ID</msg>
   <msg key="People">People</msg>
@@ -479,6 +480,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Priorities">Priorities</msg>
   <msg key="Priority">Priority:</msg>
   <msg key="Priority_1">Priority</msg>
+  <msg key="Priority_changed">Priority changed &lt;i&gt;from&lt;/i&gt; %old_prio% &lt;i&gt;to&lt;/i&gt; %new_prio%</msg>
   <msg key="Proceed">Proceed</msg>
   <msg key="Proceed_with_closing">Proceed with closing subprojects as well</msg>
   <msg key="Process">Process</msg>
@@ -578,6 +580,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Subject">Subject:</msg>
   <msg key="Subject_1">Subject</msg>
   <msg key="Subject_2">Subject\</msg>
+  <msg key="Subject_changed">Subject changed &lt;i&gt;from&lt;/i&gt; %old_title%  &lt;i&gt;to&lt;/i&gt; %new_title%</msg>
   <msg key="Subproject_tasks">Subproject Tasks</msg>
   <msg key="Subprojects">Subprojects</msg>
   <msg key="Subtotal">Subtotal</msg>

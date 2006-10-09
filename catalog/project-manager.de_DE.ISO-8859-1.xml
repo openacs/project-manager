@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.1d27" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.2a1" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -72,6 +72,7 @@
   <msg key="Comments">Kommentare</msg>
   <msg key="Complete">Fertig:</msg>
   <msg key="Contact">Ansprechpartner</msg>
+  <msg key="Create_Offer">Angebot anlegen</msg>
   <msg key="Create_Offer_help">Soll automatisch eine Projektaufstellung angelegt werden?</msg>
   <msg key="create_project">Projekt erzeugen</msg>
   <msg key="Created">Erstellt</msg>
@@ -87,6 +88,7 @@
   <msg key="Date_1">Datum:</msg>
   <msg key="Dates">Zeitangaben</msg>
   <msg key="Dates_1">Datums:</msg>
+  <msg key="Days">Tage</msg>
   <msg key="days">Tage</msg>
   <msg key="Days_work">Arbeits-&lt;br&gt;tage</msg>
   <msg key="Days_worked">Tage&lt;br&gt; gearbeitet</msg>
@@ -163,6 +165,7 @@
   <msg key="Jobid">JobID</msg>
   <msg key="Jobid_help">Fügen Sie eine Suchbegriff ein um nach der JobID (ProjektName) zu suchen</msg>
   <msg key="Key">Kennziffer</msg>
+  <msg key="Last">Letzte</msg>
   <msg key="last_years">Letzte Jahre</msg>
   <msg key="Latest_Finish">Spätestes Ende</msg>
   <msg key="Latest_finish">Spätestes Ende</msg>
@@ -386,6 +389,7 @@
   <msg key="Package">Paketinstanz</msg>
   <msg key="Package_Instance">Projekt Instanzen</msg>
   <msg key="page">Seite)</msg>
+  <msg key="Page_Size">Seitengröße</msg>
   <msg key="Parameters">Parameter</msg>
   <msg key="Party_ID">Party ID</msg>
   <msg key="People">Personen</msg>
@@ -406,6 +410,7 @@
   <msg key="Priorities">Prioritäten</msg>
   <msg key="Priority">Priorität:</msg>
   <msg key="Priority_1">Priorität</msg>
+  <msg key="Priority_changed">Priorität geändert &lt;i&gt;von&lt;/i&gt; %old_prio &lt;i&gt;zu&lt;/i&gt; %new_prio%</msg>
   <msg key="Proceed">Weiter (Projekt schliessen)</msg>
   <msg key="Proceed_with_closing">Subprojekte ebenfalls schliessen</msg>
   <msg key="Process">Prozess</msg>
@@ -504,6 +509,7 @@
   <msg key="Subject">Thema:</msg>
   <msg key="Subject_1">Thema</msg>
   <msg key="Subject_2">Betreff\</msg>
+  <msg key="Subject_changed">Betreff geändert &lt;i&gt;von&lt;/i&gt; %old_title &lt;i&gt;zu&lt;/i&gt; %new_title%</msg>
   <msg key="Subproject_tasks">Unterprojekt Aufgaben</msg>
   <msg key="Subprojects">Subprojekte</msg>
   <msg key="Subtotal">Zwischensumme</msg>
@@ -512,6 +518,7 @@
   <msg key="Table">Tabelle</msg>
   <msg key="Task">Aufgabe</msg>
   <msg key="task">Aufgabe</msg>
+  <msg key="Task_">Task_</msg>
   <msg key="Task_Calendar">Aufgaben Kalender</msg>
   <msg key="Task_calendar">Aufgaben Kalender</msg>
   <msg key="Task_categories">Aufgabenkategorien:</msg>
