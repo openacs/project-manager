@@ -43,18 +43,18 @@ set show_role_p 1
 set assignee_list [list]
 
 if { $exclude_observers_p } {
-    foreach assignee $assignees {
+    foreach assignee_one $assignees {
 	# Compare the role_id to the one get on observer_role_id
 	# to see if it is an observer.
-	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"]} {
+	if { [string equal [lsearch $observer_role_id [lindex $assignee_one 1]] "-1"]} {
 	    # Not an observer. Added to the list
-	    set party_id [lindex $assignee 0]
+	    set party_id [lindex $assignee_one 0]
 	    set name [person::name -person_id $party_id]
 	    set email [party::email -party_id $party_id]
 
 	    if {$show_role_p} {
 		# display assigned role
-		lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $party_id]
+		lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee_one 1]])" $party_id]
 	    } else {
 		lappend assignee_list [list "$name ($email)" $party_id]
 	    }
@@ -63,40 +63,43 @@ if { $exclude_observers_p } {
     }
 } else {
     # We want every assignee so we just get the assignees name
-    foreach assignee $assignees {
-	set party_id [lindex $assignee 0]
+    foreach assignee_one $assignees {
+	set party_id [lindex $assignee_one 0]
 	set name [person::name -person_id $party_id]
 	set email [party::email -party_id $party_id]
 
 	if {$show_role_p} {
 	    # display assigned role
-	    lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee 1]])" $party_id]
+	    lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee_one 1]])" $party_id]
 	} else {
 	    lappend assignee_list [list "$name ($email)" $party_id]
 	}
     }
 }
-
-set listed_party_ids {}
-foreach assignee $assignee_list {
-    lappend listed_party_ids [lindex $assignee 1]
-}
-
     
 # Include subprojects
 foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object_id] {
     set sub_assignees [pm::project::assignee_role_list -project_item_id $subproject_id]
-    foreach assignee $sub_assignees {
-	if { [string equal [lsearch $observer_role_id [lindex $assignee 1]] "-1"] || $exclude_observers_p != 1 } {
-	    set party_id [lindex $assignee 0]
+    foreach assignee_one $sub_assignees {
+	if { [string equal [lsearch $observer_role_id [lindex $assignee_one 1]] "-1"] || $exclude_observers_p != 1 } {
+	    set party_id [lindex $assignee_one 0]
 	    set name [person::name -person_id $party_id]
 	    set email [party::email -party_id $party_id]
 	    
 	    if {[lsearch -exact $listed_party_ids $party_id] == -1} {
 		lappend assignee_list [list "$name ($email)" $party_id]
-		lappend listed_party_ids $party_id
 	    }
 	}
+    }
+}
+
+# Get a list of all parties, excluding myself
+set listed_party_ids {}
+set user_id [ad_conn user_id]
+foreach assignee_one $assignee_list {
+    set assignee_id [lindex $assignee_one 1]
+    if {![string eq $assignee_id $user_id]} {
+	lappend listed_party_ids $assignee_id
     }
 }
 
@@ -123,17 +126,16 @@ ad_form -name comment \
         
         {description:richtext(richtext),optional
             {label "[_ project-manager.Comment_1]"}
-            {html { rows 9 cols 40 wrap soft}}}
+            {html { rows 9 cols 40 wrap soft}}
+	}
+	{assignee:text(checkbox),multiple,optional
+	    {label "[_ project-manager.Send_email]"}
+	    {section "[_ project-manager.Assignees]"}
+	    {options $assignee_list}
+	    {values $listed_party_ids}
+	}
     }
 
-ad_form -extend -name comment -form {
-    {assignee:text(checkbox),multiple,optional
-	{label "[_ project-manager.Send_email]"}
-	{section "[_ project-manager.Assignees]" }
-	{options $assignee_list}
-    }
-}
-	
 
 foreach group [split [parameter::get -parameter "CommentGroups"] ";"] {
     set group_id [group::get_id -group_name "$group"]
