@@ -4,18 +4,32 @@
 <fullquery name="get_projects">
     <querytext>
 	select 
-		distinct
 		item_id,
-		object_title,
-		object_package_id
+		o.package_id as object_package_id
 	from
-		pm_projectsx
+		cr_items i, acs_objects o
 	where
-		lower(object_title) like '%${keyword}%'
-		or lower(project_code) like '%${keyword}%'
+		lower(o.title) like '%${keyword}%'
+		and i.latest_revision = o.object_id
+		and i.content_type = 'pm_project'
 	order by
-		object_title asc
+		title asc
     </querytext>
 </fullquery>
 
+<fullquery name="get_projects_by_code">
+    <querytext>
+	select 
+		item_id,
+		o.package_id as object_package_id
+	from
+		cr_items i, acs_objects o, pm_projects p
+	where
+		lower(p.project_code) like '%${keyword}%'
+		and i.latest_revision = o.object_id
+		and o.object_id = p.project_id
+	order by
+		title asc
+    </querytext>
+</fullquery>
 </queryset>
