@@ -47,7 +47,8 @@
         ti.status       = s.status_id
         and cp.live_revision = op.object_id
 	$party_id_clause
-	  $observer_pagination_clause
+	$observer_pagination_clause
+	[template::list::page_where_clause -and -name "tasks" -key "t.item_id"]
         [template::list::orderby_clause -name tasks -orderby]
 
     </querytext>
