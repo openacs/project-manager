@@ -229,8 +229,8 @@ ad_proc -public pm::project::new {
     -organization_id:required
     {-dform "implicit"}
     {-creation_date ""}
-    -creation_user:required
-    -creation_ip:required
+    {-creation_user ""}
+    {-creation_ip ""}
     -package_id:required
     -no_callback:boolean
 } {
@@ -240,8 +240,13 @@ ad_proc -public pm::project::new {
     
     @param project_name
 
+    @return Returns the revision_id of the newly created project
     @error 
 } {
+
+    if {$creation_user eq ""} {
+	set creation_user [ad_conn user_id]
+    }
 
     # if the project is ongoing, there is no end date
     # we set it to null to signify that. Technically, this
@@ -282,6 +287,7 @@ ad_proc -public pm::project::new {
 			 -title $project_name \
 			 -description $description \
 			 -mime_type $mime_type \
+			 -is_live "t" \
 			 -attributes [list \
 					  [list project_code $project_code] \
 					  [list goal $goal] \
@@ -290,18 +296,12 @@ ad_proc -public pm::project::new {
 					  [list actual_start_date $actual_start_date] \
 					  [list actual_end_date $actual_end_date] \
 					  [list ongoing_p $ongoing_p] \
-					  [list estimated_finish_date $estimated_finish_date] \
-					  [list latest_finish_date $latest_finish_date] \
-					  [list earliest_finish_date $earliest_finish_date] \
-					  [list actual_hours_completed $actual_hours_completed] \
-					  [list estimated_hours_total $estimated_hours_total] \
-					  [list customer_id $customer_id] \
+					  [list customer_id $organization_id] \
 					  [list status_id $status_id] \
-					  [list currency $currency] \
 					  [list dform $dform] ] ]
     
     # Assign the user to the project
-    permission::grant -party_id creation_user -object_id project_item_id -privilege admin
+    permission::grant -party_id $creation_user -object_id $revision_id -privilege admin
     set project_role [pm::role::default]
     pm::project::assign \
         -project_item_id $project_item_id \
@@ -313,7 +313,7 @@ ad_proc -public pm::project::new {
 	callback pm::project_new -package_id $package_id -project_id $project_item_id -data [list organization_id $organization_id]
     }
 
-    return $project_revision
+    return $revision_id
 }
 
 

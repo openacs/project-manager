@@ -15,7 +15,11 @@ ad_proc -public -callback pm::project_new {
     {-project_id:required}
     {-data:required}
 } {
-}
+    Callback which is executed once the project has been created
+
+    @param package_id PackageID of the project manager package
+    @param project_id Item ID of the project
+} -
 
 ad_proc -public -callback pm::project_edit {
     {-package_id:required}
