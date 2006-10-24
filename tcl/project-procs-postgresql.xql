@@ -200,6 +200,13 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="pm::project::root_folder.get_root_folder">
+    <querytext>
+        select pm_project__get_root_folder (:package_id, 'f')
+    </querytext>
+  </fullquery>
+
+
   <fullquery name="pm::project::compute_status.update_task">
     <querytext>
         update

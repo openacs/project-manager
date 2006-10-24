@@ -252,28 +252,62 @@ ad_proc -public pm::project::new {
         set planned_end_date ""
     }
 
+    # If we do not have a parent_id set the parent_id to the root folder_id
+    if {$parent_id eq ""} {
+	set parent_id [pm::project::root_folder -package_id $package_id]
+
+	# Set the context_id to the package_id if this is not a subproject.
+	# Otherwise permission inheritance won't work.
+	set context_id $package_id
+    } else {
+	set context_id $parent_id
+    }
+
     # create a project manager project
-    set project_revision [db_exec_plsql new_project_item { *SQL }]
+    set item_id [db_string acs "select nextval('t_acs_object_id_seq') from dual"]
+    set project_item_id [content::item::new \
+		     -parent_id $parent_id \
+		     -content_type {pm_project} \
+		     -name $item_id \
+		     -package_id $package_id \
+		     -item_id $item_id \
+		     -creation_date $creation_date \
+		     -creation_user $creation_user \
+		     -context_id $context_id \
+		     -creation_ip $creation_ip]
 
-    set project_item_id [pm::project::get_project_item_id \
-                             -project_id $project_revision]
-
+    set revision_id [content::revision::new \
+			 -item_id $project_item_id \
+			 -content_type {pm_project} \
+			 -title $project_name \
+			 -description $description \
+			 -mime_type $mime_type \
+			 -attributes [list \
+					  [list project_code $project_code] \
+					  [list goal $goal] \
+					  [list planned_start_date $planned_start_date] \
+					  [list planned_end_date $planned_end_date] \
+					  [list actual_start_date $actual_start_date] \
+					  [list actual_end_date $actual_end_date] \
+					  [list ongoing_p $ongoing_p] \
+					  [list estimated_finish_date $estimated_finish_date] \
+					  [list latest_finish_date $latest_finish_date] \
+					  [list earliest_finish_date $earliest_finish_date] \
+					  [list actual_hours_completed $actual_hours_completed] \
+					  [list estimated_hours_total $estimated_hours_total] \
+					  [list customer_id $customer_id] \
+					  [list status_id $status_id] \
+					  [list currency $currency] \
+					  [list dform $dform] ] ]
+    
+    # Assign the user to the project
+    permission::grant -party_id creation_user -object_id project_item_id -privilege admin
     set project_role [pm::role::default]
-
     pm::project::assign \
         -project_item_id $project_item_id \
         -role_id $project_role \
         -party_id $creation_user \
         -send_email_p "f"
-
-    # Set the parent_id to the package_id if this is not a subproject.
-    # Otherwise permission inheritance won't work.
-    # Update the context_id
-    if {[empty_string_p $parent_id]} {
-	set parent_id $package_id
-    }
-
-    db_dml update_context_id "update acs_objects set context_id = :parent_id where object_id = :project_item_id"
 
     if {!$no_callback_p} {
 	callback pm::project_new -package_id $package_id -project_id $project_item_id -data [list organization_id $organization_id]
@@ -1551,6 +1585,17 @@ ad_proc -public pm::project::root_project {
     }
 
     return $project_parent_id
+}
+
+ad_proc -public pm::project::root_folder {
+    {-package_id:required}
+} {
+    
+    Return the root folder of a given project package_id
+    
+    @return project_item_id of the root project
+} {
+    set root_folder [db_exec_plsql get_root_folder { }]
 }
 
 ad_proc -public pm::project::compute_parent_status {project_item_id} {
