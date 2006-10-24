@@ -4,16 +4,15 @@
 <fullquery name="get_projects">
     <querytext>
 	select 
-		item_id,
-		o.package_id as object_package_id
+		i.item_id
 	from
-		cr_items i, acs_objects o
+		cr_items i, cr_revisions r, pm_projects p
 	where
-		lower(o.title) like '%${keyword}%'
-		and i.latest_revision = o.object_id
-		and i.content_type = 'pm_project'
+		lower(r.title) like '%${keyword}%'
+		and i.latest_revision = r.revision_id
+		and r.revision_id = p.project_id
 	order by
-		title asc
+		r.title asc
     </querytext>
 </fullquery>
 

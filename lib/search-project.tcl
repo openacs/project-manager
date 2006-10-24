@@ -42,7 +42,7 @@ ad_form -name search_project -form {
     }
 
     set project_item_id [lindex [lindex $match_projects 0] 0]
-    set object_package_id [lindex [lindex $match_projects 0] 1]
+    set object_package_id [acs_object::package_id -object_id $project_item_id]
     
     # We get the node_id from the package_id and use it 
     # to get the url of the project-manager
@@ -50,5 +50,6 @@ ad_form -name search_project -form {
     set pm_url [site_node::get_url -node_id $pm_node_id]
 
     # Just redirect to the pm_url and project_item_id
+
     ad_returnredirect "${pm_url}one?project_item_id=$project_item_id"
 } -has_submit {1}
