@@ -1,0 +1,1 @@
+<include src=/packages/wieners/templates/pm/project-two project_id=@project_id@ project_item_id=@project_item_id@ instance_id=@instance_id@ logger_days=@logger_days@ logger_variable_id=@logger_variable_id@ orderby_tasks=@orderby_tasks@ orderby_subproject=@orderby_subproject@ page=@page@>
