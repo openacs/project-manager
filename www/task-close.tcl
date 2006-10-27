@@ -16,17 +16,15 @@ ad_page_contract {
 } -errors {
 }
 
-db_transaction {
-    pm::task::close -task_item_id $task_item_id
-    set revision_id [pm::task::get_revision_id -task_item_id $task_item_id]
+pm::task::close -task_item_id $task_item_id
+set revision_id [pm::task::get_revision_id -task_item_id $task_item_id]
 
-    db_dml complete_task {
-	update pm_tasks_revisions
-	set percent_complete = '100'
-	where task_revision_id = :revision_id
-    }
-
-    callback pm::task_edit -package_id [ad_conn package_id] -task_id $task_item_id
+db_dml complete_task {
+    update pm_tasks_revisions
+    set percent_complete = '100'
+    where task_revision_id = :revision_id
 }
+
+callback pm::task_edit -package_id [ad_conn package_id] -task_id $task_item_id
 
 ad_returnredirect $return_url
