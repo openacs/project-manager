@@ -38,7 +38,7 @@ template::list::create \
         edit {
             display_template {
                 <a href="process-instance-edit?instance_id=@instances.instance_id@">
-                <img border="0" src="/shared/images/Edit16.gif" alt="[_ acs-kernel.common_Edit]" />
+                <img border="0" src="/resources/acs-subsite/Edit16.gif" alt="[_ acs-kernel.common_Edit]" />
                 </a>
             }
         }

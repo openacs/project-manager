@@ -25,7 +25,7 @@
 
           <tr bgcolor="#9999cc">
             <td align="left" valign="top" width="10">
-              <img src="resources/tl-9999cc.jpg" />
+              <img src="/resources/project-manager/tl-9999cc.jpg" />
             </td>
             
             <td colspan="2">
@@ -38,7 +38,7 @@
             </td>
             
             <td align="right" valign="top" width="10">
-              <img src="resources/tr-9999cc.jpg" />
+              <img src="/resources/project-manager/tr-9999cc.jpg" />
             </td>
             
           </tr>
@@ -183,7 +183,7 @@
                   #666666; font-family:
                   tahoma,verdana,arial,helvetica,sans-serif; font-size:
                   75%;">
-                  <img src="/shared/images/info.gif" width="12"
+                  <img src="/resources/acs-subsite/info.gif" width="12"
                     height="9" alt="[i]" title="Help text" border="0">
                     #project-manager.lt_Enter_a_number_for_or#
                 </span>
@@ -197,7 +197,7 @@
                   #666666; font-family:
                   tahoma,verdana,arial,helvetica,sans-serif; font-size:
                   75%;">
-                  <img src="/shared/images/info.gif" width="12"
+                  <img src="/resources/acs-subsite/info.gif" width="12"
                     height="9" alt="[i]" title="Help text" border="0">
                     #project-manager.lt_Enter_100_to_close_th_1#
                 </span>
@@ -251,7 +251,7 @@
                     color: #666666; font-family:
                     tahoma,verdana,arial,helvetica,sans-serif;
                     font-size: 75%;">
-                          <img src="/shared/images/info.gif"
+                          <img src="/resources/acs-subsite/info.gif"
                     width="12" height="9" alt="[i]" title="Help text"
                     border="0">
                             #project-manager.lt_You_can_optionally_lo#
@@ -280,25 +280,25 @@
           <if @tasks.rownum@ odd>
             <tr bgcolor="#e6e6fa">
               <td align="left" valign="bottom" width="10">
-                <img src="resources/bl-e6e6fa.jpg" />
+                <img src="/resources/project-manager/bl-e6e6fa.jpg" />
               </td>
               
               <td colspan="2">&nbsp;</td>
               
               <td align="right" valign="bottom" width="10">
-                <img src="resources/br-e6e6fa.jpg" />
+                <img src="/resources/project-manager/br-e6e6fa.jpg" />
               </td>
           </if>
           <else>
             <tr bgcolor="#ddffdd">
               <td align="left" valign="bottom" width="10">
-                <img src="resources/bl-ddffdd.jpg" />
+                <img src="/resources/project-manager/bl-ddffdd.jpg" />
               </td>
               
               <td colspan="2">&nbsp;</td>
               
               <td align="right" valign="bottom" width="10">
-                <img src="resources/br-ddffdd.jpg" />
+                <img src="/resources/project-manager/br-ddffdd.jpg" />
               </td>
           </else>
 

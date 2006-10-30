@@ -44,7 +44,7 @@ set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCom
 
 set context_bar [ad_context_bar [list "processes?process_id=$process_id" "[_ project-manager.Processes]"] "[_ project-manager.One]"]
 
-set use_link "<a href=\"[export_vars -base task-select-project {process_id project_item_id}]\"><img border=\"0\" src=\"/shared/images/go.gif\"></a>"
+set use_link "<a href=\"[export_vars -base task-select-project {process_id project_item_id}]\"><img border=\"0\" src=\"/resources/acs-subsite/go.gif\"></a>"
 
 
 set elements \
@@ -53,16 +53,16 @@ set elements \
              label "[_ project-manager.Subject_1]"
              display_template {<a href="process-task-add-edit?process_id=[set process_id]&process_task_id=@tasks.process_task_id@">@tasks.one_line@</a>
                  <if @tasks.dependency_type@ eq start_before_start>
-                 <img border="0" src="resources/start_before_start.png">
+                 <img border="0" src="/resources/project-manager/start_before_start.png">
                  </if>
                  <if @tasks.dependency_type@ eq start_before_finish>
-                 <img border="0" src="resources/start_before_finish.png">
+                 <img border="0" src="/resources/project-manager/start_before_finish.png">
                  </if>
                  <if @tasks.dependency_type@ eq finish_before_start>
-                 <img border="0" src="resources/finish_before_start.png">
+                 <img border="0" src="/resources/project-manager/finish_before_start.png">
                  </if>
                  <if @tasks.dependency_type@ eq finish_before_finish>
-                 <img border="0" src="resources/finish_before_finish.png">
+                 <img border="0" src="/resources/project-manager/finish_before_finish.png">
                  </if>
              }
          } \
