@@ -61,6 +61,25 @@ if {![info exists format]} {
     set format "normal"
 }
 
+if {[exists_and_not_null category_id]} {
+    set category_join_clause "             LEFT JOIN (
+                        select 
+                        om.category_id, 
+                        om.object_id, 
+                        t.name as category_name 
+                        from 
+                        category_object_map om, 
+                        category_translations t, 
+                        categories ctg 
+                        where 
+                        om.category_id = t.category_id and 
+                        ctg.category_id = t.category_id and 
+                        ctg.deprecated_p = 'f')
+                 c ON p.item_id = c.object_id "
+} else {
+    set category_join_clause ""
+}
+
 # initialize the pa_from_clause. It should be empty unless needed
 set pa_from_clause ""
 

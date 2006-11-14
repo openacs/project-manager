@@ -63,22 +63,8 @@
     <querytext>
         SELECT
         p.project_id
-        FROM pm_projectsx p
-             LEFT JOIN (
-                        select 
-                        om.category_id, 
-                        om.object_id, 
-                        t.name as category_name 
-                        from 
-                        category_object_map om, 
-                        category_translations t, 
-                        categories ctg 
-                        where 
-                        om.category_id = t.category_id and 
-                        ctg.category_id = t.category_id and 
-                        ctg.deprecated_p = 'f')
-                 c ON p.item_id = c.object_id, 
-        cr_items i $subprojects_from_clause $pa_from_clause
+        FROM pm_projectsx p $category_join_clause
+        ,cr_items i $subprojects_from_clause $pa_from_clause
         WHERE 
         p.project_id = i.live_revision
 	$current_package_where_clause
