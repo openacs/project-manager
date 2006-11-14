@@ -1,6 +1,6 @@
 <master />
 
-<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="/resources/project-manager/style.css" type="text/css" />
 
 <property name="title">#project-manager.One_process#</property>
 <property name="context_bar">@context_bar;noquote@</property>

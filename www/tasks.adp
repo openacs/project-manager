@@ -1,6 +1,6 @@
 <master src="lib/master">
 
-  <link rel="stylesheet" href="style.css" type="text/css" />
+  <link rel="stylesheet" href="/resources/project-manager/style.css" type="text/css" />
   
   <property name="title">#project-manager.Tasks#</property>
   <property name="context">@context@</property>
@@ -24,7 +24,7 @@
 	page_num="@page_num@" 
 	base_url="@base_url@" 
 	searchterm="@searchterm@" 
-	orderby_tasks="@orderby_tasks@" 
+	tasks_orderby="@tasks_orderby@" 
 	role_id="@role_id@" 
 	filter_package_id="@filter_package_id@" 
 	subproject_tasks="@subproject_tasks@"

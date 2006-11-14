@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.2a1" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.2a4" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -74,7 +74,9 @@
   <msg key="Contact">Contact</msg>
   <msg key="Create_Offer">Create Offer</msg>
   <msg key="Create_Offer_help">Automatically create a new offer made up of offer items for each of the combinations given above?</msg>
+  <msg key="Create_project">Creating Project</msg>
   <msg key="create_project">Create project</msg>
+  <msg key="Create_project_message1">We are creating the project and all associated subprojects. Please be patient while we finish.</msg>
   <msg key="Created">Created</msg>
   <msg key="Creation_date">Creation date</msg>
   <msg key="CSV">CSV</msg>
@@ -154,6 +156,7 @@
   <msg key="Goal">Goal</msg>
   <msg key="Goal_1">Goal:</msg>
   <msg key="Hide">Hide</msg>
+  <msg key="HideSubprojects">Hide Subprojects</msg>
   <msg key="Hour_to_date">Hour to date</msg>
   <msg key="hours">hours</msg>
   <msg key="Hours_completed">Hours completed</msg>
@@ -287,6 +290,7 @@
   <msg key="lt_nbspnumrownumnbspnbsp">&amp;nbsp;%num.rownum%&amp;nbsp;&amp;nbsp;</msg>
   <msg key="lt_New_task_term_task_it">New %task_term% #%task_item_id%: %subject%</msg>
   <msg key="lt_not_current_select_li">(not current, select live version from the</msg>
+  <msg key="lt_not_current_select_live">(not current select live)</msg>
   <msg key="lt_not_current_set_live">(not current, select live version from the  page)</msg>
   <msg key="lt_Now_set_up_dependenci">Now set up dependencies</msg>
   <msg key="lt_Once_you_have_chosen_">Once you have chosen logger instances to be integrated
@@ -594,6 +598,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Task_categories">Task categories</msg>
   <msg key="task_change">task change</msg>
   <msg key="task_Description_1">Task Description</msg>
+  <msg key="Task_end_date">Task deadline</msg>
   <msg key="Task_hours_completed">Task hours completed</msg>
   <msg key="Task_name">Task Name:</msg>
   <msg key="Task_overview">Task overview</msg>

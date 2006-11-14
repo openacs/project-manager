@@ -1,19 +1,3 @@
-<master>
-<property name="title">@title;noquote@</property>
-<property name="context">@context;noquote@</property>
-<if @focus@ not nil><property name="focus">@focus;noquote@</property></if>
-<property name="header_stuff">
-  @header_stuff;noquote@
-    <style type="text/css">   <link rel="stylesheet" type="text/css" href="/resources/project-manager/style.css" />
-   </style>
-  </property>
-<property name="doc_type">
-<?xml version="1.0"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-</property>
-<property name="navbar_list">@navbar_list@</property>
-<style type="text/css">
 td.highlighted {
   background-color:#ddddff;
   font: 90% Verdana,Georgia,Serif;
@@ -151,14 +135,3 @@ h3 {
   background-color:#ffffdd;
   font: 100% Verdana,Georgia,Serif;
 }
-</style>
-
-<!-- include src="nav-bar" project_item_id="@project_item_id@" -->
-<p />
-
-<slave>
-
-<p />
-<include src="nav-bar" project_item_id="@project_item_id@">
-
-

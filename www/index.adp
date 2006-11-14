@@ -1,6 +1,6 @@
 <master src="lib/master">
 
-  <link rel="stylesheet" href="style.css" type="text/css" />
+  <link rel="stylesheet" href="/resources/project-manager/style.css" type="text/css" />
     
 <property name="title">#project-manager.Projects#</property>
 <property name="context">@context;noquote@</property>

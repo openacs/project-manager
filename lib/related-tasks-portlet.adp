@@ -1,11 +1,11 @@
 <table border="0" class="list" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <th align="left" valign="top" width="10">
-      <img src="resources/tl-e6e6fa" align="top" />
+      <img src="/resources/project-manager/tl-e6e6fa" align="top" />
     </th>
     <th>#project-manager.Related_task_terms#</th>
     <th align="right" valign="top" width="10">
-      <img src="resources/tr-e6e6fa" align="top" />
+      <img src="/resources/project-manager/tr-e6e6fa" align="top" />
     </th>
   </tr>
   <tr>

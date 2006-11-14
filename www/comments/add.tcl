@@ -42,6 +42,9 @@ set show_role_p 1
 
 set assignee_list [list]
 
+# List to make sure we are not sending comments twice
+set listed_party_ids {}    
+
 if { $exclude_observers_p } {
     foreach assignee_one $assignees {
 	# Compare the role_id to the one get on observer_role_id
@@ -51,7 +54,7 @@ if { $exclude_observers_p } {
 	    set party_id [lindex $assignee_one 0]
 	    set name [person::name -person_id $party_id]
 	    set email [party::email -party_id $party_id]
-
+	    lappend listed_party_ids $party_id
 	    if {$show_role_p} {
 		# display assigned role
 		lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee_one 1]])" $party_id]
@@ -67,7 +70,7 @@ if { $exclude_observers_p } {
 	set party_id [lindex $assignee_one 0]
 	set name [person::name -person_id $party_id]
 	set email [party::email -party_id $party_id]
-
+	lappend listed_party_ids $party_id
 	if {$show_role_p} {
 	    # display assigned role
 	    lappend assignee_list [list "$name ($email) ([pm::role::name -role_id [lindex $assignee_one 1]])" $party_id]
@@ -76,7 +79,7 @@ if { $exclude_observers_p } {
 	}
     }
 }
-    
+
 # Include subprojects
 foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object_id] {
     set sub_assignees [pm::project::assignee_role_list -project_item_id $subproject_id]
@@ -88,13 +91,14 @@ foreach subproject_id [pm::project::get_all_subprojects -project_item_id $object
 	    
 	    if {[lsearch -exact $listed_party_ids $party_id] == -1} {
 		lappend assignee_list [list "$name ($email)" $party_id]
+		lappend listed_party_ids $party_id
 	    }
 	}
     }
 }
 
 # Get a list of all parties, excluding myself
-set listed_party_ids {}
+
 set user_id [ad_conn user_id]
 foreach assignee_one $assignee_list {
     set assignee_id [lindex $assignee_one 1]
@@ -103,6 +107,8 @@ foreach assignee_one $assignee_list {
     }
 }
 
+# Just for wieners
+set listed_party_ids [list]
 ad_form -name comment \
     -form {
         acs_object_id_seq:key
@@ -190,7 +196,8 @@ ad_form -extend -name comment -form {
 	    lappend to_party_ids "$assignee_id"
 	}
     }
-    
+
+    ns_log Notice "PM comment:: $to_party_ids"
     set comment_id [pm::util::general_comment_add \
 			-object_id $object_id \
 			-title "$title" \

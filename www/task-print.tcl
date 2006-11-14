@@ -117,16 +117,16 @@ template::list::create \
             label "[_ project-manager.Type]"
             display_template {
                 <if @dependency.dependency_type@ eq start_before_start>
-                <img border="0" src="resources/start_before_start.png">
+                <img border="0" src="/resources/project-manager/start_before_start.png">
                 </if>
                 <if @dependency.dependency_type@ eq start_before_finish>
-                <img border="0" src="resources/start_before_finish.png">
+                <img border="0" src="/resources/project-manager/start_before_finish.png">
                 </if>
                 <if @dependency.dependency_type@ eq finish_before_start>
-                <img border="0" src="resources/finish_before_start.png">
+                <img border="0" src="/resources/project-manager/finish_before_start.png">
                 </if>
                 <if @dependency.dependency_type@ eq finish_before_finish>
-                <img border="0" src="resources/finish_before_finish.png">
+                <img border="0" src="/resources/project-manager/finish_before_finish.png">
                 </if>
             }
         }
@@ -177,16 +177,16 @@ template::list::create \
             label "[_ project-manager.Type]"
             display_template {
                 <if @dependency2.dependency_type@ eq start_before_start>
-                <img border="0" src="resources/start_before_start.png">
+                <img border="0" src="/resources/project-manager/start_before_start.png">
                 </if>
                 <if @dependency2.dependency_type@ eq start_before_finish>
-                <img border="0" src="resources/start_before_finish.png">
+                <img border="0" src="/resources/project-manager/start_before_finish.png">
                 </if>
                 <if @dependency2.dependency_type@ eq finish_before_start>
-                <img border="0" src="resources/finish_before_start.png">
+                <img border="0" src="/resources/project-manager/finish_before_start.png">
                 </if>
                 <if @dependency2.dependency_type@ eq finish_before_finish>
-                <img border="0" src="resources/finish_before_finish.png">
+                <img border="0" src="/resources/project-manager/finish_before_finish.png">
                 </if>
             }
         }
