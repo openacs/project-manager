@@ -3445,7 +3445,12 @@ ad_proc -public pm::project::get_all_subprojects_not_cached {
 	set parent [lindex $subprojects $i]
 	
 	# Now we get the sub_projects of the sub_projects if there is any
-	set sub_projects [db_list get_subprojects { }]
+	if {$parent eq ""} {
+	    set sub_projects [list]
+	} else {
+	    set sub_projects [db_list get_subprojects { }]
+	}
+
 	foreach sp $sub_projects {
 	    lappend subprojects $sp
 	}
@@ -3489,4 +3494,62 @@ ad_proc -public pm::project::check_projects_status {
 	    return 0
 	}
     }
+}
+
+ad_proc -public pm::project::search {
+    -keyword:required
+} {
+    Searches for the project which matches the keyword. Returns the item_id
+    
+    @param keyword which should be in the title or the project_code
+    
+    @return item_id Item_id of the project
+} {
+    set keyword [string tolower $keyword]
+    set match_projects [db_list_of_lists get_projects { }]
+    set match_length [llength $match_projects]
+    if { [string equal $match_length 0] } {
+	# No Match, run additional search
+	set match_projects [db_list_of_lists get_projects_by_code { }]
+	set match_length [llength $match_projects]
+	if { [string equal $match_length 0] } {
+	    # No Match just return nothing
+	    return ""
+	}
+    }
+
+    # Return the first found project
+    return [lindex [lindex $match_projects 0] 0]
+}
+
+ad_proc -public pm::project::search_url_not_cached {
+    -keyword:required
+} {
+    Returns the URL for the first project found matching the keyword
+} {
+    set project_item_id [pm::project::search -keyword $keyword]
+    
+    if {$project_item_id eq ""} {
+	# No project found, return nothing
+	return ""
+    } else {
+	set object_package_id [acs_object::package_id -object_id $project_item_id]
+    
+	# We get the node_id from the package_id and use it 
+	# to get the url of the project-manager
+	set pm_node_id [site_node::get_node_id_from_object_id -object_id $object_package_id]
+	set pm_url [site_node::get_url -node_id $pm_node_id]
+	
+	# Just redirect to the pm_url and project_item_id
+	
+	return "${pm_url}one?project_item_id=$project_item_id"
+    }
+}
+
+ad_proc -public pm::project::search_url {
+    -keyword:required
+} {
+    Returns the URL for the first project found matching the keyword
+} {
+    return [util_memoize [list pm::project::search_url_not_cached -keyword $keyword]]
 }
