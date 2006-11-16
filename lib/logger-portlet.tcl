@@ -26,7 +26,10 @@ set logger_project [lindex [application_data_link::get_linked -from_object_id $p
 # And get the subprojects as well.
 set logger_projects [list $logger_project]
 foreach subproject_id [pm::project::get_all_subprojects -project_item_id $project_item_id] {
-    lappend logger_projects [lindex [application_data_link::get_linked -from_object_id $subproject_id -to_object_type logger_project] 0]
+    set logger_project_id [lindex [application_data_link::get_linked -from_object_id $subproject_id -to_object_type logger_project] 0]
+    if {![string eq "" $logger_project_id]} {
+	lappend logger_projects $logger_project_id
+    }
 }
 
 # we can also get the link to the logger instance.
