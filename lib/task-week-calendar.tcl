@@ -1,3 +1,5 @@
+ns_log Error "The task calendar page is currently broken to a state where performance is seriously harmed."
+ad_script_abort
 set t_date [clock format [clock scan $t_date] -format "%Y-%m-%d"]
 set selected_users [pm::calendar::users_to_view]
 

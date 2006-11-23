@@ -355,7 +355,7 @@ template::list::create \
 	task_item_id {
 	    label "[_ project-manager.number]"
 	    link_url_col item_url
-	    link_html {title "[_ project-manager.lt_View_this_project_ver]" }
+	    link_html {title "@tasks.title@" }
 	    display_template {<a href="@tasks.base_url@@tasks.item_url@">@tasks.task_item_id@</a>}
 	}
         status_type {

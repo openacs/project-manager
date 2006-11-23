@@ -3,7 +3,8 @@ set user_id [auth::require_login]
 set date [calendar::adjust_date -date $date -julian_date $julian_date]
 set base_url [ad_conn package_url]
 
-
+ns_log Error "The task calendar page is currently broken to a state where performance is seriously harmed."
+ad_script_abort
 set title "#project-manager.Task_calendar#"
 set context [list $title]
 set header_stuff "
