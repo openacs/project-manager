@@ -229,8 +229,8 @@ ad_proc -public pm::project::new {
     -organization_id:required
     {-dform "implicit"}
     {-creation_date ""}
-    {-creation_user ""}
-    {-creation_ip ""}
+    -creation_user:required
+    -creation_ip:required
     -package_id:required
     -no_callback:boolean
 } {
@@ -240,13 +240,8 @@ ad_proc -public pm::project::new {
     
     @param project_name
 
-    @return Returns the revision_id of the newly created project
     @error 
 } {
-
-    if {$creation_user eq ""} {
-	set creation_user [ad_conn user_id]
-    }
 
     # if the project is ongoing, there is no end date
     # we set it to null to signify that. Technically, this
@@ -287,7 +282,6 @@ ad_proc -public pm::project::new {
 			 -title $project_name \
 			 -description $description \
 			 -mime_type $mime_type \
-			 -is_live "t" \
 			 -attributes [list \
 					  [list project_code $project_code] \
 					  [list goal $goal] \
@@ -296,12 +290,18 @@ ad_proc -public pm::project::new {
 					  [list actual_start_date $actual_start_date] \
 					  [list actual_end_date $actual_end_date] \
 					  [list ongoing_p $ongoing_p] \
-					  [list customer_id $organization_id] \
+					  [list estimated_finish_date $estimated_finish_date] \
+					  [list latest_finish_date $latest_finish_date] \
+					  [list earliest_finish_date $earliest_finish_date] \
+					  [list actual_hours_completed $actual_hours_completed] \
+					  [list estimated_hours_total $estimated_hours_total] \
+					  [list customer_id $customer_id] \
 					  [list status_id $status_id] \
+					  [list currency $currency] \
 					  [list dform $dform] ] ]
     
     # Assign the user to the project
-    permission::grant -party_id $creation_user -object_id $revision_id -privilege admin
+    permission::grant -party_id creation_user -object_id project_item_id -privilege admin
     set project_role [pm::role::default]
     pm::project::assign \
         -project_item_id $project_item_id \
@@ -313,7 +313,7 @@ ad_proc -public pm::project::new {
 	callback pm::project_new -package_id $package_id -project_id $project_item_id -data [list organization_id $organization_id]
     }
 
-    return $revision_id
+    return $project_revision
 }
 
 
@@ -2137,24 +2137,15 @@ ad_proc -public pm::project::name {
 } {
 
     if {[exists_and_not_null project_item_id]} {
-        return [db_string get_item_name {
-            SELECT
-            title
-            FROM
-            cr_revisions p,
-            cr_items i
-            WHERE
-            i.live_revision = p.revision_id
-            and i.item_id = :project_item_id
-        } -default ""]
+        return [content::item::get_title -item_id $project_item_id]
     } else {
         return [db_string get_name {
             SELECT
             title
             FROM
-            pm_projectsx
+            cr_revisions
             WHERE
-            project_id = :project_id
+            revision_id = :project_id
         } -default ""]
     }
 }        
@@ -3445,12 +3436,7 @@ ad_proc -public pm::project::get_all_subprojects_not_cached {
 	set parent [lindex $subprojects $i]
 	
 	# Now we get the sub_projects of the sub_projects if there is any
-	if {$parent eq ""} {
-	    set sub_projects [list]
-	} else {
-	    set sub_projects [db_list get_subprojects { }]
-	}
-
+	set sub_projects [db_list get_subprojects { }]
 	foreach sp $sub_projects {
 	    lappend subprojects $sp
 	}
@@ -3494,62 +3480,4 @@ ad_proc -public pm::project::check_projects_status {
 	    return 0
 	}
     }
-}
-
-ad_proc -public pm::project::search {
-    -keyword:required
-} {
-    Searches for the project which matches the keyword. Returns the item_id
-    
-    @param keyword which should be in the title or the project_code
-    
-    @return item_id Item_id of the project
-} {
-    set keyword [string tolower $keyword]
-    set match_projects [db_list_of_lists get_projects { }]
-    set match_length [llength $match_projects]
-    if { [string equal $match_length 0] } {
-	# No Match, run additional search
-	set match_projects [db_list_of_lists get_projects_by_code { }]
-	set match_length [llength $match_projects]
-	if { [string equal $match_length 0] } {
-	    # No Match just return nothing
-	    return ""
-	}
-    }
-
-    # Return the first found project
-    return [lindex [lindex $match_projects 0] 0]
-}
-
-ad_proc -public pm::project::search_url_not_cached {
-    -keyword:required
-} {
-    Returns the URL for the first project found matching the keyword
-} {
-    set project_item_id [pm::project::search -keyword $keyword]
-    
-    if {$project_item_id eq ""} {
-	# No project found, return nothing
-	return ""
-    } else {
-	set object_package_id [acs_object::package_id -object_id $project_item_id]
-    
-	# We get the node_id from the package_id and use it 
-	# to get the url of the project-manager
-	set pm_node_id [site_node::get_node_id_from_object_id -object_id $object_package_id]
-	set pm_url [site_node::get_url -node_id $pm_node_id]
-	
-	# Just redirect to the pm_url and project_item_id
-	
-	return "${pm_url}one?project_item_id=$project_item_id"
-    }
-}
-
-ad_proc -public pm::project::search_url {
-    -keyword:required
-} {
-    Returns the URL for the first project found matching the keyword
-} {
-    return [util_memoize [list pm::project::search_url_not_cached -keyword $keyword]]
 }

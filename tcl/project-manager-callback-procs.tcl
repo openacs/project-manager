@@ -14,6 +14,8 @@ ad_proc -public -callback pm::project_new {
     {-package_id:required}
     {-project_id:required}
     {-data:required}
+    {-user_id ""}
+    {-creation_ip ""}
 } {
     Callback which is executed once the project has been created
 
