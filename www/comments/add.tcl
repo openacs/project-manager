@@ -139,6 +139,7 @@ ad_form -name comment \
 	    {section "[_ project-manager.Assignees]"}
 	    {options $assignee_list}
 	    {values $listed_party_ids}
+	    {html {"checked" ""}}
 	}
     }
 
