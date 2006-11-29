@@ -313,28 +313,33 @@ if { [exists_and_not_null previous_status_f] } {
     set previous_status_where_clause ""
 }
 set filters [list \
-		 searchterm [list \
+ 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
+				  type singleval \
 				 where_clause {$search_term_where}
 			    ] \
 		 date_range [list \
 				 label "[_ project-manager.Planned_end_date]" \
+				  type singleval \
 				 where_clause {$p_range_where}
-				] \
+			    ] \
 		 pm_status_id [list \
-				label "[_ project-manager.Status_1]"  \
-				default_value [pm::project::default_status_open] \
-				values { {All "-1"} [pm::status::project_status_select]} \
-				where_clause { $status_where_clause } \
-			       ] \
+				   label "[_ project-manager.Status_1]"  \
+				   default_value [pm::project::default_status_open] \
+				   values { {All "-1"} [pm::status::project_status_select]} \
+				   type multival \
+				   where_clause { $status_where_clause } \
+				  ] \
 		 assignee_id [list \
 				  label "[_ project-manager.Assignee]" \
 				  default_value $user_id \
 				  values { $assignees_filter } \
+				  type multival \
 				  where_clause {$assignee_where_clause} 
 			     ] \
 		 category_id [list \
 				  label Categories \
+				  type singleval \
 				  where_clause {c.category_id = [join [value_if_exists category_id] ","]}
 			     ] \
 		 user_space_p [list] \
@@ -343,19 +348,23 @@ set filters [list \
 		 subprojects_p [list \
 				    label "[_ project-manager.ShowSubprojects]" \
 				    values { {"[_ project-manager.True]" t } { "[_ project-manager.False]" f} } \
+				    type singleval \
 				    where_clause { $subprojects_where_clause }
 				] \
 		 is_observer_p [list \
+				    type singleval \
 				    where_clause { $user_space_clause }
 			       ] \
 		 previous_status_f [list \
 					label "[_ project-manager.Previous_Status]" \
 					values { $previous_status_options } \
+					type multival \
 					where_clause { $previous_status_where_clause }
 				   ] \
 		 current_package_f [list \
-				     label "[_ project-manager.Package_Instance]" \
-				     values {{"[_ acs-kernel.common_All]" 1} {"[_ project-manager.Current]" $pm_package_id}} \
+					label "[_ project-manager.Package_Instance]" \
+					type singleval \
+					values {{"[_ acs-kernel.common_All]" 1} {"[_ project-manager.Current]" $pm_package_id}} \
 				 ] \
 		]
 

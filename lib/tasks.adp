@@ -42,3 +42,5 @@
     </tr>
   </table>
 </if>
+<ul>
+<li>#project-manager.Estimated_Hours#: @total_estimated_hours@ (@total_estimated_hours_max@)</li></ul>

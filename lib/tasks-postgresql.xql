@@ -58,11 +58,11 @@
     <querytext>
 	SELECT  t.item_id as task_item_id
 	FROM
- (select ci.parent_id, ci.item_id, tr.end_date, tr.priority, tr.earliest_start, tr.latest_start
+ (select ci.parent_id, ci.item_id, ci.latest_revision, tr.end_date, tr.priority, tr.earliest_start, tr.latest_start
   from cr_items ci, pm_tasks_revisions tr
   -- get only live revisions
   where ci.live_revision = tr.task_revision_id
-) t, pm_tasks_active ti, $observer_from_clause
+) t, pm_tasks_active ti, $observer_from_clause $search_from_clause
         cr_items cp, acs_objects op, pm_projects p
          where t.parent_id     = cp.item_id
         and t.item_id       = ti.task_id
@@ -70,6 +70,7 @@
         and p.project_id = op.object_id
 	$party_id_clause
 	$observer_pagination_clause
+	$search_where_clause
         [template::list::filter_where_clauses -and -name tasks]
         [template::list::orderby_clause -name tasks -orderby]
     </querytext>

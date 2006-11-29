@@ -28,7 +28,7 @@ if {![info exists format]} {
 }
 
 if {![exists_and_not_null elements]} {
-    set elements "task_item_id status_type title priority estimated_hours_work_max slack_time end_date last_name"
+    set elements "task_item_id status_type title priority hours_remaining end_date last_name"
 }
 
 set user_id     [auth::require_login]

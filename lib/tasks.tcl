@@ -141,13 +141,15 @@ if {![empty_string_p $searchterm]} {
     } 
 
     if {[regexp {([0-9]+)} $searchterm match query_digits]} {
-        set search_term_where " (upper(t.title) like upper('%$searchterm%')
- or t.task_item_id = :query_digits) "
+        set search_where_clause "and (upper(cr.title) like upper('%$searchterm%')
+ or t.item_id = :query_digits)  and cr.revision_id = t.latest_revision"
     } else {
-        set search_term_where " upper(t.title) like upper('%$searchterm%')"
+        set search_where_clause "and upper(cr.title) like upper('%$searchterm%') and cr.revision_id = t.latest_revision"
     }
+    set search_from_clause "cr_revisions cr,"
 } else {
-    set search_term_where ""
+    set search_from_clause ""
+    set search_where_clause ""
 }
 
 set default_orderby [pm::task::default_orderby]
@@ -214,9 +216,8 @@ if {[exists_and_not_null filter_group_id]} {
 }
 
 set filters [list \
-		 searchterm [list \
+ 		 searchterm [list \
 				 label "[_ project-manager.Search_1]" \
-				 where_clause "$search_term_where"
 			    ] \
 		 status_id [list \
 				label "[_ project-manager.Status_1]" \
@@ -425,9 +426,7 @@ template::list::create \
 	}
 	hours_remaining {
 	    label "[_ project-manager.Hours_remaining]"
-	    html {
-		align right
-	    }
+	    display_template "<div align=\"left\">@tasks.hours_remaining@</div><div align=\"right\"> (@tasks.estimated_hours_work_max@)</div>"
 	}
 	actual_days_worked {
 	    label "[_ project-manager.Days_worked]"
@@ -444,7 +443,7 @@ template::list::create \
 	estimated_hours_work_max {
 	    label "[_ project-manager.Estimated_Hours_Max]"
 	    html {
-		align right
+		align left
 	    }
 	}
 	project_item_id {
@@ -534,6 +533,8 @@ set extend_list [list \
 		     user_html \
 		    role_type]
 
+set total_estimated_hours 0
+set total_estimated_hours_max 0
 db_multirow -extend $extend_list tasks tasks " " {
 
     if { $tasks_portlet_p && [string equal $row_count $show_rows] } {
@@ -694,6 +695,8 @@ db_multirow -extend $extend_list tasks tasks " " {
 	     -estimated_hours_work_max $estimated_hours_work_max \
 	     -percent_complete $percent_complete]
 
+    set total_estimated_hours [expr $total_estimated_hours + $estimated_hours_work]
+    set total_estimated_hours_max [expr $total_estimated_hours_max + $estimated_hours_work_max]
     set days_remaining \
 	[pm::task::days_remaining \
 	     -estimated_hours_work $estimated_hours_work \
