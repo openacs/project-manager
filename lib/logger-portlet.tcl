@@ -54,5 +54,6 @@ set log_url "${logger_url}log?project_id=$logger_project&pm_project_id=$project_
 set today_ansi [clock format [clock scan today] -format "%Y-%m-%d"]
 set then_ansi [clock format [clock scan "-$logger_days days"] -format "%Y-%m-%d"]
 
+set hours_sum [db_string hours_sum "select sum(value) from logger_entries where variable_id = :logger_variable_id and project_id in ([template::util::tcl_to_sql_list $logger_projects])" -default 0]
 
 set day_widget "[_ project-manager.lt_Last_input_typetext_n]"

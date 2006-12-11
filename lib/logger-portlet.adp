@@ -3,7 +3,7 @@
 <!-- Logger Portlet Start -->
 <table width="100%">
 <tr class="list-button-bar">
-  <td class="fill-list-middle" valign="top" colspan="2">
+  <td class="fill-list-middle" valign="top">
     <form action="one" method="post">
       @variable_widget;noquote@
       @variable_exports;noquote@
@@ -11,6 +11,7 @@
       <input type="submit" name="submit" value="#acs-kernel.common_View#" />
     </form>
   </td>
+  <td align=right>#project-manager.Hours_completed#: @hours_sum@</td>
 </tr>
 <tr>
   <td colspan="2" class="fill-list-bottom">
