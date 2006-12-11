@@ -30,12 +30,15 @@ if {[exists_and_not_null project_item_id] && ![exists_and_not_null project_id]} 
 
 if {[exists_and_not_null project_id]} {
     set title "[_ project-manager.lt_Edit_a_project_term_l]"
+    set edit_p 1
     set context_bar [ad_context_bar "[_ project-manager.Edit_project_term]"]
-
+    set project_options [pm::project::get_list_of_open -object_package_id $package_id]
+    set project_options [concat [list [list "" ""]] $project_options]
     # permissions
     permission::require_permission -party_id $user_id -object_id $package_id -privilege write
 
 } else {
+    set edit_p 0
     set title "[_ project-manager.lt_Add_a_project_term_lo]"
     set context_bar [ad_context_bar "[_ project-manager.New_project_term]"]
 
@@ -58,10 +61,6 @@ ad_form -name add_edit \
     -form {
         project_id:key
         
-        {parent_id:text(hidden)
-            {value $parent_id}
-        }
-	
         {project_item_id:text(hidden)
             {value $project_item_id}
         }
@@ -98,6 +97,26 @@ ad_form -extend -name add_edit \
             {html { rows 5 cols 40 wrap soft}}}
         
     }
+
+
+if {[string is true $edit_p]} {
+    ad_form -extend -name add_edit \
+	-form {
+	    {parent_id:text(select),optional
+		{label "[_ project-manager.Parent_project]"}
+		{value $parent_id}
+		{options $project_options}
+	    }
+	}
+} else {
+    ad_form -extend -name add_edit \
+	-form {
+	    {parent_id:text(hidden)
+		{value $parent_id}
+	    }
+	}
+}
+	
 
 
 if {[exists_and_not_null customer_id]} {
@@ -196,7 +215,8 @@ ad_form -extend -name add_edit \
             set ongoing_p t
         }
 	
-	set planned_end_date [template::util::date::get_property ansi_no_time [template::util::date::today]]
+	set planned_end_date [template::util::date::get_property linear_date_no_time [template::util::date::today]]
+	set planned_end_date [join $planned_end_date "-"]
 	set planned_start_date [template::util::date::now]
 	set description [template::util::richtext::create "" {}]
     } -edit_request {
@@ -305,6 +325,7 @@ ad_form -extend -name add_edit \
 
 	    set project_item_id [pm::project::get_project_item_id -project_id $project_id]
 
+	    db_dml update_parent_id {}
 	    if {[exists_and_not_null category_ids]} {
 		category::map_object -object_id $project_id $category_ids
 	    }
