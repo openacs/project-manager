@@ -637,6 +637,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -exclude_static]
 
 	db_dml update_task {}
+	db_dml update_parent_id {}
 
 	if {[exists_and_not_null category_ids]} {
 	    category::map_object -object_id $task_id $category_ids

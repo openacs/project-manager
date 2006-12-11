@@ -146,7 +146,7 @@ ad_form -extend -name add_edit \
         {planned_end_date:text(text)
             {label "[_ project-manager.Deadline_1]"}
 	    {html {id sel2}}
-	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>d.m.y </b>\]
+	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>y-m-d</b>\]
 	    }}
         }
     }
@@ -196,7 +196,7 @@ ad_form -extend -name add_edit \
             set ongoing_p t
         }
 	
-	set planned_end_date [template::util::date::now]
+	set planned_end_date [template::util::date::get_property ansi_no_time [template::util::date::today]]
 	set planned_start_date [template::util::date::now]
 	set description [template::util::richtext::create "" {}]
     } -edit_request {
@@ -268,7 +268,7 @@ ad_form -extend -name add_edit \
 		-project_item_id $project_item_id \
 		-role_id $project_role \
 		-party_id $user_id \
-		-send_email_p "f"
+		-send_email_p "t"
 
 	    if {[exists_and_not_null category_ids]} {
 		category::map_object -object_id $project_id $category_ids

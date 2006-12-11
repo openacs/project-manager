@@ -54,4 +54,12 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="update_parent_id">
+    <querytext>
+	    update cr_items
+	    set parent_id = :project_item_id
+	    where item_id = :task_item_id
+    </querytext>
+  </fullquery>
+
 </queryset>
