@@ -105,9 +105,6 @@ foreach num $number {
 
 util_user_message -message "[_ project-manager.lt_Saved_tasks_You_may_n]"
 
-ad_progress_bar_end -url $return_url
-
-
 # send out email alerts
 
 if {[string is true $using_process_p]} {
@@ -173,3 +170,7 @@ if {[string is true $using_process_p]} {
     }
 
 }
+
+ad_progress_bar_end -url $return_url
+
+

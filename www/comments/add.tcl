@@ -132,7 +132,7 @@ ad_form -name comment \
         
         {description:richtext(richtext),optional
             {label "[_ project-manager.Comment_1]"}
-            {html { rows 9 cols 40 wrap soft}}
+            {html { cols 90 wrap soft}}
 	}
 	{assignee:text(checkbox),multiple,optional
 	    {label "[_ project-manager.Send_email]"}
