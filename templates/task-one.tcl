@@ -85,7 +85,17 @@ set task_info(end_date)        [lc_time_fmt $task_info(end_date) $fmt]
 # we do this for the hours include portion
 set project_item_id $task_info(project_item_id)
 
-set context [list [list "one?project_item_id=$task_info(project_item_id)" "$task_info(project_name)"] "$task_info(task_title)"]
+# Set the context bar at least two levels up :-)
+set project_root [pm::util::get_root_folder -package_id $package_id]
+set parent_project_id [pm::project::parent_project_id -project_id $task_info(project_item_id)]
+set context [list]
+if {$parent_project_id ne $project_root} {
+    set project_name [pm::util::get_project_name -project_item_id $parent_project_id]
+    lappend context [list "one?project_item_id=$parent_project_id" "$project_name"]
+}
+
+lappend context [list "one?project_item_id=$task_info(project_item_id)" "$task_info(project_name)"] 
+lappend context "$task_info(task_title)"
 
 
 set richtext_list [list $task_info(description) $task_info(mime_type)]
