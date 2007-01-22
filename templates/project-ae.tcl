@@ -94,8 +94,8 @@ ad_form -extend -name add_edit \
         {description:richtext(richtext),optional
             {label "[_ project-manager.Description]"}
             {value $description}
-            {html { rows 5 cols 40 wrap soft}}}
-        
+            {html {cols 80 wrap soft}}
+	}
     }
 
 

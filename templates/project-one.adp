@@ -39,6 +39,16 @@
       />
     <p />
   </if>
+    <include
+      src="/packages/project-manager/lib/logger-portlet"
+      project_item_id="@project_item_id@"
+      return_url="@return_url@"
+      master="@portlet_master@"
+      logger_project="@project.logger_project@"
+      logger_days="@logger_days@"
+      return_url="@return_url;noquote@"
+      pm_url="@package_url;noquote@" />
+    <p />
 </td>
 <td valign="top">
     <include
@@ -59,27 +69,19 @@
     folder_id="@folder_id@" />
 	<p />
   </if>
-  <include
-    src="/packages/project-manager/lib/comments-portlet"
-    project_id="@project_id@"
-    project_item_id="@project_item_id@"
-    return_url="@return_url@" />
 <p /> 
-    <include
-      src="/packages/project-manager/lib/logger-portlet"
-      project_item_id="@project_item_id@"
-      return_url="@return_url@"
-      master="@portlet_master@"
-      logger_project="@project.logger_project@"
-      logger_days="@logger_days@"
-      return_url="@return_url;noquote@"
-      pm_url="@package_url;noquote@" />
-    <p />
         <if @forum_id@ ge 0>
           <include
             src="/packages/project-manager/lib/forums-portlet"
             forum_id="@forum_id@" />
         </if>
+	<else>
+	  <include
+	    src="/packages/project-manager/lib/comments-portlet"
+	    project_id="@project_id@"
+    project_item_id="@project_item_id@"
+    return_url="@return_url@" />
+</else>
         <p />
 </td>
 </tr>

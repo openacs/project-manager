@@ -20,7 +20,7 @@
 
   <fullquery name="get_task_data">
     <querytext>
-	select title as task_title, description, mime_type as description_mime_type,
+	select title as task_title, description as description_content, mime_type as description_mime_type,
 	       percent_complete, to_char(end_date,'YYYY-MM-DD HH24:MI:SS') as task_end_date,
 	       estimated_hours_work, estimated_hours_work_min,
 	       estimated_hours_work_max, priority

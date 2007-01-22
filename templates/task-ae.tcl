@@ -133,8 +133,8 @@ ad_form -extend -name task_add_edit \
             {html {size 40}}
         }
         
-        {description:text(textarea),optional
-            {label "[_ project-manager.Description_1]"}
+        {description:richtext(richtext),optional
+            {label "[_ project-manager.Task_description]"}
             {html { rows 14 cols 40 wrap soft}}
 	}
         
@@ -429,8 +429,7 @@ foreach role_list $roles_list {
 ad_form -extend -name task_add_edit -new_request {
     set send_email_p t
     set task_title ""
-    set description ""
-    set description_mime_type "text/plain"
+    set description  [template::util::richtext::create "" "text/html"]
     set estimated_hours_work 0
     set estimated_hours_work_min 0
     set estimated_hours_work_max 0
@@ -442,7 +441,9 @@ ad_form -extend -name task_add_edit -new_request {
     set priority 0
 } -edit_request {
     db_1row get_task_data {}
-    
+
+    set description [template::util::richtext::create $description_content $description_mime_type]
+
     set task_end_time [template::util::date::from_ansi $task_end_date [lc_get frombuilder_time_format]]
     set task_end_date [lindex $task_end_date 0]
 
@@ -463,6 +464,9 @@ ad_form -extend -name task_add_edit -new_request {
     set end_date(format) ""
 
     ad_page_contract_filter_proc_date end_date end_date
+
+    set description_content [template::util::richtext::get_property content $description]
+    set description_format [template::util::richtext::get_property format $description]
 
     set task_end_date_list [split $end_date(date) "-"]
     append task_end_date_list " [lrange $task_end_time 3 5]"
@@ -537,7 +541,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -object_id $task_id \
 			 -form task_add_edit \
 			 -cr_widget none \
-			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id object_type pm_task] \
+			 -defaults [list title $task_title description $description_content mime_type $description_format context_id $project_item_id parent_id $project_item_id object_type pm_task] \
 			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority dform} \
 			 -exclude_static]
 
@@ -632,7 +636,7 @@ ad_form -extend -name task_add_edit -new_request {
 			 -object_id $task_id \
 			 -form task_add_edit \
 			 -cr_widget none \
-			 -defaults [list title $task_title description $description mime_type $description_mime_type context_id $project_item_id parent_id $project_item_id object_type pm_task] \
+			 -defaults [list title $task_title description $description_content mime_type $description_format context_id $project_item_id parent_id $project_item_id object_type pm_task] \
 			 -default_fields {percent_complete {end_date $end_date_sql} estimated_hours_work estimated_hours_work_min estimated_hours_work_max priority dform} \
 			 -exclude_static]
 
