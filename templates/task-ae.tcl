@@ -126,6 +126,9 @@ if {[string is true $using_process_p]} {
 	}
 }
         
+# Where should we store the attached files in file storage
+set folder_id [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type "content_folder"] 0]
+
 ad_form -extend -name task_add_edit \
     -form {
         {task_title:text
@@ -135,7 +138,8 @@ ad_form -extend -name task_add_edit \
         
         {description:richtext(richtext),optional
             {label "[_ project-manager.Task_description]"}
-            {html { rows 14 cols 40 wrap soft}}
+	    {options {editor xinha plugins OacsFs height 350px folder_id $folder_id}}
+	    {html { cols 80 wrap soft}}
 	}
         
         {description_mime_type:text(select),optional

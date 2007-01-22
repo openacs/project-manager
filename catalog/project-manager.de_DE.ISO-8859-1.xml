@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.2a1" locale="de_DE" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.2a5" locale="de_DE" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- noch nicht festgelegt ---</msg>
   <msg key="--_Closed">-- geschlossen</msg>
@@ -106,7 +106,7 @@
   <msg key="Dependency">Abhängigkeiten:</msg>
   <msg key="Dependency_1">Abhängigkeit</msg>
   <msg key="Dependency_types">Abhängigkeitstypen</msg>
-  <msg key="Description">Interne Projekt-Beschreibung</msg>
+  <msg key="Description">Projekt-Beschreibung</msg>
   <msg key="Description_1">Interne Projekt-Beschreibung:</msg>
   <msg key="Description_2">Beschreibung</msg>
   <msg key="Description_changed">Beschreibung geändert</msg>
@@ -140,7 +140,7 @@
   <msg key="Enhanced_Text">Erweiterter Text</msg>
   <msg key="Error">Fehler</msg>
   <msg key="ES">ES</msg>
-  <msg key="Estimated_Hours">Geschätzte Stunden / Zeilen</msg>
+  <msg key="Estimated_Hours">Geschätzte Stunden</msg>
   <msg key="Estimated_Hours_Max">Geschätzte Stunden / Zeilen</msg>
   <msg key="Estimated_Hours_Min">Geschätzte Stunden (min.)</msg>
   <msg key="Estimated_hours_work">Geschätzte Stunden an Arbeit</msg>
@@ -291,7 +291,7 @@
   <msg key="lt_set_according_to_task">Von den Aufgabenzuteilungen aus zuteilen</msg>
   <msg key="lt_set_project_term_code">%project_term% Nr.</msg>
   <msg key="lt_set_project_term_goal">%project_term%ziel</msg>
-  <msg key="lt_set_project_term_name">%project_term%ID Nr.</msg>
+  <msg key="lt_set_project_term_name">%project_term% Name</msg>
   <msg key="lt_Set_to_100_to_close_t">Auf 100 setzen, um diese Aufgabe zu schließen.</msg>
   <msg key="lt_set_up_integration_wi">Aufsetzen der Integration mit dem Log</msg>
   <msg key="lt_Set_up_logger_integra">Set up der Log Integration</msg>
@@ -391,6 +391,7 @@
   <msg key="page">Seite)</msg>
   <msg key="Page_Size">Seitengröße</msg>
   <msg key="Parameters">Parameter</msg>
+  <msg key="Parent_project">Hauptprojekt</msg>
   <msg key="Party_ID">Party ID</msg>
   <msg key="People">Personen</msg>
   <msg key="percent">Prozent fertig</msg>
@@ -410,7 +411,7 @@
   <msg key="Priorities">Prioritäten</msg>
   <msg key="Priority">Priorität:</msg>
   <msg key="Priority_1">Priorität</msg>
-  <msg key="Priority_changed">Priorität geändert &lt;i&gt;von&lt;/i&gt; %old_prio &lt;i&gt;zu&lt;/i&gt; %new_prio%</msg>
+  <msg key="Priority_changed">Priorität geändert &lt;i&gt;von&lt;/i&gt; %old_prio% &lt;i&gt;zu&lt;/i&gt; %new_prio%</msg>
   <msg key="Proceed">Weiter (Projekt schliessen)</msg>
   <msg key="Proceed_with_closing">Subprojekte ebenfalls schliessen</msg>
   <msg key="Process">Prozess</msg>
@@ -509,7 +510,7 @@
   <msg key="Subject">Thema:</msg>
   <msg key="Subject_1">Thema</msg>
   <msg key="Subject_2">Betreff\</msg>
-  <msg key="Subject_changed">Betreff geändert &lt;i&gt;von&lt;/i&gt; %old_title &lt;i&gt;zu&lt;/i&gt; %new_title%</msg>
+  <msg key="Subject_changed">Betreff geändert &lt;i&gt;von&lt;/i&gt; %old_title% &lt;i&gt;zu&lt;/i&gt; %new_title%</msg>
   <msg key="Subproject_tasks">Unterprojekt Aufgaben</msg>
   <msg key="Subprojects">Subprojekte</msg>
   <msg key="Subtotal">Zwischensumme</msg>
@@ -523,6 +524,7 @@
   <msg key="Task_calendar">Aufgaben Kalender</msg>
   <msg key="Task_categories">Aufgabenkategorien:</msg>
   <msg key="task_change">Aufgabenveränderungen</msg>
+  <msg key="Task_description">Aufgabenbeschreibung</msg>
   <msg key="task_Description_1">Inhalt der Aufgabe</msg>
   <msg key="Task_hours_completed">Abgeschlossen Aufgabenstunden</msg>
   <msg key="Task_name">Name der Aufgabe:</msg>

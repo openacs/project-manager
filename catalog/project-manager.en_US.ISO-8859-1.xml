@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.2a4" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.2a5" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -598,6 +598,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="Task_calendar">Task calendar</msg>
   <msg key="Task_categories">Task categories</msg>
   <msg key="task_change">task change</msg>
+  <msg key="Task_description">Task description</msg>
   <msg key="task_Description_1">Task Description</msg>
   <msg key="Task_end_date">Task deadline</msg>
   <msg key="Task_hours_completed">Task hours completed</msg>

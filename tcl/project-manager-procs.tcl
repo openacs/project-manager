@@ -445,7 +445,7 @@ ad_proc -public pm::util::general_comment_add {
         # task
 
         if {[string equal $type task]} {
-	    
+
 	    set from_address [party::email -party_id $user_id]
 	    
 	    set task_url [pm::task::get_url $object_id]
@@ -543,6 +543,7 @@ ad_proc -public pm::util::email {
     foreach to $to_addr {
 	if { ![empty_string_p $to] } {
 	    acs_mail_lite::complex_send \
+		-send_immediately \
 		-to_addr  "$to" \
 		-from_addr "$from_addr" \
 		-subject "$subject" \
