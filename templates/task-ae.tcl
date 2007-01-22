@@ -42,7 +42,7 @@ if {[exists_and_not_null task_item_id] || ![ad_form_new_p -key task_id]} {
     if {[string is false $open_p]} {
         set project_options [list [list [pm::project::name -project_item_id $project_item_id] $project_item_id]]
     } else {
-	set project_options [pm::project::get_list_of_open]
+	set project_options [pm::project::get_list_of_open -object_package_id $package_id]
     }
     db_1row get_dynamic_form {}
 } else {
@@ -115,6 +115,22 @@ ad_form -name task_add_edit -export {task_item_id} \
             {options $boolean_options}
         }
     }
+
+
+if {[string is true $edit_p]} {
+    ad_form -extend -name task_add_edit \
+	-form {
+	    {project_item_id:text(select),optional
+		{label $project_term}
+		{options $project_options}
+	    }
+	}
+} else {
+    ad_form -extend -name task_add_edit \
+	-form {
+	    {project_item_id:text(hidden)}
+	}
+}
         
 if {[string is true $using_process_p]} {
     ad_form -extend -name task_add_edit \
@@ -271,22 +287,6 @@ if { $daily_p } {
 		{value {[template::util::date::now]}}
 		{format {[lc_get formbuilder_time_format]}} 
 	    }
-	}
-}
-
-
-if {[string is true $edit_p]} {
-    ad_form -extend -name task_add_edit \
-	-form {
-	    {project_item_id:text(select),optional
-		{label $project_term}
-		{options $project_options}
-	    }
-	}
-} else {
-    ad_form -extend -name task_add_edit \
-	-form {
-	    {project_item_id:text(hidden)}
 	}
 }
         
