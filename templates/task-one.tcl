@@ -86,15 +86,16 @@ set task_info(end_date)        [lc_time_fmt $task_info(end_date) $fmt]
 set project_item_id $task_info(project_item_id)
 
 # Set the context bar at least two levels up :-)
-set project_root [pm::util::get_root_folder -package_id $package_id]
-set parent_project_id [pm::project::parent_project_id -project_id $task_info(project_item_id)]
+set parent_project_id $task_info(project_item_id)
 set context [list]
-if {$parent_project_id ne $project_root} {
+while {$parent_project_id ne ""} {
     set project_name [pm::util::get_project_name -project_item_id $parent_project_id]
     lappend context [list "one?project_item_id=$parent_project_id" "$project_name"]
+    set parent_project_id [pm::project::parent_project_id -project_id $parent_project_id]
 }
 
-lappend context [list "one?project_item_id=$task_info(project_item_id)" "$task_info(project_name)"] 
+# Reverse the list (as we go up the tree but need it down the tree)
+struct::list reverse $context
 lappend context "$task_info(task_title)"
 
 

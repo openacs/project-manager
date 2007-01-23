@@ -12,6 +12,7 @@ ad_library {
 
 namespace eval pm::util {}
 
+package require struct
 
 ad_proc -public pm::util::hours_day {
 } {
