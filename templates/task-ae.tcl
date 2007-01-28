@@ -7,7 +7,6 @@ set package_id    [ad_conn package_id]
 # use hour units or day units
 set use_day_p     [parameter::get -parameter "UseDayInsteadOfHour" -default "t"]
 set hours_day     [pm::util::hours_day]
-set root_folder_id [content::folder::get_folder_from_package -package_id $package_id]
 
 # daily?
 set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
@@ -34,9 +33,6 @@ set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCom
 if {[exists_and_not_null task_item_id] || ![ad_form_new_p -key task_id]} {
     set edit_p t
     db_1row task_data {}
-    set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
-    set logger_variable_id [logger::project::get_primary_variable -project_id $logger_project]
-    logger::variable::get -variable_id $logger_variable_id -array logger_variable
 
     set open_p [pm::project::open_p -project_item_id $project_item_id]
     if {[string is false $open_p]} {
@@ -141,9 +137,16 @@ if {[string is true $using_process_p]} {
 	    }
 	}
 }
+
+# Options for the description
         
 # Where should we store the attached files in file storage
+set desc_options [list editor xinha plugins OacsFs height 350px] 
 set folder_id [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type "content_folder"] 0]
+if {$folder_id ne ""} {
+    lappend desc_options "folder_id"
+    lappend desc_options "$folder_id"
+}
 
 ad_form -extend -name task_add_edit \
     -form {
@@ -154,31 +157,25 @@ ad_form -extend -name task_add_edit \
         
         {description:richtext(richtext),optional
             {label "[_ project-manager.Task_description]"}
-	    {options {editor xinha plugins OacsFs height 350px folder_id $folder_id}}
+	    {options $desc_options}
 	    {html { cols 80 wrap soft}}
 	}
         
-        {description_mime_type:text(select),optional
-            {label "[_ project-manager.Format]"}
-            {options $format_options}
-        }
     }
         
-if {[string is true $edit_p]} {
-    if {![empty_string_p [category_tree::get_mapped_trees $root_folder_id]]} {
-        ad_form -extend -name task_add_edit -form {
-            {category_ids:integer(category),multiple {label "[_ project-manager.Categories]"}
-                {html {size 7}} {value {$task_id $root_folder_id}}
-            }
-        }
+if {[exists_and_not_null task_id]} {
+    if {![empty_string_p [category_tree::get_mapped_trees $package_id]]} {
+	category::ad_form::add_widgets \
+	    -container_object_id $package_id \
+	    -categorized_object_id $task_id \
+	    -form_name task_add_edit
     }
+
 } else {
-    if {![empty_string_p [category_tree::get_mapped_trees $root_folder_id]]} {
-        ad_form -extend -name task_add_edit -form {
-            {category_ids:integer(category),multiple,optional {label "[_ project-manager.Categories]"}
-                {html {size 7}} {value {{} $root_folder_id}}
-            }
-        }
+    if {![empty_string_p [category_tree::get_mapped_trees $package_id]]} {
+	category::ad_form::add_widgets \
+	    -container_object_id $package_id \
+	    -form_name task_add_edit
     }
 }
 
@@ -187,28 +184,17 @@ dtype::form::add_elements -dform $dform -prefix pm -object_type pm_task -object_
 if {[string is true $edit_p]} {
     ad_form -extend -name task_add_edit \
 	-form {
-	    {comment:text(textarea),optional
+	    {comment:richtext(richtext),optional
 		{label "[_ project-manager.Comment]"}
-		{html { rows 7 cols 40 wrap soft}}
-		{section "[_ project-manager.Comment]"}
-	    }
-        
-	    {comment_mime_type:text(select),optional
-		{label "[_ project-manager.Format]"}
-		{options $format_options}
+		{options $desc_options}		
+		{html { cols 80 wrap soft}}
 		{section "[_ project-manager.Comment]"}
 	    }
 	}
 } else {
     ad_form -extend -name task_add_edit \
 	-form {
-	    {comment:text(hidden)
-		{value ""}
-	    }
-
-	    {comment_mime_type:text(hidden)
-		{value "text/plain"}
-	    }
+	    {comment:text(hidden)}
 	}
 }
 
@@ -312,33 +298,6 @@ if {[string is true $edit_p]} {
 		{html {size 4}}
 		{help_text "[_ project-manager.lt_Enter_100_to_close_th_1]"}
 	    }
-
-	    {hours:text,optional
-		{label $logger_variable(name)}
-		{html {size 4}}
-		{section "[_ project-manager.Log_entry]"}
-		{after_html $logger_variable(unit)}
-	    }
-        
-
-	    {logger_variable_id:text(hidden)
-		{section "[_ project-manager.Log_entry]"}
-	    }
-
-	    {log_date:text(text),optional
-		{label "[_ project-manager.Date_1]"}
-		{html {id sel2}}
-		{after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>y-m-d </b>\]
-		}}
-		{section "[_ project-manager.Log_entry]"}
-	    }
-        
-	    {log:text,optional
-		{label "[_ project-manager.Description_1]"}
-		{html {size 30}}
-		{help_text "[_ project-manager.lt_You_can_optionally_lo]"}
-		{section "[_ project-manager.Log_entry]"}
-	    }
 	}
 } elseif {[string is true $using_process_p]} {
     ad_form -extend -name task_add_edit \
@@ -354,6 +313,40 @@ if {[string is true $edit_p]} {
 	    {percent_complete:text(hidden)}
 	}
 }
+
+# Logger information
+set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
+set logger_variable_id [logger::project::get_primary_variable -project_id $logger_project]
+logger::variable::get -variable_id $logger_variable_id -array logger_variable
+
+ad_form -extend -name task_add_edit \
+    -form {
+	{hours:text,optional
+	    {label $logger_variable(name)}
+	    {html {size 4}}
+	    {section "[_ project-manager.Log_entry]"}
+	    {after_html $logger_variable(unit)}
+	}
+
+	{logger_variable_id:text(hidden)
+	    {section "[_ project-manager.Log_entry]"}
+	}
+
+	{log_date:text(text),optional
+	    {label "[_ logger.Date]"}
+	    {html {id sel2}}
+	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>y-m-d </b>\]
+	    }}
+	    {section "[_ project-manager.Log_entry]"}
+	}
+        
+	{log:text,optional
+	    {label "[_ logger.Description]"}
+	    {html {size 30}}
+	    {help_text "[_ project-manager.lt_You_can_optionally_lo]"}
+	    {section "[_ project-manager.Log_entry]"}
+	}
+    }
 
 set roles_list [pm::role::select_list_filter]
 set assignee_role_list [pm::project::assignee_role_list -project_item_id $project_item_id]
@@ -434,6 +427,7 @@ ad_form -extend -name task_add_edit -new_request {
     set send_email_p t
     set task_title ""
     set description  [template::util::richtext::create "" "text/html"]
+    set comment  [template::util::richtext::create "" "text/html"]
     set estimated_hours_work 0
     set estimated_hours_work_min 0
     set estimated_hours_work_max 0
@@ -447,6 +441,7 @@ ad_form -extend -name task_add_edit -new_request {
     db_1row get_task_data {}
 
     set description [template::util::richtext::create $description_content $description_mime_type]
+    set comment [template::util::richtext::create "" ""]
 
     set task_end_time [template::util::date::from_ansi $task_end_date [lc_get frombuilder_time_format]]
     set task_end_date [lindex $task_end_date 0]
@@ -471,6 +466,8 @@ ad_form -extend -name task_add_edit -new_request {
 
     set description_content [template::util::richtext::get_property content $description]
     set description_format [template::util::richtext::get_property format $description]
+    set comment_content [template::util::richtext::get_property content $comment]
+    set comment_format [template::util::richtext::get_property format $comment]
 
     set task_end_date_list [split $end_date(date) "-"]
     append task_end_date_list " [lrange $task_end_time 3 5]"
@@ -516,6 +513,8 @@ ad_form -extend -name task_add_edit -new_request {
 	set estimated_hours_work_max $estimated_hours_work
     }
 
+    set category_ids [category::ad_form::get_categories -container_object_id $package_id]
+
 } -new_data {
     db_transaction {
 
@@ -553,6 +552,7 @@ ad_form -extend -name task_add_edit -new_request {
 
 	db_dml new_task {}
 
+	# Store the categories
 	if {[exists_and_not_null category_ids]} {
 	    category::map_object -object_id $task_id $category_ids
 	}
@@ -647,6 +647,7 @@ ad_form -extend -name task_add_edit -new_request {
 	db_dml update_task {}
 	db_dml update_parent_id {}
 
+	# Store the categories
 	if {[exists_and_not_null category_ids]} {
 	    category::map_object -object_id $task_id $category_ids
 	}
@@ -700,8 +701,8 @@ ad_form -extend -name task_add_edit -new_request {
     }
 } -after_submit {
     set number 1
-    set comments(1) $comment
-    set comments_mime_type(1) $comment_mime_type
+    set comments(1) $comment_content
+    set comments_mime_type(1) $comment_format
 
     ad_set_client_property -persistent f -- \
         project-manager \
