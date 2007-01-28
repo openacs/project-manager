@@ -2347,15 +2347,8 @@ ad_proc -public pm::project::compute_status_mins {
 		set hours_to_complete 0
 	    }
 	    
-	    set date [lindex [split $task_deadline " "] 0]
-	    set hours [lindex [split [lindex [split $task_deadline " "] 1] :] 0]
-	    if {[string length $hours] > 1} {
-		set hours [string trimleft $hours]
-	    }
-	    set mins  [lindex [split [lindex [split $task_deadline " "] 1] :] 1]
-	    if {[string length $mins] > 1} {
-		set mins [string trimleft $mins]
-	    }
+	    
+	    scan $task_deadline "%s %d:%d" date hours mins 
 	    set mins [expr ($hours*60) + $mins]
 	    
 	    set date_j [dt_ansi_to_julian_single_arg $date]
@@ -2456,16 +2449,7 @@ ad_proc -public pm::project::compute_status_mins {
         if {![info exists depends($task_item)]} {
 
             set earliest_start($task_item) $start_date
-	    
-	    set date [lindex [split $earliest_start($task_item) " "] 0]
-	    set hours [lindex [split [lindex [split $earliest_start($task_item) " "] 1] :] 0]
-	    if {[string length $hours] > 1} {
-		set hours [string trimleft $hours]
-	    }
-	    set mins  [lindex [split [lindex [split $earliest_start($task_item) " "] 1] :] 1]
-	    if {[string length $mins] > 1} {
-		set mins [string trimleft $mins]
-	    }
+	    scan $start_date "%s %d:%d" date hours mins 
 	    set mins [expr ($hours*60) + $mins]
 	    
 	    set date_j [dt_ansi_to_julian_single_arg $date]
@@ -2742,16 +2726,8 @@ ad_proc -public pm::project::compute_status_mins {
 		if {[string eq $hours_to_complete ""]} {
 		    set hours_to_complete 0
 		}
-
-		set date [lindex [split $latest_finish($task_item) " "] 0]
-		set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
-		if {[string length $hours] > 1} {
-		    set hours [string trimleft $hours]
-		}
-		set mins  [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 1]
-		if {[string length $mins] > 1} {
-		    set mins [string trimleft $mins]
-		}
+		
+		scan $latest_finish($task_item) "%s %d:%d" date hours mins 
 		set mins [expr ($hours*60) + $mins]
 		
 		set date_j [dt_ansi_to_julian_single_arg $date]
@@ -2805,16 +2781,7 @@ ad_proc -public pm::project::compute_status_mins {
                         ns_log Notice "setting activity_time($task_item) 0 (location 2)"
                     }
                     
-                    set date [lindex [split $latest_finish($task_item) " "] 0]
-                    set hours [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 0]
-		    if {[string length $hours] > 1} {
-			set hours [string trimleft $hours]
-		    }
-                    set hours [lc_parse_number $hours en_US]
-                    set mins  [lindex [split [lindex [split $latest_finish($task_item) " "] 1] :] 1]
-		    if {[string length $mins] > 1} {
-			set mins [string trimleft $mins]
-		    }
+		    scan $latest_finish($task_item) "%s %d:%d" date hours mins 
                     set mins [expr ($hours*60) + $mins]
                     set date_j [dt_ansi_to_julian_single_arg $date]
                     set today_j $date_j
