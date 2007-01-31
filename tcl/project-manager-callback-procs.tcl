@@ -222,3 +222,128 @@ ad_proc -public -callback subsite::url -impl pm_task {
 	return [export_vars -base "${base_url}task-one" -url {{task_id $object_id}}]
     }
 }
+
+ad_proc -public -callback acs_mail_lite::incoming_object_email -impl pm_task {
+    -array:required
+    -object_id:required
+} {
+
+    If the object_id is a task, store a comment with the task containing the contents of the e-mail.
+    Append a list of files that were associated with the email to the task.
+   
+} {
+
+    # Check if the object_id is a task
+    if {[content::item::content_type -item_id $object_id] eq "pm_task"} {
+	
+	set task_item_id $object_id
+
+	# As this is a connection less callback, set the IP Address to local
+	set peeraddr "127.0.0.1"
+
+	# Get the assignees
+	foreach assignee [pm::task::assignee_role_list -task_item_id $task_item_id] {
+	    # You could limit the assignees to only players and leads by filtering on the role
+	    # We are not going to do that though, as a watcher does want to be informed about the task
+	    lappend assignee_ids [lindex $assignee 0]
+	}
+	
+	# get a reference to the email array
+	upvar $array email
+	
+	# Get the sender from the e-mail
+	set from_addr [lindex $email(from) 0]
+	set sender_id [party::get_by_email -email $from_addr]
+
+	# Deal with the files
+	set files ""
+	set file_ids ""
+	
+	# Get the folder_id in which to store the files. This is the associated folder for the project
+	# If no folder_id is linked, just use the task_item_id as the context_id
+	set project_item_id [pm::task::project_item_id -task_item_id $task_item_id]
+	set folder_id [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type "content_folder"] 0]
+
+	foreach file $email(files) {
+	    set file_title [lindex $file 2]
+	    set mime_type [lindex $file 0]
+	    set file_path [ns_tmpnam]
+	    set f [open $file_path w+]
+            fconfigure $f -translation binary
+            puts -nonewline $f [lindex $file 3]
+            close $f
+	    
+	    # Create the content item
+	    if {$folder_id ne ""} {
+
+		set existing_item_id [fs::get_item_id -name $file_title -folder_id $folder_id]
+		if {$existing_item_id ne ""} {
+		    set item_id $existing_item_id
+		} else {
+		    set item_id [db_nextval "acs_object_id_seq"]
+		}
+
+	   	set revision_id [fs::add_file \
+				     -name $file_title \
+				     -item_id $item_id \
+				     -parent_id $folder_id \
+				     -tmp_filename $file_path\
+				     -creation_user $sender_id \
+				     -creation_ip $peeraddr \
+				     -title $file_title \
+				     -no_notification \
+				     -no_callback \
+				     -description "File send by e-mail from $email(from) to $email(to) on subject $email(subject)" \
+				     -package_id [acs_object::package_id -object_id $folder_id] \
+				     -mime_type $mime_type]
+		
+		file delete $file_path
+
+	    } else {
+	    
+		set revision_id [cr_import_content \
+				     -title $file_title \
+				     -description "File send by e-mail from $email(from) to $email(to) on subject $email(subject)" \
+				     -item_id $item_id \
+				     -creation_user $sender_id \
+				     -creation_ip $peeraddr \
+				     $context_id \
+				     $file_path \
+				     [file size $file_path] \
+				     $mime_type \
+				     "[clock seconds]-[expr round([ns_rand]*100000)]"]
+	    }
+		
+	    # Create a list of file_id and file_title
+	    lappend files  [list [content::revision::item_id -revision_id $revision_id] $file_title]
+	}
+
+	# Deal with the body
+	template::util::list_of_lists_to_array $email(bodies) email_body
+	if {[exists_and_not_null email_body(text/html)]} {
+	    set comment $email_body(text/html)
+	} else {
+	    set comment [ad_text_to_html $email_body(text/plain)]
+	}
+	set mime_type "text/html"
+	append comment "<p><ul>"
+	foreach file $files {
+	    append comment "<li><a href=\"[ad_url]/file/[lindex $file 0]/[lindex $file 1]\">[lindex $file 1]</a>"
+	}
+
+	set subject [lindex $email(subject) 0]
+
+	set comment_id [pm::util::general_comment_add \
+			    -object_id $task_item_id \
+			    -user_id $sender_id \
+			    -peeraddr $peeraddr \
+			    -title "$subject" \
+			    -comment "$comment" \
+			    -mime_type "$mime_type" \
+			    -send_email_p "t" \
+			    -to_party_ids "$assignee_ids" \
+			    -type "task"]
+
+    }
+}
+

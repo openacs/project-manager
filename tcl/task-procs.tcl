@@ -815,7 +815,7 @@ ad_proc -public pm::task::get_url {
     object_id
 } {
     
-    set package_id [db_string pm_package_id "select package_id from cr_folders cf, cr_items ci1, cr_items ci2 where cf.folder_id = ci1.parent_id and ci1.item_id = ci2.parent_id and ci2.item_id = :object_id" -default 0]
+    set package_id [acs_object::package_id -object_id $object_id]
     
     if {$package_id == 0} {
         
