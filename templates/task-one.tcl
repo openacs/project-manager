@@ -95,7 +95,8 @@ while {$parent_project_id ne ""} {
 }
 
 # Reverse the list (as we go up the tree but need it down the tree)
-struct::list reverse $context
+
+set context [struct::list reverse $context]
 lappend context "$task_info(task_title)"
 
 
