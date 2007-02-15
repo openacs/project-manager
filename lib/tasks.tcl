@@ -10,6 +10,8 @@
 # searchterm         Show tasks where the task title is like searchterm
 # subproject_tasks   Show or hide subproject_tasks, this filter is dynamically added
 #                    when pid_filter has a value.
+# min_priority       Show tasks which have at least this priority
+# max_priority       Show tasks which have maximum this priority
 #
 # Pagination and orderby:
 # ---------------------- 
@@ -32,7 +34,7 @@
 #                then filters would be added as well.
 
 set required_param_list [list]
-set optional_param_list [list tasks_orderby searchterm page actions_p base_url page_num page_size bulk_actions_p]
+set optional_param_list [list tasks_orderby searchterm page actions_p base_url page_num page_size bulk_actions_p min_priority]
 set optional_unset_list [list \
 			     filter_party_id filter_group_id pid_filter \
 			     is_observer_filter instance_id filter_package_id \
@@ -196,12 +198,24 @@ if {[exists_and_not_null is_observer_filter]} {
 	t {
 	    set observer_pagination_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and r.is_observer_p = 't' and ta.party_id = :user_id"
 	}
-	m {
+	default {
 	    set observer_pagination_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and ta.party_id = :user_id"
 	}
     }
 } else {
     set observer_pagination_clause ""
+}
+
+# Clause for the minimum priority
+if {[exists_and_not_null min_priority]} {
+    set priority_clause "and priority >= :min_priority"
+} else {
+    set priority_clause ""
+}
+
+# Clause for the maximum priority
+if {[exists_and_not_null max_priority]} {
+    append priority_clause "and priority <= :max_priority"
 }
 
 set party_id_clause ""

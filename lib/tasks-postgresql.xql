@@ -48,6 +48,7 @@
         and cp.live_revision = op.object_id
 	$party_id_clause
 	$observer_pagination_clause
+	$priority_clause
 	[template::list::page_where_clause -and -name "tasks" -key "t.item_id"]
         [template::list::orderby_clause -name tasks -orderby]
 
@@ -71,6 +72,7 @@
 	$party_id_clause
 	$observer_pagination_clause
 	$search_where_clause
+	$priority_clause
         [template::list::filter_where_clauses -and -name tasks]
         [template::list::orderby_clause -name tasks -orderby]
     </querytext>
