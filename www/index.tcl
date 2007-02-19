@@ -1,113 +1,79 @@
+# packages/project-manager/www/index.tcl
+
 ad_page_contract {
 
-    Main view page for projects.
-    
-    @author jader@bread.com
-    @author ncarroll@ee.usyd.edu.au (on first version that used CR)
-    @creation-date 2003-05-15
-    @cvs-id $Id$
+  @author rhs@mit.edu
+  @author mbryzek@mit.edu
 
-    @return title Page title.
-    @return context Context bar.
-    @return projects Multirow data set of projects.
-    @return task_term Terminology for tasks
-    @return task_term_lower Terminology for tasks (lower case)
-    @return project_term Terminology for projects
-    @return project_term_lower Terminology for projects (lower case)
-
+  @creation-date 2000-09-18
+  @cvs-id $Id$
 } {
-    {orderby ""} 
-    {pm_status_id:integer,optional}
-    {searchterm ""}
-    {end_range_f ""}
-    {start_range_f ""}
-    category_id:multiple,optional
-    {format "normal"}
-    {assignee_id ""}
-    {pm_contact_id ""}
-    {pm_etat_id ""}
-    {user_space_p "0"}
-    {subprojects_p "f"}
-    {is_observer_p ""}
-    {previous_status_f ""}
-    {current_package_f ""}
-    {page ""}
-    {page_size 25}
-    {page_num ""}
-    
+    {view "month"}
+    {date ""}
+    {julian_date ""}
+    {hide_closed_p "t"}
+    {page 1}
+    {tasks_orderby priority}
+    {projects_orderby project_name}
+    {elements "project_item_id task_item_id title priority end_date last_name"}
+    {pm_elements "subsite planned_end_date"}
 } -properties {
-
     context:onevalue
-    projects:multirow
-    write_p:onevalue
-    create_p:onevalue
+    subsite_name:onevalue
+    subsite_url:onevalue
+    nodes:multirow
     admin_p:onevalue
-    task_term:onevalue
-    task_term_lower:onevalue
-    project_term:onevalue
-    project_term_lower:onevalue
-    date_range:onevalue
+    user_id:onevalue
+    show_members_page_link_p:onevalue
 }
 
-# Sending only one value to the include
-set date_range "${start_range_f}/$end_range_f"
+set main_site_p [string equal [ad_conn package_url] "/"]
+set date [calendar::adjust_date -date $date -julian_date $julian_date]
 
-set exporting_vars { status_id category_id assignee_id orderby format pm_status_id pm_contact_id pm_etat_id previous_status_f current_package_f subprojects_p }
-set hidden_vars [export_vars -form $exporting_vars]
+# We may have to redirect to some application page
+set redirect_url [parameter::get -parameter IndexRedirectUrl -default {}]
+if { $redirect_url eq "" && $main_site_p } {
+    set redirect_url [parameter::get_from_package_key -package_key acs-kernel -parameter IndexRedirectUrl]
+}
+if { $redirect_url ne "" } {
+    ad_returnredirect $redirect_url
+    ad_script_abort
+}
 
-# set up context bar
+# Handle IndexInternalRedirectUrl
+set redirect_url [parameter::get -parameter IndexInternalRedirectUrl -default {}]
+if { $redirect_url eq "" && $main_site_p } {
+    set redirect_url [parameter::get_from_package_key -package_key acs-kernel -parameter IndexInternalRedirectUrl]
+}
+if { $redirect_url ne "" } {
+    rp_internal_redirect $redirect_url
+    ad_script_abort
+}
+
 set context [list]
-
-# the unique identifier for this package
-set user_id    [ad_maybe_redirect_for_registration]
 set package_id [ad_conn package_id]
+set admin_p [permission::permission_p -object_id $package_id -party_id [ad_conn untrusted_user_id] -privilege admin]
 
-# permissions
-permission::require_permission -party_id $user_id -object_id $package_id -privilege read
-set write_p  [permission::permission_p -object_id $package_id -privilege write] 
-set create_p [permission::permission_p -object_id $package_id -privilege create]
-set admin_p [permission::permission_p -object_id $package_id -privilege admin]
+set user_id [ad_conn user_id]
+set untrusted_user_id [ad_conn untrusted_user_id]
 
-# daily?
-set daily_p [parameter::get -parameter "UseDayInsteadOfHour" -default "f"]
+# Logger dates, limit to last 30 days
+set today_ansi [clock format [clock scan today] -format "%Y-%m-%d"]
+set then_ansi [clock format [clock scan "-30 days"] -format "%Y-%m-%d"]
+set variable_id [logger::variable::get_default_variable_id]
 
-#------------------------
-# Check if the project will be handled on daily basis or will show hours and minutes
-#------------------------
+# Get the list of logger projects
+set logger_projects [list]
+db_foreach pm_projects {select project_id as project_item_id from pm_project_assignment pa,acs_objects o where pa.project_id = o.object_id and o.package_id = :package_id and party_id = :user_id} {
+    lappend logger_projects [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
+    
+    # And get the subprojects as well.
 
-set fmt "%x %r"
-if { $daily_p } {
-    set fmt "%x"
-} 
-
-# root CR folder
-set root_folder [pm::util::get_root_folder -package_id $package_id]
-
-# Set status
-if {![exists_and_not_null pm_status_id]} {
-    set pm_status_id ""
+    foreach subproject_id [pm::project::get_all_subprojects -project_item_id $project_item_id] {
+	set logger_project_id [lindex [application_data_link::get_linked -from_object_id $subproject_id -to_object_type logger_project] 0]
+	if {![string eq "" $logger_project_id]} {
+	    lappend logger_projects $logger_project_id
+	}
+    }
 }
-
-# We want to set up a filter for each category tree.
-set export_vars [export_vars -form {status_id orderby}]
-
-if {[exists_and_not_null category_id]} {
-    set pass_cat $category_id
-} else {
-    set pass_cat ""
-}
-
-set default_orderby [pm::project::index_default_orderby]
-
-if {[exists_and_not_null orderby]} {
-    pm::project::index_default_orderby \
-        -set $orderby
-}
-
-# Only display the current package unless mentioned otherwise
-if {$current_package_f ne 1} {
-    set current_package_f $package_id
-}
-
-# Retrieving the name of the template to call
-set template_src [parameter::get -parameter "ProjectList"]
+set project_ids $logger_projects
