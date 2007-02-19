@@ -60,6 +60,11 @@ set context [list "[_ project-manager.Tasks]"]
 set package_id [ad_conn package_id]
 set user_id    [ad_maybe_redirect_for_registration]
 
+# If no instance ID is passed in, default to the package_id
+if {$instance_id eq ""} {
+    set instance_id $package_id
+}
+
 # If we are in .LRN, then filter by package_id. This is actually a crude hack...
 if {[expr [string match "/dotlrn/*" [ad_conn url]]]} {
     set com_id [dotlrn_community::get_community_id]
