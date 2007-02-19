@@ -1750,6 +1750,11 @@ ad_proc -public pm::project::close {
         project_id in (select live_revision from cr_items where item_id = :project_item_id)
     }
 
+    # Close all tasks
+    foreach task_id [db_list select_tasks {}] {
+	pm::task::close -task_item_id $task_id
+    }
+
     if {!$no_callback_p} {
 	callback pm::project_close -package_id [ad_conn package_id] -project_id $project_item_id
     }

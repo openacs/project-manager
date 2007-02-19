@@ -346,8 +346,8 @@ if { $orderby_p } {
 			       default_direction desc
 			   } \
 			   end_date {
-			       orderby_asc "priority desc, end_date, task_item_id asc"
-			       orderby_desc "priority desc, end_date desc, task_item_id desc"
+			       orderby_asc "end_date, priority desc, task_item_id asc"
+			       orderby_desc "end_date desc, priority desc, task_item_id desc"
 			       default_direction asc
 			   } \
 			   estimated_hours_work_max {
@@ -633,7 +633,7 @@ db_multirow -extend $extend_list tasks tasks " " {
 
 	# We dont want to show watchers
  	if {![string eq $role_type "observer"]} {
-	    append user_html "<a href=\"$user_url\">$assignee_name</a>"
+	    append user_html "$assignee_name"
 	    append user_html "</div></br>"
 	}
 	if {[string eq $assignee_id $user_id]} {

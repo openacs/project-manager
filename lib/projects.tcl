@@ -16,7 +16,7 @@
 # subprojects_p Should subprojects be displayed as well?
 
 set required_param_list "package_id"
-set optional_param_list [list orderby pm_status_id searchterm bulk_p action_p page_num page_size\
+set optional_param_list [list projects_orderby pm_status_id searchterm bulk_p actions_p page_num page_size\
 			     filter_p base_url end_date_f user_space_p hidden_vars]
 set optional_unset_list [list assignee_id  date_range is_observer_p previous_status_f current_package_f subprojects_p]
 set dotlrn_installed_p [apm_package_installed_p dotlrn]
@@ -133,15 +133,19 @@ if {[exists_and_not_null subprojects_p]} {
 	set subprojects_from_clause ", acs_objects ao"
 	set subprojects_where_clause "ao.object_type = 'content_folder' and ao.object_id = p.parent_id"
     } else {
-	unset subprojects_p
+	set subprojects_p ""
     }
 } else {
+    set subprojects_p ""
+}
+
+if {$subprojects_p eq ""} {
     unset subprojects_p
 }
    
 # We want to set up a filter for each category tree.
 
-set export_vars [export_vars -form {pm_status_id orderby}]
+set export_vars [export_vars -form {pm_status_id projects_orderby}]
 
 if {[exists_and_not_null category_id]} {
     set temp_category_id $category_id
@@ -183,16 +187,17 @@ if {![empty_string_p $searchterm]} {
 	}
     } else {
 	set p_range_where ""
+	set start_range_f ""
+	set end_range_f ""
     }
 
 ##############################################
 
-set default_orderby [pm::project::index_default_orderby]
-set default_orderby "project_name,desc"
+set default_orderby "project_name,asc"
 
-if {[exists_and_not_null orderby]} {
+if {[exists_and_not_null projects_orderby]} {
     pm::project::index_default_orderby \
-        -set $orderby
+        -set $projects_orderby
 }
 
 # Get url of the contacts package if it has been mounted for the links on the index page.
@@ -208,7 +213,7 @@ set contact_coloum "fff"
 
 
 
-set row_list "checkbox {}\nproject_name {}\n" 
+set row_list "project_name {}\n" 
 foreach element $elements {
         append row_list "$element {}\n"
 }
@@ -237,7 +242,7 @@ if {$actions_p == 1} {
     }
 	
 } else {
-    set actions [list "Project: $community_name" "$base_url"]
+    set actions ""
 }
 
 if {[exists_and_not_null is_observer_p]} {
@@ -388,6 +393,10 @@ template::list::create \
 <if @projects.customer_id@ not nil>$contact_column</if><else>@projects.customer_name@</else>
 "
 	}
+	subsite {
+	    label "[_ acs-subsite.subsite]"
+	    display_template "<a href=\"@projects.subsite_url;noquote@\">@projects.subsite_name;noquote@</a>"
+	}
 	creation_date {
 	    label "[_ project-manager.Creation_date]"
             display_template "@projects.creation_date_lc@"
@@ -500,12 +509,12 @@ template::list::create \
 	    row $row_list
 	} 
     } \
-    -orderby_name orderby \
+    -orderby_name projects_orderby \
     -html {
 	width 100%
     }
 
-db_multirow -extend { item_url customer_url category_select earliest_finish_date latest_finish_date start_date_lc earliest_start_date creation_date_lc planned_end_date_lc} projects project_folders " " {
+db_multirow -extend { item_url customer_url category_select earliest_finish_date latest_finish_date start_date_lc earliest_start_date creation_date_lc planned_end_date_lc subsite_url subsite_name} projects project_folders " " {
     set earliest_finish_date [lc_time_fmt $earliest_finish_date $fmt]
     set latest_finish_date [lc_time_fmt $latest_finish_date $fmt]
     set creation_date_lc [lc_time_fmt $creation_date $fmt]
@@ -516,6 +525,11 @@ db_multirow -extend { item_url customer_url category_select earliest_finish_date
 	set base_url $_base_url
     }
     
+    # Display the subsite
+    set subsite_id [site_node::closest_ancestor_package -url $base_url -package_key "acs-subsite"]
+    set subsite_url [site_node::get_url_from_object_id -object_id $subsite_id]
+    set subsite_name [acs_object_name $subsite_id]
+
     set item_url [export_vars -base "${base_url}one" {project_item_id}]
     
     # root CR folder

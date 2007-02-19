@@ -84,6 +84,19 @@
     </querytext>
   </fullquery>
 
+  <fullquery name="pm::project::close.select_tasks">
+    <querytext>
+        SELECT
+        task_id
+        FROM
+        cr_items i,
+        pm_tasks_active t
+        WHERE
+        i.item_id   = t.task_id and
+        i.parent_id = :project_item_id
+    </querytext>
+  </fullquery>
+
   <fullquery name="pm::project::compute_status.tasks_group_query">
     <querytext>
         select

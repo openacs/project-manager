@@ -50,10 +50,13 @@ namespace eval pm::calendar {
         {-hide_closed_p "t"}
 	{-display_p "l"}
 	{-display_item "t"}
+	{-hide_observer_p "f"}
 	{-package_id ""}
     } {
         Creates a month widget for tasks if display_item=t 
 	Creates a month widget for projects if display_item=p
+	
+	@param hide_observer_p Should we hide tasks where the user_id is only an observer ?
     } {
         set dotlrn_installed_p [apm_package_installed_p dotlrn]
         set day_template "<a href=?julian_date=\$julian_date>\$day_number</a>"
@@ -61,18 +64,17 @@ namespace eval pm::calendar {
         set next_nav_template "<a href=\"?view=month&date=\$ansi_date&user_id=$user_id\">&gt;</a>" 
 	set instance_clause ""
 	
-        if {$dotlrn_installed_p} {
-            if { [empty_string_p $package_id]} {
-                set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
-            } else {
-                set package_id [ad_conn package_id]
-            }
-            if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
-                set instance_clause "and o.package_id=:package_id"
-            } 
-        } else {
-            set package_id [ad_conn package_id]
-        }
+	if {$package_id eq ""} {
+	    if {$dotlrn_installed_p} {
+		set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
+		if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
+		    set instance_clause "and op.package_id=:package_id"
+		} 
+	    }
+	} else {
+	    set instance_clause "and op.package_id = :package_id"
+	}
+
 	
         if {[empty_string_p $date]} {
             set date [dt_systime]
@@ -94,6 +96,11 @@ namespace eval pm::calendar {
             set hide_closed_clause ""
         }
 	
+	# Do not show observer tasks if not wanted
+	if {$hide_observer_p eq "t"} {
+	    append hide_closed_clause " and r.is_observer_p = 'f'"
+	}
+
         set selected_users [pm::calendar::users_to_view]
         set selected_users_clause " and ts.task_id in (select task_id from pm_task_assignment where party_id in ([join $selected_users ", "]))"
 	
@@ -106,7 +113,7 @@ namespace eval pm::calendar {
 	set query_name "select_monthly_tasks"
 	
 	#display tasks by deadline
-	
+
 	if { [string eq $display_p d]} {
 	    set query_name "select_monthly_tasks_by_deadline"
 	}
@@ -128,8 +135,8 @@ namespace eval pm::calendar {
 		     ![empty_string_p $is_lead_p] && \
 		     [string is true $is_lead_p]} {
 		
-		set font_begin "$font_begin<i>"
-		set font_end "</i>$font_end"
+		set font_begin "$font_begin<font color=green>"
+		set font_end "</font>$font_end"
 	    }
 	    
 	    # if this is another row of the same item, just add the name.
@@ -141,7 +148,7 @@ namespace eval pm::calendar {
 		
 		# save the last item for output
 		    if {![empty_string_p $last_task_id]} {
-			ns_set put $items $last_latest_start_j "${day_details}</ul></p></span>"
+			ns_set put $items $day_date_j "${day_details}</ul></p></span>"
 		    }
 		    
 		    # set up the next item for output
@@ -155,7 +162,7 @@ namespace eval pm::calendar {
 		    }
 		    
 		    # begin setting up this calendar item
-                    set day_details "<span class=\"calendar-item\"><p>${detail_begin}<input type=\"checkbox\" name=\"task_item_id\" value=\"$task_id\" /><a href=\"task-one?task_id=$task_id\">$title${detail_end}</a> - <small><em>$project_name</em></small>"
+                    set day_details "${font_begin}<span class=\"calendar-item\"><p>${detail_begin}<a href=\"[pm::task::get_url $task_id]\">$title${detail_end}</a> - <small><em>$project_name</em></small>${font_end}"
 
 		    # only add to the list if we want to see closed tasks
 		    #append day_details "<ul><li>${font_begin}${full_name}${font_end}</li>"
@@ -163,18 +170,18 @@ namespace eval pm::calendar {
 		}
 	    
 	    set last_task_id $task_id
-	    set last_latest_start_j $latest_start_j
+	    set last_day_date_j $day_date_j
 	}
 	
 	if {![empty_string_p $last_task_id ]} {
 		
-	    ns_set put $items $latest_start_j "$day_details</ul></p></span>"
+	    ns_set put $items $day_date_j "$day_details</ul></p></span>"
 	}
 	
 	
 	# Display stuff
 	set day_number_template "<font size=2>$day_template</font>"
-	
+
 	return [dt_widget_month -calendar_details $items -date $date \
 		    -master_bgcolor black \
 		    -header_bgcolor lavender \

@@ -272,46 +272,66 @@ ad_proc -public -callback acs_mail_lite::incoming_object_email -impl pm_task {
             fconfigure $f -translation binary
             puts -nonewline $f [lindex $file 3]
             close $f
-	    
+
 	    # Create the content item
 	    if {$folder_id ne ""} {
-
+		set package_id [acs_object::package_id -object_id $folder_id]
 		set existing_item_id [fs::get_item_id -name $file_title -folder_id $folder_id]
 		if {$existing_item_id ne ""} {
 		    set item_id $existing_item_id
 		} else {
 		    set item_id [db_nextval "acs_object_id_seq"]
+		    content::item::new -name $file_title \
+			-parent_id $folder_id \
+			-item_id $item_id \
+			-package_id $package_id \
+			-creation_ip 127.0.0.1 \
+			-creation_user $sender_id \
+			-title $file_title
 		}
-
-	   	set revision_id [fs::add_file \
-				     -name $file_title \
+	   	set revision_id [content::revision::new \
 				     -item_id $item_id \
-				     -parent_id $folder_id \
 				     -tmp_filename $file_path\
 				     -creation_user $sender_id \
-				     -creation_ip $peeraddr \
+				     -creation_ip 127.0.0.1 \
+				     -package_id $package_id \
 				     -title $file_title \
-				     -no_notification \
-				     -no_callback \
 				     -description "File send by e-mail from $email(from) to $email(to) on subject $email(subject)" \
-				     -package_id [acs_object::package_id -object_id $folder_id] \
-				     -mime_type $mime_type]
+				     -mime_type $mime_type \
+				     -is_live "t" 
+				]
 		
 		file delete $file_path
 
 	    } else {
-	    
-		set revision_id [cr_import_content \
+		set package_id [acs_object::package_id -object_id $sender_id]	    
+		set existing_item_id [content::item::get_id_by_name -name $file_title -parent_id $sender_id]
+		if {$existing_item_id ne ""} {
+		    set item_id $existing_item_id
+		} else {
+		    set item_id [db_nextval "acs_object_id_seq"]
+		    content::item::new -name $file_title \
+			-parent_id $sender_id \
+			-item_id $item_id \
+			-package_id $package_id \
+			-creation_ip 127.0.0.1 \
+			-creation_user $sender_id \
+			-title $file_title
+		}
+
+	   	set revision_id [content::revision::new \
+				     -item_id $item_id \
+				     -tmp_filename $file_path\
+				     -creation_user $sender_id \
+				     -creation_ip 127.0.0.1 \
+				     -package_id $package_id \
 				     -title $file_title \
 				     -description "File send by e-mail from $email(from) to $email(to) on subject $email(subject)" \
-				     -item_id $item_id \
-				     -creation_user $sender_id \
-				     -creation_ip $peeraddr \
-				     $context_id \
-				     $file_path \
-				     [file size $file_path] \
-				     $mime_type \
-				     "[clock seconds]-[expr round([ns_rand]*100000)]"]
+				     -mime_type $mime_type \
+				     -is_live "t" 
+				 ]
+		
+		file delete $file_path
 	    }
 		
 	    # Create a list of file_id and file_title
@@ -323,8 +343,14 @@ ad_proc -public -callback acs_mail_lite::incoming_object_email -impl pm_task {
 	if {[exists_and_not_null email_body(text/html)]} {
 	    set comment $email_body(text/html)
 	} else {
-	    set comment [ad_text_to_html $email_body(text/plain)]
+	    if {[exists_and_not_null email_body(text/plain)]} {
+		set comment [ad_text_to_html $email_body(text/plain)]
+	    } else {
+		# No Body was given in the email
+		set comment ""
+	    }
 	}
+
 	set mime_type "text/html"
 	append comment "<p><ul>"
 	foreach file $files {

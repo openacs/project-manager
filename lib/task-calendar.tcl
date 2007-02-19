@@ -3,8 +3,6 @@ set user_id [auth::require_login]
 set date [calendar::adjust_date -date $date -julian_date $julian_date]
 set base_url [ad_conn package_url]
 
-ns_log Error "The task calendar page is currently broken to a state where performance is seriously harmed."
-ad_script_abort
 set title "#project-manager.Task_calendar#"
 set context [list $title]
 set header_stuff "
@@ -48,20 +46,35 @@ set return_url [ad_return_url]\#top
 set edit_hidden_vars [export_vars -form {return_url {new_tasks "0"}}]
 set users_clause ""
 
+# Shall we hide observers ?
+if {![exists_and_not_null hide_observer_p]} {
+    set hide_observer_p "f"
+}
+
 if { ![exists_and_not_null package_id]} {
     set calendar [pm::calendar::one_month_display \
 		      -user_id $user_id \
 		      -date $date \
+		      -hide_observer_p $hide_observer_p \
 		      -hide_closed_p $hide_closed_p \
 		      -display_p $display_p \
 		     ]
-    set package_id [dotlrn_community::get_package_id_from_package_key -package_key project-manager -community_id [dotlrn_community::get_community_id]]
-    if { ![string eq  [ad_conn package_id] [dotlrn::get_package_id]]} {
-	set users_clause "and pa.project_id in (select  p.item_id
-          from pm_projectsx p 
+    
+    # Figure out all the PM package ids
+    set package_ids ""
+    foreach package_id [apm_package_ids_from_key -package_key "project-manager"] {
+	if {![string eq  [ad_conn package_id] $package_id]} {
+	    lappend package_ids $package_id
+	}
+    }
+
+    if {$package_ids ne ""} {
+	set users_clause "and pa.project_id in (select item_id
+          from cr_items i, acs_objects o
           where 
-          p.item_id = pa.project_id 
-          and p.object_package_id = :package_id)"
+          i.item_id = o.object_id
+          and i.content_type = 'pm_project'
+          and o.package_id in ([template::util::tcl_to_sql_list $package_ids]))"
     }
     
     
@@ -70,6 +83,7 @@ if { ![exists_and_not_null package_id]} {
 		      -user_id $user_id \
 		      -date $date \
 		      -hide_closed_p $hide_closed_p \
+		      -hide_observer_p $hide_observer_p \
 		      -display_p $display_p \
 		      -package_id $package_id \
 		     ]
