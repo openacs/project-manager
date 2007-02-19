@@ -40,7 +40,7 @@ if { [ad_conn user_id] != 0} {
     lappend link_list {}
     lappend link_list "[_ project-manager.Task_Calendar]"
 
-    lappend link_list [list "${package_url}?assignee_id=${user_id}"]
+    lappend link_list [list "${package_url}projects?assignee_id=${user_id}"]
     lappend link_list {}
     lappend link_list "[_ project-manager.Projects]"
 

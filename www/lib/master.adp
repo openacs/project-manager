@@ -133,6 +133,10 @@ td.fill-list-bg {
   font: 90% Verdana,Georgia,Serif;
 }
 
+#pm_lead {
+  color: green;
+}
+
 #search-block { 
   border:1px solid #000; 
   background-color: #EAF2FF;
