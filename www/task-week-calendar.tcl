@@ -2,7 +2,7 @@ ad_page_contract {
     @author Anny Flores (annyflores@viaro.net) Viaro Networks (www.viaro.net)
 } {
     {date ""}
-    {display_p "l"}
+    {display_p "d"}
 }
 
 
