@@ -2,8 +2,7 @@
 
 ad_page_contract {
 
-  @author rhs@mit.edu
-  @author mbryzek@mit.edu
+  @author malte.sussdorff@cognovis.de
 
   @creation-date 2000-09-18
   @cvs-id $Id$
@@ -76,4 +75,21 @@ db_foreach pm_projects {select project_id as project_item_id from pm_project_ass
 	}
     }
 }
-set project_ids $logger_projects
+
+if {$logger_projects eq ""} {
+    if {[apm_package_ids_from_key -package_key "logger"] eq ""} {
+	# No instance of logger installed, redirect to subsite admin
+	ad_returnredirect -message "You need to install logger first" "../admin/applications"
+	ad_script_abort
+    }
+    if {[application_link::get_linked -from_package_id $package_id -to_package_key "logger"] eq ""} {
+	# There is no link between PM and logger, redirect to admin linking
+	ad_returnredirect -message "<font color=red>Please setup the link between project manager and logger</font>" -html "admin/linking?return_url=[ad_return_url]" 
+	ad_script_abort
+    }
+    
+    # It seems we just did not setup a project yet, go directly to add project then
+    ad_returnredirect -message "You can start by adding a new project" "add-edit"
+} else {
+    set project_ids $logger_projects
+}

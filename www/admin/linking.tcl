@@ -7,6 +7,7 @@ ad_page_contract {
     @cvs-id $Id$
 } {
     {keys:array,optional}
+    {return_url "."}
 }
 
 set title "[_ project-manager.Link_instances]"
@@ -40,7 +41,7 @@ foreach key $package_key_list {
     ad_form -extend -name linking -form [list [list keys.$key\:text(select) [list label $package_pretty_name] [list options $options_list] [list value $current_link]]]
 }
 
-ad_form -extend -name linking -on_request {
+ad_form -extend -name linking -export {return_url} -on_request {
 } -on_submit {
     db_transaction {
 	application_link::delete_links -package_id $this_package_id
@@ -54,7 +55,7 @@ ad_form -extend -name linking -on_request {
 	}
     }
 } -after_submit {
-    ad_returnredirect .
+    ad_returnredirect $return_url
     ad_script_abort
 }
 
