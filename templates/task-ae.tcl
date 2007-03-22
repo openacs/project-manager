@@ -158,7 +158,7 @@ ad_form -extend -name task_add_edit \
         {description:richtext(richtext),optional
             {label "[_ project-manager.Task_description]"}
 	    {options $desc_options}
-	    {html { cols 80 wrap soft}}
+	    {html {rows 20 cols 80 wrap soft}}
 	}
         
     }
@@ -187,7 +187,7 @@ if {[string is true $edit_p]} {
 	    {comment:richtext(richtext),optional
 		{label "[_ project-manager.Comment]"}
 		{options $desc_options}		
-		{html { cols 80 wrap soft}}
+		{html {rows 20 cols 80 wrap soft}}
 		{section "[_ project-manager.Comment]"}
 	    }
 	}

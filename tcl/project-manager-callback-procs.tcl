@@ -289,6 +289,7 @@ ad_proc -public -callback acs_mail_lite::incoming_object_email -impl pm_task {
 			-creation_user $sender_id \
 			-title $file_title
 		}
+	       ns_log Notice "$item_id :: $package_id"
 	   	set revision_id [content::revision::new \
 				     -item_id $item_id \
 				     -tmp_filename $file_path\

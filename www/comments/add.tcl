@@ -14,7 +14,6 @@ ad_page_contract {
     return_url:notnull
     {type "task"}
     {attach_p "f"}
-    {description:html ""}
 } -properties {
 } -validate {
 } -errors {
@@ -32,10 +31,12 @@ set exclude_observers_p [parameter::get -parameter "ExcludeObserversFromEMailP"]
 set observer_role_id [db_list get_observer_role_id { }]
 if { [string equal $type "project"] } {
     set assignees [pm::project::assignee_role_list -project_item_id $object_id]
+    set project_item_id $object_id
 } 
 
 if { [string equal $type "task"] } {
     set assignees [pm::task::assignee_role_list -task_item_id $object_id]
+    set project_item_id [pm::task::project_item_id -task_item_id $object_id]
 }
 
 set show_role_p 1
@@ -107,7 +108,16 @@ foreach assignee_one $assignee_list {
     }
 }
 
-# Just for wieners
+# Options for the description
+        
+# Where should we store the attached files in file storage
+set desc_options [list editor xinha plugins OacsFs height 350px] 
+set folder_id [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type "content_folder"] 0]
+if {$folder_id ne ""} {
+    lappend desc_options "folder_id"
+    lappend desc_options "$folder_id"
+}
+
 set listed_party_ids [list]
 ad_form -name comment \
     -form {
@@ -132,7 +142,8 @@ ad_form -name comment \
         
         {description:richtext(richtext),optional
             {label "[_ project-manager.Comment_1]"}
-            {html { cols 90 wrap soft}}
+	    {options $desc_options}
+	    {html {rows 20 cols 80 wrap soft}}
 	}
 	{assignee:text(checkbox),multiple,optional
 	    {label "[_ project-manager.Send_email]"}
@@ -182,7 +193,7 @@ ad_form -extend -name comment -form {
     }
 } -new_request {
     
-    set description [template::util::richtext::create "" {}]
+    set description  [template::util::richtext::create "" "text/html"]
     
 } -on_submit {
 
