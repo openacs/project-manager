@@ -853,3 +853,21 @@ ad_proc -public pm::util::assigned_projects {
 } {
     return [db_list list_of_assigned_projects "select distinct i.item_id from pm_projects p, cr_items i, pm_project_assignment pa where p.project_id = i.latest_revision and p.status_id in ($status_id) and pa.project_id = i.item_id and pa.party_id = :party_id and pa.role_id in ($role_id)"]
 }
+
+ad_proc -public pm::util::get_contacts {
+    -customer_id:required
+} {
+    Returns all contacts for customer in list for ad_form
+} {
+    set contact_list {}
+    if {[apm_package_installed_p "contacts"]} {
+	foreach employee_id [contact::util::get_employees -organization_id $customer_id] {
+	    lappend contact_list [list [contact::name -party_id $employee_id -reverse_order] $employee_id]
+	}
+	set contact_list [lsort -dictionary $contact_list]
+	lappend contact_list [list [contact::name -party_id $customer_id] $customer_id]
+    } else {
+	lappend contact_list [list [organizations::name -organization_id $customer_id] $customer_id]
+    }
+    return $contact_list
+}

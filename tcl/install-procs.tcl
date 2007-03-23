@@ -36,6 +36,43 @@ ad_proc -private pm::install::package_install {
     content::type::attribute::new -content_type {pm_project} -attribute_name {customer_id} -datatype {integer} -pretty_name {[_ project-manager.Customer]} -pretty_plural {[_ project-manager.Customers]} -column_spec {integer}
     content::type::attribute::new -content_type {pm_project} -attribute_name {dform} -datatype {string} -pretty_name {[_ project-manager.Dynamic_Form]} -pretty_plural {[_ project-manager.Dynamic_Forms]} -column_spec {varchar(100)}
 
+    dtype::create_attribute \
+	-object_type {pm_project} \
+	-name {contact_id} \
+	-data_type {integer} \
+	-pretty_name {Contact} \
+	-pretty_plural {Contacts} \
+	-default_value {}
+    lang::message::register \
+	-update_sync en_US acs-translations \
+	{pm_project_contact_id} {Contact}
+    lang::message::register \
+	-update_sync en_US acs-translations \
+	{pm_project_contact_ids} {Contacts}
+    lang::message::register \
+	-update_sync de_DE acs-translations \
+	{pm_project_contact_id} {Ansprechpartner}
+    lang::message::register \
+	-update_sync de_DE acs-translations \
+	{pm_project_contact_ids} {Ansprechpartner}
+    
+    dtype::form::metadata::create_widget \
+	-object_type {pm_project} \
+	-dform {project} \
+	-attribute_name {contact_id} \
+	-widget {select} \
+	-required_p {0}
+    
+    dtype::form::metadata::create_widget_param \
+	-object_type {pm_project} \
+	-dform {project} \
+	-attribute_name {contact_id} \
+	-param_name {options} \
+	-type {multilist} \
+	-source {eval} \
+	-value {pm::util::get_contacts -customer_id $variables(customer_id)}
+
+
     # Create pm_task
 
     dtype::create -name {pm_task} -supertype {content_revision} -pretty_name {[_ project-manager.Task]} -pretty_plural {[_ project-manager.Tasks]} -table_name {pm_tasks_revisions} -id_column {task_revision_id}
@@ -185,6 +222,45 @@ ad_proc -private pm::install::before_upgrade {
                 ns_log notice "Running Pre-Upgrade Routine"
 		
             }
+	    3.2a5 3.2a6 {
+                ns_log notice "Running Pre-Upgrade Routine"
+		dtype::create_attribute \
+		    -object_type {pm_project} \
+		    -name {contact_id} \
+		    -data_type {integer} \
+		    -pretty_name {Contact} \
+		    -pretty_plural {Contacts} \
+		    -default_value {}
+		lang::message::register \
+		    -update_sync en_US acs-translations \
+		    {pm_project_contact_id} {Contact}
+		lang::message::register \
+		    -update_sync en_US acs-translations \
+		    {pm_project_contact_ids} {Contacts}
+		lang::message::register \
+		    -update_sync de_DE acs-translations \
+		    {pm_project_contact_id} {Ansprechpartner}
+		lang::message::register \
+		    -update_sync de_DE acs-translations \
+		    {pm_project_contact_ids} {Ansprechpartner}
+		
+		dtype::form::metadata::create_widget \
+		    -object_type {pm_project} \
+		    -dform {project} \
+		    -attribute_name {contact_id} \
+		    -widget {select} \
+		    -required_p {0}
+		
+		dtype::form::metadata::create_widget_param \
+		    -object_type {pm_project} \
+		    -dform {project} \
+		    -attribute_name {contact_id} \
+		    -param_name {options} \
+		    -type {multilist} \
+		    -source {eval} \
+		    -value {pm::util::get_contacts -customer_id $variables(customer_id)}
+		
+	    }
         }
 }
 
