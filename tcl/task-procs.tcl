@@ -1637,6 +1637,7 @@ ad_proc -public pm::task::hours_remaining {
     -estimated_hours_work_min:required
     -estimated_hours_work_max:required
     -percent_complete:required
+    {-round_p "0"}
 } {
     Displays the estimated hours work remaining in a consistent format
     
@@ -1656,6 +1657,11 @@ ad_proc -public pm::task::hours_remaining {
     @error 
 } {
     set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
+    
+    # If we should round, we are not using the uncertain_completion_times
+    if {$round_p} {
+	set use_uncertain_completition_times_p 0
+    }
 
     if {[string equal $percent_complete 100]} {
         return 0
@@ -1669,7 +1675,8 @@ ad_proc -public pm::task::hours_remaining {
         return [pm::task::estimated_hours_work \
                     -estimated_hours_work $estimated_hours_work \
                     -estimated_hours_work_min $estimated_hours_work_min \
-                    -estimated_hours_work_max $estimated_hours_work_max]
+                    -estimated_hours_work_max $estimated_hours_work_max \
+		    -round_p $round_p]
     }
 
     if {[string is true $use_uncertain_completion_times_p]} {
@@ -1757,6 +1764,7 @@ ad_proc -public pm::task::estimated_hours_work {
     -estimated_hours_work:required
     -estimated_hours_work_min:required
     -estimated_hours_work_max:required
+    {-round_p "0"}
 } {
     Displays the total estimated hours work in a consistent format
     
@@ -1774,8 +1782,14 @@ ad_proc -public pm::task::estimated_hours_work {
     @error 
 } {
     set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
+    # If we should round, we are not using the uncertain_completion_times
+ns_log Notice "round $round_p"
+    if {$round_p} {
+	set use_uncertain_completion_times_p 0
+    }
 
     if {[string equal $use_uncertain_completion_times_p 1]} {
+ns_log Notice "uncertain"
         if {[string equal $estimated_hours_work_min $estimated_hours_work_max]} {
             set display_value "$estimated_hours_work_min"
         } else {

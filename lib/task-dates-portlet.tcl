@@ -25,7 +25,7 @@ set task_info(hours_remaining) \
          -estimated_hours_work $task_info(estimated_hours_work) \
          -estimated_hours_work_min $task_info(estimated_hours_work_min) \
          -estimated_hours_work_max $task_info(estimated_hours_work_max) \
-         -percent_complete $task_info(percent_complete)]
+         -percent_complete $task_info(percent_complete) -round_p 1]
 
 set task_info(days_remaining) \
     [pm::task::days_remaining \

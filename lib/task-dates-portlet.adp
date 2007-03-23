@@ -51,10 +51,10 @@
           <td>@task_info.percent_complete@%</td>
         </tr>
 	</if>
-        <if @task_info.estimate_hours_work@ not nil>
+        <if @task_info.hours_remaining@ not nil>
         <tr>
           <td class="subheader" width="40%">#project-manager.Estimated_hours_work#</td>
-          <td>@task_info.estimated_hours_work@</td>
+          <td>@task_info.hours_remaining@ (@task_info.estimated_hours_work_min@ - @task_info.estimated_hours_work_max@)</td>
         </tr>
 	</if>
       </table>
