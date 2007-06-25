@@ -1,5 +1,5 @@
 # --------------------------------------------------------------- #
-
+package require struct
 
 # the unique identifier for this package
 #set package_id  [ad_conn package_id]

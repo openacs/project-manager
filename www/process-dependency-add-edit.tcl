@@ -185,8 +185,8 @@ db_foreach dependency_query {} -column_array tasks {
             {value {$tasks(task_id)}}
         }
 
+        {-section sec1 {legendtext {$tasks(task_title)}}}
         {task_title.$tasks(task_id):text(hidden)
-            {section {$tasks(task_title)}}
             {label \"#project-manager.Subject_2#\"}
             {value {$tasks(task_title)}}
         }

@@ -184,11 +184,11 @@ dtype::form::add_elements -dform $dform -prefix pm -object_type pm_task -object_
 if {[string is true $edit_p]} {
     ad_form -extend -name task_add_edit \
 	-form {
+	    {-section "sec1" {legendtext "[_ project-manager.Comment]"}}
 	    {comment:richtext(richtext),optional
 		{label "[_ project-manager.Comment]"}
 		{options $desc_options}		
 		{html {rows 20 cols 80 wrap soft}}
-		{section "[_ project-manager.Comment]"}
 	    }
 	}
 } else {
@@ -201,45 +201,43 @@ if {[string is true $edit_p]} {
 if {!$use_uncertain_completion_times_p} {
     ad_form -extend -name task_add_edit \
 	-form {
+	    {-section "sec2" {legendtext "[_ project-manager.Work_required]"}}
 	    {estimated_hours_work:float
 		{label " "}
 		{html {size 5}}
 		{after_html $work_units}
-		{section "[_ project-manager.Work_required]"}
 	    }
 	}
 } elseif {[string is true $use_day_p]} {
     ad_form -extend -name task_add_edit \
 	-form {
+	    {-section "sec2" {legendtext "[_ project-manager.Work_required]"}}
 	    {estimated_days_work_min:float
 		{label "[_ project-manager.Min]"}
 		{html {size 5}}
 		{after_html $work_units}
-		{section "[_ project-manager.Work_required]"}
 	    }
         
 	    {estimated_days_work_max:float
 		{label "[_ project-manager.Max]"}
 		{html {size 5}}
 		{after_html $work_units}
-		{section "[_ project-manager.Work_required]"}
 	    }
 	}
 } else {
     ad_form -extend -name task_add_edit \
 	-form {
+	    {-section "sec2" {legendtext "[_ project-manager.Work_required]"}}
 	    {estimated_hours_work_min:float
 		{label "[_ project-manager.Min]"}
 		{html {size 5}}
 		{after_html $work_units}
-		{section "[_ project-manager.Work_required]"}
 	    }
         
 	    {estimated_hours_work_max:float
 		{label "[_ project-manager.Max]"}
 		{html {size 5}}
 		{after_html $work_units}
-		{section "[_ project-manager.Work_required]"}
 	    }
 	}
 }
@@ -321,15 +319,14 @@ logger::variable::get -variable_id $logger_variable_id -array logger_variable
 
 ad_form -extend -name task_add_edit \
     -form {
+	{-section "sec3" {legendtext "[_ project-manager.Log_entry]"}}
 	{hours:text,optional
 	    {label $logger_variable(name)}
 	    {html {size 4}}
-	    {section "[_ project-manager.Log_entry]"}
 	    {after_html $logger_variable(unit)}
 	}
 
 	{logger_variable_id:text(hidden)
-	    {section "[_ project-manager.Log_entry]"}
 	}
 
 	{log_date:text(text),optional
@@ -337,14 +334,12 @@ ad_form -extend -name task_add_edit \
 	    {html {id sel2}}
 	    {after_html {<input type='reset' value=' ... ' onclick=\"return showCalendar('sel2', 'y-m-d');\"> \[<b>y-m-d </b>\]
 	    }}
-	    {section "[_ project-manager.Log_entry]"}
 	}
         
 	{log:text,optional
 	    {label "[_ logger.Description]"}
 	    {html {size 30}}
 	    {help_text "[_ project-manager.lt_You_can_optionally_lo]"}
-	    {section "[_ project-manager.Log_entry]"}
 	}
     }
 
@@ -418,7 +413,6 @@ foreach role_list $roles_list {
 		   [list assignee.$role\:text(checkbox),optional,multiple \
 			[list label $role_name] \
 			[list options $assignee_options] \
-			[list section "[_ project-manager.Assignees]"] \
 			[list values $assignees] \
 		       ] ]
 }

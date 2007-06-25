@@ -244,9 +244,14 @@ ad_form -extend -name add_edit \
 	if {![empty_string_p $customer_name]} {
 	    append customer_name " - "
 	}
-	if {[empty_string_p $parent_id]} {
+	if {$parent_id eq ""} {
 	    set parent_id $folder_id
 	}
+
+	if {$parent_id eq ""} {
+	    set parent_id $package_id
+	}
+
 	set planned_end_date_list [split $planned_end_date "-"]
 	append planned_end_date_list " [lrange $planned_end_time 3 5]"
 

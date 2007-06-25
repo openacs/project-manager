@@ -26,6 +26,7 @@
 	searchterm="@searchterm@" 
 	tasks_orderby="@tasks_orderby@" 
 	role_id="@role_id@" 
+	display_mode="all"
 	filter_package_id="@filter_package_id@" 
 	subproject_tasks="@subproject_tasks@"
 	orderby_p="1"

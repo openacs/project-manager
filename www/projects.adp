@@ -16,6 +16,7 @@
 	actions_p="1" 
 	bulk_p="1" 
 	fmt="@fmt@" 
+	filter_p="1"
 	date_range="@date_range@" 
 	user_space_p="@user_space_p@" 
 	is_observer_p="@is_observer_p@" 

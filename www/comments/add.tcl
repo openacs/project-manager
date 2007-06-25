@@ -145,9 +145,9 @@ ad_form -name comment \
 	    {options $desc_options}
 	    {html {rows 20 cols 80 wrap soft}}
 	}
+	{-section "sec1" {legendtext "[_ project-manager.Assignees]"}}
 	{assignee:text(checkbox),multiple,optional
 	    {label "[_ project-manager.Send_email]"}
-	    {section "[_ project-manager.Assignees]"}
 	    {options $assignee_list}
 	    {values $listed_party_ids}
 	    {html {"checked" ""}}
@@ -175,9 +175,9 @@ foreach group [split [parameter::get -parameter "CommentGroups"] ";"] {
 
 	if {[llength $assignee_list] > 0} {
 	    ad_form -extend -name comment -form {
+		{-section "sec_$group_id" {legendtext "$group_title"}}
 		{${group_id}:text(checkbox),multiple,optional
 		    {label "[_ project-manager.Send_email]"}
-		    {section "$group_title" }
 		    {options $assignee_list}
 		}
 	    }

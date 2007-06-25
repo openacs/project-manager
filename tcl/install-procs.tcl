@@ -74,8 +74,7 @@ ad_proc -private pm::install::package_install {
 
 
     # Create pm_task
-
-    dtype::create -name {pm_task} -supertype {content_revision} -pretty_name {[_ project-manager.Task]} -pretty_plural {[_ project-manager.Tasks]} -table_name {pm_tasks_revisions} -id_column {task_revision_id}
+    dtype::create -name {pm_task} -supertype {content_revision} -pretty_name {#project-manager.Task#} -pretty_plural {#project-manager.Tasks#} -table_name {pm_tasks_revisions} -id_column {task_revision_id}
     content::type::attribute::new -content_type {pm_task} -attribute_name {end_date} -datatype {date} -pretty_name {[_ project-manager.End_date]} -pretty_plural {[_ project-manager.End_dates]} -column_spec {timestamptz}
     content::type::attribute::new -content_type {pm_task} -attribute_name {percent_complete} -datatype {number} -pretty_name {[_ project-manager.Percent_complete]} -pretty_plural {[_ project-manager.Percents_complete]} -column_spec {numeric}
     content::type::attribute::new -content_type {pm_task} -attribute_name {estimated_hours_work} -datatype {number} -pretty_name {[_ project-manager.Estimated_hours_work]} -pretty_plural {[_ project-manager.Estimated_hours_work]} -column_spec {numeric}

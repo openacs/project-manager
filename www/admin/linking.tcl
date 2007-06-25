@@ -38,7 +38,7 @@ foreach key $package_key_list {
     set current_link [lindex [application_link::get_linked -from_package_id $this_package_id -to_package_key $key] 0]
     regsub -all -- {-} $key {_} key
 
-    ad_form -extend -name linking -form [list [list keys.$key\:text(select) [list label $package_pretty_name] [list options $options_list] [list value $current_link]]]
+    ad_form -extend -name linking -form [list [list keys.$key\:text(select),optional [list label $package_pretty_name] [list options $options_list] [list value $current_link]]]
 }
 
 ad_form -extend -name linking -export {return_url} -on_request {
