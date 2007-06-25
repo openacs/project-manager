@@ -13,9 +13,9 @@
 # orderby     To sort the list using this orderby value
 #
 # package_id  The package_id which to limit the query to.
+# package_ids List of package_ids to limit the query to
 # subprojects_p Should subprojects be displayed as well?
 
-set required_param_list "package_id"
 set optional_param_list [list projects_orderby pm_status_id searchterm bulk_p actions_p page_num page_size\
 			     filter_p base_url end_date_f user_space_p hidden_vars]
 set optional_unset_list [list assignee_id  date_range is_observer_p previous_status_f current_package_f subprojects_p]
@@ -24,11 +24,6 @@ set invoice_installed_p [apm_package_installed_p dotlrn-invoices]
 set contacts_installed_p [apm_package_installed_p contacts]
 
 set user_id [ad_conn user_id]
-foreach required_param $required_param_list {
-    if {![info exists $required_param]} {
-	return -code error "$required_param is a required parameter."
-    }
-}
 
 if ![exists_and_not_null page_size] {
     set page_size 25
@@ -41,7 +36,11 @@ if { $daily_p } {
     set fmt "%x"
 } 
 
-set package_ids [join $package_id ","]
+if {![exists_and_not_null package_ids]} {
+    set package_ids $package_id
+}
+
+set package_ids [join $package_ids ","]
 
 foreach optional_param $optional_param_list {
     if {![info exists $optional_param]} {
@@ -128,21 +127,18 @@ if { ![exists_and_not_null assignee_id]} {
 set subprojects_from_clause ""
 set subprojects_where_clause ""
 
-if {[exists_and_not_null subprojects_p]} {
-    if {[string eq "f" $subprojects_p]} {
-	set subprojects_from_clause ", acs_objects ao"
-	set subprojects_where_clause "ao.object_type = 'content_folder' and ao.object_id = p.parent_id"
-    } else {
-	set subprojects_p ""
-    }
-} else {
-    set subprojects_p ""
+# Do not show subprojects by default
+if {![exists_and_not_null subprojects_p]} {
+    set subprojects_p "f"
 }
 
-if {$subprojects_p eq ""} {
+if {[string eq "f" $subprojects_p]} {
+    set subprojects_from_clause ", acs_objects ao"
+    set subprojects_where_clause "ao.object_type = 'content_folder' and ao.object_id = p.parent_id"
+} else {
     unset subprojects_p
 }
-   
+
 # We want to set up a filter for each category tree.
 
 set export_vars [export_vars -form {pm_status_id projects_orderby}]
@@ -214,6 +210,12 @@ set contact_coloum "fff"
 
 
 set row_list "project_name {}\n" 
+
+# Deal with the elements
+if {![exists_and_not_null elements]} {
+    set elements "planned_end_date"
+}
+
 foreach element $elements {
         append row_list "$element {}\n"
 }

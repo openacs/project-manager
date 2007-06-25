@@ -1,4 +1,4 @@
-    <if @filter_p@ ne 0>
+    <if @filter_p@ eq 1>
         <div id="search-block">
         <form method=post name=search action=index>
           <b>#project-manager.Search#</b>

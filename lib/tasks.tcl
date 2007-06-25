@@ -18,7 +18,7 @@
 # page        The page to show on the paginate.
 # page_size   The number of rows to display in the list
 # orderby_p   Set it to 1 if you want to show the order by menu.
-# orderby     To sort the list using this orderby value
+# tasks_orderby     To sort the list using this orderby value
 #
 # For Project Manager Task Portlet:
 # ---------------------------------
@@ -60,13 +60,33 @@ foreach optional_unset $optional_unset_list {
     }
 }
 
+
+# Deal with the include variable user_id and package_ids
+
+if {[exists_and_not_null package_ids]} {
+    set filter_package_id $package_ids
+    set package_id [lindex $package_ids 0]
+}
+
+if {[exists_and_not_null user_id]} {
+    set filter_party_id $user_id
+}
+
 if {![exists_and_not_null page_size]} {
     set page_size 10000
+}
+
+# Deal with the orderbys.
+if {[exists_and_not_null tasks_orderby]} {
+    set orderby_p 1
 }
 
 if {![info exists orderby_p]} {
     set orderby_p 0
 }
+
+# Make the end_date the default orderby
+set default_orderby "end_date,asc"
 
 if { ![exists_and_not_null tasks_portlet_p] } {
     set tasks_portlet_p f
@@ -82,9 +102,9 @@ if { ![exists_and_not_null tasks_portlet_p] } {
 #    set page_size ""
 }
 
-
+# The default display mode should be a list
 if {![info exists display_mode]} {
-    set display_mode "all"
+    set display_mode "list"
 }
 
 if {![info exists format]} {
@@ -154,28 +174,16 @@ if {![empty_string_p $searchterm]} {
     set search_where_clause ""
 }
 
-set default_orderby [pm::task::default_orderby]
-
-if {[exists_and_not_null orderby]} {
-    pm::task::default_orderby \
-        -set $orderby
-}
-
 # Get the elements to display in the list
 if {![exists_and_not_null elements]} {
     set elements [list \
+		      project_item_id \
 		      task_item_id \
 		      title \
-		      slack_time \
-		      role \
-		      latest_start \
+		      priority \
+		      hours_remaining \
 		      end_date \
-		      status_type \
-		      remaining \
-		      worked \
-		      project_item_id \
-		      percent_complete \
-		      edit_url]
+		      last_name]
 }
 
 if { [exists_and_not_null subproject_tasks] && [exists_and_not_null pid_filter]} {
@@ -218,15 +226,24 @@ if {[exists_and_not_null max_priority]} {
     append priority_clause "and priority <= :max_priority"
 }
 
+# Filter by party_id. Only the tasks of this party will be shown
 set party_id_clause ""
 if {[exists_and_not_null filter_party_id]} {
     set observer_from_clause " pm_task_assignment ta,  pm_roles r,"
     set party_id_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and ta.party_id = :filter_party_id"
 }
 
+# Filter by group_id. As of now still untested
 if {[exists_and_not_null filter_group_id]} {
     set observer_from_clause " pm_task_assignment ta,  pm_roles r,"
     set party_id_clause "and t.item_id = ta.task_id and ta.role_id = r.role_id and ta.party_id in (select member_id from group_member_map where group_id = :filter_group_id)"
+}
+
+# Filter by package_id
+if {[exists_and_not_null filter_package_id]} {
+    set filter_package_where_clause "op.package_id in ([template::util::tcl_to_sql_list $filter_package_id])"
+} else {
+    set filter_package_where_clause ""
 }
 
 set filters [list \
@@ -258,7 +275,7 @@ set filters [list \
 					 values { {"[_ project-manager.Player]" f} { "[_ project-manager.Watcher]" t} } \
 					] \
 		 filter_package_id [list \
-					where_clause "op.package_id = :filter_package_id"
+					where_clause "$filter_package_where_clause"
 				   ] \
 		]
 
@@ -357,7 +374,14 @@ if { $orderby_p } {
 			   } \
 			  ]
 } else {
-    set order_by_list [list]
+    set order_by_list [list \
+			   default_value $default_orderby \
+			   end_date {
+			       orderby_asc "end_date, priority desc, task_item_id asc"
+			       orderby_desc "end_date desc, priority desc, task_item_id desc"
+			       default_direction asc
+			   } 
+		      ]
 }
 
 

@@ -15,11 +15,18 @@ set permissions_url "[site_node::closest_ancestor_package -package_key subsite]/
 set return_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
 set vars { project_item_id return_url }
 set close_url "bulk-close?[export_vars $vars]"
-set contacts_installed_p [apm_package_installed_p contacts]
 set default_layout_url [parameter::get -parameter DefaultPortletLayoutP]
 
+if {![exists_and_not_null package_id]} {
+    set package_id [ad_conn package_id]
+}
+
 # Check if contacts is installed
-set contacts_installed_p [apm_package_installed_p contacts]
+set contacts_package_id [application_link::get_linked -from_package_id $package_id -to_package_key "contacts"]
+if {$contacts_package_id ne ""} {
+    set contacts_installed_p 1
+    set contacts_url [apm_package_url_from_id $contacts_package_id]
+}
 
 #URL to rate this project
 set rate_url "rate-project?project_id=$project_id&project_item_id=$project_item_id"
@@ -48,7 +55,6 @@ set edit_url "[ad_conn package_url]add-edit?[export_url_vars project_item_id]"
 set variables(customer_id) $project(customer_id)
 set project(status_pretty) [pm::project::get_status_description -project_item_id $project_item_id]
 
-set contacts_url [apm_package_url_from_key contacts]
 if {![empty_string_p contacts_url] && $contacts_installed_p} {
     set project(customer_name) [contact::name -party_id $project(customer_id)]
 } else {
