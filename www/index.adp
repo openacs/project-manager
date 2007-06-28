@@ -21,7 +21,7 @@
       <div class="portlet">
         <h2>Projects</h2>
         <div class="portlet-body">
-          <include src="/packages/project-manager/lib/projects" package_id="@package_id@" assignee_id=@user_id@ filter_p=0 page=@page@ page_size=30 status_id=1 orderby_p=1 projects_orderby=@projects_orderby@ elements=@pm_elements@ current_package_f="@package_id@">
+          <include src="/packages/project-manager/lib/projects" package_id="@package_id@" assignee_id=@user_id@ filter_p=0 page=@page@ page_size=30 status_id=1 orderby_p=1 projects_orderby=@projects_orderby@ elements=@pm_elements@ current_package_f="@package_id@" actions_p=1>
         </div>
       </div>
       <div class="portlet">
