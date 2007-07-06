@@ -138,7 +138,7 @@ ad_proc -public -callback contact::contact_form -impl project_manager {
 		    ad_form -extend -name $form -form {
 			{create_project_p:text(radio) \
 			     {label "[_ project-manager.create_project]"} \
-			     {options {{[_ acs-kernel.common_Yes] "t"} {[_ acs-kernel.common_no] "f"}}} \
+			     {options {{[_ acs-kernel.common_Yes] "t"} {[_ acs-kernel.common_No] "f"}}} \
 			     {values "f"}
 			}
 		    }

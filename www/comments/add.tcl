@@ -188,7 +188,7 @@ foreach group [split [parameter::get -parameter "CommentGroups"] ";"] {
 ad_form -extend -name comment -form {
     {attach_p:text(select),optional
 	{label "[_ project-manager.Attach_a_file]"}
-	{options {{"[_ acs-kernel.common_Yes]" "t"} {"[_ acs-kernel.common_no]" "f"}}}
+	{options {{"[_ acs-kernel.common_Yes]" "t"} {"[_ acs-kernel.common_No]" "f"}}}
 	{value "f"}
     }
 } -new_request {
