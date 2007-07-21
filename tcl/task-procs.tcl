@@ -1177,17 +1177,23 @@ ad_proc -public pm::task::close {
 
 ad_proc -public pm::task::email_status {} {
 
-    set send_email_p [parameter::get_from_package_key -package_key "project-manager" -parameter SendDailyEmail -default "0"]
+    set package_ids [list]
+    foreach package_id [apm_package_ids_from_key -package_key "project-manager" -mounted] { 
+        if { [parameter::get -package_id $package_id -parameter SendDailyEmail -default "0"] } {
+	    lappend package_ids $package_id
+	}
+    }
 
-    if {[string is false $send_email_p]} {
-        ns_log Notice "Parameter SendDailyEmail for project manager says skip email today"
-        return
+    if { [llength $package_ids] eq "0" } {
+	ns_log Notice "Parameter SendDailyEmail for project manager says skip email today"
+	return
     }
 
     # also don't send reminders on weekends.
 
     set today_j [db_string get_today "select to_char(current_timestamp,'J')"]
     if {![pm::project::is_workday_p $today_j]} {
+        ns_log Notice "SendDailyEmail will not be used today since it is not a workday"
         return
     }
 
@@ -1196,7 +1202,7 @@ ad_proc -public pm::task::email_status {} {
     # what if the person assigned is no longer a part of the subsite?
     # right now, we still email them.
 
-    db_foreach get_all_open_tasks {
+    db_foreach get_all_open_tasks "
         SELECT
         ts.task_id,
         ts.task_id as item_id,
@@ -1206,8 +1212,6 @@ ad_proc -public pm::task::email_status {} {
         to_char(t.earliest_start,'J') as earliest_start_j,
         to_char(current_timestamp,'J') as today_j,
         to_char(t.latest_start,'J') as latest_start_j,
-        to_char(t.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
-        to_char(t.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
         t.percent_complete,
         t.estimated_hours_work,
         t.estimated_hours_work_min,
@@ -1218,16 +1222,22 @@ ad_proc -public pm::task::email_status {} {
         to_char(t.earliest_finish,'YYYY-MM-DD HH24:MI') as earliest_finish,
         to_char(t.latest_start,'YYYY-MM-DD HH24:MI') as latest_start,
         to_char(t.latest_finish,'YYYY-MM-DD HH24:MI') as latest_finish,
+        to_char(t.end_date,'YYYY-MM-DD HH24:MI') as end_date,
+        to_char(t.end_date,'J') as end_date_j,
         p.first_names || ' ' || p.last_name as full_name,
         p.party_id,
-        (select one_line from pm_roles r where ta.role_id = r.role_id) as role
+        (select one_line from pm_roles r where ta.role_id = r.role_id) as role,
+        t.priority,
+        t.estimated_hours_work
         FROM
-        pm_tasks_active ts, 
+        pm_tasks_active ts,
         pm_tasks_revisionsx t, 
         pm_task_assignment ta,
         acs_users_all p,
         cr_items i,
-        pm_task_status s
+        pm_task_status s,
+        pm_roles r,
+        acs_objects ao
         WHERE
         ts.task_id    = t.item_id and
         i.item_id     = t.item_id and
@@ -1235,21 +1245,30 @@ ad_proc -public pm::task::email_status {} {
         ts.status     = s.status_id and
         s.status_type = 'o' and
         t.item_id     = ta.task_id and
-        ta.party_id   = p.party_id
+        ta.party_id   = p.party_id and
+        ta.role_id    = r.role_id and
+        r.one_line    = 'Lead' and
+        t.item_id     = ao.object_id and
+        ao.package_id in ( [template::util::tcl_to_sql_list $package_ids] )
         ORDER BY
-        t.latest_start asc
-    } {
+        t.priority desc, t.end_date asc
+    " {
         set earliest_start_pretty [lc_time_fmt $earliest_start "%x"]
         set earliest_finish_pretty [lc_time_fmt $earliest_finish "%x"]
         set latest_start_pretty [lc_time_fmt $latest_start "%x"]
         set latest_finish_pretty [lc_time_fmt $latest_finish "%x"]
-        
+	if { $latest_finish eq "" } {
+	    set earliest_start_j $end_date_j
+	    set latest_start_j $end_date_j
+	    set latest_finish_pretty [lc_time_fmt $end_date "%x"]
+	}
+	# reset slack time
+        set slack_time ""
         if {[exists_and_not_null earliest_start_j]} {
             set slack_time [pm::task::slack_time \
                                 -earliest_start_j $earliest_start_j \
                                 -today_j $today_j \
-                                -latest_start_j $latest_start_j]
-            
+                                -latest_start_j $latest_start_j]            
         }
         
         if {[lsearch $parties $party_id] == -1} {
@@ -1259,6 +1278,8 @@ ad_proc -public pm::task::email_status {} {
         lappend task_list($party_id) $task_id
         set titles_arr($task_id) $title
         set ls_arr($task_id)     $latest_start_pretty
+        set priority_arr($task_id) $priority
+        set hours_arr($task_id)    $estimated_hours_work
         set lf_arr($task_id)     $latest_finish_pretty
         set slack_arr($task_id)  $slack_time
         set roles($task_id-$party_id) $role
@@ -1300,101 +1321,56 @@ ad_proc -public pm::task::email_status {} {
             }
 
             if {![empty_string_p $which_pile]} {
-
-                lappend $which_pile "
-<tr><td>\#$task</td><td><a href=\"$url\">$titles_arr($task)</a></td><td>$roles($task-$party)</td><td>$ls_arr($task)</td><td>$lf_arr($task)</td><td>$slack_arr($task)</td>"
-
+		# Role is remove since we are only informing leads
+                lappend $which_pile "<tr><td>\#$task</td><td><a href=\"$url\">$titles_arr($task)</a></td><td>$priority_arr($task)</td><td>$lf_arr($task)</td></tr>"
             }
 
         }
 
-        set overdue_title "<h3>[_ project-manager.Overdue_Tasks]</h3>"
-
-        set overdue_description "[_ project-manager.lt_consult_with_people_a]"
-
-        set pressing_title "<h3>[_ project-manager.Pressing_Tasks]</h3>"
-
-        set pressing_description "[_ project-manager.lt_you_need_to_start_wor]"
-
-        set longterm_title "<h3>[_ project-manager.Long_Term_Tasks]</h3>"
-
-        set longterm_description "[_ project-manager.lt_look_over_these_to_pl]"
+	set table_heading "<table border=\"0\" bgcolor=\"#ddddff\">
+            <tr>
+              <th>[_ project-manager.Task] \#</th>
+              <th>[_ project-manager.Subject_1]</th>
+              <th>[_ project-manager.Priority]</th>
+              <th>[_ project-manager.Latest_finish]</th>
+            </tr>
+        "
 
         set cur_task_count $task_count($party)
 
         # okay, let's now set up the email body
 
-        set description "
-<p>[_ project-manager.lt_This_is_a_daily_remin]</p>
+        set description "<p>[_ project-manager.lt_This_is_a_daily_remin]</p>"
+	if { [llength $overdue] > 0 } {
+	    append description "<h3>[_ project-manager.Overdue_Tasks]</h3>"
+	    append description "<p>[_ project-manager.lt_consult_with_people_a]</p>"
+	    append description $table_heading
+	    foreach overdue_item $overdue {
+		append description $overdue_item
+	    }
+	    append description "</table>"
+	}
+	if { [llength $pressing] > 0 } {
+	    append description "<h3>[_ project-manager.Pressing_Tasks]</h3>"
+            append description "<p>[_ project-manager.lt_you_need_to_start_wor]</p>"
+	    append description $table_heading
+	    foreach pressing_item $pressing {
+		append description $pressing_item
+	    }
+	    append description "</table>"
+	}
+        if { [llength $longterm] > 0 } {
+	    append description "<h3>[_ project-manager.Long_Term_Tasks]</h3>"
+	    append description "<p>[_ project-manager.lt_look_over_these_to_pl]</p>"
+	    append description $table_heading
 
-$overdue_title
+	    foreach longterm_item $longterm {
+		append description $longterm_item
+	    }
 
-<hr />
+	    append description "</table>"
 
-$overdue_description
-
-<table border=\"0\" bgcolor=\"#ddddff\">
-<tr>
-  <th>[_ project-manager.Task] \#</th>
-  <th>[_ project-manager.Subject_1]</th>
-  <th>[_ project-manager.Role]</th>
-  <th>[_ project-manager.Latest_start]</th>
-  <th>[_ project-manager.Latest_finish]</th>
-  <th>[_ project-manager.Slack_1]</th>
-</tr>
-"
-
-        foreach overdue_item $overdue {
-            append description $overdue_item
-        }
-
-        append description "
-</table>
-
-$pressing_title
-
-<hr />
-
-$pressing_description
-
-<table border=\"0\" bgcolor=\"#ddddff\">
-<tr>
-  <th>[_ project-manager.Task] \#</th>
-  <th>[_ project-manager.Subject_1]</th>
-  <th>[_ project-manager.Role]</th>
-  <th>[_ project-manager.Latest_start]</th>
-  <th>[_ project-manager.Latest_finish]</th>
-  <th>[_ project-manager.Slack_1]</th>
-</tr>
-"
-
-        foreach pressing_item $pressing {
-            append description $pressing_item
-        }
-
-        append description "
-</table>
-
-$longterm_title
-
-$longterm_description
-
-<table border=\"0\" bgcolor=\"#ddddff\">
-<tr>
-  <th>[_ project-manager.Task] \#</th>
-  <th>[_ project-manager.Subject_1]</th>
-  <th>[_ project-manager.Role]</th>
-  <th>[_ project-manager.Latest_start]</th>
-  <th>[_ project-manager.Latest_finish]</th>
-  <th>[_ project-manager.Slack_1]</th>
-</tr>
-"
-
-        foreach longterm_item $longterm {
-            append description $longterm_item
-        }
-
-        append description "</table>"
+	}
 
         pm::util::email \
             -to_addr  $address \
@@ -1402,6 +1378,7 @@ $longterm_description
             -subject $subject \
             -body $description \
             -mime_type "text/html"
+
     }
 
     # consider also sending out emails to people who have created
