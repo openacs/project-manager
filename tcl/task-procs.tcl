@@ -1413,7 +1413,7 @@ ad_proc -public pm::task::email_status_not_lead {} {
     # also don't send reminders on weekends.
 
     set today_j [db_string get_today "select to_char(current_timestamp,'J')"]
-    if { ![string equal [pm::project::julian_to_day_of_week $today_j] 2] } {
+    if { ![string equal [pm::project::julian_to_day_of_week $today_j] 1] } {
         ns_log Notice "SendDailyEmail will not be used today for not lead updates since it is not monday"
         return
     }
