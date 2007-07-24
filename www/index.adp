@@ -5,7 +5,7 @@
   <tr>
     <td valign="top">
       <div class="portlet">
-        <h2>Calendary</h2>
+        <h2>Calendar</h2>
         <div class="portlet-body">
           <include src="/packages/project-manager/lib/task-calendar" format="print" date="@date@" julian_date="@julian_date@" hide_closed_p="@hide_closed_p@" display_p="d" hide_observer_p=t view="@view@" package_id="@package_id@">
         </div>
