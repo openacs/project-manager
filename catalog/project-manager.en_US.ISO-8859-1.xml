@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<message_catalog package_key="project-manager" package_version="3.2a5" locale="en_US" charset="ISO-8859-1">
+<message_catalog package_key="project-manager" package_version="3.2a6" locale="en_US" charset="ISO-8859-1">
 
   <msg key="---_TBD_---">--- TBD ---</msg>
   <msg key="--_Closed">-- Closed</msg>
@@ -86,6 +86,7 @@
   <msg key="Customer">Customer</msg>
   <msg key="Customer_Name">Customer Name</msg>
   <msg key="Customers">Customers</msg>
+  <msg key="Daily_task_status_report">Daily task status report</msg>
   <msg key="Date">Date</msg>
   <msg key="Date_1">Date:</msg>
   <msg key="Dates">Dates</msg>
@@ -376,6 +377,7 @@
   remove values. You will have to do that through the parameters section.</msg>
   <msg key="lt_This_is_a_daily_remin">This is a daily reminder of tasks that are assigned to you
 You currently have &lt;i&gt;%cur_task_count%&lt;/i&gt; tasks assigned to you</msg>
+  <msg key="lt_This_is_a_weekly_remin">This is a weekly reminder of the &lt;i&gt;%cur_task_count%&lt;/i&gt; tasks for which you are not a Lead.</msg>
   <msg key="lt_This_page_allows_you_">This page allows you to update the deadlines of all the
         projects in your installation. It will take a while.</msg>
   <msg key="lt_This_page_will_eventu">This page will eventually allow you to log hours against multiple
@@ -643,6 +645,7 @@ allows the system to automatically compute schedules. However, you can
   <msg key="View_this_task">View this task</msg>
   <msg key="View_Watcher">View Watcher tasks</msg>
   <msg key="Watcher">Watcher</msg>
+  <msg key="Weekly_task_status_report">Weekly task status report</msg>
   <msg key="Who">Who</msg>
   <msg key="Work">Work</msg>
   <msg key="Work_estimate">Work estimate</msg>
