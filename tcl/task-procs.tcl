@@ -1228,16 +1228,20 @@ ad_proc -public pm::task::email_status {} {
         p.party_id,
         (select one_line from pm_roles r where ta.role_id = r.role_id) as role,
         t.priority,
-        t.estimated_hours_work
+        t.estimated_hours_work,
+        op.title as project_name,
+        cp.item_id as project_item_id
         FROM
         pm_tasks_active ts,
         pm_tasks_revisionsx t, 
         pm_task_assignment ta,
         acs_users_all p,
         cr_items i,
+        cr_items cp,
         pm_task_status s,
         pm_roles r,
-        acs_objects ao
+        acs_objects ao,
+        acs_objects op
         WHERE
         ts.task_id    = t.item_id and
         i.item_id     = t.item_id and
@@ -1249,7 +1253,9 @@ ad_proc -public pm::task::email_status {} {
         ta.role_id    = r.role_id and
         r.one_line    = 'Lead' and
         t.item_id     = ao.object_id and
-        ao.package_id in ( [template::util::tcl_to_sql_list $package_ids] )
+        ao.package_id in ( [template::util::tcl_to_sql_list $package_ids] ) and
+        i.parent_id   = cp.item_id and
+        cp.live_revision = op.object_id
         ORDER BY
         t.priority desc, t.end_date asc
     " {
@@ -1283,6 +1289,8 @@ ad_proc -public pm::task::email_status {} {
         set lf_arr($task_id)     $latest_finish_pretty
         set slack_arr($task_id)  $slack_time
         set roles($task_id-$party_id) $role
+        set project_name_arr($task_id) $project_name
+        set project_item_id_arr($task_id) $project_item_id
         
         # how many tasks does this person have?
         if {[info exists task_count($party_id)]} {
@@ -1321,8 +1329,9 @@ ad_proc -public pm::task::email_status {} {
             }
 
             if {![empty_string_p $which_pile]} {
+		set project_url [pm::project::url -project_item_id $project_item_id_arr($task)]
 		# Role is remove since we are only informing leads
-                lappend $which_pile "<tr><td>\#$task</td><td><a href=\"$url\">$titles_arr($task)</a></td><td>$priority_arr($task)</td><td>$lf_arr($task)</td></tr>"
+                lappend $which_pile "<tr><td>\#$task</td><td><a href=\"$url\">$titles_arr($task)</a></td><td>$priority_arr($task)</td><td>$lf_arr($task)</td><td><a href=\"$project_url\">$project_name_arr($task)</a></td></tr>"
             }
 
         }
@@ -1333,6 +1342,7 @@ ad_proc -public pm::task::email_status {} {
               <th>[_ project-manager.Subject_1]</th>
               <th>[_ project-manager.Priority]</th>
               <th>[_ project-manager.Latest_finish]</th>
+              <th>[_ project-manager.Project]</th>
             </tr>
         "
 
