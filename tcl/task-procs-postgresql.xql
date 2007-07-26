@@ -253,6 +253,8 @@
       t.percent_complete,
       p.title as project_name,
       t.parent_id as project_item_id,
+      t.priority,
+      t.end_date,
       a.process_instance
       FROM
       pm_tasks_revisionsx t, 

@@ -1755,11 +1755,15 @@ ad_proc -public pm::task::email_alert {
   </tr>
   <tr>
     <td>[_ project-manager.Project]</td>
-    <td>$project_name</td>
+    <td><a href=\"[pm::project::url -project_item_id $project_item_id]\">$project_name</a></td>
   </tr>
   <tr>
     <td>[_ project-manager.Your_role]</td>
     <td>$role</td>
+  </tr>
+  <tr>
+    <td>[_ project-manager.Priority]</td>
+    <td>$priority</td>
   </tr>
 </table>
 
@@ -1772,16 +1776,30 @@ $process_html
 </table>
 
 <h3>[_ project-manager.Dates_1]</h3>
-<table border=\"0\" bgcolor=\"#ddddff\">
-  <tr>
-    <td>[_ project-manager.Latest_start_1]</td>
-    <td>$latest_start</td>
-  </tr>
-  <tr>
-    <td>[_ project-manager.Latest_finish]</td>
-    <td><i>$latest_finish</i></td>
-  </tr>
-</table>"
+"
+
+	if {$latest_start ne ""} {
+	    append notification_text "<table border=\"0\" bgcolor=\"#ddddff\">
+            <tr>
+	    <td>[_ project-manager.Latest_start_1]</td>
+	    <td>$latest_start</td>
+	    </tr>
+	    <tr>
+	    <td>[_ project-manager.Latest_finish]</td>
+	    <td><i>$latest_finish</i></td>
+	    </tr>
+	    </table>"
+	} elseif {$end_date ne ""} {
+	    append notification_text "<table border=\"0\" bgcolor=\"#ddddff\">
+            <tr>
+	    <td>[_ project-manager.End_date]</td>
+	    <td><i>$end_date</i></td>
+	    </tr>
+	    </table>"
+	} else {
+	    append notification_text "<p>No dates specified</td>"
+	}
+
 
         pm::util::email \
             -to_addr  $to_address \
@@ -1993,13 +2011,11 @@ ad_proc -public pm::task::estimated_hours_work {
 } {
     set use_uncertain_completion_times_p [parameter::get -parameter "UseUncertainCompletionTimesP" -default "1"]
     # If we should round, we are not using the uncertain_completion_times
-ns_log Notice "round $round_p"
     if {$round_p} {
 	set use_uncertain_completion_times_p 0
     }
 
     if {[string equal $use_uncertain_completion_times_p 1]} {
-ns_log Notice "uncertain"
         if {[string equal $estimated_hours_work_min $estimated_hours_work_max]} {
             set display_value "$estimated_hours_work_min"
         } else {

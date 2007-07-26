@@ -57,6 +57,12 @@
           <td>@task_info.hours_remaining@ (@task_info.estimated_hours_work_min@ - @task_info.estimated_hours_work_max@)</td>
         </tr>
 	</if>
+	<if @task_info.priority@ not nil>
+        <tr>
+          <td class="subheader" width="40%">#project-manager.Priority#</td>
+          <td>@task_info.priority@ </td>
+        </tr>
+	</if> 
       </table>
     </td>
   </tr>

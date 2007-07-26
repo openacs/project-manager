@@ -26,6 +26,9 @@ set contacts_package_id [application_link::get_linked -from_package_id $package_
 if {$contacts_package_id ne ""} {
     set contacts_installed_p 1
     set contacts_url [apm_package_url_from_id $contacts_package_id]
+} else {
+    set contacts_installed_p 0
+    set contacts_url ""
 }
 
 #URL to rate this project

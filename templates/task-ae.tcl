@@ -606,7 +606,6 @@ ad_form -extend -name task_add_edit -new_request {
         # -------------------------------------
 
 	set logger_project [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
-	ns_log Notice "Hours:: $hours,,, $priority"
         if {[exists_and_not_null hours]} {
 
             pm::project::log_hours \
