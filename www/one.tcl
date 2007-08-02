@@ -31,7 +31,7 @@
     pid_filter:integer,optional
     {page:integer ""}
     {orderby_subproject ""}
-    {tasks_orderby ""}
+    {tasks_orderby "priority"}
     {logger_variable_id:integer ""}
     {logger_days:integer "30"}
     {instance_id:integer ""}
