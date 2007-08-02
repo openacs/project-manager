@@ -822,7 +822,7 @@ ad_proc -public pm::task::get_url {
         set url [site_node_closest_ancestor_package_url -package_key "project-manager"]
     } else {
         set url "[ad_url]"
-        append url [site_node::get_url_from_object_id -object_id $package_id]
+        append url [lindex [site_node::get_url_from_object_id -object_id $package_id] 0]
     }
 
     set package_url "${url}task-one?task_id=$object_id"

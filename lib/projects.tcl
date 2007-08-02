@@ -522,17 +522,19 @@ db_multirow -extend { item_url customer_url category_select earliest_finish_date
     set creation_date_lc [lc_time_fmt $creation_date $fmt]
     set start_date_lc [lc_time_fmt $start_date "%x"]
     set planned_end_date_lc [lc_time_fmt $planned_end_date $fmt]
-    set _base_url [site_node::get_url_from_object_id -object_id $package_id]
+    set _base_url [lindex [site_node::get_url_from_object_id -object_id $package_id] 0]
     if {![empty_string_p $_base_url]} {
 	set base_url $_base_url
     }
     
     # Display the subsite
     set subsite_id [site_node::closest_ancestor_package -url $base_url -package_key "acs-subsite"]
-    set subsite_url [site_node::get_url_from_object_id -object_id $subsite_id]
+    set subsite_url [lindex [site_node::get_url_from_object_id -object_id $subsite_id] 0]
     set subsite_name [acs_object_name $subsite_id]
 
     set item_url [export_vars -base "${base_url}one" {project_item_id}]
+
+    ds_comment "$base_url :: $item_url :: $package_id"
     
     # root CR folder
     set root_folder [pm::util::get_root_folder -package_id $package_id]

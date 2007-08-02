@@ -140,5 +140,5 @@ template::list::create \
 # Create the multirow
 db_multirow -extend { project_name project_url } members get_members { } {
     set project_name [pm::project::name -project_item_id $project_id]
-    set project_url "[site_node::get_url_from_object_id -object_id $object_package_id]one?project_item_id=$project_id"
+    set project_url "[lindex [site_node::get_url_from_object_id -object_id $object_package_id] 0]one?project_item_id=$project_id"
 }

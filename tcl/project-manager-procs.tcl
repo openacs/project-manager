@@ -317,7 +317,7 @@ ad_proc -public pm::util::logger_url {} {
     
     @error 
 } {
-    return [site_node::get_url_from_object_id -object_id [lindex [application_link::get_linked -from_package_id [ad_conn package_id] -to_package_key logger] 0]]
+    return [lindex [site_node::get_url_from_object_id -object_id [lindex [application_link::get_linked -from_package_id [ad_conn package_id] -to_package_key logger] 0]] 0]
 }
 
 
@@ -690,7 +690,7 @@ ad_proc -public pm::util::url {
     } else {
         set return_val ""
     }
-    append return_val [site_node::get_url_from_object_id -object_id $package_id]
+    append return_val [lindex [site_node::get_url_from_object_id -object_id $package_id] 0]
 
     return $return_val
 }
