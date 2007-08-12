@@ -3,17 +3,6 @@
 <queryset>
   <rdbms><type>postgresql</type><version>7.3</version></rdbms>
   
-  <fullquery name="pm::project::get_project_id.get_project_id">
-    <querytext>
-      SELECT
-      live_revision
-      FROM
-      cr_items
-      WHERE
-      item_id = :project_item_id
-    </querytext>
-  </fullquery>
-
   <fullquery name="pm::project::get_project_item_id.get_project_item">
     <querytext>
       SELECT

@@ -3,15 +3,7 @@
 <queryset>
   <rdbms><type>oracle</type><version>8.0</version></rdbms>
   
-  <fullquery name="pm::project::get_project_id.get_project_id">
-    <querytext>
-      SELECT  live_revision
-      FROM    cr_items
-      WHERE   item_id = :project_item_id
-    </querytext>
-  </fullquery>
-
-  <fullquery name="pm::project::get_project_item_id.get_project_item">
+   <fullquery name="pm::project::get_project_item_id.get_project_item">
     <querytext>
       SELECT i.item_id
       FROM   cr_items i,

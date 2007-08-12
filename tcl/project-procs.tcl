@@ -15,7 +15,7 @@ namespace eval pm::project {}
 ad_proc -public pm::project::get_project_id {
     -project_item_id:required
 } {
-    Returns the live project_id when give the project_item_id
+    Returns the best project_id when give the project_item_id
 
     @author Jade Rubick (jader@bread.com)
     @creation-date 2004-02-19
@@ -26,9 +26,7 @@ ad_proc -public pm::project::get_project_id {
     
     @error 
 } {
-    set return_val [db_string get_project_id { }]
-
-    return $return_val
+    return [content::item::get_best_revision -item_id $project_item_id]
 }
 
 
