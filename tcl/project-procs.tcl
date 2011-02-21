@@ -3401,7 +3401,7 @@ ad_proc -public pm::project::get_all_subprojects_not_cached {
     so on...) for the specific project_item_id					
     
     @param project_item_id  The project_item_id to get all the subprojects
-    @returns list of all the subprojects
+    @return list of all the subprojects
 } {
     
     # First we are going to get all subprojects
@@ -3449,7 +3449,7 @@ ad_proc -public pm::project::check_projects_status {
     
     @param projects  The list of projects to get check the status
     @param status_id The status_id that all project must have
-    @returns 1 or 0
+    @return 1 or 0
 } {
     
     set projects [template::util::tcl_to_sql_list $projects]
