@@ -563,7 +563,7 @@ ad_form -extend -name task_add_edit -new_request {
 	    foreach role [array names assignee] {
 		foreach person_id $assignee($role) {
 		    # We do not want to update the assignment
-		    # This allows the trick that a LEAD assignement will not be 
+		    # This allows the trick that a LEAD assignment will not be 
 		    # overwritten by a player / watcher one, as the role is lower
 		    pm::task::assign \
 			-task_item_id $task_item_id \
