@@ -14,7 +14,7 @@ ad_page_contract {
 
     @param process_id The process that we're adding or editing items for.
     @param process_task_id The tasks we're creating and adding assignments for
-    @param use_dependency A list of tasks that will need dependencies. Needs to be passed to the depedency page.
+    @param use_dependency A list of tasks that will need dependencies. Needs to be passed to the dependency page.
 } {
 
     my_key:integer,optional
