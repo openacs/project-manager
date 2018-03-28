@@ -30,7 +30,7 @@
 #                            In orther to the pagination work entirelly you need to provide
 #                            this variable.
 # page_size     (optional)   Number that specified how many rows will be shown on the list.
-#                            Defautl to 5.
+#                            Default to 5.
 
 set required_param_list [list group_name customer_id]
 set optional_param_list [list show_filter_p elements page page_size]
