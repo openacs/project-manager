@@ -16,7 +16,7 @@
 # page_size   The number of rows to display in the list
 # pt_orderby  To sort the list using this orderby value
 # orderby_p   Boolean that indicates if you want to have the 
-#             orderby functionallity or not, default 't'
+#             orderby functionality or not, default 't'
 #
 #
 # Other Values:
