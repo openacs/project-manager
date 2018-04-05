@@ -95,6 +95,6 @@ if { [exists_and_not_null orderby_people] } {
     set exist_order_by_p 0
 }
 
-# Retrieving the value of the parameter to knwo wich template we call
+# Retrieving the value of the parameter to know which template we call
 set template_src [parameter::get -parameter "TaskOne"]
 # ------------------------- END OF FILE ------------------------- #

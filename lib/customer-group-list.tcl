@@ -76,7 +76,7 @@ if { ![exists_and_not_null page_size] } {
     set page_size 5
 }
 
-# To see wich elements we will show on the list
+# To see which elements we will show on the list
 set rows_list [list]
 if { ![exists_and_not_null elements] } {
     set rows_list [list name email project_name deadline]

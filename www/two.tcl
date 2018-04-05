@@ -95,6 +95,6 @@
 }
 
 
-# Retrieving the value of the parameter to know wich include to call
+# Retrieving the value of the parameter to know which include to call
 set template_src [parameter::get -parameter "ProjectOne"]
 # ------------------------- END OF FILE ------------------------- #

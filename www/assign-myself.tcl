@@ -1,6 +1,6 @@
 # packages/project-manager/www/assign-myself
 ad_page_contract { 
-    Assign all the recieved tasks to the recieved role, default to lead.
+    Assign all the received tasks to the received role, default to lead.
     @author Miguel Marin (miguelmarin@viaro.net)
     @author Malte Sussdorff (malte.sussdorff@cognovis.de) (fixing the page)
 } {
@@ -45,7 +45,7 @@ ad_form -name "reassign" -form {
 	{options $roles_list}
     }
 } -on_submit {
-    
+
     # We are going to reassign all the checked tasks to the user_id
     foreach task $task_item_id {
 	# We remove the current assignment
