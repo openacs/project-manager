@@ -6,7 +6,7 @@
     <pretty-plural>Project Managers</pretty-plural>
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
-    
+
     <version name="3.2a6" url="http://openacs.org/repository/download/apm/project-manager-3.2a6.apm">
         <owner url="mailto:jade@rubick.com">Jade Rubick</owner>
         <owner url="mailto:malte.sussdorff@cognovis.de">Malte Sussdorff</owner>
@@ -38,7 +38,7 @@
         </callbacks>
         <parameters>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="AssignGroupP"  default="0" description="Allows to assign a group instead of a user to projects and tasks. Set it to 1 if you want to allow this functionallity and to 0 if you don't. Default 0" section_name="project-manager"/>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CommentGroups"  default="DPM;FPM;Account Manager;Entrance;Management;German Proof;Foreign Proof" description="Semikolon seperated list of group names to be used in comments. If you are sending comments the members of each of the groups will be presented as possible recipients of the comment in addition to the assignees." section_name="Comments"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CommentGroups"  default="DPM;FPM;Account Manager;Entrance;Management;German Proof;Foreign Proof" description="Semicolon separated list of group names to be used in comments. If you are sending comments the members of each of the groups will be presented as possible recipients of the comment in addition to the assignees." section_name="Comments"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CreateForumP"  default="0" description="If set to 1 a forum will be created for each project. Default 0." section_name="Comments"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="EnvelopePrefix"  default="1" description="Default prefix for outgoing email. If left empty, system will use the causing user's email." section_name="email"/>
@@ -54,7 +54,7 @@
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectList"  default="/packages/project-manager/lib/projects" description="The template for display of the list of projects" section_name="Templates"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="ProjectOne"  default="/packages/project-manager/templates/project-one" description="The template for display of an individual project" section_name="Templates"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="RatedGroup"  description="Groupname of the group, whose members are being rated" section_name="Ratings"/>
-            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="SendAssignEmailsP"  default="1" description="If set to 1, emails will be send for task and project assignments. Can be overwritten by specifiying send_mail_p as a parameter to the procedures" section_name="email"/>
+            <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="SendAssignEmailsP"  default="1" description="If set to 1, emails will be send for task and project assignments. Can be overwritten by specifying send_mail_p as a parameter to the procedures" section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="SendDailyEmail"  default="0" description="Whether or not to send a daily email reminder to all people who are assigned tasks. A 1 indicates yes, and a 0 indicates no." section_name="email"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="ShowObserverTasksP"  default="0" description="If set to 1, then the user will see all his tasks, even if he is only an observer. Otherwise, not shown" section_name="tasks"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="TaskAdd"  default="/packages/project-manager/templates/task-ae" description="The template for the adding/editing of an individual task" section_name="Templates"/>

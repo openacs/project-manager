@@ -1258,7 +1258,7 @@ ad_proc -public pm::project::compute_status {project_item_id} {
                     if {[string is true $debug]} {
                         ns_log Notice " dependent_item: $dependent_item"
                     }
-                                    
+
                     if {[exists_and_not_null ongoing_task($dependent_item)]} {
                         set defer_p f
                         set my_latest_start ""
@@ -1266,7 +1266,7 @@ ad_proc -public pm::project::compute_status {project_item_id} {
                         if {[string is true $debug]} {
                             ns_log Notice " ongoing_task, no defer"
                         }
-                        
+
                     } elseif {![exists_and_not_null latest_start($dependent_item)]} {
                         # we defer the task if the dependent item has no
                         # latest_start date set 
@@ -1283,7 +1283,7 @@ ad_proc -public pm::project::compute_status {project_item_id} {
                         # be cleaned up better. Defering is necessary
                         # given this algorithm, but there are
                         # times when you don't want to defer.
-                        # This is hackish, and I'm embarrased, but on
+                        # This is hackish, and I'm embarrassed, but on
                         # a deadline. :(
                         if {$defer_count($task_item) > 5} {
                             set defer_p f
@@ -1300,13 +1300,13 @@ ad_proc -public pm::project::compute_status {project_item_id} {
 
                             set defer_p t
                         }
-                        
+
 
 
                     } else {
-                        
+
                         # the dependent item has a deadline
-                        
+
                         if {[string is false [exists_and_not_null activity_time($task_item)]]} {
                             set activity_time($task_item) 0
                             ns_log Notice "setting activity_time($task_item) 0 (location 3)"
@@ -1317,7 +1317,7 @@ ad_proc -public pm::project::compute_status {project_item_id} {
                                  -end_date_j $latest_start($dependent_item) \
                                  -hours_to_complete $activity_time($task_item) \
                                  -hours_day $hours_day]
-                        
+
                         if {[string is true $debug]} {
                             ns_log Notice " my_latest_start: $my_latest_start"
                         }
@@ -2907,7 +2907,7 @@ ad_proc -public pm::project::compute_status_mins {
                     if {[string is true $debug]} {
                         ns_log Notice " dependent_item: $dependent_item"
                     }
-                                    
+
                     if {[exists_and_not_null ongoing_task($dependent_item)]} {
                         set defer_p f
                         set my_latest_start ""
@@ -2915,7 +2915,7 @@ ad_proc -public pm::project::compute_status_mins {
                         if {[string is true $debug]} {
                             ns_log Notice " ongoing_task, no defer"
                         }
-                        
+
                     } elseif {![exists_and_not_null latest_start($dependent_item)]} {
                         # we defer the task if the dependent item has no
                         # latest_start date set 
@@ -2932,7 +2932,7 @@ ad_proc -public pm::project::compute_status_mins {
                         # be cleaned up better. Defering is necessary
                         # given this algorithm, but there are
                         # times when you don't want to defer.
-                        # This is hackish, and I'm embarrased, but on
+                        # This is hackish, and I'm embarrassed, but on
                         # a deadline. :(
                         if {$defer_count($task_item) > 5} {
                             set defer_p f
@@ -2949,13 +2949,13 @@ ad_proc -public pm::project::compute_status_mins {
 
                             set defer_p t
                         }
-                        
+
 
 
                     } else {
-                        
+
                         # the dependent item has a deadline
-                        
+
                         if {[string is false [exists_and_not_null activity_time($task_item)]]} {
                             set activity_time($task_item) 0
                             ns_log Notice "setting activity_time($task_item) 0 (location 3)"
@@ -2966,7 +2966,7 @@ ad_proc -public pm::project::compute_status_mins {
                                  -end_date $latest_start($dependent_item) \
                                  -hours_to_complete $activity_time($task_item) \
                                  -hours_day $hours_day]
-                        
+
                         if {[string is true $debug]} {
                             ns_log Notice " my_latest_start: $my_latest_start"
                         }
