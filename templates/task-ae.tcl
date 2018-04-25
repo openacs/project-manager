@@ -356,7 +356,7 @@ if {[string is true $using_process_p]} {
     set task_assignee_list [pm::task::assignee_role_list -task_item_id $task_item_id]
 } else {
     # NEW
-    set task_assignee_list [list]
+    set task_assignee_list {}
 }
 
 
@@ -399,7 +399,7 @@ foreach role_list $roles_list {
     set role_name [lindex $role_list 0]
     set role      [lindex $role_list 1]
 
-    set assignees [list]
+    set assignees {}
     foreach one_assignee $assignee_role_list {
 	set person_id [lindex $one_assignee 0]
 	set person_role [lindex $one_assignee 1]

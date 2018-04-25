@@ -111,7 +111,7 @@ ad_proc -public pm::task::options_list {
         set union_clause ""
     }
 
-    set keys [list]
+    set keys {}
 
     db_foreach get_dependency_tasks { } {
         set options($task_title) $item_id
@@ -253,7 +253,7 @@ ad_proc -public pm::task::options_list_html {
         set union_clause ""
     }
 
-    set keys [list]
+    set keys {}
 
     db_foreach get_dependency_tasks { } {
         set options($task_title) $item_id
@@ -414,7 +414,7 @@ ad_proc -public pm::task::dependency_add {
 
     if {$loop_limit > 0} {
 
-        set dep_list [list]
+        set dep_list {}
         db_foreach get_dependencies { } {
             lappend dep_list d-$dep_task-$dep_task_parent
         }
@@ -1177,7 +1177,7 @@ ad_proc -public pm::task::close {
 
 ad_proc -public pm::task::email_status {} {
 
-    set package_ids [list]
+    set package_ids {}
     foreach package_id [apm_package_ids_from_key -package_key "project-manager" -mounted] { 
         if { [parameter::get -package_id $package_id -parameter SendDailyEmail -default "0"] } {
 	    lappend package_ids $package_id
@@ -1197,7 +1197,7 @@ ad_proc -public pm::task::email_status {} {
         return
     }
 
-    set parties [list]
+    set parties {}
 
     # what if the person assigned is no longer a part of the subsite?
     # right now, we still email them.
@@ -1310,9 +1310,9 @@ ad_proc -public pm::task::email_status {} {
         set subject "[ad_system_name]: [_ project-manager.Daily_task_status_report]"
         set address [db_string get_email "select email from parties where party_id = :party" -default "jade-errors@bread.com"]
 
-        set overdue [list]
-        set pressing [list]
-        set longterm [list]
+        set overdue {}
+        set pressing {}
+        set longterm {}
 
         foreach task $task_list($party) {
 
@@ -1398,7 +1398,7 @@ ad_proc -public pm::task::email_status {} {
 
 ad_proc -public pm::task::email_status_not_lead {} {
 
-    set package_ids [list]
+    set package_ids {}
     foreach package_id [apm_package_ids_from_key -package_key "project-manager" -mounted] { 
         if { [parameter::get -package_id $package_id -parameter SendDailyEmail -default "0"] } {
 	    lappend package_ids $package_id
@@ -1418,7 +1418,7 @@ ad_proc -public pm::task::email_status_not_lead {} {
         return
     }
 
-    set parties [list]
+    set parties {}
 
     # what if the person assigned is no longer a part of the subsite?
     # right now, we still email them.
@@ -1531,9 +1531,9 @@ ad_proc -public pm::task::email_status_not_lead {} {
         set subject "[ad_system_name]: [_ project-manager.Weekly_task_status_report]"
         set address [db_string get_email "select email from parties where party_id = :party" -default "jade-errors@bread.com"]
 
-        set overdue [list]
-        set pressing [list]
-        set longterm [list]
+        set overdue {}
+        set pressing {}
+        set longterm {}
 
         foreach task $task_list($party) {
 
@@ -2581,7 +2581,7 @@ ad_proc -public pm::task::what_changed {
 
     
     # get the new task values
-    set tasks_item_id [list]
+    set tasks_item_id {}
     foreach num $number {
         lappend tasks_item_id $task_item_id($num)
     }

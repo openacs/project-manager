@@ -169,7 +169,7 @@ if {[string is true $edit_p]} {
 
 
 
-    set deps [list]
+    set deps {}
     foreach task $task_item_id {
         if {[lsearch $deps $task_dependency($task)] == -1 && \
                 ![empty_string_p $task_dependency($task)]} {
