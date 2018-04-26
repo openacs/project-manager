@@ -23,7 +23,7 @@ if { [empty_string_p $return_url] } {
 }
 
 # We are going to get all projects of the same instance that we are located
-set options [list]
+set options {}
 db_foreach get_projects { } {
     set project [pm::project::get_project_item_id -project_id $object_id]
     lappend options [list "$object_title" $project]
@@ -54,7 +54,7 @@ ad_form -name move_task -form {
 # To get projects of other instances in the system using to forms, one for search 
 # and the other one for select
 if { $search_p } {
-    set search_options [list]
+    set search_options {}
     db_foreach get_search_projects { } {
 	set project [pm::project::get_project_item_id -project_id $object_id]
 	lappend search_options [list "$object_title" $project]

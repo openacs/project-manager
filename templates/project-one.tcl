@@ -48,7 +48,7 @@ set forum_id [application_data_link::get_linked -from_object_id $project(item_id
 set folder_id [lindex [application_data_link::get_linked -from_object_id $project(item_id) -to_object_type "content_folder"] 0]
 
 set parent_project_id $project_item_id
-set context [list]
+set context {}
 while {$parent_project_id ne ""} {
     set project_name [pm::util::get_project_name -project_item_id $parent_project_id]
     lappend context [list "one?project_item_id=$parent_project_id" "$project_name"]

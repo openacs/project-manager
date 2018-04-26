@@ -32,7 +32,7 @@ set return_url "one?project_id=$project_id"
 # First we get all users assigned to this project
 set users_list [pm::project::assignee_role_list -project_item_id $project_item_id]
 
-set options [list]
+set options {}
 
 
 if {[string eq "" $party_id]} {

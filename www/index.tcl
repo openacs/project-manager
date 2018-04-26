@@ -49,7 +49,7 @@ if { $redirect_url ne "" } {
     ad_script_abort
 }
 
-set context [list]
+set context {}
 set package_id [ad_conn package_id]
 set admin_p [permission::permission_p -object_id $package_id -party_id [ad_conn untrusted_user_id] -privilege admin]
 
@@ -62,7 +62,7 @@ set then_ansi [clock format [clock scan "-30 days"] -format "%Y-%m-%d"]
 set variable_id [logger::variable::get_default_variable_id]
 
 # Get the list of logger projects
-set logger_projects [list]
+set logger_projects {}
 db_foreach pm_projects {select project_id as project_item_id from pm_project_assignment pa,acs_objects o where pa.project_id = o.object_id and o.package_id = :package_id and party_id = :user_id} {
     lappend logger_projects [lindex [application_data_link::get_linked -from_object_id $project_item_id -to_object_type logger_project] 0]
     

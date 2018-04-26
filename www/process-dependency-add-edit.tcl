@@ -154,13 +154,13 @@ ad_form -name add_edit -form {
 
 # get dependency types
 
-#set options [list] #db_foreach get_dependency_types {} -column_array
+#set options {} #db_foreach get_dependency_types {} -column_array
 #sdependencies {# lappend options "{\"$dependencies(description)\"
 #s$dependencies(short_name)}" #}
 
 # set up list of tasks that this task can be depend on
 
-set dependency_keys [list]
+set dependency_keys {}
 
 db_foreach get_dependency_tasks {} -column_array dependency_tasks {
     
@@ -173,7 +173,7 @@ db_foreach get_dependency_tasks {} -column_array dependency_tasks {
 db_foreach dependency_query {} -column_array tasks {
     # set up the tasks that can be viewed. Takes out the current task
 
-    set dependency_options_full [list]
+    set dependency_options_full {}
     foreach key $dependency_keys {
         if {![string equal $key $tasks(task_title)]} {
             lappend dependency_options_full [list $key $dependency_options($key)]

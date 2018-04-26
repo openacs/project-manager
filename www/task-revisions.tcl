@@ -73,7 +73,7 @@ template::list::create \
         narrow
     } 
 
-set descriptions [list]
+set descriptions {}
 
 db_multirow -extend { item_url description_rich old_revision_id } revisions task_revisions_query {
 } {

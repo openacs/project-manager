@@ -34,7 +34,7 @@ ad_page_contract {
 # --------------------------------------------------------------- #
 
 # set up context bar
-set context [list]
+set context {}
 set title "Project Manager Administration"
 
 # the unique identifier for this package

@@ -2604,8 +2604,8 @@ ad_proc -public pm::task::what_changed {
 	dtype::get_object -object_id $prev_rev_id -object_type pm_task -array old_task
 	db_1row get_new_title_and_desc "select title as old_title,description as old_description from cr_revisions where revision_id = $prev_rev_id"
 	
-	set changes [list]
-	set manual_change_list [list]
+	set changes {}
+	set manual_change_list {}
 	# Get changes for percent_complete
 	set old $old_task(percent_complete)
 	set new $task(percent_complete)

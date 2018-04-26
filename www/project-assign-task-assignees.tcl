@@ -40,7 +40,7 @@ set assignments_lol [db_list_of_lists get_people {
                     and ppm.party_id = :user_id)
 }]
 
-set parties [list]
+set parties {}
 
 foreach pair $assignments_lol {
 
