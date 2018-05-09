@@ -87,7 +87,7 @@ set project_item_id $task_info(project_item_id)
 
 # Set the context bar at least two levels up :-)
 set parent_project_id $task_info(project_item_id)
-set context {}
+set context [list]
 while {$parent_project_id ne ""} {
     set project_name [pm::util::get_project_name -project_item_id $parent_project_id]
     lappend context [list "one?project_item_id=$parent_project_id" "$project_name"]

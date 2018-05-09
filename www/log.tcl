@@ -8,4 +8,4 @@ ad_page_contract {
 
 
 set title "[_ project-manager.lt_Set_up_logger_integra]"
-set context {}
+set context [list]

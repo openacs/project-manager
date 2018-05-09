@@ -57,7 +57,7 @@ set hidden_vars [export_vars -form $exporting_vars]
 
 
 # set up context bar
-set context {}
+set context [list]
 
 # the unique identifier for this package
 set user_id [ad_maybe_redirect_for_registration]
@@ -98,8 +98,8 @@ if { [exists_and_not_null ped_filter] } {
     }
 }
 
-set actions {}
-set bulk_actions {}
+set actions [list]
+set bulk_actions [list]
 
 template::list::create \
     -name "projects" \

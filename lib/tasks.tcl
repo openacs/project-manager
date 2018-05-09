@@ -293,7 +293,7 @@ if {$actions_p == 1} {
 		     "[_ project-manager.Add_task]" \
 		     [export_vars -base "${base_url}task-select-project" {return_url}] "[_ project-manager.Add_a_task]"]
 } else {
-    set actions {}
+    set actions [list]
 }
 
 # Append each element to row_list that is used on 
@@ -332,8 +332,8 @@ if { $use_bulk_p == 1 || $bulk_actions_p == 1} {
 
     set bulk_action_export_vars [list [list return_url] [list project_item_id]]
 } else {
-    set bulk_actions {}
-    set bulk_action_export_vars {}
+    set bulk_actions [list]
+    set bulk_action_export_vars [list]
 }
 
 # Orderby's to use in

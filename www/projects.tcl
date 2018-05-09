@@ -56,7 +56,7 @@ set exporting_vars { status_id category_id assignee_id projects_orderby format p
 set hidden_vars [export_vars -form $exporting_vars]
 
 # set up context bar
-set context {}
+set context [list]
 
 # the unique identifier for this package
 set user_id    [ad_maybe_redirect_for_registration]
