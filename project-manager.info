@@ -37,7 +37,7 @@
             <callback type="after-instantiate"  proc="pm::install::package_instantiate"/>
         </callbacks>
         <parameters>
-            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="AssignGroupP"  default="0" description="Allows to assign a group instead of a user to projects and tasks. Set it to 1 if you want to allow this functionallity and to 0 if you don't. Default 0" section_name="project-manager"/>
+            <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="AssignGroupP"  default="0" description="Allows to assign a group instead of a user to projects and tasks. Set it to 1 if you want to allow this functionality and to 0 if you don't. Default 0" section_name="project-manager"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CommentGroups"  default="DPM;FPM;Account Manager;Entrance;Management;German Proof;Foreign Proof" description="Semicolon separated list of group names to be used in comments. If you are sending comments the members of each of the groups will be presented as possible recipients of the comment in addition to the assignees." section_name="Comments"/>
             <parameter datatype="number"  min_n_values="1"  max_n_values="1"  name="CreateForumP"  default="0" description="If set to 1 a forum will be created for each project. Default 0." section_name="Comments"/>
             <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="DefaultPortletLayoutP"  default="/packages/project-manager/lib/portlet" description="The src path for the layout to user on project manager portlets master tag" section_name="Layout"/>
