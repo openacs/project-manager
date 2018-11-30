@@ -234,7 +234,7 @@ ad_proc -public -callback acs_mail_lite::incoming_object_email -impl pm_task {
 } {
 
     # Check if the object_id is a task
-    if {[content::item::content_type -item_id $object_id] eq "pm_task"} {
+    if {[content::item::get_content_type -item_id $object_id] eq "pm_task"} {
 	
 	set task_item_id $object_id
 
