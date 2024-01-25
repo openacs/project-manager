@@ -131,6 +131,9 @@ if {[string is true $edit_p]} {
 
 }
 
+::template::head::add_javascript \
+    -src /resources/acs-templating/calendar.js
+
 # -------------------------------------------------------------
 # Start creating the multirow we'll use to create the interface
 # -------------------------------------------------------------

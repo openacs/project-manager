@@ -242,6 +242,9 @@ if {!$use_uncertain_completion_times_p} {
 	}
 }
 
+::template::head::add_javascript \
+    -src /resources/acs-templating/calendar.js
+
 ad_form -extend -name task_add_edit \
     -form {
         {task_end_date:text(text),optional

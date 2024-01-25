@@ -1,3 +1,4 @@
+<script src="/resources/acs-templating/calendar.js"></script>
     <if @filter_p@ eq 1>
         <div id="search-block">
         <form method=post name=search action=index>

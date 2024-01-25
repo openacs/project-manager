@@ -153,6 +153,9 @@ dtype::form::add_elements -dform $dform -prefix pm -object_type pm_project -obje
 
 set status_options [lang::util::localize [pm::status::project_status_select]]
 
+::template::head::add_javascript \
+    -src /resources/acs-templating/calendar.js
+
 ad_form -extend -name add_edit \
     -form {
         {status_id:text(select)
