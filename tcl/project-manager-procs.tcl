@@ -229,8 +229,8 @@ ad_proc -private pm::util::word_diff {
 		set new [$filter_proc $new]
 	}
 
-	set old_f [ns_tmpnam]
-	set new_f [ns_tmpnam]
+	set old_f [ns_mktemp]
+	set new_f [ns_mktemp]
 	set old_fd [open $old_f "w"]
 	set new_fd [open $new_f "w"]
 	puts $old_fd [join [split $old $split_by] "\n"]
